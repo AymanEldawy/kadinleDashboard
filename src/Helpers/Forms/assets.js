@@ -1,6 +1,8 @@
+import {DropDowns} from "../functions";
+
 export const AssetsGroup = [
   { name: "Number", type: "number", label: "Number", required: false },
-  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: [] },
+  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: DropDowns('SecLvl') },
   { name: "Code", type: "text", label: "Code", required: false },
   { name: "Name", type: "text", label: "Name", required: false },
   { name: "LtnName", type: "text", label: "LtnName", required: false },

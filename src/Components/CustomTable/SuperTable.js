@@ -1,29 +1,74 @@
 import React from "react";
+import { useEffect } from "react";
 import { useCallback } from "react";
 import { useState } from "react";
+import ReactPaginate from "react-paginate";
+import ChevronIcon from "../../Helpers/Icons/ChevronIcon";
 import CheckboxField from "../CustomForm/CheckboxField";
+import Checkbox from "../Global/Checkbox";
 import Table from "./Table";
 import TableBody from "./TableBody";
 import TableCol from "./TableCol";
 import TableHead from "./TableHead";
+import TableHeadCol from "./TableHeadCol";
 import TableRow from "./TableRow";
-
-const SuperTable = ({ columns, data, allowSelect }) => {
-  const [filterList, setFilterList] = useState(data || []);
-  const [selectedList, setSelectedList] = useState({});
-  const handelFilter = useCallback((val) => {
-    let newList = data?.filter(
-      (item) => item?.name?.toLowerCase().indexOf(val?.toLowerCase()) !== -1
-    );
-    setFilterList(newList);
+const itemsPerPage = 30; // dropdown to select item per number
+let sorting = {};
+const SuperTable = ({
+  columns,
+  data,
+  allowSelect,
+  searchValue,
+  // deleteItem,
+  selectedList,
+  setSelectedList,
+}) => {
+  const [filterList, setFilterList] = useState(data);
+  const [itemOffset, setItemOffset] = useState(0);
+  const [currentItems, setCurrentItems] = useState([]);
+  const [pageCount, setPageCount] = useState(1);
+  const [refresh, setRefresh] = useState(false);
+  useEffect(() => {
+    setFilterList(data);
   }, []);
+
+  useEffect(() => {
+    if (searchValue) {
+      let newList = data?.filter((item) => {
+        // console.log(
+        //   item?.Name?.toLowerCase()?.indexOf(searchValue?.toLowerCase())
+        // );
+        return (
+          item?.Name?.toLowerCase()?.indexOf(searchValue?.toLowerCase()) !== -1
+        );
+        // return columns?.filter((key) => {
+        //   let col = item?.[key];
+        //   console.log(item?.[key], "");
+        //   return col?.length
+        //     ? col?.toLowerCase()?.indexOf(searchValue?.toLowerCase()) !== -1
+        //     : null;
+      });
+      // console.log(newList);
+      setItemOffset(1);
+      setFilterList(newList);
+      setCurrentItems(filterList?.slice(0, itemsPerPage));
+    } else {
+      setFilterList(data);
+      setCurrentItems(filterList?.slice(0, itemsPerPage));
+    }
+  }, [searchValue]);
 
   const handelSelect = useCallback(
     (itemId) => {
       if (selectedList[itemId]) {
         let newSelectedList = selectedList;
         delete newSelectedList[itemId];
-        selectedList(newSelectedList);
+        setSelectedList((prev) => {
+          return {
+            ...prev,
+            ...newSelectedList,
+          };
+        });
       } else {
         setSelectedList((prev) => {
           return {
@@ -35,7 +80,6 @@ const SuperTable = ({ columns, data, allowSelect }) => {
     },
     [selectedList]
   );
-
   const handleSelectedAll = useCallback(
     (e) => {
       if (!e?.target?.checked) {
@@ -43,38 +87,121 @@ const SuperTable = ({ columns, data, allowSelect }) => {
       } else {
         let newList = {};
         for (const key in data) {
-          newList[data?.[key]?.id] = data?.[key]?.id;
+          newList[data?.[key]?.Guid] = data?.[key]?.Guid;
         }
         setSelectedList(newList);
       }
     },
     [selectedList]
   );
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setCurrentItems(filterList?.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(filterList?.length / itemsPerPage));
+  }, [itemsPerPage]);
 
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % filterList?.length;
+    setItemOffset(newOffset);
+  };
+  useEffect(() => {}, [refresh]);
+  const sortBy = async (col) => {
+    console.table(currentItems);
+    let promise = new Promise((resolve, reject) => {
+      let list = currentItems?.sort((a, b) => {
+        if (sorting[col] === "asc") {
+          sorting[col] = "desc";
+          return a[col] > b[col] ? 1 : a[col] < b[col] ? -1 : 0;
+        } else {
+          sorting[col] = "asc";
+          return a[col] < b[col] ? 1 : a[col] > b[col] ? -1 : 0;
+        }
+      });
+      resolve(list);
+    });
+    promise.then((d) => {
+      setRefresh((prev) => !prev);
+      setCurrentItems(d);
+    });
+  };
   return (
-    <Table>
-      <TableHead>
-        {allowSelect ? <CheckboxField onChange={handleSelectedAll} /> : null}
-        {columns?.map((col) => (
-          <TableCol head>{col}</TableCol>
-        ))}
-      </TableHead>
-      <TableBody>
-        {filterList?.map((row) => (
-          <TableRow>
-            {allowSelect ? (
-              <CheckboxField
-                checked={!!selectedList[row?.id]}
-                onChange={() => handelSelect(row?.id)}
+    <>
+      <Table>
+        <TableHead>
+          {allowSelect ? (
+            <TableCol head>
+              {" "}
+              <input
+                type="checkbox"
+                className="w-4 h-4 "
+                onChange={handleSelectedAll}
               />
-            ) : null}
-            {columns?.map((col) => (
-              <TableCol>{row[col]}</TableCol>
-            ))}
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+            </TableCol>
+          ) : null}
+          {columns?.map((col) => (
+            <TableHeadCol sort sortBy={sortBy}>
+              {col}
+            </TableHeadCol>
+          ))}
+        </TableHead>
+        <TableBody>
+          {currentItems?.map((row) => {
+            return (
+              <TableRow
+                classes={`border-b dark:border-borderdark ${
+                  !!selectedList[row?.Guid] ? "bg-gray-100 dark:bg-[#1115]" : ""
+                }`}
+              >
+                {allowSelect ? (
+                  <TableCol>
+                    <input
+                      className="w-4 h-4"
+                      type="checkbox"
+                      checked={!!selectedList[row?.Guid]}
+                      onChange={() => handelSelect(row?.Guid)}
+                    />
+                  </TableCol>
+                ) : null}
+                {columns?.map((col) => {
+                  if (col === "CDate") {
+                    let date = new Date(row[col]).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    });
+                    return (
+                      <TableCol classes="whitespace-nowrap">{date}</TableCol>
+                    );
+                  } else return <TableCol>{row[col]}</TableCol>;
+                })}
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+      <ReactPaginate
+        breakLabel="..."
+        nextLabel={
+          <span className="flex  scale-75 -rotate-90">
+            <ChevronIcon />
+          </span>
+        }
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={5}
+        pageCount={pageCount}
+        previousLabel={
+          <span className="flex scale-75  rotate-90">
+            <ChevronIcon />
+          </span>
+        }
+        renderOnZeroPageCount={null}
+        className="pagination flex gap-6 items-center shadow p-3"
+        activeClassName="bg-blue-500 p-1 px-2 rounded text-sm text-white"
+        previousClassName="rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
+        nextClassName="rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
+        disabledClassName="text-gray-200 dark:text-gray-600"
+      />
+    </>
   );
 };
 

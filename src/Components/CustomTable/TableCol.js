@@ -1,16 +1,11 @@
 import React from "react";
+import { SortIcon } from "../../Helpers/Icons";
 
-const TableCol = ({ children, scope, classes, head = false }) => {
+const TableCol = ({ children, scope, classes, sort, sortBy, head = false }) => {
   return (
-    <>
-      {head ? (
-        <th scope={scope ? scope : "col"} className={`px-4 py-2 ${classes}`}>
-          {children}
-        </th>
-      ) : (
-        <td className={`px-4 py-2 ${classes}`}>{children}</td>
-      )}
-    </>
+    <td scope={scope ? scope : 1} className={`px-4 py-2 ${classes}`}>
+      {children}
+    </td>
   );
 };
 

@@ -1,6 +1,8 @@
+import {DropDowns} from "../functions";
+
 export const customer = [
   { name: "Number", type: "number", label: "Number", required: false },
-  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: [] },
+  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: DropDowns('SecLvl') },
   { name: "Barcode", type: "text", label: "Barcode", required: false },
   { name: "Name", type: "text", label: "Name", required: false },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
@@ -446,7 +448,7 @@ const Shop_Fixed_assets = [
  const Villa_Assets = [
   {
     name: "AssetsGuid",
-    type: "unique",
+    key: "unique",
     label: "AssetsGuid",
     required: false,
     list: [],
@@ -561,7 +563,7 @@ const Parking_Details = [
 // starting RentInfo
 export const RentInfo = [
   { name: "Number", type: "number", label: "Number", required: false },
-  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: [] },
+  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: DropDowns('SecLvl') },
   { name: "Name", type: "text", label: "Name", required: false },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
   { name: "Adjective", type: "text", label: "Adjective", required: false },
@@ -611,7 +613,7 @@ export const Landcontract = [
     label: "DeliverDate",
     required: false,
   },
-  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: [] },
+  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: DropDowns('SecLvl') },
   { name: "Mark", type: "checkbox", label: "Mark", required: false },
   {
     name: "IsAutoRenewal",
@@ -1095,7 +1097,7 @@ export const Landcontract = [
 // starting Owner
 export const Owner = [
   { name: "Number", type: "number", label: "Number", required: false },
-  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: [] },
+  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: DropDowns('SecLvl') },
   { name: "Name", type: "text", label: "Name", required: false },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
   { name: "Nationality", type: "text", label: "Nationality", required: false },

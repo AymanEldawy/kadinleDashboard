@@ -45,14 +45,14 @@ const LanguageBar = () => {
       </button>
 
       {open ? (
-        <ul className="absolute bg-white left-0 p-3 px-6 min-w-[200px] dark:bg-bgmaindark dark:text-gray-200 shadow rounded-md top-12 z-50 text-gray-500 text-sm flex flex-col gap-3">
+        <ul className="absolute bg-white left-0 p-3 px-6 min-w-[200px] dark:bg-bgmaindark shadow rounded-md top-12 z-50 text-gray-500 text-sm flex flex-col gap-3">
           {languages?.map((language) => (
             <li
               onClick={() => {
                 changeLanguage(language);
                 setOpen(false);
               }}
-              className="flex items-center gap-4 cursor-pointer font-medium hover:text-gray-900"
+              className="flex items-center gap-4 cursor-pointer font-medium hover:text-gray-900 dark:hover:text-gray-200"
             >
               <img
                 className="w-4 h-4"

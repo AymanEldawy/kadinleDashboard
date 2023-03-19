@@ -1,4 +1,4 @@
-import { account, cost, currency } from "./account";
+import { account, cost, Currency } from "./account";
 import { testentry } from "./testentry";
 import {
   customer,
@@ -14,6 +14,7 @@ import {
 import { mat, matgroup, Store } from "./materials";
 import { Assets, AssetsGroup } from "./assets";
 import { FlatContractFee } from "./transactions";
+import {DropDowns} from "../functions";
 
 // Manual page
 const building = [
@@ -58,7 +59,7 @@ const building = [
     key: "select",
     name: "SecLvl",
     label: "SecLvl",
-    list: [],
+    list: DropDowns("SecLvl"),
   },
 
   // step 2
@@ -99,7 +100,7 @@ const building = [
     key: "select",
     name: "SecLvl",
     label: "SecLvl",
-    list: [],
+    list: DropDowns("SecLvl"),
   },
   // step 3
   {
@@ -198,7 +199,7 @@ const building = [
     key: "select",
     name: "SecLvl",
     label: "SecLvl",
-    list: [],
+    list: DropDowns("SecLvl"),
   },
   // step 4
   // Purchase
@@ -337,7 +338,7 @@ const leaseapartment = [
     key: "select",
     label: "NewState",
     required: false,
-    list: [],
+    list: DropDowns("NewState"),
   }, // select
   { name: "Purpose", type: "text", label: "Purpose", required: false },
   {
@@ -454,7 +455,7 @@ const leaseapartment = [
     key: "select",
     label: "RentDuration",
     required: false,
-    list: [],
+    list: DropDowns("RentDuration"),
   }, // select
   {
     name: "FromDate",
@@ -468,7 +469,7 @@ const leaseapartment = [
     key: "select",
     label: "PayType",
     required: false,
-    list: [],
+    list: DropDowns("PayType"),
   }, // select
   { name: "CostGuid", type: "text", label: "CostGuid", required: false },
   {
@@ -733,7 +734,7 @@ export default {
   // Account
   account,
   cost,
-  currency,
+  Currency,
   // cards
   customer,
   salesman,

@@ -6,8 +6,6 @@ const Footer = () => {
     let bodyHeight = document.body.getClientRects()[0].height;
     let warperHeight = document.getElementById("layout-wrapper").clientHeight;
     if (bodyHeight > warperHeight) {
-      console.log(bodyHeight, warperHeight)
-      console.log("raun..ong");
       setExtraClasses("fixed bottom-0 left-0 w-full");
     }
   }, []);

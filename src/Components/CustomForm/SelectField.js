@@ -5,8 +5,8 @@ const SelectField = ({
   error,
   className,
   list,
-  keyLabel = "name",
-  keyValue = "id",
+  // keyLabel = "name",
+  // keyValue = "id",
   ...field
 }) => {
   return (
@@ -20,8 +20,11 @@ const SelectField = ({
         }`}
         {...field}
       >
+        <option>Choose...</option>
         {list?.map((item) => (
-          <option className="p-1" value={item[keyValue]}>{item[keyLabel]}</option>
+          <option className="p-1" value={item}>
+            {item}
+          </option>
         ))}
       </select>
       {error ? (

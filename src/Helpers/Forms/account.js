@@ -1,6 +1,14 @@
+import { DropDowns } from "../functions";
+
 export const account = [
   { name: "Number", type: "number", label: "Number", required: false },
-  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: [] },
+  {
+    name: "SecLvl",
+    key: "select",
+    label: "SecLvl",
+    required: false,
+    list: DropDowns("SecLvl"),
+  },
   { name: "Name", type: "text", label: "Name", required: false },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
   { name: "Code", type: "text", label: "Code", required: false },
@@ -32,16 +40,28 @@ export const account = [
 
 export const cost = [
   { name: "Number", type: "number", label: "Number", required: false },
-  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: [] },
+  {
+    name: "SecLvl",
+    key: "select",
+    label: "SecLvl",
+    required: false,
+    list: DropDowns("SecLvl"),
+  },
   { name: "Code", type: "text", label: "Code", required: false },
   { name: "Name", type: "text", label: "Name", required: false },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
   { name: "ParentGUID", type: "text", label: "ParentGUID", required: false },
   { name: "Note", type: "text", label: "Note", required: false },
 ];
-export const currency = [
+export const Currency = [
   { name: "Number", type: "number", label: "Number", required: false },
-  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: [] },
+  {
+    name: "SecLvl",
+    key: "select",
+    label: "SecLvl",
+    required: false,
+    list: DropDowns("SecLvl"),
+  },
 
   { name: "Code", type: "text", label: "Code", required: false },
   { name: "LtnCode", type: "text", label: "LtnCode", required: false },

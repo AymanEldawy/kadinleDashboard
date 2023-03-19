@@ -1,0 +1,34 @@
+[No]
+[ComplaintGuid]
+[MaintenanceWorkerGuid]
+[StartDate]
+[EndExpectedDate]
+[WorkKInd]
+
+____________________
+
+Complaint details
+	Complaint No.
+	Issue date
+	Client
+	Building name
+	Flat
+	Problem description
+
+Close maintenance order
+	[CloseDate]
+	[OrderState]
+
+Fees
+	[EntryDate]
+	[EntryValue]
+	[EntryCurrencyGUID][currency]
+	[EntryCurrencyVal]
+	[DebitAccountGuid][account]
+	[CreditAccountGuid][account]
+	[DebitCostGuid][cost center]
+	[CreditCostGuid][cost center]
+	[EntryNote]
+
+Bills 
+	Grid: [BillOrderDetail]?

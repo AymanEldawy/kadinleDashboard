@@ -15,3 +15,8 @@ export { default as GearIcon } from './GearIcon'
 export { default as PuzzleIcon } from './PuzzleIcon';
 export { default as FullScreenIcon } from './FullScreenIcon';
 export { default as FitScreenIcon } from './FitScreenIcon';
+export { default as InformationIcon } from './InformationIcon';
+export { default as ExclamationTriangle } from './ExclamationTriangleIcon';
+export { default as CheckIcon } from './CheckIcon';
+export { default as HandStopIcon } from './HandStopIcon';
+export { default as SortIcon } from './SortIcon';

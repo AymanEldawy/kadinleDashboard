@@ -7,7 +7,7 @@ export const TableBar = ({
   onDeleteClick,
   onFilterClick,
   onSearchChange,
-  searchValue
+  searchValue,
 }) => {
   return (
     <div className="flex justify-between gap-2">

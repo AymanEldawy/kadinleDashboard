@@ -1,6 +1,14 @@
+import {DropDowns} from "../functions";
+
 export const mat = [
   { name: "Number", type: "number", label: "Number", required: false },
-  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: [] },
+  {
+    name: "SecLvl",
+    key: "select",
+    label: "SecLvl",
+    required: false,
+    list: DropDowns("SecLvl"),
+  },
   { name: "Code", type: "text", label: "Code", required: false },
   { name: "Name", type: "text", label: "Name", required: false },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
@@ -67,7 +75,13 @@ export const mat = [
 
 export const matgroup = [
   { name: "Number", type: "number", label: "Number", required: false },
-  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: [] },
+  {
+    name: "SecLvl",
+    key: "select",
+    label: "SecLvl",
+    required: false,
+    list: DropDowns("SecLvl"),
+  },
   { name: "Code", type: "text", label: "Code", required: false },
   { name: "Name", type: "text", label: "Name", required: false },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
@@ -77,7 +91,13 @@ export const matgroup = [
 
 export const Store = [
   { name: "Number", type: "number", label: "Number", required: false },
-  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: [] },
+  {
+    name: "SecLvl",
+    key: "select",
+    label: "SecLvl",
+    required: false,
+    list: DropDowns("SecLvl"),
+  },
   { name: "Code", type: "text", label: "Code", required: false },
   { name: "Name", type: "text", label: "Name", required: false },
   { name: "LtnName", type: "text", label: "LtnName", required: false },

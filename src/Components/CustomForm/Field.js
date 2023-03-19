@@ -62,7 +62,7 @@ const Field = ({
       ) : null}
       <div className="relative flex items-center ">
         <input
-          className={`border rounded placeholder:text-gray-600 dark:placeholder:text-gray-500 dark:text-white p-1 w-full invalid:text-gray-800  ${className}`}
+          className={`border rounded  placeholder:text-gray-800 dark:placeholder:text-gray-500 dark:text-white p-1 w-full invalid:text-gray-800  ${className}`}
           type="text"
           id="myInput"
           value={value}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import Layout from "../../Layout";
@@ -11,9 +11,10 @@ import Modal from "../../Components/Modal/Modal";
 import { TableBar } from "../../Components/TableBar/TableBar";
 import SuperTable from "../../Components/CustomTable/SuperTable";
 import { useCallback } from "react";
+import axios from "axios";
+import { AlertContext } from "../../Context/AlertContext";
 
 function getForm(form) {
-  console.log(formsApi);
   return formsApi[form];
 }
 function getColumns(table) {
@@ -34,49 +35,88 @@ const List = () => {
   const [activeStage, setActiveStage] = useState("");
   const [fields, setFields] = useState([]);
   const [columns, setColumns] = useState([]);
+  const [data, setData] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { alertMessage, dispatchAlert } = useContext(AlertContext);
+  const [selectedList, setSelectedList] = useState({});
   // Get data
   let singleList = useMemo(() => getForm(name), [name]);
   const forms = singleList?.forms;
   const steps = singleList?.steps;
   // storage data
-  let data = [];
   // check if form is more then step
   const check = () => {
     if (steps?.length) {
-      console.log(".....", forms, steps);
       setActiveStage(steps?.[0]);
-      console.log(forms[steps?.[0]]);
       setFields(forms[steps?.[0]]);
-      console.log(fields);
       setColumns(getAllColumns(forms));
     } else {
       setColumns(getColumns(singleList));
       setFields(singleList);
     }
   };
+  const getData = async () => {
+    setLoading(true);
+    await axios
+      .post(`/list`, {
+        table: name,
+      })
+      .then((res) => {
+        console.log(res);
+        setLoading(false);
+        setData(res?.data?.recordset);
+      });
+    setLoading(false);
+  };
   useEffect(() => {
     check();
-  }, []);
+    getData();
+  }, [name]);
 
   // Handel Submit
   const onSubmit = async (values) => {
     let body = {
       dat: values,
       columns: Object.keys(values),
-      table: "account",
+      table: name,
     };
-    let result = await fetch(`http://localhost:3001/create`, {
-      method: "POST",
-      body,
+    let res = await axios.post(`/create`, {
+      ...body,
     });
+    if (res?.statusText === "OK") {
+      dispatchAlert({
+        open: true,
+        type: "success",
+        msg: "Added Successfully...",
+      });
+      // setTimeout(() => )
+      setOpen(false);
+    } else {
+    }
   };
 
+  const deleteItem = async () => {
+    console.log(selectedList);
+    setLoading(true);
+    // for (const item of Object.keys(selectedList)) {
+      await axios
+        .post(`/delete`, {
+          table: name,
+          Guid: +item,
+        })
+        .then((res) => {
+          console.log(res);
+          setLoading(false);
+        });
+    // }
+    setLoading(false);
+  };
   const changeTab = (tabName) => {
     setTab(tabName);
     setFields(forms[tabName]);
     setActiveStage(tabName);
   };
-  console.log(columns);
   return (
     <>
       <Modal open={open} onClose={() => setOpen(false)}>
@@ -97,7 +137,7 @@ const List = () => {
             </>
           ) : (
             <button
-              className={` p-2 flex-1 font-medium capitalize border-l-4  text-left text-lg !text-blue-500 bg-blue-50 border-blue-500 `}
+              className={` p-2 flex-1 font-medium capitalize border-l-4 dark:bg-borderdark text-left text-lg !text-blue-500 bg-blue-50 border-blue-500 `}
             >
               {name}
             </button>
@@ -106,8 +146,23 @@ const List = () => {
         <SuperForm initialFields={fields} onSubmit={onSubmit} />
       </Modal>
       <BlockPaper title={name}>
-        <TableBar onAddClick={() => setOpen(true)} />
-        {!!columns ? <SuperTable columns={columns} data={data} /> : null}
+        <TableBar
+          onDeleteClick={deleteItem}
+          onAddClick={() => setOpen(true)}
+          onSearchChange={setSearchValue}
+          searchValue={searchValue}
+        />
+        {!!columns && !loading ? (
+          <SuperTable
+            deleteItem={deleteItem}
+            columns={columns}
+            data={data}
+            allowSelect
+            searchValue={searchValue}
+            selectedList={selectedList}
+            setSelectedList={setSelectedList}
+          />
+        ) : null}
       </BlockPaper>
     </>
   );

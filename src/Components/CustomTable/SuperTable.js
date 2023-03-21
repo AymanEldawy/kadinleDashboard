@@ -12,14 +12,13 @@ import TableCol from "./TableCol";
 import TableHead from "./TableHead";
 import TableHeadCol from "./TableHeadCol";
 import TableRow from "./TableRow";
-const itemsPerPage = 30; // dropdown to select item per number
 let sorting = {};
 const SuperTable = ({
   columns,
   data,
   allowSelect,
   searchValue,
-  // deleteItem,
+  itemsPerPage,
   selectedList,
   setSelectedList,
 }) => {
@@ -28,12 +27,18 @@ const SuperTable = ({
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(1);
   const [refresh, setRefresh] = useState(false);
+
   useEffect(() => {
     setFilterList(data);
   }, []);
-
   useEffect(() => {
-    if (searchValue) {
+    const endOffset = itemOffset + parseInt(itemsPerPage);
+    setCurrentItems(filterList?.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(filterList?.length / parseInt(itemsPerPage)));
+  }, [filterList, itemsPerPage, itemOffset]);
+  useEffect(() => {}, [refresh]);
+  useEffect(() => {
+    if (searchValue !== "") {
       let newList = data?.filter((item) => {
         // console.log(
         //   item?.Name?.toLowerCase()?.indexOf(searchValue?.toLowerCase())
@@ -94,27 +99,25 @@ const SuperTable = ({
     },
     [selectedList]
   );
-  useEffect(() => {
-    const endOffset = itemOffset + itemsPerPage;
-    setCurrentItems(filterList?.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(filterList?.length / itemsPerPage));
-  }, [itemsPerPage]);
 
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % filterList?.length;
     setItemOffset(newOffset);
   };
-  useEffect(() => {}, [refresh]);
   const sortBy = async (col) => {
     console.table(currentItems);
     let promise = new Promise((resolve, reject) => {
-      let list = currentItems?.sort((a, b) => {
-        if (sorting[col] === "asc") {
+      let list = currentItems?.sort(({ [col]: cola }, { [col]: colb }) => {
+        console.log(cola > colb);
+        console.log(colb < cola);
+        if (sorting[cola] === "asc") {
           sorting[col] = "desc";
-          return a[col] > b[col] ? 1 : a[col] < b[col] ? -1 : 0;
+          return cola <  colb;
+          // return a[col] > b[col] ? 1 : a[col] < b[col] ? -1 : 0;
         } else {
           sorting[col] = "asc";
-          return a[col] < b[col] ? 1 : a[col] > b[col] ? -1 : 0;
+          return colb > cola;
+          // return a[col] < b[col] ? 1 : a[col] > b[col] ? -1 : 0;
         }
       });
       resolve(list);
@@ -129,14 +132,13 @@ const SuperTable = ({
       <Table>
         <TableHead>
           {allowSelect ? (
-            <TableCol head>
-              {" "}
+            <TableHeadCol>
               <input
                 type="checkbox"
                 className="w-4 h-4 "
                 onChange={handleSelectedAll}
               />
-            </TableCol>
+            </TableHeadCol>
           ) : null}
           {columns?.map((col) => (
             <TableHeadCol sort sortBy={sortBy}>
@@ -164,13 +166,19 @@ const SuperTable = ({
                 ) : null}
                 {columns?.map((col) => {
                   if (col === "CDate") {
-                    let date = new Date(row[col]).toLocaleDateString("en-US", {
+                    let date = new Date(row[col]).toLocaleDateString("en-UK", {
                       year: "numeric",
-                      month: "short",
+                      month: "numeric",
                       day: "numeric",
+                      weekday: "short",
+                    });
+                    let time = new Date(row[col]).toLocaleTimeString("en-UK", {
+                      timeStyle: "short",
                     });
                     return (
-                      <TableCol classes="whitespace-nowrap">{date}</TableCol>
+                      <TableCol classes="whitespace-nowrap">
+                        {date} | {time}
+                      </TableCol>
                     );
                   } else return <TableCol>{row[col]}</TableCol>;
                 })}

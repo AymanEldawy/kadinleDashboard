@@ -107,6 +107,9 @@ body.dark .has-checked:has(input:checked) input {
 .pagination li {
   padding: .25rem .5rem
 }
+.sorting-hover:hover span {
+  opacity: 1;
+}
 /* Menu
 body.dark ul li button,
 body.dark ul li a {

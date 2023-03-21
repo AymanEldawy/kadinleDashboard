@@ -1180,6 +1180,9 @@ const OfferPrice_Prices = [
     type: "text",
     label: "SaleLastPriceDate",
     required: false,
+    // list: [...getData('')],
+    // keyLable: 'name',
+    // keyValue: "id"
   },
   // Prices
   // increasable
@@ -1292,6 +1295,7 @@ export const OfferPrice = {
     "Balance",
     "Pictures",
   ],
+  columns: [''],
   forms: {
     Units: OfferPrice_Units,
     Specifications: OfferPrice_Specifications,

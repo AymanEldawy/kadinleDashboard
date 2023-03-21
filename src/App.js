@@ -5,6 +5,8 @@ import Accounts from "./Components/Tables/Accounts/Accounts";
 import Chart from "./Pages/Chart/Chart";
 import Home from "./Pages/Home/Home";
 import List from "./Pages/List/List";
+import Building from "./Pages/ManualForms/Building";
+import LeaseApartment from "./Pages/ManualForms/LeaseApartment";
 // import Routes from "./Routes";
 function App() {
   return (
@@ -12,6 +14,9 @@ function App() {
     <div className="App ">
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/testentry" element={<TestEntry />} />
+        <Route path="/building" element={<Building />} />
+        <Route path="/LeaseApartment" element={<LeaseApartment />} />
         <Route path="/testentry" element={<TestEntry />} />
         <Route path="/list/:name" element={<List />} />
         <Route path="/chart/:name" element={<Chart />} />

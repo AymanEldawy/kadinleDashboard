@@ -1,4 +1,12 @@
-import { BanknoteIcon, BriefcaseIcon, BuildingIcon, GearIcon, PuzzleIcon, ToolsIcon, UserIcon } from "./Icons";
+import {
+  BanknoteIcon,
+  BriefcaseIcon,
+  BuildingIcon,
+  GearIcon,
+  PuzzleIcon,
+  ToolsIcon,
+  UserIcon,
+} from "./Icons";
 import ClipboardIcon from "./Icons/ClipboardIcon";
 
 export const menuData = [
@@ -60,7 +68,7 @@ export const menuData = [
     key: "cards",
     name: "Cards",
     link: "cards",
-    icon: <ClipboardIcon /> ,
+    icon: <ClipboardIcon />,
     children: [
       {
         key: "Customer",
@@ -70,7 +78,7 @@ export const menuData = [
       {
         key: "Building",
         name: "Building Card",
-        link: "/list/building",
+        link: "/building",
       },
       {
         key: "Flat",
@@ -205,7 +213,7 @@ export const menuData = [
               {
                 key: 1,
                 name: "Flat rent contract",
-                link: "/list/LeaseApartment",
+                link: "/LeaseApartment",
               },
               {
                 key: 2,

@@ -7,6 +7,7 @@ const SelectField = ({
   list,
   // keyLabel = "name",
   // keyValue = "id",
+  hideText,
   ...field
 }) => {
   return (
@@ -20,7 +21,7 @@ const SelectField = ({
         }`}
         {...field}
       >
-        <option>Choose...</option>
+        {!hideText ? <option>Choose...</option> : null}
         {list?.map((item) => (
           <option className="p-1" value={item}>
             {item}

@@ -14,6 +14,7 @@ import { useCallback } from "react";
 import axios from "axios";
 import { AlertContext } from "../../Context/AlertContext";
 
+
 function getForm(form) {
   return formsApi[form];
 }
@@ -27,6 +28,7 @@ function getAllColumns(table) {
   }
   return columns;
 }
+
 const List = () => {
   const params = useParams();
   const { name } = params;
@@ -39,6 +41,7 @@ const List = () => {
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(false);
   const { alertMessage, dispatchAlert } = useContext(AlertContext);
+  const [itemsPerPage, setItemsPerPage] = useState(20);
   const [selectedList, setSelectedList] = useState({});
   // Get data
   let singleList = useMemo(() => getForm(name), [name]);
@@ -91,32 +94,51 @@ const List = () => {
         msg: "Added Successfully...",
       });
       // setTimeout(() => )
+      getData();
       setOpen(false);
     } else {
     }
   };
 
   const deleteItem = async () => {
-    console.log(selectedList);
-    setLoading(true);
-    // for (const item of Object.keys(selectedList)) {
-      await axios
-        .post(`/delete`, {
-          table: name,
-          Guid: +item,
-        })
-        .then((res) => {
-          console.log(res);
-          setLoading(false);
-        });
-    // }
-    setLoading(false);
+    //   console.log(selectedList);
+    //   setLoading(true);
+    //   // for (const item of Object.keys(selectedList)) {
+    //   await axios
+    //     .post(`/delete`, {
+    //       table: name,
+    //       Guid: +item,
+    //     })
+    //     .then((res) => {
+    //       console.log(res);
+    //       setLoading(false);
+    //     });
+    //   // }
+    //   setLoading(false);
   };
   const changeTab = (tabName) => {
     setTab(tabName);
     setFields(forms[tabName]);
     setActiveStage(tabName);
   };
+
+  const goNext = () => {
+    let index = steps.indexOf(activeStage);
+    console.log(index);
+    if (index !== steps?.length) {
+      setActiveStage(steps?.[index + 1]);
+      setFields(forms[steps?.[index + 1]]);
+    } else return;
+  };
+  const goBack = () => {
+    let index = steps.indexOf(activeStage);
+    console.log(index);
+    if (index > 0) {
+      setActiveStage(steps?.[index - 1]);
+      setFields(forms[steps?.[index - 1]]);
+    } else return;
+  };
+
   return (
     <>
       <Modal open={open} onClose={() => setOpen(false)}>
@@ -143,7 +165,14 @@ const List = () => {
             </button>
           )}
         </div>
-        <SuperForm initialFields={fields} onSubmit={onSubmit} />
+        <SuperForm
+          initialFields={fields}
+          onSubmit={onSubmit}
+          goBack={goBack}
+          goNext={
+            steps?.length - 1 == steps?.indexOf(activeStage) ? undefined : goNext
+          }
+        />
       </Modal>
       <BlockPaper title={name}>
         <TableBar
@@ -151,9 +180,12 @@ const List = () => {
           onAddClick={() => setOpen(true)}
           onSearchChange={setSearchValue}
           searchValue={searchValue}
+          onSelectChange={setItemsPerPage}
+          itemsPerPage={itemsPerPage}
         />
         {!!columns && !loading ? (
           <SuperTable
+            itemsPerPage={itemsPerPage}
             deleteItem={deleteItem}
             columns={columns}
             data={data}

@@ -8,7 +8,7 @@ import InputField from "./InputField";
 import RadioField from "./RadioField";
 import SelectField from "./SelectField";
 
-const SuperForm = ({ onSubmit, initialFields }) => {
+const SuperForm = ({ onSubmit, initialFields, goBack, goNext }) => {
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -165,10 +165,28 @@ const SuperForm = ({ onSubmit, initialFields }) => {
           }
         })}
       </div>
-
-      <button className="rounded-md px-4 py-2 bg-blue-500 text-sm font-medium text-white ">
-        Submit
-      </button>
+      {!!goNext ? (
+        <div className="flex justify-between gap-4 items-center">
+          <button
+            type="button"
+            className="rounded-md px-4 py-2 bg-blue-500 text-sm font-medium text-white "
+            onClick={goBack}
+          >
+            prev
+          </button>
+          <button
+            type="button"
+            className="rounded-md px-4 py-2 bg-blue-500 text-sm font-medium text-white "
+            onClick={goNext}
+          >
+            Next
+          </button>
+        </div>
+      ) : (
+        <button className="rounded-md px-4 py-2 bg-blue-500 text-sm font-medium text-white ">
+          Submit
+        </button>
+      )}
     </form>
   );
 };

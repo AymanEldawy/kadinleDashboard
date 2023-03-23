@@ -5,14 +5,17 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./Context/ThemeContext";
 import { AlertProvider } from "./Context/AlertContext";
+import { PopupFormProvider } from "./Context/PopupFormContext";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <AlertProvider>
-          <App />
-        </AlertProvider>
+        <PopupFormProvider>
+          <AlertProvider>
+            <App />
+          </AlertProvider>
+        </PopupFormProvider>
       </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>

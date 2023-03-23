@@ -17,31 +17,58 @@ const TestEntryFormTable = ({
   return (
     <Table className="pb-8 overflow-auto max-h-[420px] dark:border-borderdark">
       <TableHead classes="dark:bg-[#555] dark:text-gray-200">
-        <TableCol classes="border border-gray-300 dark:border-borderdark !py-3" head>
+        <TableCol
+          classes="border border-gray-300 dark:border-borderdark !py-3"
+          head
+        >
           #
         </TableCol>
-        <TableCol classes="border border-gray-300 dark:border-borderdark !py-3" head>
+        <TableCol
+          classes="border border-gray-300 dark:border-borderdark !py-3"
+          head
+        >
           AcGuid
         </TableCol>
-        <TableCol classes="border border-gray-300 dark:border-borderdark !py-3" head>
+        <TableCol
+          classes="border border-gray-300 dark:border-borderdark !py-3"
+          head
+        >
           Debit
         </TableCol>
-        <TableCol classes="border border-gray-300 dark:border-borderdark !py-3" head>
+        <TableCol
+          classes="border border-gray-300 dark:border-borderdark !py-3"
+          head
+        >
           Credit
         </TableCol>
-        <TableCol classes="border border-gray-300 dark:border-borderdark !py-3" head>
+        <TableCol
+          classes="border border-gray-300 dark:border-borderdark !py-3"
+          head
+        >
           CurrencyGuid
         </TableCol>
-        <TableCol classes="border border-gray-300 dark:border-borderdark !py-3" head>
+        <TableCol
+          classes="border border-gray-300 dark:border-borderdark !py-3"
+          head
+        >
           CurrencyVal
         </TableCol>
-        <TableCol classes="border border-gray-300 dark:border-borderdark !py-3" head>
+        <TableCol
+          classes="border border-gray-300 dark:border-borderdark !py-3"
+          head
+        >
           Note
         </TableCol>
-        <TableCol classes="border border-gray-300 dark:border-borderdark !py-3" head>
+        <TableCol
+          classes="border border-gray-300 dark:border-borderdark !py-3"
+          head
+        >
           CostGuid
         </TableCol>
-        <TableCol classes="border border-gray-300 dark:border-borderdark !py-3" head>
+        <TableCol
+          classes="border border-gray-300 dark:border-borderdark !py-3"
+          head
+        >
           ObverseAcGuid
         </TableCol>
       </TableHead>
@@ -50,9 +77,12 @@ const TestEntryFormTable = ({
           .fill(0)
           .map((r, index) => (
             <TableRow>
-              <TableCol classes="!p-0 border dark:border-borderdark text-center">{index + 1}</TableCol>
+              <TableCol classes="!p-0 border dark:border-borderdark text-center">
+                {index + 1}
+              </TableCol>
               <TableCol classes="!p-0 border dark:border-borderdark">
                 <Field
+                  table="account"
                   className="min-w-[170px] border-0"
                   list={[]}
                   // label="AcGuid"
@@ -91,6 +121,7 @@ const TestEntryFormTable = ({
               </TableCol>
               <TableCol classes="!p-0 border dark:border-borderdark">
                 <Field
+                  table="Currency"
                   className="min-w-[170px] border-0"
                   list={[]}
                   // label="CurrencyGuid"
@@ -126,6 +157,7 @@ const TestEntryFormTable = ({
               </TableCol>
               <TableCol classes="!p-0 border dark:border-borderdark">
                 <Field
+                  table="cost"
                   className="min-w-[170px] border-0"
                   list={[]}
                   // label="CostGuid"
@@ -136,6 +168,7 @@ const TestEntryFormTable = ({
               </TableCol>
               <TableCol classes="!p-0 border dark:border-borderdark">
                 <Field
+                  table="account"
                   className="min-w-[170px] border-0"
                   list={[]}
                   // label="ObverseAcGuid"

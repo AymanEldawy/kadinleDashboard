@@ -1,4 +1,4 @@
-import { DropDowns } from "../functions";
+import { DropDowns, getData } from "../functions";
 
 export const account = [
   { name: "Number", type: "number", label: "Number", required: false },
@@ -16,10 +16,12 @@ export const account = [
   { name: "NSons", type: "number", label: "NSons", required: false },
   { name: "Note", type: "text", label: "Note", required: false },
   {
+    table: "Currency",
     name: "CurrencyGUID",
-    type: "text",
+    key: "unique",
     label: "CurrencyGUID",
     required: false,
+    list: getData("currency"),
   },
   {
     name: "CurrencyVal",
@@ -28,8 +30,15 @@ export const account = [
     required: false,
   },
   { name: "Type", type: "number", label: "Type", required: false },
-  { name: "ParentGUID", type: "text", label: "ParentGUID", required: false },
-  { name: "FinalGUID", type: "text", label: "FinalGUID", required: false },
+  {
+    table: "account",
+    name: "ParentGUID",
+    key: "unique",
+    label: "ParentGUID",
+    required: false,
+    list: getData("account"),
+  },
+  { name: "FinalGUID", type: "text", label: "FinalGUID", required: false }, // need to change
   { name: "MaxDebit", type: "number", label: "MaxDebit", required: false },
   { name: "MinDebit", type: "number", label: "MinDebit", required: false },
   { name: "MaxCredit", type: "number", label: "MaxCredit", required: false },
@@ -50,7 +59,14 @@ export const cost = [
   { name: "Code", type: "text", label: "Code", required: false },
   { name: "Name", type: "text", label: "Name", required: false },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
-  { name: "ParentGUID", type: "text", label: "ParentGUID", required: false },
+  {
+    table: "cost",
+    name: "ParentGUID",
+    key: "unique",
+    label: "ParentGUID",
+    required: false,
+    list: getData("account"),
+  },
   { name: "Note", type: "text", label: "Note", required: false },
 ];
 export const Currency = [

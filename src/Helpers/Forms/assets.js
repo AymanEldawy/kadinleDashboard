@@ -1,13 +1,26 @@
-import {DropDowns} from "../functions";
+import { DropDowns, getData } from "../functions";
 
 export const AssetsGroup = [
   { name: "Number", type: "number", label: "Number", required: false },
-  { name: "SecLvl", key: "select", label: "SecLvl", required: false, list: DropDowns('SecLvl') },
+  {
+    name: "SecLvl",
+    key: "select",
+    label: "SecLvl",
+    required: false,
+    list: DropDowns("SecLvl"),
+  },
   { name: "Code", type: "text", label: "Code", required: false },
   { name: "Name", type: "text", label: "Name", required: false },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
   { name: "Note", type: "text", label: "Note", required: false },
-  { name: "ParentGuid", type: "text", label: "ParentGuid", required: false },
+  {
+    table: "AssetGroup",
+    name: "ParentGuid",
+    key: "unique",
+    label: "ParentGuid",
+    required: false,
+    list: getData("account"),
+  },
 ];
 
 const Assets_General = [
@@ -18,16 +31,20 @@ const Assets_General = [
   { name: "Note", type: "text", label: "Note", required: false },
   { name: "IsActive", type: "checkbox", label: "IsActive", required: false },
   {
+    table: "Assets", // need to update
     name: "AssetsAreaGuid",
-    type: "text",
+    key: "unique",
     label: "AssetsAreaGuid",
     required: false,
+    list: getData("account"), //
   },
   {
+    table: "",
     name: "CurrentAssetsAreaGuid",
-    type: "text",
+    key: "unique",
     label: "CurrentAssetsAreaGuid",
     required: false,
+    list: [],
   },
   { name: "state", type: "text", label: "state", required: false },
   { name: "Origin", type: "text", label: "Origin", required: false },
@@ -36,75 +53,101 @@ const Assets_General = [
 
 const Assets_Accounts = [
   {
+    table: "",
     name: "AsstesAccountGuid",
-    type: "text",
+    key: "unique",
     label: "AsstesAccountGuid",
     required: false,
+    list: [],
   },
   {
+    table: "",
+
     name: "ExpenseAccountGuid",
-    type: "text",
+    key: "unique",
     label: "ExpenseAccountGuid",
     required: false,
+    list: [],
   },
   {
+    table: "",
+
     name: "DepreciationAccountGuid",
-    type: "text",
+    key: "unique",
     label: "DepreciationAccountGuid",
     required: false,
+    list: [],
   },
   {
+    table: "",
+
     name: "DepreciationTotalAccountGuid",
-    type: "text",
+    key: "unique",
     label: "DepreciationTotalAccountGuid",
     required: false,
+    list: [],
   },
   {
+    table: "",
+
     name: "ProfitAccountGuid",
-    type: "text",
+    key: "unique",
     label: "ProfitAccountGuid",
     required: false,
+    list: [],
   },
   {
+    table: "",
     name: "lossesAccountGuid",
-    type: "text",
+    key: "unique",
     label: "lossesAccountGuid",
     required: false,
+    list: [],
   },
   {
+    table: "",
     name: "EvaluationAccountGuid",
-    type: "text",
+    key: "unique",
     label: "EvaluationAccountGuid",
     required: false,
+    list: [],
   },
 ];
 const Assets_Input = [
   { name: "Importer", type: "text", label: "Importer", required: false },
   {
+    table: "",
     name: "EnterAccountGuid",
-    type: "text",
+    key: "unique",
     label: "EnterAccountGuid",
     required: false,
+    list: [],
   },
   { name: "EnterDate", type: "text", label: "EnterDate", required: false },
   { name: "EnterValue", type: "number", label: "EnterValue", required: false },
   {
+    table: "Currency",
     name: "CurrencyGUID",
-    type: "text",
+    key: "unique",
     label: "CurrencyGUID",
     required: false,
+    list: [],
   },
   {
+    table: "cost",
     name: "EnterCostGuid",
-    type: "text",
+    key: "unique",
     label: "EnterCostGuid",
     required: false,
+    list: [],
   },
   {
+    table: "",
     name: "EnterCreditCostGuid",
-    type: "text",
+    key: "unique",
     label: "EnterCreditCostGuid",
     required: false,
+    list: [],
   },
   { name: "EnterNote", type: "text", label: "EnterNote", required: false },
 ];
@@ -220,17 +263,21 @@ const Assets_Asset_sale = [
     required: false,
   },
   {
+    table: "",
     name: "SalesAccountGuid",
-    type: "text",
+    key: "unique",
     label: "SalesAccountGuid",
     required: false,
+    list: getData("account"),
   },
   { name: "SaleValue", type: "number", label: "SaleValue", required: false },
   {
+    table: "",
     name: "CurrencySaleGUID",
-    type: "text",
+    key: "unique",
     label: "CurrencySaleGUID",
     required: false,
+    list: getData("currency"),
   },
   {
     name: "CurrencySaleVal",
@@ -261,4 +308,3 @@ export const Assets = {
     "Asset sale": Assets_Asset_sale,
   },
 };
-

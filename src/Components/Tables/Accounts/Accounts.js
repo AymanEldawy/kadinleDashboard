@@ -31,32 +31,38 @@ const Accounts = () => {
     setFilterList(newList);
   }, []);
 
-  const handelSelect = useCallback((itemId) => {
-    if (selectedList[itemId]) {
-      let newSelectedList = selectedList;
-      delete newSelectedList[itemId];
-      selectedList(newSelectedList);
-    } else {
-      setSelectedList((prev) => {
-        return {
-          ...prev,
-          [itemId]: itemId,
-        };
-      });
-    }
-  }, [selectedList]);
-  const handleSelectedAll = useCallback((e) => {
-    if (!e?.target?.checked) {
-      setSelectedList({});
-    } else {
-      let newList = {};
-      for (const key in list) {
-        newList[list?.[key]?.id] = list?.[key]?.id;
+  const handelSelect = useCallback(
+    (itemId) => {
+      if (selectedList[itemId]) {
+        let newSelectedList = selectedList;
+        delete newSelectedList[itemId];
+        selectedList(newSelectedList);
+      } else {
+        setSelectedList((prev) => {
+          return {
+            ...prev,
+            [itemId]: itemId,
+          };
+        });
       }
-      setSelectedList(newList);
-    }
-    console.log(list);
-  }, [selectedList]);
+    },
+    [selectedList]
+  );
+  const handleSelectedAll = useCallback(
+    (e) => {
+      if (!e?.target?.checked) {
+        setSelectedList({});
+      } else {
+        let newList = {};
+        for (const key in list) {
+          newList[list?.[key]?.id] = list?.[key]?.id;
+        }
+        setSelectedList(newList);
+      }
+      console.log(list);
+    },
+    [selectedList]
+  );
   return (
     <>
       <Modal open={open} onClose={() => setOpen(false)} />
@@ -114,7 +120,12 @@ const Accounts = () => {
                       checked={!!selectedList[item?.id]}
                       onChange={() => handelSelect(item?.id)}
                     />
-                    <Field list={list} getSelectedValue={refValue} onPlusClick={() => setOpen(true)} />
+                    <Field
+                      table="account"
+                      list={list}
+                      getSelectedValue={refValue}
+                      // onPlusClick={() => setOpen(true)}
+                    />
                   </div>
                 </TableCol>
                 <TableCol>Silver</TableCol>

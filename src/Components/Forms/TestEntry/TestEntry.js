@@ -78,6 +78,7 @@ const TestEntry = () => {
           onChange={(e) => handelChangeField("date", e.target.value)}
         />
         <Field
+          table="Currency"
           name="CurrencyGuid"
           label="Currency Guid"
           list={[]}

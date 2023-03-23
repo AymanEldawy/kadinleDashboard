@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useContext } from "react";
 import { useCallback } from "react";
+import { PopupFormContext } from "../../Context/PopupFormContext";
 import { PlusIcon } from "../../Helpers/Icons";
 
 const Field = ({
+  tableName,
   list,
   getSelectedValue,
   getSelectedValueRef,
@@ -14,31 +17,39 @@ const Field = ({
   className,
   ...field
 }) => {
+  console.log(field)
   const [value, setValue] = useState("");
   const [listFilter, setListFilter] = useState([]);
   const [selected, setSelected] = useState("");
   const [dropdown, setDropdown] = useState(false);
+  const { dispatchForm } = useContext(PopupFormContext);
   useEffect(() => {
     setListFilter(list || []);
   }, []);
-  const handelFilter = useCallback((val) => {
-    setValue(val);
-    if (val?.length > 0) setDropdown(true);
-    else setDropdown(false);
-    let newList = list?.filter(
-      (item) => item?.name?.toLowerCase().indexOf(val?.toLowerCase()) !== -1
-    );
-    setListFilter(newList);
-  }, [value]);
-  const handelSelected = useCallback((item) => {
-    setValue(item?.name);
-    setSelected(item);
-    setDropdown(false);
-    if (!!getSelectedValue) getSelectedValue(field?.name, item?.id);
-    if (!!getSelectedValueRef) getSelectedValueRef.current = item?.id;
-    if (!!getSelectedValueWithIndex)
-      getSelectedValueWithIndex(field?.index, field?.name, item?.id);
-  }, [selected]);
+  const handelFilter = useCallback(
+    (val) => {
+      setValue(val);
+      if (val?.length > 0) setDropdown(true);
+      else setDropdown(false);
+      let newList = list?.filter(
+        (item) => item?.name?.toLowerCase().indexOf(val?.toLowerCase()) !== -1
+      );
+      setListFilter(newList);
+    },
+    [value]
+  );
+  const handelSelected = useCallback(
+    (item) => {
+      setValue(item?.name);
+      setSelected(item);
+      setDropdown(false);
+      if (!!getSelectedValue) getSelectedValue(field?.name, item?.id);
+      if (!!getSelectedValueRef) getSelectedValueRef.current = item?.id;
+      if (!!getSelectedValueWithIndex)
+        getSelectedValueWithIndex(field?.index, field?.name, item?.id);
+    },
+    [selected]
+  );
 
   const onCancelMenu = () => {
     if (!listFilter?.length) {
@@ -83,7 +94,14 @@ const Field = ({
         <button
           type="button"
           className="absolute right-2 rtl:left-2 rtl:right-auto text-blue-500 hover:text-white rounded-full hover:bg-blue-400"
-          onClick={onPlusClick}
+          onClick={() => {
+            if (onPlusClick) onPlusClick();
+            console.log(tableName);
+            dispatchForm({
+              open: true,
+              table: field?.table,
+            });
+          }}
         >
           <PlusIcon />
         </button>

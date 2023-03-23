@@ -82,6 +82,7 @@ const SuperForm = ({ onSubmit, initialFields, goBack, goNext }) => {
           } else if (field?.key === "unique") {
             return (
               <Field
+                table={field?.table}
                 key={`${field?.name}-${i}`}
                 list={field?.list}
                 type={field?.type}

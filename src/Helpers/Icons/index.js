@@ -20,3 +20,6 @@ export { default as ExclamationTriangle } from './ExclamationTriangleIcon';
 export { default as CheckIcon } from './CheckIcon';
 export { default as HandStopIcon } from './HandStopIcon';
 export { default as SortIcon } from './SortIcon';
+export { default as FolderPlusIcon } from './FolderPlusIcon';
+export { default as FolderMinusIcon } from './FolderMinusIcon';
+export { default as FolderEmptyIcon } from './FolderEmptyIcon';

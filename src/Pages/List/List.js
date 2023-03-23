@@ -66,7 +66,6 @@ const List = () => {
         table: name,
       })
       .then((res) => {
-        console.log(res);
         setLoading(false);
         setData(res?.data?.recordset);
       });
@@ -138,6 +137,7 @@ const List = () => {
       setFields(forms[steps?.[index - 1]]);
     } else return;
   };
+  console.log(fields)
 
   return (
     <>

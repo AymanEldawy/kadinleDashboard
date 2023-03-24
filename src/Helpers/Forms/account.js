@@ -38,7 +38,7 @@ export const account = [
     required: false,
     list: getData("account"),
   },
-  { name: "FinalGUID", type: "text", label: "FinalGUID", required: false }, // need to change
+  { table: "account", name: "FinalGUID", key: "unique", label: "FinalGUID", required: false, list: [] }, // need to change
   { name: "MaxDebit", type: "number", label: "MaxDebit", required: false },
   { name: "MinDebit", type: "number", label: "MinDebit", required: false },
   { name: "MaxCredit", type: "number", label: "MaxCredit", required: false },

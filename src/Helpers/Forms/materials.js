@@ -1,4 +1,4 @@
-import {DropDowns} from "../functions";
+import { DropDowns } from "../functions";
 
 export const mat = [
   { name: "Number", type: "number", label: "Number", required: false },
@@ -24,13 +24,22 @@ export const mat = [
   { name: "unityfix2", type: "checkbox", label: "unityfix2", required: false },
   { name: "unityfix3", type: "checkbox", label: "unityfix3", required: false },
   { name: "Note", type: "text", label: "Note", required: false },
-  { name: "GroupGuid", type: "text", label: "GroupGuid", required: false },
+  {
+    table: "",
+    name: "GroupGuid",
+    type: "unique",
+    label: "GroupGuid",
+    required: false,
+    list: [],
+  },
   { name: "MatType", type: "number", label: "MatType", required: false },
   {
+    table: "Currency",
     name: "CurrencyGuid",
-    type: "text",
+    type: "unique",
     label: "CurrencyGuid",
     required: false,
+    list: [],
   },
   {
     name: "CurrencyVal",
@@ -86,7 +95,14 @@ export const matgroup = [
   { name: "Name", type: "text", label: "Name", required: false },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
   { name: "Note", type: "text", label: "Note", required: false },
-  { name: "ParentGuid", type: "text", label: "ParentGuid", required: false },
+  {
+    table: "",
+    name: "ParentGuid",
+    type: "unique",
+    label: "ParentGuid",
+    required: false,
+    list: [],
+  },
 ];
 
 export const Store = [
@@ -109,6 +125,20 @@ export const Store = [
     required: false,
   },
   { name: "Note", type: "text", label: "Note", required: false },
-  { name: "ParentGuid", type: "text", label: "ParentGuid", required: false },
-  { name: "AcFinalGUID", type: "text", label: "AcFinalGUID", required: false },
+  {
+    table: "",
+    name: "ParentGuid",
+    type: "unique",
+    label: "ParentGuid",
+    required: false,
+    list: [],
+  },
+  {
+    table: "",
+    name: "AcFinalGUID",
+    type: "unique",
+    label: "AcFinalGUID",
+    required: false,
+    list: [],
+  },
 ];

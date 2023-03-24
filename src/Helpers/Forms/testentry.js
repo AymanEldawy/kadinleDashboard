@@ -1,5 +1,6 @@
 export const testentry = [
   {
+    table: "account",
     key: "unique",
     name: "AcGuid",
     label: "AcGuid",
@@ -27,6 +28,7 @@ export const testentry = [
     required: true,
   },
   {
+    table: "Currency",
     key: "unique",
     name: "CurrencyGuid",
     label: "CurrencyGuid",
@@ -48,6 +50,7 @@ export const testentry = [
     required: true,
   },
   {
+    table: "cost",
     key: "unique",
     name: "CostGuid",
     label: "CostGuid",
@@ -57,6 +60,7 @@ export const testentry = [
     keyValue: "id",
   },
   {
+    table: "",
     key: "unique",
     name: "ObverseAcGuid",
     label: "ObverseAcGuid",

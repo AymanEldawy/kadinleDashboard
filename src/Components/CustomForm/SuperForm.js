@@ -8,7 +8,14 @@ import InputField from "./InputField";
 import RadioField from "./RadioField";
 import SelectField from "./SelectField";
 
-const SuperForm = ({ onSubmit, initialFields, goBack, goNext }) => {
+const SuperForm = ({
+  onSubmit,
+  initialFields,
+  goBack,
+  goNext,
+  allowSteps,
+  oldValues,
+}) => {
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -17,9 +24,15 @@ const SuperForm = ({ onSubmit, initialFields, goBack, goNext }) => {
   useEffect(() => {
     setErrors({});
     setTouched({});
-    setValues({});
+    // setValues({});
   }, [location?.pathname]);
-
+  useEffect(() => {
+    if (oldValues) {
+      console.log(oldValues);
+      setValues(oldValues);
+    }
+    console.log(",", values);
+  }, [oldValues]);
   const insertIntoErrors = (name, value) => {
     if (value === "") {
       setErrors((prev) => {
@@ -65,6 +78,7 @@ const SuperForm = ({ onSubmit, initialFields, goBack, goNext }) => {
           if (field?.key === "input") {
             return (
               <InputField
+                value={values?.[field?.name] || ""}
                 key={`${field?.name}-${i}`}
                 type={field?.type}
                 name={field?.name}
@@ -82,6 +96,7 @@ const SuperForm = ({ onSubmit, initialFields, goBack, goNext }) => {
           } else if (field?.key === "unique") {
             return (
               <Field
+                value={values?.[field?.name] || ""}
                 table={field?.table}
                 key={`${field?.name}-${i}`}
                 list={field?.list}
@@ -96,6 +111,7 @@ const SuperForm = ({ onSubmit, initialFields, goBack, goNext }) => {
           } else if (field?.key === "radio") {
             return (
               <RadioField
+                defaultChecked={values?.[field?.name] || ""}
                 key={`${field?.name}-${i}`}
                 label={field?.label}
                 name={field?.name}
@@ -113,6 +129,7 @@ const SuperForm = ({ onSubmit, initialFields, goBack, goNext }) => {
           } else if (field?.key === "select") {
             return (
               <SelectField
+                defaultValue={values?.[field?.name] || ""}
                 key={`${field?.name}-${i}`}
                 name={field?.name}
                 label={field?.label}
@@ -132,6 +149,7 @@ const SuperForm = ({ onSubmit, initialFields, goBack, goNext }) => {
           } else if (field?.key === "checkbox") {
             return (
               <CheckboxField
+                defaultChecked={values?.[field?.name] || ""}
                 key={`${field?.name}-${i}`}
                 label={field?.label}
                 name={field?.name}
@@ -149,6 +167,7 @@ const SuperForm = ({ onSubmit, initialFields, goBack, goNext }) => {
           } else {
             return (
               <InputField
+                value={values?.[field?.name] || ""}
                 key={`${field?.name}-${i}`}
                 name={field?.name}
                 type={field?.type}
@@ -166,8 +185,8 @@ const SuperForm = ({ onSubmit, initialFields, goBack, goNext }) => {
           }
         })}
       </div>
-      {!!goNext ? (
-        <div className="flex justify-between gap-4 items-center">
+      <div className="flex justify-between gap-4 items-center">
+        {allowSteps ? (
           <button
             type="button"
             className="rounded-md px-4 py-2 bg-blue-500 text-sm font-medium text-white "
@@ -175,6 +194,8 @@ const SuperForm = ({ onSubmit, initialFields, goBack, goNext }) => {
           >
             prev
           </button>
+        ) : null}
+        {!!goNext && allowSteps ? (
           <button
             type="button"
             className="rounded-md px-4 py-2 bg-blue-500 text-sm font-medium text-white "
@@ -182,12 +203,12 @@ const SuperForm = ({ onSubmit, initialFields, goBack, goNext }) => {
           >
             Next
           </button>
-        </div>
-      ) : (
-        <button className="rounded-md px-4 py-2 bg-blue-500 text-sm font-medium text-white ">
-          Submit
-        </button>
-      )}
+        ) : (
+          <button className="rounded-md px-4 py-2 bg-blue-500 text-sm font-medium text-white ">
+            Submit
+          </button>
+        )}
+      </div>
     </form>
   );
 };

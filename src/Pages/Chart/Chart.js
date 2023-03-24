@@ -4,6 +4,7 @@ import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import axios from "axios";
 import { useCallback } from "react";
 import RenderTree from "../../Components/RenderTree/RenderTree";
+import SuperForm from "../../Components/CustomForm/SuperForm";
 
 function toTree(data, pid = null) {
   return data.reduce((r, e) => {
@@ -23,7 +24,6 @@ const Chart = () => {
   const [chartTree, setChartTree] = useState();
   const params = useParams();
   const { name } = params;
-
   const getData = async () => {
     setLoading(true);
     await axios
@@ -43,7 +43,7 @@ const Chart = () => {
 
   return (
     <BlockPaper title="Chart">
-      {!loading ? <RenderTree chartTree={chartTree} /> : null}
+      {!loading ? <RenderTree chartTree={chartTree} name={name} /> : null}
     </BlockPaper>
   );
 };

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useCallback } from "react";
 import { useState } from "react";
 import ReactPaginate from "react-paginate";
+import { Link } from "react-router-dom";
 import ChevronIcon from "../../Helpers/Icons/ChevronIcon";
 import CheckboxField from "../CustomForm/CheckboxField";
 import Checkbox from "../Global/Checkbox";
@@ -21,6 +22,7 @@ const SuperTable = ({
   itemsPerPage,
   selectedList,
   setSelectedList,
+  table,
 }) => {
   const [filterList, setFilterList] = useState(data);
   const [itemOffset, setItemOffset] = useState(0);
@@ -40,9 +42,6 @@ const SuperTable = ({
   useEffect(() => {
     if (searchValue !== "") {
       let newList = data?.filter((item) => {
-        // console.log(
-        //   item?.Name?.toLowerCase()?.indexOf(searchValue?.toLowerCase())
-        // );
         return (
           item?.Name?.toLowerCase()?.indexOf(searchValue?.toLowerCase()) !== -1
         );
@@ -53,7 +52,6 @@ const SuperTable = ({
         //     ? col?.toLowerCase()?.indexOf(searchValue?.toLowerCase()) !== -1
         //     : null;
       });
-      // console.log(newList);
       setItemOffset(1);
       setFilterList(newList);
       setCurrentItems(filterList?.slice(0, itemsPerPage));
@@ -105,27 +103,21 @@ const SuperTable = ({
     setItemOffset(newOffset);
   };
   const sortBy = async (col) => {
-    console.table(currentItems);
-    let promise = new Promise((resolve, reject) => {
-      let list = currentItems?.sort(({ [col]: cola }, { [col]: colb }) => {
-        console.log(cola > colb);
-        console.log(colb < cola);
-        if (sorting[cola] === "asc") {
-          sorting[col] = "desc";
-          return cola <  colb;
-          // return a[col] > b[col] ? 1 : a[col] < b[col] ? -1 : 0;
-        } else {
-          sorting[col] = "asc";
-          return colb > cola;
-          // return a[col] < b[col] ? 1 : a[col] > b[col] ? -1 : 0;
-        }
-      });
-      resolve(list);
+    const list = [...currentItems];
+    const newSortOrder = sorting[col] === "asc" ? "desc" : "asc";
+    list.sort((a, b) => {
+      const valueA = a[col];
+      const valueB = b[col];
+      if (typeof valueA === "string") {
+        return newSortOrder === "asc"
+          ? valueA.localeCompare(valueB)
+          : valueB.localeCompare(valueA);
+      }
+      return newSortOrder === "asc" ? valueA - valueB : valueB - valueA;
     });
-    promise.then((d) => {
-      setRefresh((prev) => !prev);
-      setCurrentItems(d);
-    });
+    setCurrentItems(list);
+    setRefresh((prev) => !prev);
+    sorting[col] = newSortOrder;
   };
   return (
     <>
@@ -150,7 +142,7 @@ const SuperTable = ({
           {currentItems?.map((row) => {
             return (
               <TableRow
-                classes={`border-b dark:border-borderdark ${
+                classes={`border-b dark:border-borderdark whitespace-nowrap ${
                   !!selectedList[row?.Guid] ? "bg-gray-100 dark:bg-[#1115]" : ""
                 }`}
               >
@@ -182,6 +174,15 @@ const SuperTable = ({
                     );
                   } else return <TableCol>{row[col]}</TableCol>;
                 })}
+                <TableCol>
+                  <Link
+                    className="hover:underline text-blue-500"
+                    to={`/update/${table}/${row?.Guid}`}
+                    state={{ row, table }}
+                  >
+                    Edit
+                  </Link>
+                </TableCol>
               </TableRow>
             );
           })}

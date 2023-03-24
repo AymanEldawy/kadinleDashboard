@@ -1,5 +1,7 @@
 import React, { useCallback } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
+import formsApi from "../../Helpers/Forms/formsApi";
 import {
   FolderEmptyIcon,
   FolderMinusIcon,
@@ -7,6 +9,7 @@ import {
   PlusIcon,
   TrashIcon,
 } from "../../Helpers/Icons";
+import SuperForm from "../CustomForm/SuperForm";
 import Modal from "../Modal/Modal";
 
 const TreeViewItem = ({ itemName, icon, toggleOpen, onSelectedItem }) => {
@@ -33,9 +36,14 @@ const TreeViewItem = ({ itemName, icon, toggleOpen, onSelectedItem }) => {
   );
 };
 
-const RenderTree = ({ chartTree }) => {
+const RenderTree = ({ chartTree, name }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [open, setOpen] = useState({});
+  const [fields, setFields] = useState([]);
+  useEffect(() => {
+    setFields(formsApi[name]);
+  }, []);
+
   const toggleOpen = (itemId, level) => {
     console.log(itemId, "r");
     if (open[level] === itemId) {
@@ -57,7 +65,6 @@ const RenderTree = ({ chartTree }) => {
 
   const renderTree = useCallback(
     (tree, level = 1) => {
-      console.log(level);
       return tree?.map((item) => {
         return (
           <li className="space-x-3 w-fit mt-2 mb-2 last:mb-0">
@@ -101,14 +108,25 @@ const RenderTree = ({ chartTree }) => {
     },
     [open, toggleOpen]
   );
-
+  let oldValues = selectedItem?.FinalGUID
+    ? {
+        ParentGUID: selectedItem?.ParentGUID,
+        FinalGUID: selectedItem?.FinalGUID,
+      }
+    : {
+        ParentGUID: selectedItem?.ParentGUID,
+      };
   return (
     <>
       <Modal open={!!selectedItem} onClose={() => setSelectedItem(null)}>
-        <p className="dark:text-white text-black font-medium text-lg mb-1">
-          Name: {selectedItem?.Name}
-        </p>
-        <p>id: {selectedItem?.Guid}</p>
+        <div className="flex items-center mb-8 text-left">
+          <button
+            className={` p-2 flex-1 font-medium capitalize border-l-4 dark:bg-borderdark text-left text-lg !text-blue-500 bg-blue-50 border-blue-500 `}
+          >
+            Create new {name}
+          </button>
+        </div>
+        <SuperForm initialFields={fields} oldValues={oldValues} />
       </Modal>
       <ul
         className={`relative pr-4 !ml-4 rounded-md dark:before:border-borderdark before:border-l-2 before:absolute before:left-0 before:-z-1 before:h-full color-level-0 after:opacity-50 after:w-4 after:h-full after:absolute after:top-0`}

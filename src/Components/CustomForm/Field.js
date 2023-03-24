@@ -17,7 +17,6 @@ const Field = ({
   className,
   ...field
 }) => {
-  console.log(field)
   const [value, setValue] = useState("");
   const [listFilter, setListFilter] = useState([]);
   const [selected, setSelected] = useState("");

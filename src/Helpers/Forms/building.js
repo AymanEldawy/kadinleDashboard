@@ -51,12 +51,21 @@ const Building_General_information = [
 
 const Building_account = [
   {
+    table: "",
     name: "BuildingAccountGuid",
-    type: "text",
+    key: "unique",
     label: "BuildingAccountGuid",
     required: false,
+    list: [],
   },
-  { name: "CostGuid", type: "text", label: "CostGuid", required: false },
+  {
+    table: "cost",
+    name: "CostGuid",
+    key: "unique",
+    label: "CostGuid",
+    required: false,
+    list: [],
+  },
   {
     name: "AccountBankBuildingGuid",
     type: "text",
@@ -64,25 +73,41 @@ const Building_account = [
     required: false,
   },
   {
+    table: "",
+
     name: "CashAccountGuid",
-    type: "text",
+    key: "unique",
     label: "CashAccountGuid",
     required: false,
+    list: [],
   },
   {
+    table: "",
+
     name: "InsuranceAccountGuid",
-    type: "text",
+    key: "unique",
     label: "InsuranceAccountGuid",
     required: false,
+    list: [],
   },
   {
+    table: "",
+
     name: "RentInfoGuid",
-    type: "text",
+    key: "unique",
     label: "RentInfoGuid",
     required: false,
+    list: [],
   },
   { name: "BankName", type: "text", label: "BankName", required: false },
-  { name: "AccountGuid", type: "text", label: "AccountGuid", required: false },
+  {
+    table: "account",
+    name: "AccountGuid",
+    key: "unique",
+    label: "AccountGuid",
+    required: false,
+    list: [],
+  },
 ];
 
 const Building_Add_flats = [
@@ -214,7 +239,14 @@ const Building_ownerships = [
     label: "CurrencyvalPurchase",
     required: false,
   },
-  { name: "AccountGuid", type: "text", label: "AccountGuid", required: false },
+  {
+    table: "account",
+    name: "AccountGuid",
+    key: "unique",
+    label: "AccountGuid",
+    required: false,
+    list: [],
+  },
   {
     name: "PurchaseNotes",
     type: "text",
@@ -223,10 +255,12 @@ const Building_ownerships = [
   },
   // Investment
   {
+    table: "account", // update
     name: "OwnerAccountGuid",
-    type: "text",
+    key: "unique",
     label: "OwnerAccountGuid",
     required: false,
+    list: [],
   },
   {
     name: "IdentityBeginDate",
@@ -247,10 +281,12 @@ const Building_ownerships = [
     required: false,
   },
   {
+    table: "Currency", // update
     name: "CurrencyIdentityGUID",
-    type: "text",
+    key: "unique",
     label: "CurrencyIdentityGUID",
     required: false,
+    list: [],
   },
   {
     name: "CurrencyValIdentity",
@@ -259,7 +295,14 @@ const Building_ownerships = [
     required: false,
   },
   // Properties management
-  { name: "OwnerGuid", type: "text", label: "OwnerGuid", required: false },
+  {
+    table: "",
+    name: "OwnerGuid",
+    key: "unique",
+    label: "OwnerGuid",
+    required: false,
+    list: [],
+  },
   {
     name: "CommissionPercent",
     type: "number",
@@ -267,16 +310,21 @@ const Building_ownerships = [
     required: false,
   },
   {
+    table: "",
     name: "AccountCommIncomeGuid",
-    type: "text",
+    key: "unique",
     label: "AccountCommIncomeGuid",
     required: false,
+    list: [],
   },
   {
+    table: "",
+
     name: "AcCommissionFromOwnerGUID",
-    type: "text",
+    key: "unique",
     label: "AcCommissionFromOwnerGUID",
     required: false,
+    list: [],
   },
   // Opening journal entry
   {

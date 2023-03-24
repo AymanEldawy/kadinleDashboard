@@ -14,7 +14,6 @@ import { useCallback } from "react";
 import axios from "axios";
 import { AlertContext } from "../../Context/AlertContext";
 
-
 function getForm(form) {
   return formsApi[form];
 }
@@ -137,7 +136,7 @@ const List = () => {
       setFields(forms[steps?.[index - 1]]);
     } else return;
   };
-  console.log(fields)
+  console.log(fields);
 
   return (
     <>
@@ -166,11 +165,14 @@ const List = () => {
           )}
         </div>
         <SuperForm
+          allowSteps={steps?.length}
           initialFields={fields}
           onSubmit={onSubmit}
           goBack={goBack}
           goNext={
-            steps?.length - 1 == steps?.indexOf(activeStage) ? undefined : goNext
+            steps?.length - 1 == steps?.indexOf(activeStage)
+              ? undefined
+              : goNext
           }
         />
       </Modal>
@@ -185,6 +187,7 @@ const List = () => {
         />
         {!!columns && !loading ? (
           <SuperTable
+            table={name}
             itemsPerPage={itemsPerPage}
             deleteItem={deleteItem}
             columns={columns}

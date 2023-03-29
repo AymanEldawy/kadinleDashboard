@@ -5,8 +5,10 @@ const TableHead = ({ children, classes }) => {
     <thead
       className={`text-xs text-gray-700 uppercase dark:bg-borderdark dark:text-gray-300 bg-gray-200 ${classes}`}
     >
-      {/* <tr>{children}</tr> */}
-      {children}
+      <tr>
+        {/* <tr>{children}</tr> */}
+        {children}
+      </tr>
     </thead>
   );
 };

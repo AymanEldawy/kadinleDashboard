@@ -13,15 +13,22 @@ import SuperTable from "../../Components/CustomTable/SuperTable";
 import { useCallback } from "react";
 import axios from "axios";
 import { AlertContext } from "../../Context/AlertContext";
+import TableForm from "../../Components/Forms/TableForm/TableForm";
+import { Button } from "../../Components/Global/Button";
+import FormHeadingTitleSteps from "../../Components/Global/FormHeadingTitleSteps";
 
 const LeaseApartment = () => {
   const params = useParams();
   const { name } = params;
   const [tab, setTab] = useState(name || "");
   const [activeStage, setActiveStage] = useState("");
+  const [index, setIndex] = useState();
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [allValues, setAllValues] = useState({});
+  const [childrenValues, setChildrenValues] = useState({});
   const { alertMessage, dispatchAlert } = useContext(AlertContext);
+  const [openModalForm, setOpenModalForm] = useState(false);
 
   // Get data
   let singleList = useMemo(() => formsApi["LeaseApartment"], [name]);
@@ -31,25 +38,6 @@ const LeaseApartment = () => {
     setActiveStage(steps[0]);
     setFields(forms?.[steps?.[0]]);
   }, [steps]);
-  // Handel Submit
-  const onSubmit = async (values) => {
-    let body = {
-      dat: values,
-      columns: Object.keys(values),
-      table: name,
-    };
-    let res = await axios.post(`/create`, {
-      ...body,
-    });
-    if (res?.statusText === "OK") {
-      dispatchAlert({
-        open: true,
-        type: "success",
-        msg: "Added Successfully...",
-      });
-    } else {
-    }
-  };
 
   const changeTab = (tabName) => {
     setTab(tabName);
@@ -58,7 +46,6 @@ const LeaseApartment = () => {
   };
   const goNext = () => {
     let index = steps.indexOf(activeStage);
-    console.log(index);
     if (index !== steps?.length) {
       setActiveStage(steps?.[index + 1]);
       setFields(forms[steps?.[index + 1]]);
@@ -66,46 +53,113 @@ const LeaseApartment = () => {
   };
   const goBack = () => {
     let index = steps.indexOf(activeStage);
-    console.log(index);
     if (index > 0) {
       setActiveStage(steps?.[index - 1]);
       setFields(forms[steps?.[index - 1]]);
     } else return;
   };
 
+  const onPopupFormSubmit = (values) => {
+    setChildrenValues((prev) => {
+      return {
+        ...prev,
+        [activeStage]: {
+          ...childrenValues?.[activeStage],
+          [index]: values,
+        },
+      };
+    });
+    setOpenModalForm(false);
+  };
+  const onFormTableSubmit = (values) => {
+    setChildrenValues((prev) => {
+      return {
+        ...prev,
+        [activeStage]: {
+          ...values,
+        },
+      };
+    });
+  };
+
+  // Handel Submit
+  const onSubmit = async (values) => {
+    setAllValues((prev) => {
+      return {
+        ...prev,
+        ...values,
+      };
+    });
+    if (activeStage === steps[steps.length - 1]) {
+      let body = {
+        dat: allValues,
+        children: childrenValues,
+        columns: Object.keys(allValues),
+        table: "LeaseApartment",
+      };
+      let res = await axios.post(`/create`, {
+        ...body,
+      });
+    }
+    // if (res?.statusText === "OK") {
+    //   dispatchAlert({
+    //     open: true,
+    //     type: "success",
+    //     msg: "Added Successfully...",
+    //   });
+    // } else {
+    // }
+  };
+
   return (
     <BlockPaper title={name}>
-      <div className="flex items-center mb-8 text-left overflow-auto">
-        {steps?.length ? (
-          <>
-            {steps?.map((step, index) => (
-              <button
-                onClick={() => changeTab(step)}
-                key={step}
-                className={`${
-                  activeStage === step ? "border-blue-500 !text-blue-500" : ""
-                } bg-blue-100 dark:bg-bgmaindark  p-2 flex-1 font-medium capitalize whitespace-nowrap`}
-              >
-                {step}
-              </button>
-            ))}
-          </>
-        ) : (
-          <button
-            className={` p-2 flex-1 font-medium capitalize border-l-4 dark:bg-borderdark text-left text-lg !text-blue-500 bg-blue-50 border-blue-500 `}
-          >
-            {name}
-          </button>
-        )}
+      <div className="flex items-center text-left overflow-auto">
+        <FormHeadingTitleSteps
+          steps={steps}
+          changeTab={changeTab}
+          activeStage={activeStage}
+          name={name}
+        />
       </div>
-      <SuperForm
-        initialFields={fields}
-        onSubmit={onSubmit}
-        goBack={goBack}
-        goNext={
-          steps?.length - 1 == steps?.indexOf(activeStage) ? undefined : goNext
-        }
-      />
+      <div className="h-5" />
+      {activeStage === "payments" ||
+      activeStage === "Related parking contracts" ||
+      activeStage === "Other fees" ||
+      activeStage === "Termination fines" ||
+      activeStage === "Log file" ? (
+        <>
+          <Modal open={openModalForm} onClose={() => setOpenModalForm(false)}>
+            <SuperForm initialFields={fields} onSubmit={onPopupFormSubmit} />
+          </Modal>
+          <TableForm
+            steps={steps}
+            initialFields={fields}
+            onOpen={() => setOpenModalForm(true)}
+            setIndex={setIndex}
+            oldValues={childrenValues?.[activeStage]}
+            onSubmit={onFormTableSubmit}
+            goBack={goBack}
+            goNext={
+              steps?.length - 1 == steps?.indexOf(activeStage)
+                ? undefined
+                : goNext
+            }
+          />
+        </>
+      ) : (
+        <SuperForm
+          oldValues={allValues}
+          allowSteps={steps?.length}
+          initialFields={fields}
+          onSubmit={onSubmit}
+          goBack={goBack}
+          goNext={
+            steps?.length - 1 == steps?.indexOf(activeStage)
+              ? undefined
+              : goNext
+          }
+        />
+      )}
     </BlockPaper>
   );
 };

@@ -159,12 +159,12 @@ export const menuData = [
         link: "/list/Store",
       },
       {
-        key: "Material",
+        key: "Chart of Stores",
         name: "Chart of Stores",
         link: "/Chart/store",
       },
       {
-        key: "Material",
+        key: "Activity reports",
         name: "Activity reports",
         link: "/report/materials",
       },
@@ -376,7 +376,7 @@ export const menuData = [
       {
         key: "tool 1",
         name: "tool 1",
-        link: "",
+        link: "/tools",
       },
       {
         key: "tool 2",

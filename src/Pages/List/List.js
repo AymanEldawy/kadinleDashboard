@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
-import Layout from "../../Layout";
 import formsApi from "../../Helpers/Forms/formsApi";
 import SuperForm from "../../Components/CustomForm/SuperForm";
 import { useMemo } from "react";
@@ -13,6 +12,8 @@ import SuperTable from "../../Components/CustomTable/SuperTable";
 import { useCallback } from "react";
 import axios from "axios";
 import { AlertContext } from "../../Context/AlertContext";
+import FormHeadingTitleSteps from "../../Components/Global/FormHeadingTitleSteps";
+import { ListsGuidsContext } from "../../Context/ListsGuidsContext";
 
 function getForm(form) {
   return formsApi[form];
@@ -39,16 +40,17 @@ const List = () => {
   const [data, setData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(false);
-  const { alertMessage, dispatchAlert } = useContext(AlertContext);
+  const { dispatchAlert } = useContext(AlertContext);
+  // const {} = useContext()
   const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [searchKey, setSearchKey] = useState("Name");
   const [selectedList, setSelectedList] = useState({});
   // Get data
   let singleList = useMemo(() => getForm(name), [name]);
   const forms = singleList?.forms;
   const steps = singleList?.steps;
-  // storage data
   // check if form is more then step
-  const check = () => {
+  const check = useCallback(() => {
     if (steps?.length) {
       setActiveStage(steps?.[0]);
       setFields(forms[steps?.[0]]);
@@ -57,6 +59,17 @@ const List = () => {
       setColumns(getColumns(singleList));
       setFields(singleList);
     }
+    setSearchKey(columns.includes("Name") ? "Name" : columns[0]);
+  }, [name]);
+  const getRefData = async () => {
+    await axios
+      .post(`/checkref`, {
+        table: name,
+      })
+      .then((res) => {
+        console.log("res", res);
+        // setData(res?.data?.recordset);
+      });
   };
   const getData = async () => {
     setLoading(true);
@@ -73,6 +86,7 @@ const List = () => {
   useEffect(() => {
     check();
     getData();
+    getRefData();
   }, [name]);
 
   // Handel Submit
@@ -99,71 +113,53 @@ const List = () => {
   };
 
   const deleteItem = async () => {
-    //   console.log(selectedList);
-    //   setLoading(true);
-    //   // for (const item of Object.keys(selectedList)) {
-    //   await axios
-    //     .post(`/delete`, {
-    //       table: name,
-    //       Guid: +item,
-    //     })
-    //     .then((res) => {
-    //       console.log(res);
-    //       setLoading(false);
-    //     });
-    //   // }
-    //   setLoading(false);
+    // setLoading(true);
+    await axios
+      .post(`/delete`, {
+        table: name,
+        guids: Object.keys(selectedList),
+      })
+      .then((res) => {
+        console.log(res);
+        getData();
+        // setLoading(false);
+      });
+    // setLoading(false);
   };
-  const changeTab = (tabName) => {
-    setTab(tabName);
-    setFields(forms[tabName]);
-    setActiveStage(tabName);
-  };
+  const changeTab = useCallback(
+    (tabName) => {
+      setTab(tabName);
+      setFields(forms[tabName]);
+      setActiveStage(tabName);
+    },
+    [activeStage, fields, tab]
+  );
 
-  const goNext = () => {
+  const goNext = useCallback(() => {
     let index = steps.indexOf(activeStage);
-    console.log(index);
     if (index !== steps?.length) {
       setActiveStage(steps?.[index + 1]);
       setFields(forms[steps?.[index + 1]]);
     } else return;
-  };
-  const goBack = () => {
+  }, [fields, activeStage]);
+  const goBack = useCallback(() => {
     let index = steps.indexOf(activeStage);
-    console.log(index);
     if (index > 0) {
       setActiveStage(steps?.[index - 1]);
       setFields(forms[steps?.[index - 1]]);
     } else return;
-  };
-  console.log(fields);
+  }, [fields, activeStage]);
 
   return (
     <>
       <Modal open={open} onClose={() => setOpen(false)}>
-        <div className="flex items-center mb-8 text-left">
-          {steps?.length ? (
-            <>
-              {steps?.map((step, index) => (
-                <button
-                  onClick={() => changeTab(step)}
-                  key={step}
-                  className={`${
-                    activeStage === step ? "border-blue-500 !text-blue-500" : ""
-                  } bg-blue-100 dark:bg-bgmaindark  p-2 flex-1 font-medium capitalize whitespace-nowrap`}
-                >
-                  {step}
-                </button>
-              ))}
-            </>
-          ) : (
-            <button
-              className={` p-2 flex-1 font-medium capitalize border-l-4 dark:bg-borderdark text-left text-lg !text-blue-500 bg-blue-50 border-blue-500 `}
-            >
-              {name}
-            </button>
-          )}
-        </div>
+        <FormHeadingTitleSteps
+          name={name}
+          steps={steps}
+          changeTab={changeTab}
+          activeStage={activeStage}
+        />
+        <div className="h-5" />
         <SuperForm
           allowSteps={steps?.length}
           initialFields={fields}
@@ -184,6 +180,9 @@ const List = () => {
           searchValue={searchValue}
           onSelectChange={setItemsPerPage}
           itemsPerPage={itemsPerPage}
+          columns={columns}
+          searchKey={searchKey}
+          setSearchKey={setSearchKey}
         />
         {!!columns && !loading ? (
           <SuperTable
@@ -193,6 +192,7 @@ const List = () => {
             columns={columns}
             data={data}
             allowSelect
+            searchKey={searchKey}
             searchValue={searchValue}
             selectedList={selectedList}
             setSelectedList={setSelectedList}

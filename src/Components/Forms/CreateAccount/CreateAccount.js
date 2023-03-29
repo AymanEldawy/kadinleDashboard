@@ -64,9 +64,7 @@ const initialFields = [
 
 const CreateAccount = () => {
   const form = formsApi['account'];
-  console.log(form)
   const submit = (values) => {
-    console.log(values);
   };
   return (
     <BlockPaper title="Create new Account">

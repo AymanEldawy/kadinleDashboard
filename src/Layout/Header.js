@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import BallIcon from "../Helpers/Icons/BallIcon";
 import NotificationBar from "../Components/NotificationBar/NotificationBar";
+import BarsIcon from "../Helpers/Icons/BarsIcon";
 
 function Header({ setOpen, mode, setMode }) {
   const { changeTheme, theme } = useContext(ThemeContext);
@@ -47,6 +48,9 @@ function Header({ setOpen, mode, setMode }) {
           <div className="">
             <SearchBar />
           </div>
+          <button className="lg:hidden" onClick={() => setOpen((prev) => !prev)}>
+            <BarsIcon />
+          </button>
         </div>
         <div className="ml-auto :rtl:mr-auto rtl:ml-0 flex items-center gap-4">
           <div className="flex items-center gap-2">

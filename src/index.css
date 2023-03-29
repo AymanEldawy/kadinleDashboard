@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #afaab1 #ffffff;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #afaab1;
+  border-radius: 12px;
+  border: 3px solid #ffffff;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -167,9 +190,28 @@ body.dark .has-checked:has(input:checked) input {
   background-color: #30f1;
 }
 
-/* Menu
-body.dark ul li button,
-body.dark ul li a {
-  hover:text-blue-600 dark:hover:bg-[#111] dark:hover:text-white
-hover:text-blue-600 dark:hover:bg-[#111] dark:hover:text-white
-} */
+/* Tooltip */
+.tooltip {
+  position: relative;
+  z-index: 9;
+}
+.tooltip::before {
+  float: left;
+  content: "" attr(data-title) "";
+  position: absolute;
+  /* transform: translate(-5px, -40px); */
+  left: 0;
+  bottom: 103%;
+  padding: 5px 10px;
+  border-radius: 0.5rem;
+  background-color: #444;
+  color: #fff;
+  font-size: 11px;
+  opacity: 0;
+}
+.tooltip:hover {
+  z-index: 9;
+}
+.tooltip:hover::before {
+  opacity: 1;
+}

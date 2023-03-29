@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
 import { AlertContext } from "../../Context/AlertContext";
+import FormHeadingTitleSteps from "../../Components/Global/FormHeadingTitleSteps";
 
 function getForm(form) {
   return formsApi[form];
@@ -25,7 +26,6 @@ const Update = () => {
   const [loading, setLoading] = useState(false);
   const { alertMessage, dispatchAlert } = useContext(AlertContext);
   // Get data
-  console.log(row, table);
   let singleList = useMemo(() => getForm(name), [name]);
   const forms = singleList?.forms;
   const steps = singleList?.steps;
@@ -45,16 +45,26 @@ const Update = () => {
 
   // Handel Submit
   const onSubmit = async (values) => {
+    let newValues = {};
+    for (const key in values) {
+      if (values[key] !== null) {
+        newValues[key] = values[key];
+      }
+    }
+    delete newValues["Number"];
+    delete newValues["Guid"];
+    let columns = Object.keys(newValues);
+
     let body = {
-      dat: values,
-      columns: Object.keys(values),
+      dat: newValues,
+      columns,
       table: name,
-      num: id
+      num: id,
     };
+
     let res = await axios.post(`/update`, {
       ...body,
     });
-    console.log(res)
     if (res?.statusText === "OK") {
       dispatchAlert({
         open: true,
@@ -64,23 +74,6 @@ const Update = () => {
       setOpen(false);
     } else {
     }
-  };
-
-  const deleteItem = async () => {
-    //   console.log(selectedList);
-    //   setLoading(true);
-    //   // for (const item of Object.keys(selectedList)) {
-    //   await axios
-    //     .post(`/delete`, {
-    //       table: name,
-    //       Guid: +item,
-    //     })
-    //     .then((res) => {
-    //       console.log(res);
-    //       setLoading(false);
-    //     });
-    //   // }
-    //   setLoading(false);
   };
   const changeTab = (tabName) => {
     setTab(tabName);
@@ -104,29 +97,13 @@ const Update = () => {
   };
   return (
     <BlockPaper title={name}>
-      <div className="flex items-center mb-8 text-left">
-        {steps?.length ? (
-          <>
-            {steps?.map((step, index) => (
-              <button
-                onClick={() => changeTab(step)}
-                key={step}
-                className={`${
-                  activeStage === step ? "border-blue-500 !text-blue-500" : ""
-                } bg-blue-100 dark:bg-bgmaindark  p-2 flex-1 font-medium capitalize whitespace-nowrap`}
-              >
-                {step}
-              </button>
-            ))}
-          </>
-        ) : (
-          <button
-            className={` p-2 flex-1 font-medium capitalize border-l-4 dark:bg-borderdark text-left text-lg !text-blue-500 bg-blue-50 border-blue-500 `}
-          >
-            {name}
-          </button>
-        )}
-      </div>
+      <FormHeadingTitleSteps
+        name={name}
+        steps={steps}
+        changeTab={changeTab}
+        activeStage={activeStage}
+      />
+      <div className="h-5" />
       {!!row ? (
         <SuperForm
           oldValues={row}

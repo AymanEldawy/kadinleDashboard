@@ -23,3 +23,5 @@ export { default as SortIcon } from './SortIcon';
 export { default as FolderPlusIcon } from './FolderPlusIcon';
 export { default as FolderMinusIcon } from './FolderMinusIcon';
 export { default as FolderEmptyIcon } from './FolderEmptyIcon';
+export { default as EditIcon } from './EditIcon';
+export { default as BarsIcon } from './BarsIcon';

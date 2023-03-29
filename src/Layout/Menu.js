@@ -23,7 +23,7 @@ const Menu = () => {
     return links?.map((item) => {
       if (item?.children) {
         return (
-          <li key={item?.key} className="relative group">
+          <li key={item?.name} className="relative group">
             <button className="whitespace-nowrap flex justify-between items-center  hover:text-blue-600  dark:hover:bg-transparent dark:hover:text-white py-2 w-full ">
               <span className="scale-[65%]">{item?.icon}</span>
               {item.name}
@@ -45,7 +45,7 @@ const Menu = () => {
       }
       if (item?.subChild) {
         return (
-          <li key={item?.key} className="relative">
+          <li key={item?.name} className="relative">
             <button className="whitespace-nowrap gap-2 justify-between hover:text-blue-600 py-2 hover:bg-gray-100 dark:hover:bg-transparent dark:hover:text-white px-4 w-full flex ">
               {item.name}
               <span className="scale-[60%] -rotate-90">
@@ -59,7 +59,7 @@ const Menu = () => {
         );
       }
       return (
-        <li key={item?.key} className="relative">
+        <li key={item?.name} className="relative">
           {item?.link === "" ? (
             <button className="whitespace-nowrap hover:text-blue-600 dark:hover:bg-transparent dark:hover:text-white py-2 px-4 w-full flex">
               {item.name}
@@ -77,7 +77,7 @@ const Menu = () => {
     });
   };
   return (
-    <div className="shadow bg-white dark:bg-bgmaindark">
+    <div className="shadow bg-white dark:bg-bgmaindark hidden lg:block">
       <div className="container">
         <ul className="primary-menu text-gray-500 dark:text-gray-400 text-sm font-medium min-h-[40px] flex gap-1 items-center justify-between capitalize">
           {list(menuData)}

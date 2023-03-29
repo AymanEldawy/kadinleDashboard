@@ -5,7 +5,7 @@ const LeaseApartment_Contract_information = [
   {
     table: "",
     name: "CustomerGuid",
-    type: "unique",
+    key: "unique",
     label: "CustomerGuid",
     required: false,
     list: [],
@@ -13,7 +13,7 @@ const LeaseApartment_Contract_information = [
   {
     table: "",
     name: "BuildingGuid",
-    type: "unique",
+    key: "unique",
     label: "BuildingGuid",
     required: false,
     list: [],
@@ -21,7 +21,7 @@ const LeaseApartment_Contract_information = [
   {
     table: "",
     name: "ApartmentGuid",
-    type: "unique",
+    key: "unique",
     label: "ApartmentGuid",
     required: false,
     list: [],
@@ -29,7 +29,7 @@ const LeaseApartment_Contract_information = [
   {
     table: "",
     name: "RentInfoGuid",
-    type: "unique",
+    key: "unique",
     label: "RentInfoGuid",
     required: false,
     list: [],
@@ -37,7 +37,7 @@ const LeaseApartment_Contract_information = [
   {
     table: "",
     name: "SalesManGuid",
-    type: "unique",
+    key: "unique",
     label: "SalesManGuid",
     required: false,
     list: [],
@@ -113,7 +113,7 @@ const LeaseApartment_Financial_Information = [
   {
     table: "Currency",
     name: "CurrencyGuid",
-    type: "unique",
+    key: "unique",
     label: "CurrencyGuid",
     required: false,
     list: [],
@@ -133,7 +133,7 @@ const LeaseApartment_Financial_Information = [
   {
     table: "",
     name: "DiscountAccountGuid",
-    type: "unique",
+    key: "unique",
     label: "DiscountAccountGuid",
     required: false,
     list: [],
@@ -187,7 +187,7 @@ const LeaseApartment_Financial_Information = [
   {
     table: "cost",
     name: "CostGuid",
-    type: "unique",
+    key: "unique",
     label: "CostGuid",
     required: false,
     list: [],
@@ -195,7 +195,7 @@ const LeaseApartment_Financial_Information = [
   {
     table: "",
     name: "RevenueAccountGuid",
-    type: "unique",
+    key: "unique",
     label: "RevenueAccountGuid",
     required: false,
     list: [],
@@ -203,7 +203,7 @@ const LeaseApartment_Financial_Information = [
   {
     table: "",
     name: "CustAccountGuid",
-    type: "unique",
+    key: "unique",
     label: "CustAccountGuid",
     required: false,
     list: [],
@@ -211,7 +211,7 @@ const LeaseApartment_Financial_Information = [
   {
     table: "",
     name: "InsuranceAccountGuid",
-    type: "unique",
+    key: "unique",
     label: "InsuranceAccountGuid",
     required: false,
     list: [],
@@ -231,7 +231,7 @@ const LeaseApartment_Financial_Information = [
   {
     table: "",
     name: "FineRevenueAccountGUID",
-    type: "unique",
+    key: "unique",
     label: "FineRevenueAccountGUID",
     required: false,
     list: [],
@@ -279,7 +279,7 @@ const LeaseApartment_Commission = [
   {
     table: "",
     name: "AcCommissionFromCustGuid",
-    type: "unique",
+    key: "unique",
     label: "AcCommissionFromCustGuid",
     required: false,
     list: [],
@@ -305,7 +305,7 @@ const LeaseApartment_Commission = [
   {
     table: "",
     name: "AcCommissionFromOwnerGuid",
-    type: "unique",
+    key: "unique",
     label: "AcCommissionFromOwnerGuid",
     required: false,
     list: [],
@@ -331,7 +331,7 @@ const LeaseApartment_Commission = [
   {
     table: "",
     name: "AcSalesManCommissionGuid",
-    type: "unique",
+    key: "unique",
     label: "AcSalesManCommissionGuid",
     required: false,
     list: [],
@@ -339,7 +339,7 @@ const LeaseApartment_Commission = [
   {
     table: "",
     name: "AcCommissionExpenseGuid",
-    type: "unique",
+    key: "unique",
     label: "AcCommissionExpenseGuid",
     required: false,
     list: [],

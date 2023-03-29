@@ -21,7 +21,7 @@ export const account = [
     key: "unique",
     label: "CurrencyGUID",
     required: false,
-    list: getData("currency"),
+    list: [],
   },
   {
     name: "CurrencyVal",
@@ -36,9 +36,16 @@ export const account = [
     key: "unique",
     label: "ParentGUID",
     required: false,
-    list: getData("account"),
+    list: [],
   },
-  { table: "account", name: "FinalGUID", key: "unique", label: "FinalGUID", required: false, list: [] }, // need to change
+  {
+    table: "account",
+    name: "FinalGUID",
+    key: "unique",
+    label: "FinalGUID",
+    required: false,
+    list: [],
+  }, // need to change
   { name: "MaxDebit", type: "number", label: "MaxDebit", required: false },
   { name: "MinDebit", type: "number", label: "MinDebit", required: false },
   { name: "MaxCredit", type: "number", label: "MaxCredit", required: false },
@@ -65,7 +72,7 @@ export const cost = [
     key: "unique",
     label: "ParentGUID",
     required: false,
-    list: getData("account"),
+    list: [],
   },
   { name: "Note", type: "text", label: "Note", required: false },
 ];

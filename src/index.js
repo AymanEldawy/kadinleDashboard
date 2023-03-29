@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./Context/ThemeContext";
 import { AlertProvider } from "./Context/AlertContext";
 import { PopupFormProvider } from "./Context/PopupFormContext";
+import { ListsGuidsProvider } from "./Context/ListsGuidsContext";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
@@ -13,7 +14,9 @@ root.render(
       <ThemeProvider>
         <PopupFormProvider>
           <AlertProvider>
-            <App />
+            <ListsGuidsProvider>
+              <App />
+            </ListsGuidsProvider>
           </AlertProvider>
         </PopupFormProvider>
       </ThemeProvider>

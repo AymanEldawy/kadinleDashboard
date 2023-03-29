@@ -6,35 +6,11 @@ import {
   FolderEmptyIcon,
   FolderMinusIcon,
   FolderPlusIcon,
-  PlusIcon,
-  TrashIcon,
 } from "../../Helpers/Icons";
 import SuperForm from "../CustomForm/SuperForm";
+import FormHeadingTitle from "../Global/FormHeadingTitle";
 import Modal from "../Modal/Modal";
-
-const TreeViewItem = ({ itemName, icon, toggleOpen, onSelectedItem }) => {
-  return (
-    <div onClick={toggleOpen} className="flex capitalize cursor-pointer">
-      <div className="group options flex gap-1 pl-4 min-w-[190px] hover:text-black dark:hover:text-white dark:hover:bg-bgmaindark dark:hover:border-borderdark hover:bg-gray-100 border-transparent rounded border hover:border-gray-300">
-        <button className="scale-75">{icon}</button>
-        {itemName}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            console.log("run...");
-            onSelectedItem();
-          }}
-          className="text-transparent group-hover:text-blue-600 scale-75 rounded-ful ml-auto rtl:mr-auto"
-        >
-          <PlusIcon />
-        </button>
-        <button className="scale-90 text-transparent group-hover:text-red-500">
-          <TrashIcon />
-        </button>
-      </div>
-    </div>
-  );
-};
+import TreeViewItem from "./TreeViewItem";
 
 const RenderTree = ({ chartTree, name }) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -45,7 +21,6 @@ const RenderTree = ({ chartTree, name }) => {
   }, []);
 
   const toggleOpen = (itemId, level) => {
-    console.log(itemId, "r");
     if (open[level] === itemId) {
       setOpen((prev) => {
         return {
@@ -60,7 +35,6 @@ const RenderTree = ({ chartTree, name }) => {
           [level]: itemId,
         };
       });
-    console.log(open);
   };
 
   const renderTree = useCallback(
@@ -69,7 +43,8 @@ const RenderTree = ({ chartTree, name }) => {
         return (
           <li className="space-x-3 w-fit mt-2 mb-2 last:mb-0">
             <TreeViewItem
-              itemName={item?.Name}
+              table={name}
+              row={item}
               toggleOpen={() => {
                 if (item?.children?.length) toggleOpen(item?.Guid, level);
               }}
@@ -110,22 +85,16 @@ const RenderTree = ({ chartTree, name }) => {
   );
   let oldValues = selectedItem?.FinalGUID
     ? {
-        ParentGUID: selectedItem?.ParentGUID,
+        ParentGUID: selectedItem?.Guid,
         FinalGUID: selectedItem?.FinalGUID,
       }
     : {
-        ParentGUID: selectedItem?.ParentGUID,
+        ParentGUID: selectedItem?.Guid,
       };
   return (
     <>
       <Modal open={!!selectedItem} onClose={() => setSelectedItem(null)}>
-        <div className="flex items-center mb-8 text-left">
-          <button
-            className={` p-2 flex-1 font-medium capitalize border-l-4 dark:bg-borderdark text-left text-lg !text-blue-500 bg-blue-50 border-blue-500 `}
-          >
-            Create new {name}
-          </button>
-        </div>
+        <FormHeadingTitle title={`Create new ${name}`} />
         <SuperForm initialFields={fields} oldValues={oldValues} />
       </Modal>
       <ul

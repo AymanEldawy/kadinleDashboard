@@ -9,74 +9,47 @@ import TableRow from "../../CustomTable/TableRow";
 import SuperForm from "../../CustomForm/SuperForm";
 import Field from "../../CustomForm/Field";
 import InputField from "../../CustomForm/InputField";
+import TableHeadCol from "../../CustomTable/TableHeadCol";
 const TestEntryFormTable = ({
   handelChangeEntriesField,
   handelChangeFieldBlur,
 }) => {
-  console.log("run....");
   return (
     <Table className="pb-8 overflow-auto max-h-[420px] dark:border-borderdark">
       <TableHead classes="dark:bg-[#555] dark:text-gray-200">
-        <TableCol
-          classes="border border-gray-300 dark:border-borderdark !py-3"
-          head
-        >
+        <TableHeadCol classes="border border-gray-300 dark:border-borderdark !py-3">
           #
-        </TableCol>
-        <TableCol
-          classes="border border-gray-300 dark:border-borderdark !py-3"
-          head
-        >
+        </TableHeadCol>
+        <TableHeadCol classes="border border-gray-300 dark:border-borderdark !py-3">
           AcGuid
-        </TableCol>
-        <TableCol
-          classes="border border-gray-300 dark:border-borderdark !py-3"
-          head
-        >
+        </TableHeadCol>
+        <TableHeadCol classes="border border-gray-300 dark:border-borderdark !py-3">
           Debit
-        </TableCol>
-        <TableCol
-          classes="border border-gray-300 dark:border-borderdark !py-3"
-          head
-        >
+        </TableHeadCol>
+        <TableHeadCol classes="border border-gray-300 dark:border-borderdark !py-3">
           Credit
-        </TableCol>
-        <TableCol
-          classes="border border-gray-300 dark:border-borderdark !py-3"
-          head
-        >
+        </TableHeadCol>
+        <TableHeadCol classes="border border-gray-300 dark:border-borderdark !py-3">
           CurrencyGuid
-        </TableCol>
-        <TableCol
-          classes="border border-gray-300 dark:border-borderdark !py-3"
-          head
-        >
+        </TableHeadCol>
+        <TableHeadCol classes="border border-gray-300 dark:border-borderdark !py-3">
           CurrencyVal
-        </TableCol>
-        <TableCol
-          classes="border border-gray-300 dark:border-borderdark !py-3"
-          head
-        >
+        </TableHeadCol>
+        <TableHeadCol classes="border border-gray-300 dark:border-borderdark !py-3">
           Note
-        </TableCol>
-        <TableCol
-          classes="border border-gray-300 dark:border-borderdark !py-3"
-          head
-        >
+        </TableHeadCol>
+        <TableHeadCol classes="border border-gray-300 dark:border-borderdark !py-3">
           CostGuid
-        </TableCol>
-        <TableCol
-          classes="border border-gray-300 dark:border-borderdark !py-3"
-          head
-        >
+        </TableHeadCol>
+        <TableHeadCol classes="border border-gray-300 dark:border-borderdark !py-3">
           ObverseAcGuid
-        </TableCol>
+        </TableHeadCol>
       </TableHead>
       <TableBody>
         {Array(20)
           .fill(0)
           .map((r, index) => (
-            <TableRow>
+            <TableRow key={`${r}-${index}`}>
               <TableCol classes="!p-0 border dark:border-borderdark text-center">
                 {index + 1}
               </TableCol>

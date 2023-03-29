@@ -23,7 +23,7 @@ const SelectField = ({
       >
         {!hideText ? <option>Choose...</option> : null}
         {list?.map((item) => (
-          <option className="p-1" value={item}>
+          <option key={item} className="p-1" value={item}>
             {item}
           </option>
         ))}

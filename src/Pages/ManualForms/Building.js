@@ -13,6 +13,7 @@ import SuperTable from "../../Components/CustomTable/SuperTable";
 import { useCallback } from "react";
 import axios from "axios";
 import { AlertContext } from "../../Context/AlertContext";
+import FormHeadingTitleSteps from "../../Components/Global/FormHeadingTitleSteps";
 
 const Building = () => {
   const params = useParams();
@@ -28,8 +29,11 @@ const Building = () => {
   let singleList = useMemo(() => formsApi["building"], [name]);
   const forms = singleList?.forms;
   const steps = singleList?.steps;
-  console.log(steps)
   // Handel Submit
+  useEffect(() => {
+    setFields(forms[steps[0]]);
+    setActiveStage(steps[0]);
+  }, []);
   const onSubmit = async (values) => {
     let body = {
       dat: values,
@@ -55,32 +59,38 @@ const Building = () => {
     setFields(forms[tabName]);
     setActiveStage(tabName);
   };
+  const goNext = () => {
+    let index = steps.indexOf(activeStage);
+    if (index !== steps?.length) {
+      setActiveStage(steps?.[index + 1]);
+      setFields(forms[steps?.[index + 1]]);
+    } else return;
+  };
+  const goBack = () => {
+    let index = steps.indexOf(activeStage);
+    if (index > 0) {
+      setActiveStage(steps?.[index - 1]);
+      setFields(forms[steps?.[index - 1]]);
+    } else return;
+  };
   return (
     <BlockPaper title={name}>
-      <div className="flex items-center mb-8 text-left">
-        {steps?.length ? (
-          <>
-            {steps?.map((step, index) => (
-              <button
-                onClick={() => changeTab(step)}
-                key={step}
-                className={`${
-                  activeStage === step ? "border-blue-500 !text-blue-500" : ""
-                } bg-blue-100 dark:bg-bgmaindark  p-2 flex-1 font-medium capitalize whitespace-nowrap`}
-              >
-                {step}
-              </button>
-            ))}
-          </>
-        ) : (
-          <button
-            className={` p-2 flex-1 font-medium capitalize border-l-4 dark:bg-borderdark text-left text-lg !text-blue-500 bg-blue-50 border-blue-500 `}
-          >
-            {name}
-          </button>
-        )}
-      </div>
-      <SuperForm initialFields={fields} onSubmit={onSubmit} />
+      <FormHeadingTitleSteps
+        name={name}
+        steps={steps}
+        changeTab={changeTab}
+        activeStage={activeStage}
+      />
+      <div className="h-5" />
+      <SuperForm
+        initialFields={fields}
+        onSubmit={onSubmit}
+        allowSteps={steps?.length}
+        goBack={goBack}
+        goNext={
+          steps?.length - 1 == steps?.indexOf(activeStage) ? undefined : goNext
+        }
+      />
     </BlockPaper>
   );
 };

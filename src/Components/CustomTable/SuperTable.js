@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useEffect } from "react";
 import { useCallback } from "react";
 import { useState } from "react";
@@ -6,13 +6,14 @@ import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
 import ChevronIcon from "../../Helpers/Icons/ChevronIcon";
 import CheckboxField from "../CustomForm/CheckboxField";
-import Checkbox from "../Global/Checkbox";
+import Checkbox from "../CustomForm/Checkbox";
 import Table from "./Table";
 import TableBody from "./TableBody";
 import TableCol from "./TableCol";
 import TableHead from "./TableHead";
 import TableHeadCol from "./TableHeadCol";
 import TableRow from "./TableRow";
+import TableUniqueCol from "./TableUniqueCol";
 let sorting = {};
 const SuperTable = ({
   columns,
@@ -23,6 +24,7 @@ const SuperTable = ({
   selectedList,
   setSelectedList,
   table,
+  searchKey,
 }) => {
   const [filterList, setFilterList] = useState(data);
   const [itemOffset, setItemOffset] = useState(0);
@@ -40,26 +42,46 @@ const SuperTable = ({
   }, [filterList, itemsPerPage, itemOffset]);
   useEffect(() => {}, [refresh]);
   useEffect(() => {
-    if (searchValue !== "") {
+    if (searchValue) {
       let newList = data?.filter((item) => {
-        return (
-          item?.Name?.toLowerCase()?.indexOf(searchValue?.toLowerCase()) !== -1
-        );
-        // return columns?.filter((key) => {
-        //   let col = item?.[key];
-        //   console.log(item?.[key], "");
-        //   return col?.length
-        //     ? col?.toLowerCase()?.indexOf(searchValue?.toLowerCase()) !== -1
-        //     : null;
+        if (typeof item[searchKey] === "string")
+          return item[searchKey]
+            ?.toLowerCase()
+            ?.startsWith(searchValue?.toLowerCase());
+        else
+          return item[searchKey]
+            ?.toString()
+            ?.toLowerCase()
+            ?.startsWith(searchValue?.toLowerCase());
       });
       setItemOffset(1);
-      setFilterList(newList);
-      setCurrentItems(filterList?.slice(0, itemsPerPage));
+      setCurrentItems(newList?.slice(0, itemsPerPage));
     } else {
       setFilterList(data);
-      setCurrentItems(filterList?.slice(0, itemsPerPage));
+      setCurrentItems(data?.slice(0, itemsPerPage));
     }
   }, [searchValue]);
+  useEffect(() => {
+    console.log("rendering");
+  }, []);
+  // useEffect(() => {
+  //   if (searchValue !== "") {
+  //     let newList = data?.filter((item) => {
+  //       return columns.every((key) => {
+  //         return (
+  //           item.hasOwnProperty(key) &&
+  //           item[key]?.toLowerCase()?.includes(searchValue?.toLowerCase())
+  //         );
+  //       });
+  //     });
+  //     setItemOffset(1);
+  //     setFilterList(newList);
+  //     setCurrentItems(filterList?.slice(0, itemsPerPage));
+  //   } else {
+  //     setFilterList(data);
+  //     setCurrentItems(filterList?.slice(0, itemsPerPage));
+  //   }
+  // }, [searchValue]);
 
   const handelSelect = useCallback(
     (itemId) => {
@@ -105,7 +127,7 @@ const SuperTable = ({
   const sortBy = async (col) => {
     const list = [...currentItems];
     const newSortOrder = sorting[col] === "asc" ? "desc" : "asc";
-    list.sort((a, b) => {
+    let newList = list.sort((a, b) => {
       const valueA = a[col];
       const valueB = b[col];
       if (typeof valueA === "string") {
@@ -115,7 +137,7 @@ const SuperTable = ({
       }
       return newSortOrder === "asc" ? valueA - valueB : valueB - valueA;
     });
-    setCurrentItems(list);
+    setCurrentItems(newList);
     setRefresh((prev) => !prev);
     sorting[col] = newSortOrder;
   };
@@ -133,7 +155,7 @@ const SuperTable = ({
             </TableHeadCol>
           ) : null}
           {columns?.map((col) => (
-            <TableHeadCol sort sortBy={sortBy}>
+            <TableHeadCol key={col} sort sortBy={sortBy}>
               {col}
             </TableHeadCol>
           ))}
@@ -142,6 +164,7 @@ const SuperTable = ({
           {currentItems?.map((row) => {
             return (
               <TableRow
+                key={row?.Name}
                 classes={`border-b dark:border-borderdark whitespace-nowrap ${
                   !!selectedList[row?.Guid] ? "bg-gray-100 dark:bg-[#1115]" : ""
                 }`}
@@ -156,7 +179,7 @@ const SuperTable = ({
                     />
                   </TableCol>
                 ) : null}
-                {columns?.map((col) => {
+                {columns?.map((col, index) => {
                   if (col === "CDate") {
                     let date = new Date(row[col]).toLocaleDateString("en-UK", {
                       year: "numeric",
@@ -168,11 +191,13 @@ const SuperTable = ({
                       timeStyle: "short",
                     });
                     return (
-                      <TableCol classes="whitespace-nowrap">
+                      <TableCol classes="whitespace-nowrap" key={index}>
                         {date} | {time}
                       </TableCol>
                     );
-                  } else return <TableCol>{row[col]}</TableCol>;
+                  } else if (col?.toLowerCase()?.indexOf("guid") !== -1) {
+                    return <TableUniqueCol key={index} val={row[col]} />;
+                  } else return <TableCol key={index}>{row[col]}</TableCol>;
                 })}
                 <TableCol>
                   <Link
@@ -214,4 +239,4 @@ const SuperTable = ({
   );
 };
 
-export default SuperTable;
+export default memo(SuperTable);

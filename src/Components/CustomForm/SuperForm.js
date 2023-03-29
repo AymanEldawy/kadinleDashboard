@@ -1,7 +1,8 @@
-import React from "react";
+import React, { memo } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Button } from "../Global/Button";
 import CheckboxField from "./CheckboxField";
 import Field from "./Field";
 import InputField from "./InputField";
@@ -28,10 +29,8 @@ const SuperForm = ({
   }, [location?.pathname]);
   useEffect(() => {
     if (oldValues) {
-      console.log(oldValues);
       setValues(oldValues);
     }
-    console.log(",", values);
   }, [oldValues]);
   const insertIntoErrors = (name, value) => {
     if (value === "") {
@@ -56,8 +55,10 @@ const SuperForm = ({
       };
     });
   };
-  const handelChangeField = (name, value) => {
-    insertIntoErrors(name, value);
+  const handelChangeField = (name, value, required) => {
+    if (required) {
+      insertIntoErrors(name, value);
+    }
     setValues((prev) => {
       return {
         ...prev,
@@ -69,6 +70,9 @@ const SuperForm = ({
     e.preventDefault();
     if (!errors.length) {
       onSubmit(values);
+      if (goNext) {
+        goNext();
+      }
     }
   };
   return (
@@ -78,8 +82,8 @@ const SuperForm = ({
           if (field?.key === "input") {
             return (
               <InputField
-                value={values?.[field?.name] || ""}
-                key={`${field?.name}-${i}`}
+                value={values?.[field?.name]}
+                key={`${field?.name}`}
                 type={field?.type}
                 name={field?.name}
                 label={field?.label}
@@ -90,15 +94,21 @@ const SuperForm = ({
                     ? errors[field?.name]
                     : null
                 }
-                onChange={(e) => handelChangeField(field?.name, e.target.value)}
+                onChange={(e) =>
+                  handelChangeField(
+                    field?.name,
+                    e.target.value,
+                    field?.required
+                  )
+                }
               />
             );
           } else if (field?.key === "unique") {
             return (
               <Field
-                value={values?.[field?.name] || ""}
+                value={values?.[field?.name]}
                 table={field?.table}
-                key={`${field?.name}-${i}`}
+                key={`${field?.name}`}
                 list={field?.list}
                 type={field?.type}
                 label={field?.label}
@@ -111,8 +121,8 @@ const SuperForm = ({
           } else if (field?.key === "radio") {
             return (
               <RadioField
-                defaultChecked={values?.[field?.name] || ""}
-                key={`${field?.name}-${i}`}
+                defaultChecked={values?.[field?.name]}
+                key={`${field?.name}`}
                 label={field?.label}
                 name={field?.name}
                 required={field?.required}
@@ -123,34 +133,44 @@ const SuperForm = ({
                     : null
                 }
                 list={field?.list}
-                onChange={(e) => handelChangeField(field?.name, e.target.value)}
+                onChange={(e) =>
+                  handelChangeField(
+                    field?.name,
+                    e.target.value,
+                    field?.required
+                  )
+                }
               />
             );
           } else if (field?.key === "select") {
             return (
               <SelectField
-                defaultValue={values?.[field?.name] || ""}
-                key={`${field?.name}-${i}`}
+                defaultValue={values?.[field?.name]}
+                key={`${field?.name}`}
                 name={field?.name}
                 label={field?.label}
                 onFocus={() => onTouched(field?.name)}
                 required={field?.required}
                 list={field?.list}
-                keyLabel={field?.keyLabel ? field?.keyLabel : "name"}
-                keyValue={field?.keyValue ? field?.keyValue : "id"}
                 error={
                   touched[field?.name] && errors[field?.name]
                     ? errors[field?.name]
                     : null
                 }
-                onChange={(e) => handelChangeField(field?.name, e.target.value)}
+                onChange={(e) =>
+                  handelChangeField(
+                    field?.name,
+                    e.target.value,
+                    field?.required
+                  )
+                }
               />
             );
           } else if (field?.key === "checkbox") {
             return (
               <CheckboxField
-                defaultChecked={values?.[field?.name] || ""}
-                key={`${field?.name}-${i}`}
+                defaultChecked={values?.[field?.name]}
+                key={`${field?.name}`}
                 label={field?.label}
                 name={field?.name}
                 required={field?.required}
@@ -161,14 +181,20 @@ const SuperForm = ({
                     : null
                 }
                 list={field?.list}
-                onChange={(e) => handelChangeField(field?.name, e.target.value)}
+                onChange={(e) =>
+                  handelChangeField(
+                    field?.name,
+                    e.target.value,
+                    field?.required
+                  )
+                }
               />
             );
           } else {
             return (
               <InputField
-                value={values?.[field?.name] || ""}
-                key={`${field?.name}-${i}`}
+                value={values?.[field?.name]}
+                key={`${field?.name}`}
                 name={field?.name}
                 type={field?.type}
                 label={field?.label}
@@ -179,7 +205,13 @@ const SuperForm = ({
                     ? errors[field?.name]
                     : null
                 }
-                onChange={(e) => handelChangeField(field?.name, e.target.value)}
+                onChange={(e) =>
+                  handelChangeField(
+                    field?.name,
+                    e.target.value,
+                    field?.required
+                  )
+                }
               />
             );
           }
@@ -187,30 +219,16 @@ const SuperForm = ({
       </div>
       <div className="flex justify-between gap-4 items-center">
         {allowSteps ? (
-          <button
-            type="button"
-            className="rounded-md px-4 py-2 bg-blue-500 text-sm font-medium text-white "
-            onClick={goBack}
-          >
-            prev
-          </button>
+          <Button title="Back" onClick={goBack} type="button" />
         ) : null}
         {!!goNext && allowSteps ? (
-          <button
-            type="button"
-            className="rounded-md px-4 py-2 bg-blue-500 text-sm font-medium text-white "
-            onClick={goNext}
-          >
-            Next
-          </button>
+          <Button type="submit" title="Next" />
         ) : (
-          <button className="rounded-md px-4 py-2 bg-blue-500 text-sm font-medium text-white ">
-            Submit
-          </button>
+          <Button type="submit" title="Submit" />
         )}
       </div>
     </form>
   );
 };
 
-export default SuperForm;
+export default memo(SuperForm);

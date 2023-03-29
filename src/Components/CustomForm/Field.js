@@ -1,12 +1,16 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { useCallback } from "react";
+import { ListsGuidsContext } from "../../Context/ListsGuidsContext";
 import { PopupFormContext } from "../../Context/PopupFormContext";
+import { cacheList } from "../../Helpers/functions";
 import { PlusIcon } from "../../Helpers/Icons";
+let hashed = {};
 
 const Field = ({
-  tableName,
-  list,
+  table,
+  // list,
   getSelectedValue,
   getSelectedValueRef,
   getSelectedValueWithIndex,
@@ -15,46 +19,74 @@ const Field = ({
   onFocus,
   label,
   className,
+  required,
+  value: val,
   ...field
 }) => {
   const [value, setValue] = useState("");
   const [listFilter, setListFilter] = useState([]);
+  const [list, setList] = useState([]);
   const [selected, setSelected] = useState("");
   const [dropdown, setDropdown] = useState(false);
   const { dispatchForm } = useContext(PopupFormContext);
+  const { addTableList, lists, getGuidName } = useContext(ListsGuidsContext);
   useEffect(() => {
-    setListFilter(list || []);
+    async function fetch() {
+      return await axios
+        .post(`/list`, {
+          table: table,
+        })
+        .then((res) => {
+          let data = res.data.recordset;
+          setList(data);
+          addTableList(table || "unknown", data || []);
+        });
+    }
+    if (!lists[table]) {
+      fetch();
+    } else {
+      setList(lists[table]);
+    }
   }, []);
+  useEffect(() => {
+    if (val) setValue(getGuidName(table, val));
+  }, [val]);
+
   const handelFilter = useCallback(
     (val) => {
       setValue(val);
       if (val?.length > 0) setDropdown(true);
       else setDropdown(false);
-      let newList = list?.filter(
-        (item) => item?.name?.toLowerCase().indexOf(val?.toLowerCase()) !== -1
+
+      let newList = list?.filter((item) =>
+        item?.Name?.toLowerCase().startsWith(val?.toLowerCase())
       );
+      // console.log(newList);
       setListFilter(newList);
     },
-    [value]
+    [value, list]
   );
   const handelSelected = useCallback(
     (item) => {
-      setValue(item?.name);
+      // console.log("items", item);
+      setValue(item?.Name);
       setSelected(item);
       setDropdown(false);
-      if (!!getSelectedValue) getSelectedValue(field?.name, item?.id);
-      if (!!getSelectedValueRef) getSelectedValueRef.current = item?.id;
+      if (!!getSelectedValue)
+        getSelectedValue(field?.name, item?.Guid, required);
+      if (!!getSelectedValueRef) getSelectedValueRef.current = item?.Guid;
       if (!!getSelectedValueWithIndex)
-        getSelectedValueWithIndex(field?.index, field?.name, item?.id);
+        getSelectedValueWithIndex(field?.index, field?.name, item?.Guid);
     },
     [selected]
   );
 
   const onCancelMenu = () => {
     if (!listFilter?.length) {
-      setValue("");
       setListFilter([]);
     }
+    setValue("");
+    setSelected("");
     setDropdown(false);
   };
   return (
@@ -76,7 +108,7 @@ const Field = ({
           type="text"
           id="myInput"
           value={value}
-          autoComplete
+          autoComplete="on"
           placeholder="Search here"
           onChange={(e) => {
             handelFilter(e.target.value);
@@ -95,7 +127,6 @@ const Field = ({
           className="absolute right-2 rtl:left-2 rtl:right-auto text-blue-500 hover:text-white rounded-full hover:bg-blue-400"
           onClick={() => {
             if (onPlusClick) onPlusClick();
-            console.log(tableName);
             dispatchForm({
               open: true,
               table: field?.table,
@@ -106,20 +137,23 @@ const Field = ({
         </button>
       </div>
       {dropdown ? (
-        <div className="relative rounded-md mt-2 text-sm w-full z-10 bg-white bg_dark shadow-md p-2">
+        <div className="absolute rounded-md mt-2 text-sm w-full z-10 bg-white bg_dark shadow-md p-2">
           {listFilter?.length && dropdown ? (
             <ul id="myUL" className="flex flex-col gap-1">
               {listFilter?.map((item) => (
                 <li
-                  key={item?.id}
-                  onClick={() => handelSelected(item)}
-                  className={`capitalize p-1 px-3 rounded-md hover:bg-gray-200 dark:hover:bg-yellow-100 dark:hover:text-yellow-500 cursor-pointer ${
-                    selected?.id === item?.id
-                      ? "bg-blue-400 text-white dark:bg-yellow-100 dark:text-yellow-500"
+                  key={item?.Name}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handelSelected(item);
+                  }}
+                  className={`capitalize p-1 px-3 rounded-md hover:bg-gray-200 cursor-pointer ${
+                    selected?.Guid === item?.Guid
+                      ? "bg-blue-400 text-white"
                       : ""
                   }`}
                 >
-                  <a href="#">{item?.name}</a>
+                  <a href="#">{item?.Name}</a>
                 </li>
               ))}
             </ul>

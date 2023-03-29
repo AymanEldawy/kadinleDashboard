@@ -1,5 +1,7 @@
 import React from "react";
-import { TrashIcon } from "../../Helpers/Icons";
+import { useState } from "react";
+import { ChevronIcon, TrashIcon } from "../../Helpers/Icons";
+import Backdrop from "../Backdrop/Backdrop";
 import SelectField from "../CustomForm/SelectField";
 import SearchBar from "../SearchBar/SearchBar";
 
@@ -11,11 +13,22 @@ export const TableBar = ({
   searchValue,
   onSelectChange,
   itemsPerPage,
+  columns,
+  searchKey,
+  setSearchKey,
 }) => {
   return (
     <div className="flex justify-between gap-2">
       <div className="flex gap-2 items-center">
-        <SearchBar value={searchValue} onSearchChange={onSearchChange} />
+        <div className="relative">
+          <SearchBar
+            value={searchValue}
+            onSearchChange={onSearchChange}
+            columns={columns}
+            searchKey={searchKey}
+            setSearchKey={setSearchKey}
+          />
+        </div>
         <SelectField
           hideText
           value={itemsPerPage}

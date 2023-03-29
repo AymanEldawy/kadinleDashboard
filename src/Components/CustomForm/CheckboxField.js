@@ -1,5 +1,5 @@
 import React from "react";
-import Checkbox from "../Global/Checkbox";
+import Checkbox from "./Checkbox";
 
 const CheckboxField = ({ label, error, list, name, ...field }) => {
   return (
@@ -9,7 +9,7 @@ const CheckboxField = ({ label, error, list, name, ...field }) => {
       ) : null}
       <div className="flex gap-4 items-center">
         {list?.map((item) => (
-          <Checkbox name={name} value={item} {...field} label={item} />
+          <Checkbox key={item} name={name} value={item} {...field} label={item} />
         ))}
       </div>
       {error ? (

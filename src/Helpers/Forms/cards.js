@@ -1372,9 +1372,6 @@ const OfferPrice_Prices = [
     type: "text",
     label: "SaleLastPriceDate",
     required: false,
-    // list: [...getData('')],
-    // keyLable: 'name',
-    // keyValue: "id"
   },
   // Prices
   // increasable

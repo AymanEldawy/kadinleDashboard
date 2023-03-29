@@ -6,6 +6,7 @@ import { AlertContext } from "../../Context/AlertContext";
 import { PopupFormContext } from "../../Context/PopupFormContext";
 import formsApi from "../../Helpers/Forms/formsApi";
 import SuperForm from "../CustomForm/SuperForm";
+import FormHeadingTitle from "../Global/FormHeadingTitle";
 import Modal from "../Modal/Modal";
 
 const PopupForm = () => {
@@ -35,13 +36,7 @@ const PopupForm = () => {
 
   return (
     <Modal open={open} onClose={() => dispatchForm({})}>
-      <div className="flex items-center mb-8 text-left">
-        <button
-          className={` p-2 flex-1 font-medium capitalize border-l-4 dark:bg-borderdark text-left text-lg !text-blue-500 bg-blue-50 border-blue-500 `}
-        >
-          Create new {table}
-        </button>
-      </div>
+      <FormHeadingTitle title={`Create new ${table}`} />
       <SuperForm initialFields={initialFields} onSubmit={onSubmit} />
     </Modal>
   );

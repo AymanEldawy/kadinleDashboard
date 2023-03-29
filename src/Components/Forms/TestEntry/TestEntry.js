@@ -29,10 +29,8 @@ const updateReadonlyValues = (index, name, value, setRefresh) => {
   } else {
     oldValue = hashIndex[`${name}-${index}`]; // store old value
     hashIndex[`${name}-${index}`] = value; // reset key value
-    console.log(newValue, value, oldValue);
     newValue = value - oldValue;
   }
-  console.log(hashIndex, newValue);
 
   if (!isNaN(parseInt(newValue))) {
     readOnlyValues[name] = +readOnlyValues[name] + parseInt(newValue);
@@ -55,7 +53,6 @@ const TestEntry = () => {
     readOnlyValues[name] = value;
   };
   const handelChangeFieldBlur = (index, name, value) => {
-    console.log(index, "name", name, value);
     updateReadonlyValues(index, name, value, setRefresh);
   };
 

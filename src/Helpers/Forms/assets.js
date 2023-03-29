@@ -1,4 +1,4 @@
-import { DropDowns, getData } from "../functions";
+import { DropDowns } from "../functions";
 
 export const AssetsGroup = [
   { name: "Number", type: "number", label: "Number", required: false },
@@ -19,7 +19,7 @@ export const AssetsGroup = [
     key: "unique",
     label: "ParentGuid",
     required: false,
-    list: getData("account"),
+    list: [],
   },
 ];
 
@@ -36,7 +36,7 @@ const Assets_General = [
     key: "unique",
     label: "AssetsAreaGuid",
     required: false,
-    list: getData("account"), //
+    list: [], //
   },
   {
     table: "",
@@ -268,7 +268,7 @@ const Assets_Asset_sale = [
     key: "unique",
     label: "SalesAccountGuid",
     required: false,
-    list: getData("account"),
+    list: [],
   },
   { name: "SaleValue", type: "number", label: "SaleValue", required: false },
   {
@@ -277,7 +277,7 @@ const Assets_Asset_sale = [
     key: "unique",
     label: "CurrencySaleGUID",
     required: false,
-    list: getData("currency"),
+    list: [],
   },
   {
     name: "CurrencySaleVal",

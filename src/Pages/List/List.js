@@ -14,6 +14,7 @@ import axios from "axios";
 import { AlertContext } from "../../Context/AlertContext";
 import FormHeadingTitleSteps from "../../Components/Global/FormHeadingTitleSteps";
 import { ListsGuidsContext } from "../../Context/ListsGuidsContext";
+import ConfirmModal from "../../Components/ConfirmModal/ConfirmModal";
 
 function getForm(form) {
   return formsApi[form];
@@ -28,7 +29,10 @@ function getAllColumns(table) {
   }
   return columns;
 }
-
+const cacheList = {};
+const getCachedList = (tableName) => {
+  return cacheList[tableName];
+};
 const List = () => {
   const params = useParams();
   const { name } = params;
@@ -41,14 +45,18 @@ const List = () => {
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(false);
   const { dispatchAlert } = useContext(AlertContext);
+  const [reffedTables, setReffedTables] = useState(null);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
   // const {} = useContext()
   const [itemsPerPage, setItemsPerPage] = useState(20);
   const [searchKey, setSearchKey] = useState("Name");
   const [selectedList, setSelectedList] = useState({});
+
   // Get data
   let singleList = useMemo(() => getForm(name), [name]);
   const forms = singleList?.forms;
   const steps = singleList?.steps;
+
   // check if form is more then step
   const check = useCallback(() => {
     if (steps?.length) {
@@ -61,16 +69,38 @@ const List = () => {
     }
     setSearchKey(columns.includes("Name") ? "Name" : columns[0]);
   }, [name]);
+  //
+  const getLists = async (tableName) => {
+    await axios
+      .post(`/list`, {
+        table: tableName,
+      })
+      .then((res) => {
+        cacheList[tableName] = res?.data?.recordset;
+      });
+  };
   const getRefData = async () => {
     await axios
       .post(`/checkref`, {
         table: name,
       })
       .then((res) => {
-        console.log("res", res);
-        // setData(res?.data?.recordset);
+        let data = res?.data?.recordset;
+        if (data) {
+          let collect = {};
+          for (const item of data) {
+            if (item?.reffedTables !== name) {
+              getLists(item?.Referenced_Table);
+            } else {
+              cacheList[name] = data;
+            }
+            collect[item?.Column] = item?.Referenced_Table;
+          }
+          setReffedTables(collect);
+        }
       });
   };
+
   const getData = async () => {
     setLoading(true);
     await axios
@@ -79,10 +109,12 @@ const List = () => {
       })
       .then((res) => {
         setLoading(false);
+        console.log(res);
         setData(res?.data?.recordset);
       });
     setLoading(false);
   };
+
   useEffect(() => {
     check();
     getData();
@@ -91,6 +123,7 @@ const List = () => {
 
   // Handel Submit
   const onSubmit = async (values) => {
+    if (steps && activeStage !== steps[steps?.length - 1]) return;
     let body = {
       dat: values,
       columns: Object.keys(values),
@@ -100,32 +133,30 @@ const List = () => {
       ...body,
     });
     if (res?.statusText === "OK") {
+      setOpen(false);
       dispatchAlert({
         open: true,
         type: "success",
         msg: "Added Successfully...",
       });
-      // setTimeout(() => )
       getData();
-      setOpen(false);
     } else {
     }
   };
 
   const deleteItem = async () => {
-    // setLoading(true);
     await axios
       .post(`/delete`, {
         table: name,
         guids: Object.keys(selectedList),
       })
       .then((res) => {
-        console.log(res);
         getData();
-        // setLoading(false);
       });
-    // setLoading(false);
+    setOpenConfirmation(false);
   };
+
+  // handel Tabs
   const changeTab = useCallback(
     (tabName) => {
       setTab(tabName);
@@ -142,6 +173,7 @@ const List = () => {
       setFields(forms[steps?.[index + 1]]);
     } else return;
   }, [fields, activeStage]);
+
   const goBack = useCallback(() => {
     let index = steps.indexOf(activeStage);
     if (index > 0) {
@@ -152,6 +184,11 @@ const List = () => {
 
   return (
     <>
+      <ConfirmModal
+        onConfirm={deleteItem}
+        open={openConfirmation}
+        setOpen={setOpenConfirmation}
+      />
       <Modal open={open} onClose={() => setOpen(false)}>
         <FormHeadingTitleSteps
           name={name}
@@ -161,6 +198,7 @@ const List = () => {
         />
         <div className="h-5" />
         <SuperForm
+          getCachedList={!!getCachedList ? getCachedList : undefined}
           allowSteps={steps?.length}
           initialFields={fields}
           onSubmit={onSubmit}
@@ -174,18 +212,19 @@ const List = () => {
       </Modal>
       <BlockPaper title={name}>
         <TableBar
-          onDeleteClick={deleteItem}
+          onDeleteClick={() => setOpenConfirmation(true)}
           onAddClick={() => setOpen(true)}
           onSearchChange={setSearchValue}
           searchValue={searchValue}
           onSelectChange={setItemsPerPage}
           itemsPerPage={itemsPerPage}
-          columns={columns}
-          searchKey={searchKey}
-          setSearchKey={setSearchKey}
+          // columns={columns}
+          // searchKey={searchKey}
+          // setSearchKey={setSearchKey}
         />
         {!!columns && !loading ? (
           <SuperTable
+            reffedTables={reffedTables}
             table={name}
             itemsPerPage={itemsPerPage}
             deleteItem={deleteItem}

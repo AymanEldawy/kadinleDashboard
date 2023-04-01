@@ -24,7 +24,8 @@ const SuperTable = ({
   selectedList,
   setSelectedList,
   table,
-  searchKey,
+  // searchKey,
+  reffedTables,
 }) => {
   const [filterList, setFilterList] = useState(data);
   const [itemOffset, setItemOffset] = useState(0);
@@ -34,54 +35,52 @@ const SuperTable = ({
 
   useEffect(() => {
     setFilterList(data);
-  }, []);
+  }, [data]);
+
   useEffect(() => {
+    // Needed more work
+    setItemOffset(1);
+    console.log(itemOffset, itemsPerPage);
     const endOffset = itemOffset + parseInt(itemsPerPage);
     setCurrentItems(filterList?.slice(itemOffset, endOffset));
     setPageCount(Math.ceil(filterList?.length / parseInt(itemsPerPage)));
   }, [filterList, itemsPerPage, itemOffset]);
+
   useEffect(() => {}, [refresh]);
+
   useEffect(() => {
     if (searchValue) {
-      let newList = data?.filter((item) => {
-        if (typeof item[searchKey] === "string")
-          return item[searchKey]
-            ?.toLowerCase()
-            ?.startsWith(searchValue?.toLowerCase());
-        else
-          return item[searchKey]
-            ?.toString()
-            ?.toLowerCase()
-            ?.startsWith(searchValue?.toLowerCase());
-      });
+      let newList = [];
+      for (const col of columns) {
+        for (const item of data) {
+          if (typeof item[col] == "string") {
+            if (
+              item[col]?.toLowerCase()?.startsWith(searchValue?.toLowerCase())
+            )
+              newList.push(item);
+          } else {
+            if (
+              item[col]
+                ?.toString()
+                ?.toLowerCase()
+                ?.startsWith(searchValue?.toLowerCase())
+            )
+              newList.push(item);
+          }
+        }
+      }
       setItemOffset(1);
       setCurrentItems(newList?.slice(0, itemsPerPage));
     } else {
+      setItemOffset(1);
       setFilterList(data);
       setCurrentItems(data?.slice(0, itemsPerPage));
     }
   }, [searchValue]);
+
   useEffect(() => {
     console.log("rendering");
   }, []);
-  // useEffect(() => {
-  //   if (searchValue !== "") {
-  //     let newList = data?.filter((item) => {
-  //       return columns.every((key) => {
-  //         return (
-  //           item.hasOwnProperty(key) &&
-  //           item[key]?.toLowerCase()?.includes(searchValue?.toLowerCase())
-  //         );
-  //       });
-  //     });
-  //     setItemOffset(1);
-  //     setFilterList(newList);
-  //     setCurrentItems(filterList?.slice(0, itemsPerPage));
-  //   } else {
-  //     setFilterList(data);
-  //     setCurrentItems(filterList?.slice(0, itemsPerPage));
-  //   }
-  // }, [searchValue]);
 
   const handelSelect = useCallback(
     (itemId) => {
@@ -154,17 +153,18 @@ const SuperTable = ({
               />
             </TableHeadCol>
           ) : null}
-          {columns?.map((col) => (
-            <TableHeadCol key={col} sort sortBy={sortBy}>
+          {columns?.map((col, index) => (
+            <TableHeadCol key={`${col}-${index}`} sort sortBy={sortBy}>
               {col}
             </TableHeadCol>
           ))}
+          <TableHeadCol>Actions</TableHeadCol>
         </TableHead>
         <TableBody>
-          {currentItems?.map((row) => {
+          {currentItems?.map((row, index) => {
             return (
               <TableRow
-                key={row?.Name}
+                key={`${row?.Name}-${index}`}
                 classes={`border-b dark:border-borderdark whitespace-nowrap ${
                   !!selectedList[row?.Guid] ? "bg-gray-100 dark:bg-[#1115]" : ""
                 }`}
@@ -196,7 +196,15 @@ const SuperTable = ({
                       </TableCol>
                     );
                   } else if (col?.toLowerCase()?.indexOf("guid") !== -1) {
-                    return <TableUniqueCol key={index} val={row[col]} />;
+                    return (
+                      <TableUniqueCol
+                        row={row}
+                        col={col}
+                        reffedTables={reffedTables}
+                        key={index}
+                        val={row[col]}
+                      />
+                    );
                   } else return <TableCol key={index}>{row[col]}</TableCol>;
                 })}
                 <TableCol>

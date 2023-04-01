@@ -5,6 +5,19 @@ import { useState } from "react";
 export const ListsGuidsContext = createContext();
 const guidListCached = {};
 
+const getTableData = async (table, addTableList) => {
+  return await axios
+    .post(`/list`, {
+      table,
+    })
+    .then((res) => {
+      let data = res?.data?.recordset;
+      // setLists(data);
+      addTableList(table, data);
+      return data;
+    });
+};
+
 export const ListsGuidsProvider = ({ children }) => {
   const [lists, setLists] = useState("");
   // const [guid, set]
@@ -19,9 +32,13 @@ export const ListsGuidsProvider = ({ children }) => {
 
   const getGuidName = (table, guid) => {
     if (!guidListCached[guid]) {
-      lists?.[table]?.forEach((item) => {
-        guidListCached[item?.Guid] = item?.Name;
-      });
+      if (lists[table]) {
+        lists?.[table]?.forEach((item) => {
+          guidListCached[item?.Guid] = item?.Name;
+        });
+      } else {
+        getTableData(table, addTableList)
+      }
     }
     return guidListCached[guid] || "";
   };

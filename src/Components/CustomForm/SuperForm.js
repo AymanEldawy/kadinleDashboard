@@ -16,6 +16,7 @@ const SuperForm = ({
   goNext,
   allowSteps,
   oldValues,
+  getCachedList,
 }) => {
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
@@ -25,13 +26,18 @@ const SuperForm = ({
   useEffect(() => {
     setErrors({});
     setTouched({});
-    // setValues({});
-  }, [location?.pathname]);
-  useEffect(() => {
     if (oldValues) {
       setValues(oldValues);
+    } else {
+      setValues({});
     }
-  }, [oldValues]);
+  }, [location?.pathname, oldValues]);
+  // useEffect(() => {
+  //   if (oldValues) {
+  //     setValues(oldValues);
+  //   }
+  // }, [oldValues]);
+
   const insertIntoErrors = (name, value) => {
     if (value === "") {
       setErrors((prev) => {
@@ -109,7 +115,7 @@ const SuperForm = ({
                 value={values?.[field?.name]}
                 table={field?.table}
                 key={`${field?.name}`}
-                list={field?.list}
+                list={!!getCachedList ? getCachedList(field?.table) : []}
                 type={field?.type}
                 label={field?.label}
                 name={field?.name}
@@ -222,7 +228,7 @@ const SuperForm = ({
           <Button title="Back" onClick={goBack} type="button" />
         ) : null}
         {!!goNext && allowSteps ? (
-          <Button type="submit" title="Next" />
+          <Button type="button" title="Next" onClick={submit} />
         ) : (
           <Button type="submit" title="Submit" />
         )}

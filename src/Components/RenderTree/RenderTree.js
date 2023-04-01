@@ -12,7 +12,7 @@ import FormHeadingTitle from "../Global/FormHeadingTitle";
 import Modal from "../Modal/Modal";
 import TreeViewItem from "./TreeViewItem";
 
-const RenderTree = ({ chartTree, name }) => {
+const RenderTree = ({ chartTree, name, deleteItem, onSubmit }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [open, setOpen] = useState({});
   const [fields, setFields] = useState([]);
@@ -43,6 +43,7 @@ const RenderTree = ({ chartTree, name }) => {
         return (
           <li className="space-x-3 w-fit mt-2 mb-2 last:mb-0">
             <TreeViewItem
+              deleteItem={deleteItem}
               table={name}
               row={item}
               toggleOpen={() => {
@@ -91,11 +92,20 @@ const RenderTree = ({ chartTree, name }) => {
     : {
         ParentGUID: selectedItem?.Guid,
       };
+
+  const submit = (values) => {
+    onSubmit(values);
+    setOpen(false);
+  };
   return (
     <>
       <Modal open={!!selectedItem} onClose={() => setSelectedItem(null)}>
         <FormHeadingTitle title={`Create new ${name}`} />
-        <SuperForm initialFields={fields} oldValues={oldValues} />
+        <SuperForm
+          initialFields={fields}
+          oldValues={oldValues}
+          onSubmit={submit}
+        />
       </Modal>
       <ul
         className={`relative pr-4 !ml-4 rounded-md dark:before:border-borderdark before:border-l-2 before:absolute before:left-0 before:-z-1 before:h-full color-level-0 after:opacity-50 after:w-4 after:h-full after:absolute after:top-0`}

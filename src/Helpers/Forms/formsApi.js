@@ -15,7 +15,7 @@ import { mat, matgroup, Store } from "./materials";
 import { Assets, AssetsGroup } from "./assets";
 import { FlatContractFee } from "./transactions";
 import { building } from "./building";
-
+import { FlatBuildingDetails } from "./flatBuildingDetails";
 // Manual page
 import { LeaseApartment } from "./LeaseApartment";
 
@@ -37,6 +37,7 @@ export default {
   Owner,
   // Prefer to building manual
   building,
+  FlatBuildingDetails,
   // Materials
   mat,
   matgroup,

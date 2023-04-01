@@ -10,10 +10,35 @@ import SuperForm from "../../CustomForm/SuperForm";
 import Field from "../../CustomForm/Field";
 import InputField from "../../CustomForm/InputField";
 import TableHeadCol from "../../CustomTable/TableHeadCol";
+import { useEffect } from "react";
+import { useContext } from "react";
+import { ListsGuidsContext } from "../../../Context/ListsGuidsContext";
+import axios from "axios";
+const cacheList = {};
 const TestEntryFormTable = ({
   handelChangeEntriesField,
   handelChangeFieldBlur,
+  entries,
 }) => {
+  const { addTableList, lists, getGuidName } = useContext(ListsGuidsContext);
+  useEffect(() => {
+    async function fetch(table) {
+      if (lists[table]) return;
+      return await axios
+        .post(`/list`, {
+          table: table,
+        })
+        .then((res) => {
+          let data = res.data.recordset;
+          cacheList[table] = data;
+          addTableList(table || "unknown", data || []);
+        });
+    }
+    fetch("account");
+    fetch("Currency");
+    fetch("cost");
+  }, []);
+
   return (
     <Table className="pb-8 overflow-auto max-h-[420px] dark:border-borderdark">
       <TableHead classes="dark:bg-[#555] dark:text-gray-200">
@@ -55,9 +80,10 @@ const TestEntryFormTable = ({
               </TableCol>
               <TableCol classes="!p-0 border dark:border-borderdark">
                 <Field
-                  table="account"
+                  tableForHashed="account"
                   className="min-w-[170px] border-0"
-                  list={[]}
+                  list={cacheList["account"]}
+                  value={entries?.[index]?.["AcGuid"] || ""}
                   // label="AcGuid"
                   name="AcGuid"
                   getSelectedValueWithIndex={handelChangeEntriesField}
@@ -69,9 +95,10 @@ const TestEntryFormTable = ({
                   type="number"
                   className="border-0"
                   // label="Debit"
+                  value={entries?.[index]?.["Debit"] || ""}
                   name="Debit"
                   onChange={(e) =>
-                    handelChangeEntriesField(index, "Debit", e.target.value)
+                    handelChangeEntriesField(index, "Debit", +e.target.value)
                   }
                   onBlur={(e) =>
                     handelChangeFieldBlur(index, "Debit", e.target.value)
@@ -82,10 +109,11 @@ const TestEntryFormTable = ({
                 <InputField
                   type="number"
                   // label="credit"
+                  value={entries?.[index]?.["Credit"] || ""}
                   name="Credit"
                   className="border-0"
                   onChange={(e) =>
-                    handelChangeEntriesField(index, "Credit", e.target.value)
+                    handelChangeEntriesField(index, "Credit", +e.target.value)
                   }
                   onBlur={(e) =>
                     handelChangeFieldBlur(index, "Credit", e.target.value)
@@ -94,9 +122,10 @@ const TestEntryFormTable = ({
               </TableCol>
               <TableCol classes="!p-0 border dark:border-borderdark">
                 <Field
-                  table="Currency"
+                  tableForHashed="Currency"
                   className="min-w-[170px] border-0"
-                  list={[]}
+                  list={cacheList["Currency"]}
+                  value={entries?.[index]?.["CurrencyGuid"] || ""}
                   // label="CurrencyGuid"
                   name="CurrencyGuid"
                   getSelectedValue={handelChangeEntriesField}
@@ -106,13 +135,14 @@ const TestEntryFormTable = ({
                 <InputField
                   type="number"
                   // label="CurrencyVal"
+                  value={entries?.[index]?.["CurrencyVal"] || ""}
                   className="border-0"
                   name="CurrencyVal"
                   onChange={(e) =>
                     handelChangeEntriesField(
                       index,
                       "CurrencyVal",
-                      e.target.value
+                      +e.target.value
                     )
                   }
                 />
@@ -121,6 +151,7 @@ const TestEntryFormTable = ({
                 <InputField
                   type="text"
                   // label="Note"
+                  value={entries?.[index]?.["Note"] || ""}
                   className="border-0"
                   name="Note"
                   onChange={(e) =>
@@ -130,21 +161,21 @@ const TestEntryFormTable = ({
               </TableCol>
               <TableCol classes="!p-0 border dark:border-borderdark">
                 <Field
-                  table="cost"
+                  tableForHashed="cost"
                   className="min-w-[170px] border-0"
-                  list={[]}
+                  list={cacheList["cost"]}
                   // label="CostGuid"
-
+                  value={entries?.[index]?.["CostGuid"] || ""}
                   name="CostGuid"
                   getSelectedValue={handelChangeEntriesField}
                 />
               </TableCol>
               <TableCol classes="!p-0 border dark:border-borderdark">
                 <Field
-                  table="account"
+                  tableForHashed="account"
                   className="min-w-[170px] border-0"
-                  list={[]}
-                  // label="ObverseAcGuid"
+                  list={cacheList["account"]}
+                  value={entries?.[index]?.["ObverseAcGuid"] || ""}
                   name="ObverseAcGuid"
                   getSelectedValue={handelChangeEntriesField}
                 />

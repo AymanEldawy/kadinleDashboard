@@ -11,6 +11,7 @@ import { Button } from "../../Global/Button";
 
 const TableForm = ({
   onOpen,
+  rowLength,
   initialFields,
   setIndex,
   oldValues,
@@ -18,6 +19,8 @@ const TableForm = ({
   goBack,
   goNext,
   steps,
+  getCachedList,
+  getValuesWithoutSubmit,
 }) => {
   const [grid, setGrid] = useState([]);
   const [columns, setColumns] = useState([]);
@@ -34,6 +37,12 @@ const TableForm = ({
       };
     });
   }, [oldValues]);
+
+  useEffect(() => {
+    if (getValuesWithoutSubmit) {
+      getValuesWithoutSubmit(grid);
+    }
+  }, [grid]);
 
   const handelChangeField = useCallback(
     (index, name, value) => {
@@ -71,20 +80,24 @@ const TableForm = ({
           ))}
         </TableHead>
         <TableBody>
-          {Array(20)
+          {Array(rowLength)
             .fill(0)
             .map((r, index) => (
-              <TableRow>
+              <TableRow key={`${r}-${index}`}>
                 <TableCol classes="max-w-fit !p-0 border dark:border-borderdark text-center">
-                  <button
-                    className="hover:bg-gray-200 hover:font-medium block w-full p-2"
-                    onClick={() => {
-                      onOpen();
-                      setIndex(index + 1);
-                    }}
-                  >
-                    {index + 1}
-                  </button>
+                  {!!setIndex ? (
+                    <button
+                      className="hover:bg-gray-200 hover:font-medium block w-full p-2"
+                      onClick={() => {
+                        if (onOpen) onOpen();
+                        setIndex(index + 1);
+                      }}
+                    >
+                      {index + 1}
+                    </button>
+                  ) : (
+                    index + 1
+                  )}
                 </TableCol>
                 {initialFields?.map((field) => (
                   <TableCol classes="!p-0 border" key={field?.name}>
@@ -92,9 +105,12 @@ const TableForm = ({
                       <Field
                         value={grid?.[index + 1]?.[field?.name]}
                         className="min-w-[140px] border-0"
-                        table={field?.table}
                         name={field?.name}
                         getSelectedValueWithIndex={handelChangeField}
+                        tableForHashed={field?.table}
+                        list={
+                          !!getCachedList ? getCachedList(field?.table) : []
+                        }
                       />
                     ) : (
                       <InputField
@@ -131,6 +147,9 @@ const TableForm = ({
               type="button"
             />
           </>
+        ) : null}
+        {!steps?.length && !!onSubmit ? (
+          <Button title="Submit" onClick={submit} type="button" />
         ) : null}
       </div>
     </>

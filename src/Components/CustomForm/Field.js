@@ -10,7 +10,8 @@ let hashed = {};
 
 const Field = ({
   table,
-  // list,
+  tableForHashed,
+  list: defaultList,
   getSelectedValue,
   getSelectedValueRef,
   getSelectedValueWithIndex,
@@ -31,25 +32,42 @@ const Field = ({
   const { dispatchForm } = useContext(PopupFormContext);
   const { addTableList, lists, getGuidName } = useContext(ListsGuidsContext);
   useEffect(() => {
-    async function fetch() {
-      return await axios
-        .post(`/list`, {
-          table: table,
-        })
-        .then((res) => {
-          let data = res.data.recordset;
-          setList(data);
-          addTableList(table || "unknown", data || []);
-        });
+    if (table) {
+      async function fetch() {
+        // console.log("tesseting");
+        return await axios
+          .post(`/list`, {
+            table: table,
+          })
+          .then((res) => {
+            let data = res.data.recordset;
+            // console.log(data, "---");
+            setList(data);
+            if (data?.length > 0) addTableList(table || "unknown", data || []);
+          });
+      }
+      if (!lists[table]) {
+        fetch();
+      } else {
+        // console.log("rrrr", lists, table);
+        setList(lists[table]);
+      }
     }
-    if (!lists[table]) {
-      fetch();
-    } else {
-      setList(lists[table]);
-    }
-  }, []);
+  }, [table]);
+
   useEffect(() => {
-    if (val) setValue(getGuidName(table, val));
+    if (defaultList?.length) {
+      setList(defaultList);
+    }
+    if (!lists[tableForHashed]) {
+      addTableList(tableForHashed, defaultList);
+    }
+  }, [defaultList]);
+  // console.log(list);
+  useEffect(() => {
+    let tableName = table || tableForHashed;
+    if (val) setValue(getGuidName(tableName, val));
+    else setValue("");
   }, [val]);
 
   const handelFilter = useCallback(
@@ -80,7 +98,7 @@ const Field = ({
     },
     [selected]
   );
-
+  // console.log(list);
   const onCancelMenu = () => {
     if (!listFilter?.length) {
       setListFilter([]);
@@ -129,11 +147,11 @@ const Field = ({
             if (onPlusClick) onPlusClick();
             dispatchForm({
               open: true,
-              table: field?.table,
+              table: field?.table || tableForHashed || "",
             });
           }}
         >
-          <PlusIcon />
+          <PlusIcon circle />
         </button>
       </div>
       {dropdown ? (

@@ -132,6 +132,7 @@ const LeaseApartment = () => {
             <SuperForm initialFields={fields} onSubmit={onPopupFormSubmit} />
           </Modal>
           <TableForm
+            rowLength={10}
             steps={steps}
             initialFields={fields}
             onOpen={() => setOpenModalForm(true)}

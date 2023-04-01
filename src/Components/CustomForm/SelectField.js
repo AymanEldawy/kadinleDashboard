@@ -5,8 +5,8 @@ const SelectField = ({
   error,
   className,
   list,
-  // keyLabel = "name",
-  // keyValue = "id",
+  keyLabel = "name",
+  keyValue = "id",
   hideText,
   ...field
 }) => {
@@ -22,9 +22,9 @@ const SelectField = ({
         {...field}
       >
         {!hideText ? <option>Choose...</option> : null}
-        {list?.map((item) => (
-          <option key={item} className="p-1" value={item}>
-            {item}
+        {list?.map((item, index) => (
+          <option key={item[keyValue]} className="p-1" value={item[keyValue]}>
+            {item[keyLabel]}
           </option>
         ))}
       </select>

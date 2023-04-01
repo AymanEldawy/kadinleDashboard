@@ -4,7 +4,14 @@ import { ChevronIcon, TrashIcon } from "../../Helpers/Icons";
 import Backdrop from "../Backdrop/Backdrop";
 import SelectField from "../CustomForm/SelectField";
 import SearchBar from "../SearchBar/SearchBar";
-
+const itemsListPerPages = [
+  { id: "10", name: "Number of rows 10" },
+  { id: "20", name: "Number of rows 20" },
+  { id: "50", name: "Number of rows 50" },
+  { id: "100", name: "Number of rows 100" },
+  { id: "200", name: "Number of rows 200" },
+  { id: "500", name: "Number of rows 500" },
+];
 export const TableBar = ({
   onAddClick,
   onDeleteClick,
@@ -33,13 +40,9 @@ export const TableBar = ({
           hideText
           value={itemsPerPage}
           onChange={(e) => onSelectChange(e.target.value)}
-          list={[10, 20, 50, 100, 200, 500]}
+          list={itemsListPerPages}
           className="p-2 rounded-md"
         />
-        <div className="py-2 dark:text-gray-300 text-sm text-gray-600 font-medium rounded-md flex gap-2">
-          Number of rows:
-          <span>{itemsPerPage}</span>
-        </div>
       </div>
       <div className="flex gap-2">
         <button

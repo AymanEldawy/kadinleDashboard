@@ -38,7 +38,7 @@ const Building = () => {
     let body = {
       dat: values,
       columns: Object.keys(values),
-      table: name,
+      table: name || 'Building',
     };
     let res = await axios.post(`/create`, {
       ...body,

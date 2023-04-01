@@ -78,7 +78,7 @@ export const menuData = [
       {
         key: "Building",
         name: "Building Card",
-        link: "/building",
+        link: "/list/building",
       },
       {
         key: "Flat",

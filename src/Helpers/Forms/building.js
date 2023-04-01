@@ -67,14 +67,15 @@ const Building_account = [
     list: [],
   },
   {
+    table: "",
     name: "AccountBankBuildingGuid",
-    type: "text",
+    key: "unique",
     label: "AccountBankBuildingGuid",
     required: false,
+    list: [],
   },
   {
     table: "",
-
     name: "CashAccountGuid",
     key: "unique",
     label: "CashAccountGuid",

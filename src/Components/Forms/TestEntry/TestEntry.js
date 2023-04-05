@@ -1,19 +1,13 @@
 import axios from "axios";
-import React, { useContext } from "react";
-import { useMemo } from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import { useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { AlertContext } from "../../../Context/AlertContext";
 import { ChevronIcon } from "../../../Helpers/Icons";
-import Layout from "../../../Layout";
-import Backdrop from "../../Backdrop/Backdrop";
 import BlockPaper from "../../BlockPaper/BlockPaper";
 import Field from "../../CustomForm/Field";
 import InputField from "../../CustomForm/InputField";
-import { Button } from "../../Global/Button";
 import TestEntryFormTable from "./TestEntryFormTable";
+import Loading from "../../Loading/Loading";
 
 const columns = {
   Credit: "",
@@ -35,12 +29,11 @@ const childColumns = [
   "CostGuid",
   "ObverseAcGuid",
 ];
-
 const cashedEntries = {};
+const cashedEntriesAcGuidValues = {};
 let hashIndex = {};
-let readOnlyValues = columns;
 
-const updateReadonlyValues = (index, name, value, setRefresh) => {
+const updateReadonlyValues = (index, name, value, setReadOnlyValues) => {
   let newValue = 0;
   let oldValue = 0;
   if (!hashIndex[`${name}-${index}`]) {
@@ -53,23 +46,34 @@ const updateReadonlyValues = (index, name, value, setRefresh) => {
   }
 
   if (!isNaN(parseInt(newValue))) {
-    readOnlyValues[name] = +readOnlyValues[name] + parseInt(newValue);
-    readOnlyValues["Difference"] =
-      readOnlyValues["Debit"] - readOnlyValues["Credit"];
-    setRefresh((prev) => !prev);
+    setReadOnlyValues((prev) => {
+      return {
+        ...prev,
+        [name]: prev[name] + parseInt(newValue),
+      };
+    });
+    setReadOnlyValues((prev) => {
+      return {
+        ...prev,
+        Difference: prev["Debit"] - prev["Credit"],
+      };
+    });
   }
 };
 
 const TestEntry = () => {
   const params = useParams();
   const { id } = params;
-  const [refresh, setRefresh] = useState(false);
   const [entries, setEntries] = useState({});
   const [loading, setLoading] = useState(false);
   const [selectedRowNumber, setSelectedRowNumber] = useState(0);
   const [numberOfRows, setNumberOfRows] = useState();
   const [data, setData] = useState([]);
   const { dispatchAlert } = useContext(AlertContext);
+  const [readOnlyValues, setReadOnlyValues] = useState(columns);
+  const [shouldUpdate, setShouldUpdate] = useState(false);
+  const [shouldUpdateUniqueIdentifyCols, setShouldUpdateUniqueIdentifyCols] =
+    useState({ index: null, status: false });
 
   // get Rows Data
   const getRows = async (Guid) => {
@@ -119,36 +123,62 @@ const TestEntry = () => {
               Number: current?.Number,
             });
           }
-          readOnlyValues = sortedSheet[0];
-          console.log(
-            "🚀 ~ file: TestEntry.js:123 ~ .then ~ readOnlyValues:",
-            readOnlyValues
-          );
-
+          setReadOnlyValues(sortedSheet[0]);
           setNumberOfRows(numbers); // select all numbers of rows
           getRows(sortedSheet[selectedRowNumber]?.Guid); // get rows for current selected number
-          // readOnlyValues = {
-          //   ...sortedSheet[0],
-          // };
         }
       });
     setLoading(false);
   };
-  useEffect(() => {
-    console.log("render");
-  }, [refresh]);
 
   useEffect(() => {
     // if (id) {
     getData();
     // }
   }, []);
+  // auto fill or Update all currencyGuid & currencyVal in table
+  useEffect(() => {
+    for (const key in entries) {
+      if (entries[key]["Credit"] || entries[key]["Debit"]) {
+        checkAutoInherit(key);
+      }
+    }
+  }, [shouldUpdate]);
+  // auto fill or or update next row when AcGuid & ObverseAcGuid in the same row have value
+  useEffect(() => {
+    let { index } = shouldUpdateUniqueIdentifyCols;
+    if (entries?.[index]?.AcGuid && entries?.[index]?.ObverseAcGuid) {
+      if (!entries?.[index + 1]?.AcGuid) {
+        setEntries((prev) => {
+          return {
+            ...prev,
+            [index + 1]: {
+              ...prev?.[index + 1],
+              AcGuid: prev?.[index]?.ObverseAcGuid,
+            },
+          };
+        });
+      }
+      if (!entries?.[index + 1]?.ObverseAcGuid) {
+        setEntries((prev) => {
+          return {
+            ...prev,
+            [index + 1]: {
+              ...prev?.[index + 1],
+              ObverseAcGuid: prev?.[index]?.AcGuid,
+            },
+          };
+        });
+      }
+    }
+  }, [shouldUpdateUniqueIdentifyCols]);
+
   // steps
   const goNext = () => {
     console.log(selectedRowNumber, numberOfRows?.length);
     if (selectedRowNumber < numberOfRows?.length - 1) {
       console.log("goN");
-      readOnlyValues = data[selectedRowNumber + 1];
+      setReadOnlyValues(data[selectedRowNumber + 1]);
       console.log(data[selectedRowNumber + 1]);
       getRows(numberOfRows[selectedRowNumber + 1]?.Guid);
       setSelectedRowNumber((prev) => prev + 1);
@@ -157,8 +187,7 @@ const TestEntry = () => {
   const goBack = () => {
     if (selectedRowNumber > 0) {
       console.log("goBack");
-      readOnlyValues = data[selectedRowNumber - 1];
-      console.log(data[selectedRowNumber - 1]);
+      setReadOnlyValues(data[selectedRowNumber - 1]);
       getRows(numberOfRows[selectedRowNumber - 1]?.Guid);
       setSelectedRowNumber((prev) => prev - 1);
     }
@@ -166,20 +195,88 @@ const TestEntry = () => {
 
   const handelChangeField = (name, value) => {
     console.log(name, value);
-    readOnlyValues[name] = value;
+    setReadOnlyValues((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+    if (name === "CurrencyGuid" || name === "CurrencyVal") {
+      setShouldUpdate((prev) => !prev);
+    }
   };
   const handelChangeFieldBlur = (index, name, value) => {
-    updateReadonlyValues(index, name, value, setRefresh);
+    updateReadonlyValues(index, name, value, setReadOnlyValues);
+  };
+
+  const checkAutoInherit = (index) => {
+    if (readOnlyValues?.CurrencyGuid) {
+      if (!entries?.[index]?.CurrencyGuid) {
+        setEntries((prev) => {
+          return {
+            ...prev,
+            [index]: {
+              ...prev?.[index],
+              CurrencyGuid: readOnlyValues?.CurrencyGuid,
+            },
+          };
+        });
+      }
+    }
+    if (readOnlyValues?.CurrencyVal) {
+      if (!entries?.[index]?.CurrencyVal) {
+        setEntries((prev) => {
+          return {
+            ...prev,
+            [index]: {
+              ...prev?.[index],
+              CurrencyVal: readOnlyValues?.CurrencyVal,
+            },
+          };
+        });
+      }
+    }
+  };
+  const allowSelect = (key) => {
+    return cashedEntriesAcGuidValues?.hasOwnProperty(key);
   };
 
   const handelChangeEntriesField = (index, name, value) => {
+    console.log(name, value);
+    let checkToContinue = true;
+    if (name === "AcGuid") {
+      if (
+        cashedEntriesAcGuidValues[value] &&
+        cashedEntriesAcGuidValues[value] !== index
+      ) {
+        checkToContinue = false;
+        cashedEntriesAcGuidValues[value] = index;
+        return;
+      } else {
+        cashedEntriesAcGuidValues[value] = index;
+      }
+    }
+    console.log(cashedEntriesAcGuidValues);
+    // Insert grid
     setEntries((prev) => {
       return {
         ...prev,
         [index]: { ...prev?.[index], [name]: value },
       };
     });
-    console.log(entries);
+    // auto insert to AcGuid / ObverseAcGuid
+    if (name === "AcGuid" || name === "ObverseAcGuid") {
+      setShouldUpdateUniqueIdentifyCols((prev) => {
+        return {
+          index: index,
+          status: !prev?.status,
+        };
+      });
+    }
+    // auto insert to CurrencyGuid / CurrencyVal
+    if (name === "Credit" || name === "Debit") {
+      checkAutoInherit(index);
+    }
   };
 
   // Handel Submit
@@ -252,7 +349,7 @@ const TestEntry = () => {
 
   return (
     <>
-      <Backdrop open={loading} />
+      {loading ? <Loading withBackdrop /> : null}
       <BlockPaper title="CREATE NEW DENTRY">
         {/* Form */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 lg:gap-4">
@@ -260,7 +357,7 @@ const TestEntry = () => {
             name="Date"
             type="date"
             label="Date"
-            value={readOnlyValues["Date"] || ""}
+            value={readOnlyValues["Date"]}
             onChange={(e) => handelChangeField("Date", e.target.value)}
           />
           <Field
@@ -269,21 +366,21 @@ const TestEntry = () => {
             label="Currency Guid"
             list={[]}
             required={true}
-            value={readOnlyValues["CurrencyGuid"] || ""}
+            value={readOnlyValues["CurrencyGuid"]}
             getSelectedValue={handelChangeField}
           />
           <InputField
             name="CurrencyVal"
             type="number"
             label="Currency Value"
-            value={readOnlyValues["CurrencyVal"] || ""}
+            value={readOnlyValues["CurrencyVal"]}
             onChange={(e) => handelChangeField("CurrencyVal", e.target.value)}
           />
           <InputField
             name="Note"
             type="text"
             label="Note"
-            value={readOnlyValues["Note"] || ""}
+            value={readOnlyValues["Note"]}
             onChange={(e) => handelChangeField("Note", e.target.value)}
           />
         </div>
@@ -291,6 +388,7 @@ const TestEntry = () => {
           entries={entries}
           handelChangeFieldBlur={handelChangeFieldBlur}
           handelChangeEntriesField={handelChangeEntriesField}
+          allowSelect={allowSelect}
         />
         <div className=" mt-4 grid grid-cols-2 md:grid-cols-4 gap-2 lg:gap-4">
           <InputField

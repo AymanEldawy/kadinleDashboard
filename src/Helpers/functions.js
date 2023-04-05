@@ -57,3 +57,9 @@ export function DropDowns(key) {
   };
   return DropDown[key];
 }
+
+
+// conversion
+export const hexToDecimal = (hex) => parseInt(hex, 16);
+export const decimalToHex = (dec) =>
+  (dec + Math.pow(16, 6)).toString(16).substr(-6);

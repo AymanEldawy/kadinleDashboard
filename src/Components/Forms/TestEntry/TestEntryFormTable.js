@@ -14,11 +14,12 @@ import { useEffect } from "react";
 import { useContext } from "react";
 import { ListsGuidsContext } from "../../../Context/ListsGuidsContext";
 import axios from "axios";
-const cacheList = {};
+const CACHE_LIST = {};
 const TestEntryFormTable = ({
   handelChangeEntriesField,
   handelChangeFieldBlur,
   entries,
+  allowSelect,
 }) => {
   const { addTableList, lists, getGuidName } = useContext(ListsGuidsContext);
   useEffect(() => {
@@ -30,7 +31,7 @@ const TestEntryFormTable = ({
         })
         .then((res) => {
           let data = res.data.recordset;
-          cacheList[table] = data;
+          CACHE_LIST[table] = data;
           addTableList(table || "unknown", data || []);
         });
     }
@@ -80,9 +81,10 @@ const TestEntryFormTable = ({
               </TableCol>
               <TableCol classes="!p-0 border dark:border-borderdark">
                 <Field
+                  allowSelect={allowSelect}
                   tableForHashed="account"
-                  className="min-w-[170px] border-0"
-                  list={cacheList["account"]}
+                  className="min-w-[170px] border-0 !rounded-none !h-full"
+                  list={CACHE_LIST["account"]}
                   value={entries?.[index]?.["AcGuid"] || ""}
                   // label="AcGuid"
                   name="AcGuid"
@@ -93,7 +95,7 @@ const TestEntryFormTable = ({
               <TableCol classes="!p-0 border dark:border-borderdark">
                 <InputField
                   type="number"
-                  className="border-0"
+                  className="border-0 !rounded-none !h-full"
                   // label="Debit"
                   value={entries?.[index]?.["Debit"] || ""}
                   name="Debit"
@@ -111,7 +113,7 @@ const TestEntryFormTable = ({
                   // label="credit"
                   value={entries?.[index]?.["Credit"] || ""}
                   name="Credit"
-                  className="border-0"
+                  className="border-0 !rounded-none !h-full"
                   onChange={(e) =>
                     handelChangeEntriesField(index, "Credit", +e.target.value)
                   }
@@ -123,12 +125,13 @@ const TestEntryFormTable = ({
               <TableCol classes="!p-0 border dark:border-borderdark">
                 <Field
                   tableForHashed="Currency"
-                  className="min-w-[170px] border-0"
-                  list={cacheList["Currency"]}
+                  className="min-w-[170px] border-0 !rounded-none !h-full"
+                  list={CACHE_LIST["Currency"]}
                   value={entries?.[index]?.["CurrencyGuid"] || ""}
                   // label="CurrencyGuid"
                   name="CurrencyGuid"
-                  getSelectedValue={handelChangeEntriesField}
+                  getSelectedValueWithIndex={handelChangeEntriesField}
+                  index={index}
                 />
               </TableCol>
               <TableCol classes="!p-0 border dark:border-borderdark">
@@ -136,7 +139,7 @@ const TestEntryFormTable = ({
                   type="number"
                   // label="CurrencyVal"
                   value={entries?.[index]?.["CurrencyVal"] || ""}
-                  className="border-0"
+                  className="border-0 !rounded-none !h-full"
                   name="CurrencyVal"
                   onChange={(e) =>
                     handelChangeEntriesField(
@@ -152,7 +155,7 @@ const TestEntryFormTable = ({
                   type="text"
                   // label="Note"
                   value={entries?.[index]?.["Note"] || ""}
-                  className="border-0"
+                  className="border-0 !rounded-none !h-full"
                   name="Note"
                   onChange={(e) =>
                     handelChangeEntriesField(index, "Note", e.target.value)
@@ -162,22 +165,24 @@ const TestEntryFormTable = ({
               <TableCol classes="!p-0 border dark:border-borderdark">
                 <Field
                   tableForHashed="cost"
-                  className="min-w-[170px] border-0"
-                  list={cacheList["cost"]}
+                  className="min-w-[170px] border-0 !rounded-none !h-full"
+                  list={CACHE_LIST["cost"]}
                   // label="CostGuid"
                   value={entries?.[index]?.["CostGuid"] || ""}
                   name="CostGuid"
-                  getSelectedValue={handelChangeEntriesField}
+                  getSelectedValueWithIndex={handelChangeEntriesField}
+                  index={index}
                 />
               </TableCol>
               <TableCol classes="!p-0 border dark:border-borderdark">
                 <Field
                   tableForHashed="account"
-                  className="min-w-[170px] border-0"
-                  list={cacheList["account"]}
+                  className="min-w-[170px] border-0 !rounded-none !h-full"
+                  list={CACHE_LIST["account"]}
                   value={entries?.[index]?.["ObverseAcGuid"] || ""}
                   name="ObverseAcGuid"
-                  getSelectedValue={handelChangeEntriesField}
+                  getSelectedValueWithIndex={handelChangeEntriesField}
+                  index={index}
                 />
               </TableCol>
             </TableRow>

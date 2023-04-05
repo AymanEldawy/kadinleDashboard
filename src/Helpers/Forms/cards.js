@@ -58,7 +58,7 @@ export const customer = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
     name: "InsuranceAccountGuid",
     key: "unique",
     label: "InsuranceAccountGuid",
@@ -66,7 +66,7 @@ export const customer = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
     name: "VATAccountGuid",
     key: "unique",
     label: "VATAccountGuid",
@@ -161,6 +161,15 @@ const Shop_General = [
     required: false,
     list: [],
   },
+  // New
+  {
+    name: "SecLvl",
+    key: "select",
+    label: "SecLvl",
+    required: false,
+    list: DropDowns("SecLvl"),
+  },
+  // ----
   { name: "Number", type: "number", label: "Number", required: false },
   { name: "NO", type: "text", label: "NO", required: false },
   { name: "ShopKind", type: "text", label: "ShopKind", required: false },
@@ -189,7 +198,7 @@ const Shop_General = [
     list: [],
   },
   {
-    table: "",
+    table: "Customer",
     name: "CustGuid",
     key: "unique",
     label: "CustGuid",
@@ -197,7 +206,7 @@ const Shop_General = [
     list: [],
   },
   {
-    table: "",
+    table: "Customer",
     name: "CustOwnerGuid",
     key: "unique",
     label: "CustOwnerGuid",
@@ -240,7 +249,7 @@ const Shop_Rent_price = [
   },
   { name: "CostPrice", type: "number", label: "CostPrice", required: false },
   {
-    table: "",
+    table: "Currency",
     name: "CostCurrencyGUID",
     key: "unique",
     label: "CostCurrencyGUID",
@@ -263,7 +272,7 @@ const Shop_Selling_price = [
   },
   { name: "Sale", type: "number", label: "Sale", required: false },
   {
-    table: "",
+    table: "Currency",
     name: "SaleCurrencyGUID",
     key: "unique",
     label: "SaleCurrencyGUID",
@@ -280,7 +289,7 @@ const Shop_Extra_fields = [];
 
 const Shop_Fixed_assets = [
   {
-    table: "",
+    table: "Assets",
     name: "AssetsGuid",
     key: "unique",
     label: "AssetsGuid",
@@ -319,7 +328,7 @@ const Villa_General_information = [
     required: false,
   },
   {
-    table: "",
+    table: "Customer",
     name: "CuOwnerGuid",
     key: "unique",
     label: "CuOwnerGuid",
@@ -330,7 +339,7 @@ const Villa_General_information = [
 
 const Villa_Accounts = [
   {
-    table: "",
+    table: "account",
     name: "VillaAccountGuid",
     key: "unique",
     label: "VillaAccountGuid",
@@ -338,7 +347,7 @@ const Villa_Accounts = [
     list: [],
   },
   {
-    table: "",
+    table: "cost",
     name: "CostGuid",
     key: "unique",
     label: "CostGuid",
@@ -346,7 +355,7 @@ const Villa_Accounts = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
     name: "AccountBankVillaGuid",
     key: "unique",
     label: "AccountBankVillaGuid",
@@ -354,7 +363,7 @@ const Villa_Accounts = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
     name: "CashAccountGuid",
     key: "unique",
     label: "CashAccountGuid",
@@ -362,7 +371,7 @@ const Villa_Accounts = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
     name: "InsuranceAccountGuid",
     key: "unique",
     label: "InsuranceAccountGuid",
@@ -370,7 +379,7 @@ const Villa_Accounts = [
     list: [],
   },
   {
-    table: "",
+    table: "RentInfo",
     name: "RentInfoGuid",
     key: "unique",
     label: "RentInfoGuid",
@@ -514,7 +523,7 @@ const Villa_Notes = [
 ];
 const Villa_Assets = [
   {
-    table: "",
+    table: "Assets",
     name: "AssetsGuid",
     key: "unique",
     label: "AssetsGuid",
@@ -627,7 +636,7 @@ const Parking_Price = [
   },
   { name: "CostPrice", type: "number", label: "CostPrice", required: false },
   {
-    table: "",
+    table: "cost",
     name: "CostCurrencyGUID",
     key: "unique",
     label: "CostCurrencyGUID",
@@ -717,7 +726,7 @@ export const Landcontract = [
     required: false,
   },
   {
-    table: "",
+    table: "ContractType",
     name: "TypeGuid",
     key: "unique",
     label: "TypeGuid",
@@ -726,7 +735,7 @@ export const Landcontract = [
   },
   { name: "ContractNo", type: "text", label: "ContractNo", required: false },
   {
-    table: "",
+    table: "Customer",
     name: "CustomerGuid",
     key: "unique",
     label: "CustomerGuid",
@@ -734,7 +743,7 @@ export const Landcontract = [
     list: [],
   },
   {
-    table: "",
+    table: "Salesman",
     name: "SalesManGuid",
     key: "unique",
     label: "SalesManGuid",
@@ -742,7 +751,7 @@ export const Landcontract = [
     list: [],
   },
   {
-    table: "",
+    table: "RentInfo",
     name: "RentInfoGuid",
     key: "unique",
     label: "RentInfoGuid",
@@ -750,7 +759,7 @@ export const Landcontract = [
     list: [],
   },
   {
-    table: "",
+    table: "Earth",
     name: "LandGuid",
     key: "unique",
     label: "LandGuid",
@@ -758,7 +767,7 @@ export const Landcontract = [
     list: [],
   },
   {
-    table: "",
+    table: "Villa",
     name: "VillaGuid",
     key: "unique",
     label: "VillaGuid",
@@ -766,7 +775,7 @@ export const Landcontract = [
     list: [],
   },
   {
-    table: "",
+    table: "cost",
     name: "CostGuid",
     key: "unique",
     label: "CostGuid",
@@ -807,7 +816,7 @@ export const Landcontract = [
   { name: "NewState", type: "number", label: "NewState", required: false },
   { name: "Whereabouts", type: "text", label: "Whereabouts", required: false },
   {
-    table: "",
+    table: "account",
     name: "RevenueAccountGuid",
     key: "unique",
     label: "RevenueAccountGuid",
@@ -815,7 +824,7 @@ export const Landcontract = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
     name: "CustAccountGuid",
     key: "unique",
     label: "CustAccountGuid",
@@ -835,7 +844,7 @@ export const Landcontract = [
     required: false,
   },
   {
-    table: "",
+    table: "account",
     name: "AcCommissionFromCustGuid",
     key: "unique",
     label: "AcCommissionFromCustGuid",
@@ -855,7 +864,7 @@ export const Landcontract = [
     required: false,
   },
   {
-    table: "",
+    table: "account",
     name: "AcCommissionFromOwnerGuid",
     key: "unique",
     label: "AcCommissionFromOwnerGuid",
@@ -875,7 +884,7 @@ export const Landcontract = [
     required: false,
   },
   {
-    table: "",
+    table: "account",
     name: "AcSalesManCommissionGuid",
     key: "unique",
     label: "AcSalesManCommissionGuid",
@@ -883,7 +892,7 @@ export const Landcontract = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
     name: "AcCommissionExpenseGuid",
     key: "unique",
     label: "AcCommissionExpenseGuid",
@@ -903,7 +912,7 @@ export const Landcontract = [
     required: false,
   },
   {
-    table: "",
+    table: "account",
     name: "AcIncomNextYearGUID",
     key: "unique",
     label: "AcIncomNextYearGUID",
@@ -911,7 +920,7 @@ export const Landcontract = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
     name: "InsuranceAccountGuid",
     key: "unique",
     label: "InsuranceAccountGuid",
@@ -967,13 +976,14 @@ export const Landcontract = [
     required: false,
   },
   {
-    name: "DiscountAccountGuid",
     key: "unique",
-    label: "DiscountAccountGuid",
     required: false,
+    label: "DiscountAccountGuid",
+    name: "DiscountAccountGuid",
+    table: "Account",
   },
   {
-    table: "",
+    table: "Realty_Users",
     name: "UserGuid",
     key: "unique",
     label: "UserGuid",
@@ -981,7 +991,7 @@ export const Landcontract = [
     list: [],
   },
   {
-    table: "",
+    table: "Branch",
     name: "BranchGuid",
     key: "unique",
     label: "BranchGuid",
@@ -1053,7 +1063,7 @@ export const Landcontract = [
   { name: "Period", type: "number", label: "Period", required: false },
   { name: "OtherFee", type: "number", label: "OtherFee", required: false },
   {
-    table: "",
+    table: "account",
     name: "OtherFeeAccountGUID",
     key: "unique",
     label: "OtherFeeAccountGUID",
@@ -1062,7 +1072,7 @@ export const Landcontract = [
   },
   { name: "OtherFee1", type: "number", label: "OtherFee1", required: false },
   {
-    table: "",
+    table: "account",
     name: "OtherFeeAccount1GUID",
     key: "unique",
     label: "OtherFeeAccount1GUID",
@@ -1071,7 +1081,7 @@ export const Landcontract = [
   },
   { name: "OtherFee2", type: "number", label: "OtherFee2", required: false },
   {
-    table: "",
+    table: "account",
     name: "OtherFeeAccount2GUID",
     key: "unique",
     label: "OtherFeeAccount2GUID",
@@ -1080,7 +1090,7 @@ export const Landcontract = [
   },
   { name: "OtherFee3", type: "number", label: "OtherFee3", required: false },
   {
-    table: "",
+    table: "account",
     name: "OtherFeeAccount3GUID",
     key: "unique",
     label: "OtherFeeAccount3GUID",
@@ -1089,7 +1099,7 @@ export const Landcontract = [
   },
   { name: "OtherFee4", type: "number", label: "OtherFee4", required: false },
   {
-    table: "",
+    table: "account",
     name: "OtherFeeAccount4GUID",
     key: "unique",
     label: "OtherFeeAccount4GUID",
@@ -1098,7 +1108,7 @@ export const Landcontract = [
   },
   { name: "OtherFee5", type: "number", label: "OtherFee5", required: false },
   {
-    table: "",
+    table: "account",
     name: "OtherFeeAccount5GUID",
     key: "unique",
     label: "OtherFeeAccount5GUID",
@@ -1137,7 +1147,7 @@ export const Landcontract = [
   },
   { name: "RoundKind", type: "number", label: "RoundKind", required: false },
   {
-    table: "",
+    table: "account",
     name: "FineRevenueAccountGUID",
     key: "unique",
     label: "FineRevenueAccountGUID",
@@ -1151,7 +1161,13 @@ export const Landcontract = [
     required: false,
   },
   { name: "Fine", type: "number", label: "Fine", required: false },
-  { name: "FineAccount", type: "text", label: "FineAccount", required: false },
+  {
+    key: "unique",
+    required: false,
+    label: "FineAccount",
+    name: "FineAccount",
+    table: "account",
+  },
   { name: "FineNote", type: "text", label: "FineNote", required: false },
   {
     name: "CreateResultingEntry",
@@ -1159,18 +1175,23 @@ export const Landcontract = [
     label: "CreateResultingEntry",
     required: false,
   },
+  // new
   {
-    name: "AccountContractPrice",
-    type: "text",
+    required: false,
     label: "AccountContractPrice",
-    required: false,
+    name: "AccountContractPrice",
+    key: "unique",
+    table: "account",
   },
   {
-    name: "AccountCertificatValue",
-    type: "text",
-    label: "AccountCertificatValue",
+    key: "unique",
     required: false,
+    label: "AccountCertificatValue",
+    name: "AccountCertificatValue",
+    key: "unique",
+    table: "Account",
   },
+  // ---
   { name: "License1No", type: "text", label: "License1No", required: false },
   { name: "License2No", type: "text", label: "License2No", required: false },
   { name: "License3No", type: "text", label: "License3No", required: false },
@@ -1251,7 +1272,7 @@ export const Landcontract = [
     required: false,
   },
   {
-    table: "",
+    table: "Realty_Users",
     name: "AcquittancePrintedByGuid",
     key: "unique",
     label: "AcquittancePrintedByGuid",
@@ -1388,7 +1409,7 @@ const OfferPrice_options = [
 const OfferPrice_Minimum = [
   // increasable
   {
-    table: "",
+    table: "Store",
     name: "StoreGuid",
     key: "unique",
     label: "StoreGuid",
@@ -1402,7 +1423,7 @@ const OfferPrice_Minimum = [
 const OfferPrice_Balance = [
   // increasable
   {
-    table: "",
+    table: "Store",
     name: "StoreGuid",
     key: "unique",
     label: "StoreGuid",

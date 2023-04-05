@@ -25,3 +25,7 @@ export { default as FolderMinusIcon } from './FolderMinusIcon';
 export { default as FolderEmptyIcon } from './FolderEmptyIcon';
 export { default as EditIcon } from './EditIcon';
 export { default as BarsIcon } from './BarsIcon';
+export { default as NotAllowIcon } from './NotAllowIcon';
+export { default as HourglassIcon } from './HourglassIcon';
+export { default as CloseIcon } from './CloseIcon';
+export { default as LockIcon } from './LockIcon';

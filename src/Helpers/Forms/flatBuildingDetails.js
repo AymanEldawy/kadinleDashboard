@@ -1,17 +1,5 @@
 export const FlatBuildingDetails = [
-  {
-    name: "Number",
-    type: "number",
-    label: "Number",
-    required: false,
-  },
-  {
-    table: "Building",
-    name: "BuildingGuid",
-    key: "unique",
-    label: "BuildingGuid",
-    list: [],
-  },
+
   {
     name: "Color",
     type: "color",
@@ -91,7 +79,7 @@ export const FlatBuildingDetails = [
     required: false,
   },
   {
-    table: "Building",
+    table: "Customer",
     name: "CustGuid",
     key: "unique",
     label: "CustGuid",

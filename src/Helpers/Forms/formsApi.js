@@ -1,5 +1,5 @@
 import { account, cost, Currency } from "./account";
-import { testentry } from "./testentry";
+// import { testentry } from "./testentry";
 import {
   customer,
   salesman,
@@ -20,7 +20,7 @@ import { FlatBuildingDetails } from "./flatBuildingDetails";
 import { LeaseApartment } from "./LeaseApartment";
 
 export default {
-  testentry, // stand allow
+  // testentry, // stand allow
   // Account
   account,
   cost,

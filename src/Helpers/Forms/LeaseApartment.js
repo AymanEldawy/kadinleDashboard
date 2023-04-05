@@ -3,7 +3,7 @@ import { DropDowns } from "../functions";
 const LeaseApartment_Contract_information = [
   { name: "ContractNo", type: "text", label: "ContractNo", required: false },
   {
-    table: "",
+    table: "Customer",
     name: "CustomerGuid",
     key: "unique",
     label: "CustomerGuid",
@@ -11,7 +11,7 @@ const LeaseApartment_Contract_information = [
     list: [],
   },
   {
-    table: "",
+    table: "building",
     name: "BuildingGuid",
     key: "unique",
     label: "BuildingGuid",
@@ -19,7 +19,7 @@ const LeaseApartment_Contract_information = [
     list: [],
   },
   {
-    table: "",
+    table: "Apartment",
     name: "ApartmentGuid",
     key: "unique",
     label: "ApartmentGuid",
@@ -27,7 +27,7 @@ const LeaseApartment_Contract_information = [
     list: [],
   },
   {
-    table: "",
+    table: "RentInfo",
     name: "RentInfoGuid",
     key: "unique",
     label: "RentInfoGuid",
@@ -35,7 +35,7 @@ const LeaseApartment_Contract_information = [
     list: [],
   },
   {
-    table: "",
+    table: "Salesman",
     name: "SalesManGuid",
     key: "unique",
     label: "SalesManGuid",
@@ -131,7 +131,7 @@ const LeaseApartment_Financial_Information = [
     required: false,
   },
   {
-    table: "",
+    table: "account",
     name: "DiscountAccountGuid",
     key: "unique",
     label: "DiscountAccountGuid",
@@ -193,7 +193,7 @@ const LeaseApartment_Financial_Information = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
     name: "RevenueAccountGuid",
     key: "unique",
     label: "RevenueAccountGuid",
@@ -201,7 +201,7 @@ const LeaseApartment_Financial_Information = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
     name: "CustAccountGuid",
     key: "unique",
     label: "CustAccountGuid",
@@ -209,7 +209,7 @@ const LeaseApartment_Financial_Information = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
     name: "InsuranceAccountGuid",
     key: "unique",
     label: "InsuranceAccountGuid",
@@ -229,7 +229,7 @@ const LeaseApartment_Financial_Information = [
     required: false,
   },
   {
-    table: "",
+    table: "account",
     name: "FineRevenueAccountGUID",
     key: "unique",
     label: "FineRevenueAccountGUID",
@@ -240,7 +240,7 @@ const LeaseApartment_Financial_Information = [
 const LeaseApartment_payments = [
   // increasable
   {
-    table: "",
+    table: "ReceiptOrderType",
     name: "TypeGuid",
     key: "unique",
     label: "TypeGuid",
@@ -251,7 +251,7 @@ const LeaseApartment_payments = [
   { name: "Value", type: "text", label: "Value", required: false },
   { name: "BankName", type: "text", label: "BankName", required: false },
   {
-    table: "",
+    table: "Currency",
     name: "CurrencyGUID",
     key: "unique",
     label: "CurrencyGUID",
@@ -277,7 +277,7 @@ const LeaseApartment_Commission = [
     required: false,
   },
   {
-    table: "",
+    table: "account",
     name: "AcCommissionFromCustGuid",
     key: "unique",
     label: "AcCommissionFromCustGuid",
@@ -303,7 +303,7 @@ const LeaseApartment_Commission = [
     required: false,
   },
   {
-    table: "",
+    table: "account",
     name: "AcCommissionFromOwnerGuid",
     key: "unique",
     label: "AcCommissionFromOwnerGuid",
@@ -329,7 +329,7 @@ const LeaseApartment_Commission = [
     required: false,
   },
   {
-    table: "",
+    table: "account",
     name: "AcSalesManCommissionGuid",
     key: "unique",
     label: "AcSalesManCommissionGuid",
@@ -337,7 +337,7 @@ const LeaseApartment_Commission = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
     name: "AcCommissionExpenseGuid",
     key: "unique",
     label: "AcCommissionExpenseGuid",
@@ -354,7 +354,7 @@ const LeaseApartment_Commission = [
 const LeaseApartment_Related_parking_contracts = [
   { name: "Number", type: "text", label: "Number", required: false },
   {
-    table: "",
+    table: "LeaseApartment",
     name: "ParentGuid",
     key: "unique",
     label: "ParentGuid",
@@ -362,7 +362,7 @@ const LeaseApartment_Related_parking_contracts = [
     list: [],
   },
   {
-    table: "",
+    table: "ParkingContract",
     name: "ParkingContractGuid",
     key: "unique",
     label: "ParkingContractGuid",
@@ -459,7 +459,7 @@ const LeaseApartment_Fixed_assets = [
   // Increasable
   { name: "ODate", type: "date", label: "ODate", required: false },
   {
-    table: "",
+    table: "Realty_Users",
     name: "UserGuid",
     key: "unique",
     label: "UserGuid",

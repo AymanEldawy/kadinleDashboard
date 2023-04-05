@@ -4,6 +4,7 @@ import {
   ExclamationTriangle,
   HandStopIcon,
   InformationIcon,
+  NotAllowIcon,
 } from "../../Helpers/Icons";
 import Modal from "../Modal/Modal";
 
@@ -15,7 +16,8 @@ const Alert = ({ alertMessage, dispatchAlert }) => {
       case "error":
         return (
           <>
-            <HandStopIcon className="w-28 h-28 text-red-500" />
+            {/* <HandStopIcon className="w-28 h-28 text-red-500" /> */}
+            <NotAllowIcon className="fill-text-red-500 w-28 h-28 text-red-500" />
             <p className="text-lg text-red-700">{alert?.msg}</p>
           </>
         );

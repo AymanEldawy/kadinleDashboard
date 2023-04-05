@@ -25,7 +25,7 @@ export const mat = [
   { name: "unityfix3", type: "checkbox", label: "unityfix3", required: false },
   { name: "Note", type: "text", label: "Note", required: false },
   {
-    table: "",
+    table: "MatGroup",
     name: "GroupGuid",
     type: "unique",
     label: "GroupGuid",
@@ -96,7 +96,7 @@ export const matgroup = [
   { name: "LtnName", type: "text", label: "LtnName", required: false },
   { name: "Note", type: "text", label: "Note", required: false },
   {
-    table: "",
+    table: "MatGroup",
     name: "ParentGuid",
     type: "unique",
     label: "ParentGuid",
@@ -126,7 +126,7 @@ export const Store = [
   },
   { name: "Note", type: "text", label: "Note", required: false },
   {
-    table: "",
+    table: "Store",
     name: "ParentGuid",
     type: "unique",
     label: "ParentGuid",
@@ -134,7 +134,7 @@ export const Store = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
     name: "AcFinalGUID",
     type: "unique",
     label: "AcFinalGUID",

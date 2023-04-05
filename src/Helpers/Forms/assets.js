@@ -14,7 +14,7 @@ export const AssetsGroup = [
   { name: "LtnName", type: "text", label: "LtnName", required: false },
   { name: "Note", type: "text", label: "Note", required: false },
   {
-    table: "AssetGroup",
+    table: "AssetsGroup",
     name: "ParentGuid",
     key: "unique",
     label: "ParentGuid",
@@ -24,7 +24,19 @@ export const AssetsGroup = [
 ];
 
 const Assets_General = [
-  { name: "AssetsGroup", type: "text", label: "AssetsGroup", required: false },
+  {
+    type: "text",
+    required: false,
+    label: "Number",
+    name: "Number",
+  },
+  {
+    required: false,
+    label: "AssetsGroupGuid",
+    name: "AssetsGroupGuid",
+    key: "unique",
+    table: "AssetsGroup",
+  },
   { name: "Code", type: "text", label: "Code", required: false },
   { name: "Name", type: "text", label: "Name", required: false },
   { name: "Barcode", type: "text", label: "Barcode", required: false },
@@ -48,12 +60,11 @@ const Assets_General = [
   },
   { name: "state", type: "text", label: "state", required: false },
   { name: "Origin", type: "text", label: "Origin", required: false },
-  { name: "Importer", type: "text", label: "Importer", required: false },
 ];
 
 const Assets_Accounts = [
   {
-    table: "",
+    table: "account",
     name: "AsstesAccountGuid",
     key: "unique",
     label: "AsstesAccountGuid",
@@ -61,8 +72,7 @@ const Assets_Accounts = [
     list: [],
   },
   {
-    table: "",
-
+    table: "account",
     name: "ExpenseAccountGuid",
     key: "unique",
     label: "ExpenseAccountGuid",
@@ -70,8 +80,7 @@ const Assets_Accounts = [
     list: [],
   },
   {
-    table: "",
-
+    table: "account",
     name: "DepreciationAccountGuid",
     key: "unique",
     label: "DepreciationAccountGuid",
@@ -79,8 +88,7 @@ const Assets_Accounts = [
     list: [],
   },
   {
-    table: "",
-
+    table: "account",
     name: "DepreciationTotalAccountGuid",
     key: "unique",
     label: "DepreciationTotalAccountGuid",
@@ -88,7 +96,7 @@ const Assets_Accounts = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
 
     name: "ProfitAccountGuid",
     key: "unique",
@@ -97,7 +105,7 @@ const Assets_Accounts = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
     name: "lossesAccountGuid",
     key: "unique",
     label: "lossesAccountGuid",
@@ -105,7 +113,7 @@ const Assets_Accounts = [
     list: [],
   },
   {
-    table: "",
+    table: "account",
     name: "EvaluationAccountGuid",
     key: "unique",
     label: "EvaluationAccountGuid",
@@ -116,7 +124,7 @@ const Assets_Accounts = [
 const Assets_Input = [
   { name: "Importer", type: "text", label: "Importer", required: false },
   {
-    table: "",
+    table: "account",
     name: "EnterAccountGuid",
     key: "unique",
     label: "EnterAccountGuid",
@@ -142,7 +150,7 @@ const Assets_Input = [
     list: [],
   },
   {
-    table: "",
+    table: "cost",
     name: "EnterCreditCostGuid",
     key: "unique",
     label: "EnterCreditCostGuid",
@@ -225,8 +233,36 @@ const Assets_Depreciation = [
     label: "DepreciationMode",
     required: false,
   },
-  // { name: "", type: "text", label: "", required: false },
-  // { name: "", type: "text", label: "", required: false },
+  {
+    type: "text",
+    required: false,
+    label: "IsDepreciationMonthly",
+    name: "IsDepreciationMonthly",
+  },
+  {
+    type: "text",
+    required: false,
+    label: "DepreciationBeginDate",
+    name: "DepreciationBeginDate",
+  },
+  {
+    type: "number",
+    required: false,
+    label: "Age",
+    name: "Age",
+  },
+  {
+    type: "text",
+    required: false,
+    label: "DepreciationAvg",
+    name: "DepreciationAvg",
+  },
+  {
+    type: "text",
+    required: false,
+    label: "ScrapValue",
+    name: "ScrapValue",
+  },
   {
     name: "OldYearExtra",
     type: "number",
@@ -263,7 +299,7 @@ const Assets_Asset_sale = [
     required: false,
   },
   {
-    table: "",
+    table: "account",
     name: "SalesAccountGuid",
     key: "unique",
     label: "SalesAccountGuid",
@@ -272,7 +308,7 @@ const Assets_Asset_sale = [
   },
   { name: "SaleValue", type: "number", label: "SaleValue", required: false },
   {
-    table: "",
+    table: "Currency",
     name: "CurrencySaleGUID",
     key: "unique",
     label: "CurrencySaleGUID",

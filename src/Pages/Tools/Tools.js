@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import SuperForm from "../../Components/CustomForm/SuperForm";
 import TableForm from "../../Components/Forms/TableForm/TableForm";
@@ -8,111 +8,240 @@ import { Button } from "../../Components/Global/Button";
 import ContentBar from "../../Components/Global/ContentBar/ContentBar";
 import FormHeadingTitle from "../../Components/Global/FormHeadingTitle";
 import formsApi from "../../Helpers/Forms/formsApi";
-import { PlusIcon } from "../../Helpers/Icons";
+import {
+  CloseIcon,
+  LockIcon,
+  NotAllowIcon,
+  PlusIcon,
+} from "../../Helpers/Icons";
 import MinusIcon from "../../Helpers/Icons/MinusIcon";
-
-const itemsCount = Array(50).fill("transparent");
-
-const cacheList = {};
+import ToolsTabs from "./ToolsTabs";
+import { useCallback } from "react";
+import { hexToDecimal } from "../../Helpers/functions";
+const CACHE_LIST = {};
 const getCachedList = (tableName) => {
-  return cacheList[tableName];
+  return CACHE_LIST[tableName];
 };
+const CACHE_LIST_COLORS = {};
 
 const Tools = () => {
-  const { Guid } = useParams();
+  const { num } = useParams();
   const [count, setCount] = useState(25);
   const [refresh, setRefresh] = useState(false);
   const [selectedColor, setSelectedColor] = useState("");
   const [getValuesWithoutSubmit, setGetValuesWithoutSubmit] = useState();
   const fields = formsApi["FlatBuildingDetails"];
-  const [items, setItems] = useState(itemsCount);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
-  const [colors, setColors] = useState([
-    "#f03",
-    "#973",
-    "#f08",
-    "#8d3",
-    "#0ed",
-    "#0da",
-    "#0e5",
-  ]);
+  const [flatsDetails, setFlatsDetails] = useState({});
+  const [canInsertColor, setCanInsertColor] = useState(false);
 
   const getLists = async (tableName) => {
-    console.log(tableName);
     await axios
       .post(`/list`, {
         table: tableName,
       })
       .then((res) => {
-        cacheList[tableName] = res?.data?.recordset;
+        CACHE_LIST[tableName] = res?.data?.recordset;
       });
   };
   const getApartments = async () => {
-    console.log("run....");
     setLoading(true);
     await axios
-      // .post(`/find/apartment`, {
-      //   Guid: "31C8F1EE-6E04-441F-A76C-D15CE60D2327",
-      // })
-      .post(`/iteminfo`, {
+      .post(`/findPropertyOfBuilding`, {
         table: "Building",
-        num: "31C8F1EE-6E04-441F-A76C-D15CE60D2327",
+        building: "31C8F1EE-6E04-441F-A76C-D15CE60D2327",
       })
       .then((res) => {
-        console.table(res?.data?.recordset);
-        setData(res?.data?.recordset);
+        console.log(res)
+        setData(res?.data?.recordset[0]);
       });
     setLoading(false);
   };
+  // const getApartments = async () => {
+  //   setLoading(true);
+  //   await axios
+  //     .post(`/iteminfo`, {
+  //       table: "Building",
+  //       num: "31C8F1EE-6E04-441F-A76C-D15CE60D2327",
+  //     })
+  //     .then((res) => {
+  //       setData(res?.data?.recordset[0]);
+  //     });
+  //   setLoading(false);
+  // };
 
   useEffect(() => {
     getApartments();
     getLists("Building");
     getLists("cust");
   }, []);
+  useEffect(() => {}, [refresh]); // Refresh / force rerender
   useEffect(() => {
-    let customColors = [];
-    if (getValuesWithoutSubmit) {
-      for (const row of Object.values(getValuesWithoutSubmit)) {
-        console.log(row);
-        if (row["Color"]) {
-          customColors.push(row["Color"]);
-        }
-      }
-      console.log(customColors, getValuesWithoutSubmit);
-      setColors(customColors);
+    for (const key in getValuesWithoutSubmit) {
+      CACHE_LIST_COLORS[key] = getValuesWithoutSubmit[key];
     }
+    setRefresh((p) => !p);
   }, [getValuesWithoutSubmit]);
-  useEffect(() => {}, [refresh]);
-  const onDecrement = () => {
+  const onDecrement = useCallback(() => {
     if (count > 1) {
       setCount((prev) => prev - 1);
     }
-  };
-  const onIncrement = () => {
+  });
+  const onIncrement = useCallback(() => {
     if (count < 30) {
       setCount((prev) => prev + 1);
     }
-  };
+  });
   // select color
-  const onSelectColor = (color) => {
-    setSelectedColor(color);
+  const onSelectColor = useCallback(
+    (key) => {
+      setSelectedColor(key);
+      setCanInsertColor(true);
+    },
+    [selectedColor]
+  );
+  const preventInsertColor = () => {
+    setSelectedColor("");
+    setCanInsertColor(false);
   };
-  const insertColor = (index) => {
-    let newItems = items;
-    newItems[index] = selectedColor;
-    console.log(index, newItems);
-    setItems(newItems);
-    setRefresh((p) => !p);
-  };
+
+  const insertColor =
+    //  useCallback(
+    (tabName, indexY, indexX) => {
+      if (selectedColor?.Color !== "") {
+        setFlatsDetails((prev) => {
+          return {
+            ...prev,
+            [tabName]: {
+              ...prev?.[tabName],
+              [indexY]: {
+                ...prev?.[tabName]?.[indexY],
+                [indexX]: {
+                  ...prev?.[tabName]?.[indexY]?.[indexX],
+                  index: selectedColor,
+                },
+              },
+            },
+          };
+        });
+        setRefresh((p) => !p);
+      }
+    };
+  console.log(flatsDetails);
+  // [refresh]
+  // );
+  const removeRow = useCallback(
+    (tabName, row) => {
+      let newFlatDetails = flatsDetails;
+      delete newFlatDetails[tabName][row];
+      setFlatsDetails(newFlatDetails);
+      setRefresh((p) => !p);
+    },
+    [flatsDetails, refresh]
+  );
+  const removeMatrix = useCallback(
+    (tabName, y, x) => {
+      let newFlatDetails = flatsDetails;
+      for (let index = 0; index < y; index++) {
+        delete newFlatDetails[tabName][index][x];
+      }
+      setFlatsDetails(newFlatDetails);
+      setRefresh((p) => !p);
+    },
+    [flatsDetails, refresh]
+  );
+  const removeOneItemColor = useCallback(
+    (tabName, y, x) => {
+      let newFlatDetails = flatsDetails;
+      delete newFlatDetails?.[tabName]?.[y]?.[x];
+      setFlatsDetails(newFlatDetails);
+      setRefresh((p) => !p);
+    },
+    [flatsDetails, refresh]
+  );
+  const removeFromColor = useCallback(
+    (tabName, indexY, indexX, direction) => {
+      if (direction === "vertical") {
+        removeMatrix(tabName, indexY, indexX);
+      } else {
+        removeRow(tabName, indexY);
+      }
+    },
+    [flatsDetails]
+  );
   // handel Submit
-  const onSubmit = () => {};
+  const onSubmit = () => {
+    // Structure of data
+    // CACHE_LIST_COLORS Object 1 remove Number & BuildingGuid
+    for (const key in CACHE_LIST_COLORS) {
+      delete CACHE_LIST_COLORS?.[key]["Number"];
+      delete CACHE_LIST_COLORS?.[key]["BuildingGuid"];
+      CACHE_LIST_COLORS[key]["Color"] = hexToDecimal(
+        CACHE_LIST_COLORS[key]?.Color?.substr(1)
+      );
+    }
+    let newFlatDetails = flatsDetails;
+    for (const row in flatsDetails) {
+      for (const cols in flatsDetails[row]) {
+        for (const currentIndex in flatsDetails[row][cols]) {
+          let item = flatsDetails?.[row]?.[cols]?.[currentIndex];
+          if (item) {
+            newFlatDetails[row][cols][[currentIndex]] = {
+              ...CACHE_LIST_COLORS[item?.index],
+            };
+          }
+        }
+      }
+    }
+    console.log(CACHE_LIST_COLORS, "submit");
+    console.log(flatsDetails, "submit");
+    console.log(newFlatDetails, "submit");
+    // convert hex to decimal
+    // FlatDetails Object two
+  };
 
   return (
     <BlockPaper
       contentBar={
-        <ContentBar title="Flat Building Details">
+        <ContentBar
+          title="Flat Building Details"
+          description={
+            <Link
+              to={`updates/building/${12345}`}
+              className="text-blue-500 dark:text-white hover:underline text-sm"
+            >
+              {data?.Name ? data?.Name : "Edit Building"}
+            </Link>
+          }
+        >
+          <div className="flex gap-1">
+            {!!CACHE_LIST_COLORS
+              ? Object.entries(CACHE_LIST_COLORS)?.map(([key, value]) => (
+                  <>
+                    {value?.Color ? (
+                      <button
+                        onClick={() => onSelectColor(key)}
+                        className={`h-7 min-w-[50px] ${
+                          selectedColor === key
+                            ? "rounded-3xl border-2 border-gray-50"
+                            : ""
+                        } `}
+                        style={{ background: value?.Color }}
+                      ></button>
+                    ) : null}
+                  </>
+                ))
+              : null}
+            <button
+              onClick={preventInsertColor}
+              className={`px-4 py-1 bg-green-500 rounded-sm text-white ${
+                !canInsertColor ? " bg-red-500 " : ""
+              }`}
+            >
+              <LockIcon open={!canInsertColor} className="h-5 w-5" />
+            </button>
+          </div>
           <div className="flex bg-white dark:bg-borderdark shadow-sm rounded min-w-[70px] overflow-hidden">
             <button
               className="hover:text-blue-500 dark:hover:text-white flex-1 p-1 disabled:bg-gray-50 scale-90"
@@ -128,15 +257,6 @@ const Tools = () => {
               <PlusIcon />
             </button>
           </div>
-          <div className="flex gap-1">
-            {colors?.map((color) => (
-              <button
-                onClick={() => onSelectColor(color)}
-                className="h-7 min-w-[50px]"
-                style={{ background: color }}
-              ></button>
-            ))}
-          </div>
         </ContentBar>
       }
     >
@@ -144,17 +264,21 @@ const Tools = () => {
         initialFields={fields}
         rowLength={count}
         getCachedList={getCachedList}
-        // selectColor={selectColor}
         getValuesWithoutSubmit={setGetValuesWithoutSubmit}
       />
-      <div className="flex gap-2 flex-wrap">
-        {items?.map((r, index) => (
-          <div
-            onClick={() => insertColor(index)}
-            style={{ background: r }}
-            className={`cursor-cell border-dashed h-7 min-w-[40px] rounded-md border border-gray-700`}
-          ></div>
-        ))}
+
+      <ToolsTabs
+        data={data}
+        insertColor={insertColor}
+        canInsertColor={canInsertColor}
+        flatsDetails={flatsDetails}
+        setFlatsDetails={setFlatsDetails}
+        removeFromColor={removeFromColor}
+        CACHE_LIST_COLORS={CACHE_LIST_COLORS}
+        removeOneItemColor={removeOneItemColor}
+      />
+      <div className="mt-8 flex justify-end">
+        <Button onClick={onSubmit} title="Submit" />
       </div>
     </BlockPaper>
   );

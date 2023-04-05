@@ -29,9 +29,9 @@ function getAllColumns(table) {
   }
   return columns;
 }
-const cacheList = {};
+const CACHE_LIST = {};
 const getCachedList = (tableName) => {
-  return cacheList[tableName];
+  return CACHE_LIST[tableName];
 };
 const List = () => {
   const params = useParams();
@@ -76,7 +76,7 @@ const List = () => {
         table: tableName,
       })
       .then((res) => {
-        cacheList[tableName] = res?.data?.recordset;
+        CACHE_LIST[tableName] = res?.data?.recordset;
       });
   };
   const getRefData = async () => {
@@ -92,7 +92,7 @@ const List = () => {
             if (item?.reffedTables !== name) {
               getLists(item?.Referenced_Table);
             } else {
-              cacheList[name] = data;
+              CACHE_LIST[name] = data;
             }
             collect[item?.Column] = item?.Referenced_Table;
           }

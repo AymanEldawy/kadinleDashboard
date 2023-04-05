@@ -4,10 +4,8 @@ import { useContext } from "react";
 import { useCallback } from "react";
 import { ListsGuidsContext } from "../../Context/ListsGuidsContext";
 import { PopupFormContext } from "../../Context/PopupFormContext";
-import { cacheList } from "../../Helpers/functions";
 import { PlusIcon } from "../../Helpers/Icons";
-let hashed = {};
-
+import { AlertContext } from "../../Context/AlertContext";
 const Field = ({
   table,
   tableForHashed,
@@ -22,6 +20,7 @@ const Field = ({
   className,
   required,
   value: val,
+  allowSelect,
   ...field
 }) => {
   const [value, setValue] = useState("");
@@ -31,6 +30,7 @@ const Field = ({
   const [dropdown, setDropdown] = useState(false);
   const { dispatchForm } = useContext(PopupFormContext);
   const { addTableList, lists, getGuidName } = useContext(ListsGuidsContext);
+  const { dispatchAlert } = useContext(AlertContext);
   useEffect(() => {
     if (table) {
       async function fetch() {
@@ -86,7 +86,15 @@ const Field = ({
   );
   const handelSelected = useCallback(
     (item) => {
-      // console.log("items", item);
+      if (!!allowSelect && allowSelect(item?.Guid)) {
+        console.log("cant select it");
+        dispatchAlert({
+          type: "error",
+          msg: "Oops! Can't Select this Name again",
+          open: true,
+        });
+        return;
+      }
       setValue(item?.Name);
       setSelected(item);
       setDropdown(false);
@@ -128,12 +136,20 @@ const Field = ({
           value={value}
           autoComplete="on"
           placeholder="Search here"
+          onBlur={(e) => {
+            if (e.target.value === "") {
+              if (!!getSelectedValue)
+                getSelectedValue(field?.name, "", required);
+              if (!!getSelectedValueRef) getSelectedValueRef.current = "";
+              if (!!getSelectedValueWithIndex)
+                getSelectedValueWithIndex(field?.index, field?.name, "");
+            }
+          }}
           onChange={(e) => {
             handelFilter(e.target.value);
             if (!!onChange) onChange();
           }}
           onFocus={() => {
-            // setDropdown(true);
             if (!!onFocus) {
               onFocus();
             }

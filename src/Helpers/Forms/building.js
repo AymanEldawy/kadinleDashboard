@@ -311,7 +311,7 @@ const Building_ownerships = [
     required: false,
   },
   {
-    table: "",
+    table: "account",
     name: "AccountCommIncomeGuid",
     key: "unique",
     label: "AccountCommIncomeGuid",

@@ -8,6 +8,7 @@ import TableHead from "../../CustomTable/TableHead";
 import TableHeadCol from "../../CustomTable/TableHeadCol";
 import TableRow from "../../CustomTable/TableRow";
 import { Button } from "../../Global/Button";
+import { memo } from "react";
 
 const TableForm = ({
   onOpen,
@@ -66,7 +67,7 @@ const TableForm = ({
           columns?.length > 5 ? "" : "max-w-[900px]"
         } mx-auto pb-8 overflow-auto max-h-[420px] dark:border-borderdark`}
       >
-        <TableHead classes="dark:bg-[#555] dark:text-gray-200">
+        <TableHead classes="dark:bg-[##5490d3] !bg-[#5490d3] text-white dark:text-gray-200">
           <TableHeadCol classes="border border-gray-300 dark:border-borderdark !py-3 !text-center">
             <div className="text-center w-full block">#</div>
           </TableHeadCol>
@@ -100,11 +101,14 @@ const TableForm = ({
                   )}
                 </TableCol>
                 {initialFields?.map((field) => (
-                  <TableCol classes="!p-0 border" key={field?.name}>
+                  <TableCol
+                    classes="!p-0 border  dark:border-borderdark text-center"
+                    key={field?.name}
+                  >
                     {field?.key === "unique" ? (
                       <Field
                         value={grid?.[index + 1]?.[field?.name]}
-                        className="min-w-[140px] border-0"
+                        className="min-w-[140px] !border-0 !rounded-none !h-full !bg-transparent"
                         name={field?.name}
                         getSelectedValueWithIndex={handelChangeField}
                         tableForHashed={field?.table}
@@ -115,7 +119,9 @@ const TableForm = ({
                     ) : (
                       <InputField
                         value={grid?.[index + 1]?.[field?.name]}
-                        className="border-0"
+                        className={`!border-0 !rounded-none !bg-transparent ${
+                          field?.type === "color" ? "" : "!h-full"
+                        }`}
                         name={field?.name}
                         type={field?.type}
                         required={field?.required}
@@ -156,4 +162,4 @@ const TableForm = ({
   );
 };
 
-export default TableForm;
+export default memo(TableForm);

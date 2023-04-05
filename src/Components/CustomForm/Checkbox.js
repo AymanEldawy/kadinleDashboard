@@ -1,8 +1,16 @@
 import React from "react";
 
-const Checkbox = ({ label, name, value, checked, onChange, ...field }) => {
+const Checkbox = ({
+  label,
+  name,
+  value,
+  checked,
+  onChange,
+  className,
+  ...field
+}) => {
   return (
-    <div className="flex items-center mr-4">
+    <div className={`flex items-center mr-4 ${className}`}>
       <label
         for={label}
         className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-400 flex gap-1 capitalize items-center p-1 px-2 rounded-md has-checked"

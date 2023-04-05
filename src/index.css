@@ -229,3 +229,14 @@ body.dark .has-checked:has(input:checked) input {
 .tooltip:hover::before {
   opacity: 1;
 }
+
+
+.tools-tab-item button {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .1s ease-in;
+}
+.tools-tab-item:hover button {
+  opacity: 1;
+  pointer-events: unset;
+} 

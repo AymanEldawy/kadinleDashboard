@@ -15,5 +15,11 @@ module.exports = {
       bgdark: "",
     }),
   },
-  plugins: [],
+  variants: {
+    textColor: ["responsive", "hover", "focus", "group-hover"],
+    opacity: ["responsive", "hover", "focus", "group-hover"],
+  },
+  plugins: [
+    
+  ],
 };

@@ -1,16 +1,16 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const sql = require('mssql');
+const sql = require("mssql");
 
-const cors = require('cors');
+const cors = require("cors");
 
 const sqlConfig = {
-  user: 'ayman',
-  password: '12345',
-  database: 'Matiestate',
-  server: 'DESKTOP-VPIP642',
+  user: "ayman",
+  password: "12345",
+  database: "Matiestate",
+  server: "DESKTOP-VPIP642",
   options: {
-    instanceName: 'MSSQLSERVER',
+    instanceName: "MSSQLSERVER",
     trustServerCertificate: true,
   },
 };
@@ -19,10 +19,10 @@ app.use(cors());
 app.use(express.json());
 // const db = sql.connect(sqlConfig);
 
-app.post('/pullguid', (req, res) => {
+app.post("/pullguid", (req, res) => {
   const name = req.body.name;
   const table = req.body.table;
-  const select = 'SELECT * FROM ' + table + " WHERE Name='" + name + "'";
+  const select = "SELECT * FROM " + table + " WHERE Name='" + name + "'";
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -37,10 +37,10 @@ app.post('/pullguid', (req, res) => {
   });
 });
 
-app.post('/delete', (req, res) => {
+app.post("/delete", (req, res) => {
   const table = req.body.table;
   const Guid = req.body.Guid;
-  const select = 'DELETE FROM ' + table + " WHERE Guid='" + Guid + "'";
+  const select = "DELETE FROM " + table + " WHERE Guid='" + Guid + "'";
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -55,45 +55,46 @@ app.post('/delete', (req, res) => {
   });
 });
 
-app.get('/hello', (req, res) => {
-  res.send('Hello World!');
+app.get("/hello", (req, res) => {
+  res.send("Hello World!");
 });
 
-app.post('/create', (req, res) => {
+app.post("/create", (req, res) => {
   const dat = req.body.dat;
   const table = req.body.table;
   const columns = req.body.columns;
-  let array = '';
-  let columnList = '';
-  let amount = '';
+  let array = "";
+  let columnList = "";
+  let amount = "";
   for (let i = 0; i < columns.length; i++) {
     if (i == columns.length - 1) {
       columnList = columnList + columns[i];
       array = array + "'" + dat[columns[i]] + "'";
-      amount = amount + '?';
+      amount = amount + "?";
     } else {
-      columnList = columnList + columns[i] + ', ';
-      array = array + "'" + dat[columns[i]] + "'" + ', ';
-      amount = amount + '?,';
+      columnList = columnList + columns[i] + ", ";
+      array = array + "'" + dat[columns[i]] + "'" + ", ";
+      amount = amount + "?,";
     }
   }
 
   let insert;
-  if (dat['Number']) {
+  if (dat["Number"]) {
     insert =
-      'SET IDENTITY_INSERT ' +
+      "SET IDENTITY_INSERT " +
       table +
-      ' ON INSERT INTO ' +
+      " ON INSERT INTO " +
       table +
-      '(' +
+      "(" +
       columnList +
-      ') VALUES (' +
+      ") VALUES (" +
       array +
-      ') SET IDENTITY_INSERT ' +
+      ") SET IDENTITY_INSERT " +
       table +
-      ' OFF';
+      " OFF";
   } else {
-    insert = 'INSERT INTO ' + table + '(' + columnList + ') VALUES (' + array + ')';
+    insert =
+      "INSERT INTO " + table + "(" + columnList + ") VALUES (" + array + ")";
   }
   sql.connect(sqlConfig, function (err) {
     if (err) {
@@ -111,43 +112,50 @@ app.post('/create', (req, res) => {
   });
 });
 
-app.post('/createEntryParent', (req, res) => {
+app.post("/createEntryParent", (req, res) => {
   const dat = req.body.dat;
   const table = req.body.table;
   const columns = req.body.columns;
-  let array = '';
-  let columnList = '';
-  let amount = '';
+  let array = "";
+  let columnList = "";
+  let amount = "";
   for (let i = 0; i < columns.length; i++) {
     if (i == columns.length - 1) {
       columnList = columnList + columns[i];
       array = array + "'" + dat[columns[i]] + "'";
-      amount = amount + '?';
+      amount = amount + "?";
     } else {
-      columnList = columnList + columns[i] + ', ';
-      array = array + "'" + dat[columns[i]] + "'" + ', ';
-      amount = amount + '?,';
+      columnList = columnList + columns[i] + ", ";
+      array = array + "'" + dat[columns[i]] + "'" + ", ";
+      amount = amount + "?,";
     }
   }
 
   let insert;
-  if (dat['Number']) {
+  if (dat["Number"]) {
     insert =
-      'SET IDENTITY_INSERT ' +
+      "SET IDENTITY_INSERT " +
       table +
-      ' ON INSERT INTO ' +
+      " ON INSERT INTO " +
       table +
-      '(' +
+      "(" +
       columnList +
-      ') VALUES (' +
+      ") VALUES (" +
       array +
-      ') SET IDENTITY_INSERT ' +
+      ") SET IDENTITY_INSERT " +
       table +
-      ' OFF';
+      " OFF";
   } else {
-    insert = 'INSERT INTO ' + table + '(' + columnList + ') OUTPUT inserted.Guid VALUES (' + array + ')';
+    insert =
+      "INSERT INTO " +
+      table +
+      "(" +
+      columnList +
+      ") OUTPUT inserted.Guid VALUES (" +
+      array +
+      ")";
   }
-  console.log(insert)
+  console.log(insert);
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -159,84 +167,95 @@ app.post('/createEntryParent', (req, res) => {
         res.send(err);
       } else {
         const guid = result.recordset[0].Guid;
-        console.log(guid)
-        createEntryChild(req.body.childData, req.body.childTable, req.body.childColumns, guid);
+        console.log(guid);
+        createEntryChild(
+          req.body.childData,
+          req.body.childTable,
+          req.body.childColumns,
+          guid
+        );
       }
     });
   });
 });
 
 function createEntryChild(data, table, columns, guid) {
-  for(let i in Object.keys(data)) {
+  for (let i in Object.keys(data)) {
     let dat = data[i];
-    console.log('IT WORKS!')
-    if(guid){
-      dat['ParentGuid'] = guid;
+    console.log("IT WORKS!");
+    if (guid) {
+      dat["ParentGuid"] = guid;
     }
-    dat['Number'] = parseInt(i)+1;
-    if (!columns.includes('Number')) {
-      columns.push('Number');
+    dat["Number"] = parseInt(i) + 1;
+    if (!columns.includes("Number")) {
+      columns.push("Number");
     }
-    if (!columns.includes('ParentGuid')) {
-      columns.push('ParentGuid');
+    if (!columns.includes("ParentGuid")) {
+      columns.push("ParentGuid");
     }
-  let array = '';
-  let columnList = '';
-  let amount = '';
-  for (let i = 0; i < columns.length; i++) {
-    if (typeof dat[columns[i]] !== 'undefined') {
-    if (i == columns.length - 1) {
-      columnList = columnList + columns[i];
-      array = array + "'" + dat[columns[i]] + "'";
-      amount = amount + '?';
-    } else {
-      columnList = columnList + columns[i] + ', ';
-      array = array + "'" + dat[columns[i]] + "'" + ', ';
-      amount = amount + '?,';
-    }}
-  }
-  
-  let insert;
-  if (dat['Number']) {
-    insert =
-      'SET IDENTITY_INSERT ' +
-      table +
-      ' ON INSERT INTO ' +
-      table +
-      '(' +
-      columnList +
-      ') VALUES (' +
-      array +
-      ') SET IDENTITY_INSERT ' +
-      table +
-      ' OFF';
-  } else {
-    insert = 'INSERT INTO ' + table + '(' + columnList + ') VALUES (' + array + ')';
-  }
-  console.log(insert)
-  sql.connect(sqlConfig, function (err) {
-    if (err) {
-      console.log(err);
+    let array = "";
+    let columnList = "";
+    let amount = "";
+    for (let i = 0; i < columns.length; i++) {
+      if (typeof dat[columns[i]] !== "undefined") {
+        if (i == columns.length - 1) {
+          columnList = columnList + columns[i];
+          array = array + "'" + dat[columns[i]] + "'";
+          amount = amount + "?";
+        } else {
+          columnList = columnList + columns[i] + ", ";
+          array = array + "'" + dat[columns[i]] + "'" + ", ";
+          amount = amount + "?,";
+        }
+      }
     }
-    var db = new sql.Request();
 
-    db.query(insert, (err, result) => {
+    let insert;
+    if (dat["Number"]) {
+      insert =
+        "SET IDENTITY_INSERT " +
+        table +
+        " ON INSERT INTO " +
+        table +
+        "(" +
+        columnList +
+        ") VALUES (" +
+        array +
+        ") SET IDENTITY_INSERT " +
+        table +
+        " OFF";
+    } else {
+      insert =
+        "INSERT INTO " + table + "(" + columnList + ") VALUES (" + array + ")";
+    }
+    console.log(insert);
+    sql.connect(sqlConfig, function (err) {
       if (err) {
         console.log(err);
-      } else {
-        console.log('success');
       }
+      var db = new sql.Request();
+
+      db.query(insert, (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("success");
+        }
+      });
     });
-  });
   }
 }
 
-app.post('/login', (req, res) => {
+app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.email;
 
   const authenticate =
-    "SELECT * from dbo.users Where Email='" + email + " AND Password= '" + password + "'";
+    "SELECT * from dbo.users Where Email='" +
+    email +
+    " AND Password= '" +
+    password +
+    "'";
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -253,15 +272,15 @@ app.post('/login', (req, res) => {
   });
 });
 
-app.post('/update', (req, res) => {
+app.post("/update", (req, res) => {
   const dat = req.body.dat;
   const table = req.body.table;
   const columns = req.body.columns;
   const num = req.body.num;
-  let array = '';
-  let columnList = '';
-  let amount = '';
-  let setlist = '';
+  let array = "";
+  let columnList = "";
+  let amount = "";
+  let setlist = "";
   for (let i = 0; i < columns.length; i++) {
     if (i == columns.length - 1) {
       setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "'";
@@ -270,7 +289,8 @@ app.post('/update', (req, res) => {
     }
   }
 
-  const insert = 'UPDATE ' + table + ' SET ' + setlist + " WHERE Guid= '" + num + "'";
+  const insert =
+    "UPDATE " + table + " SET " + setlist + " WHERE Guid= '" + num + "'";
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -287,116 +307,134 @@ app.post('/update', (req, res) => {
   });
 });
 
-function updateEntryChild(data, table, guid){
-
-    for(let i of Object.keys(data)){
-      if(data[i]['Guid']){
-    const columns = Object.keys(data[i]);
-    const dat = data[i];
-    const num = data[i]['Guid'];
-    let array = '';
-    let columnList = '';
-    let amount = '';
-    let setlist = '';
-    console.log('Columns are', columns)
-    console.log('data is', data)
-    for (let i = 0; i < columns.length; i++) {
-      if (typeof dat[columns[i]] !== 'undefined' && columns[i] !== 'Guid' && columns[i] !== 'Number' && dat[columns[i]] !== null) {
-      if (i == columns.length - 1) {
-        setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "'";
-      } else {
-        setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "', ";
-      }}
-    }
-  
-    const insert = 'UPDATE ' + table + ' SET ' + setlist + " WHERE Guid= '" + num + "'";
-    console.log(insert)
-    sql.connect(sqlConfig, function (err) {
-      if (err) {
-        console.log(err);
-      }
-      var db = new sql.Request();
-  
-      db.query(insert, (err, result) => {
-        if (err) {
-          console.log(err)
-        } else {
-          console.log('good')
+function updateEntryChild(data, table, guid) {
+  for (let i of Object.keys(data)) {
+    if (data[i]["Guid"]) {
+      const columns = Object.keys(data[i]);
+      const dat = data[i];
+      const num = data[i]["Guid"];
+      let array = "";
+      let columnList = "";
+      let amount = "";
+      let setlist = "";
+      console.log("Columns are", columns);
+      console.log("data is", data);
+      for (let i = 0; i < columns.length; i++) {
+        if (
+          typeof dat[columns[i]] !== "undefined" &&
+          columns[i] !== "Guid" &&
+          columns[i] !== "Number" &&
+          dat[columns[i]] !== null
+        ) {
+          if (i == columns.length - 1) {
+            setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "'";
+          } else {
+            setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "', ";
+          }
         }
-      });
-    });}
-  else{
-    let dat = data[i];
-    const columns = Object.keys(data[i]);
-    console.log('IT WORKS!')
-    dat['ParentGuid'] = guid;
-    dat['Number'] = parseInt(i)+1;
-    if (!columns.includes('Number')) {
-      columns.push('Number');
-    }
-    if (!columns.includes('ParentGuid')) {
-      columns.push('ParentGuid');
-    }
-  let array = '';
-  let columnList = '';
-  let amount = '';
-  for (let i = 0; i < columns.length; i++) {
-    if (typeof dat[columns[i]] !== 'undefined' && dat[columns[i]] !== null) {
-    if (i == columns.length - 1) {
-      columnList = columnList + columns[i];
-      array = array + "'" + dat[columns[i]] + "'";
-      amount = amount + '?';
-    } else {
-      columnList = columnList + columns[i] + ', ';
-      array = array + "'" + dat[columns[i]] + "'" + ', ';
-      amount = amount + '?,';
-    }}
-  }
-  
-  let insert;
-  if (dat['Number']) {
-    insert =
-      'SET IDENTITY_INSERT ' +
-      table +
-      ' ON INSERT INTO ' +
-      table +
-      '(' +
-      columnList +
-      ') VALUES (' +
-      array +
-      ') SET IDENTITY_INSERT ' +
-      table +
-      ' OFF';
-  } else {
-    insert = 'INSERT INTO ' + table + '(' + columnList + ') VALUES (' + array + ')';
-  }
-  console.log(insert)
-  sql.connect(sqlConfig, function (err) {
-    if (err) {
-      console.log(err);
-    }
-    var db = new sql.Request();
-
-    db.query(insert, (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log('success');
       }
-    });
-  });
-  }}
+
+      const insert =
+        "UPDATE " + table + " SET " + setlist + " WHERE Guid= '" + num + "'";
+      console.log(insert);
+      sql.connect(sqlConfig, function (err) {
+        if (err) {
+          console.log(err);
+        }
+        var db = new sql.Request();
+
+        db.query(insert, (err, result) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("good");
+          }
+        });
+      });
+    } else {
+      let dat = data[i];
+      const columns = Object.keys(data[i]);
+      console.log("IT WORKS!");
+      dat["ParentGuid"] = guid;
+      dat["Number"] = parseInt(i) + 1;
+      if (!columns.includes("Number")) {
+        columns.push("Number");
+      }
+      if (!columns.includes("ParentGuid")) {
+        columns.push("ParentGuid");
+      }
+      let array = "";
+      let columnList = "";
+      let amount = "";
+      for (let i = 0; i < columns.length; i++) {
+        if (
+          typeof dat[columns[i]] !== "undefined" &&
+          dat[columns[i]] !== null
+        ) {
+          if (i == columns.length - 1) {
+            columnList = columnList + columns[i];
+            array = array + "'" + dat[columns[i]] + "'";
+            amount = amount + "?";
+          } else {
+            columnList = columnList + columns[i] + ", ";
+            array = array + "'" + dat[columns[i]] + "'" + ", ";
+            amount = amount + "?,";
+          }
+        }
+      }
+
+      let insert;
+      if (dat["Number"]) {
+        insert =
+          "SET IDENTITY_INSERT " +
+          table +
+          " ON INSERT INTO " +
+          table +
+          "(" +
+          columnList +
+          ") VALUES (" +
+          array +
+          ") SET IDENTITY_INSERT " +
+          table +
+          " OFF";
+      } else {
+        insert =
+          "INSERT INTO " +
+          table +
+          "(" +
+          columnList +
+          ") VALUES (" +
+          array +
+          ")";
+      }
+      console.log(insert);
+      sql.connect(sqlConfig, function (err) {
+        if (err) {
+          console.log(err);
+        }
+        var db = new sql.Request();
+
+        db.query(insert, (err, result) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("success");
+          }
+        });
+      });
+    }
+  }
 }
 
-app.post('/updateEntryParent', (req, res) => {
+app.post("/updateEntryParent", (req, res) => {
   const dat = req.body.dat;
   const table = req.body.table;
   const columns = req.body.columns;
   const num = req.body.num;
-  let array = '';
-  let columnList = '';
-  let amount = '';
-  let setlist = '';
+  let array = "";
+  let columnList = "";
+  let amount = "";
+  let setlist = "";
   for (let i = 0; i < columns.length; i++) {
     if (i == columns.length - 1) {
       setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "'";
@@ -405,7 +443,8 @@ app.post('/updateEntryParent', (req, res) => {
     }
   }
 
-  const insert = 'UPDATE ' + table + ' SET ' + setlist + " WHERE Guid= '" + num + "'";
+  const insert =
+    "UPDATE " + table + " SET " + setlist + " WHERE Guid= '" + num + "'";
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -423,16 +462,16 @@ app.post('/updateEntryParent', (req, res) => {
   });
 });
 
-app.post('/updateApp', (req, res) => {
+app.post("/updateApp", (req, res) => {
   const dat = req.body.dat;
   const table = req.body.table;
   const columns = req.body.columns;
   const newguid = req.body.newguid;
   const num = req.body.num;
-  let array = '';
-  let columnList = '';
-  let amount = '';
-  let setlist = '';
+  let array = "";
+  let columnList = "";
+  let amount = "";
+  let setlist = "";
   for (let i = 0; i < columns.length; i++) {
     if (i == columns.length - 1) {
       setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "'";
@@ -442,9 +481,9 @@ app.post('/updateApp', (req, res) => {
   }
 
   const insert =
-    'UPDATE ' +
+    "UPDATE " +
     table +
-    ' SET ' +
+    " SET " +
     setlist +
     " WHERE No= '" +
     num +
@@ -468,10 +507,10 @@ app.post('/updateApp', (req, res) => {
   });
 });
 
-app.post('/iteminfo', (req, res) => {
+app.post("/iteminfo", (req, res) => {
   const table = req.body.table;
   const num = req.body.num;
-  const select = 'select * from dbo.' + table + " WHERE Guid='" + num + "'";
+  const select = "select * from dbo." + table + " WHERE Guid='" + num + "'";
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -486,10 +525,11 @@ app.post('/iteminfo', (req, res) => {
   });
 });
 
-app.post('/rowinfo', (req, res) => {
+app.post("/rowinfo", (req, res) => {
   const table = req.body.table;
   const num = req.body.num;
-  const select = 'select * from dbo.' + table + " WHERE ParentGuid='" + num + "'";
+  const select =
+    "select * from dbo." + table + " WHERE ParentGuid='" + num + "'";
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -504,18 +544,19 @@ app.post('/rowinfo', (req, res) => {
   });
 });
 
-app.post('/', (req, res) => {
+app.post("/", (req, res) => {
   const request = req.body.request;
-  if (request == 'best') {
-    return res.send('Why Not Tech');
+  if (request == "best") {
+    return res.send("Why Not Tech");
   } else {
-    return res.send('Do not bother');
+    return res.send("Do not bother");
   }
 });
 
-app.post('/info', (req, res) => {
+app.post("/info", (req, res) => {
   const table = req.body.table;
-  const select = "select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" + table + "'";
+  const select =
+    "select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" + table + "'";
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -530,9 +571,9 @@ app.post('/info', (req, res) => {
   });
 });
 
-app.post('/list', (req, res) => {
+app.post("/list", (req, res) => {
   const table = req.body.table;
-  const select = 'select * from dbo.' + table;
+  const select = "select * from dbo." + table;
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -547,11 +588,15 @@ app.post('/list', (req, res) => {
   });
 });
 
-app.post('/find/apartment', (req, res) => {
+app.post("/find/apartment", (req, res) => {
   const Guid = req.body.Guid;
   const No = req.body.No;
   const select =
-    "select * from dbo.apartment WHERE BuildingGuid='" + Guid + "' AND No='" + No + "'";
+    "select * from dbo.apartment WHERE BuildingGuid='" +
+    Guid +
+    "' AND No='" +
+    No +
+    "'";
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -566,10 +611,10 @@ app.post('/find/apartment', (req, res) => {
   });
 });
 
-app.post('/search/tables', (req, res) => {
+app.post("/search/tables", (req, res) => {
   const value = req.body.value;
   let tables = [];
-  const select = 'SELECT * FROM INFORMATION_SCHEMA.TABLES';
+  const select = "SELECT * FROM INFORMATION_SCHEMA.TABLES";
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -579,15 +624,16 @@ app.post('/search/tables', (req, res) => {
       if (err) {
         console.log(err);
       }
-      for (let i = 0; i < result['recordset'].length; i++) {
+      for (let i = 0; i < result["recordset"].length; i++) {
         if (value) {
           const ser = value[0].toUpperCase() + value.slice(1);
           const serr = value[0].toLowerCase() + value.slice(1);
           if (
-            result['recordset'][i].TABLE_NAME.substring(0, value.length) == ser ||
-            result['recordset'][i].TABLE_NAME.substring(0, value.length) == serr
+            result["recordset"][i].TABLE_NAME.substring(0, value.length) ==
+              ser ||
+            result["recordset"][i].TABLE_NAME.substring(0, value.length) == serr
           ) {
-            tables.push(result['recordset'][i].TABLE_NAME);
+            tables.push(result["recordset"][i].TABLE_NAME);
           }
         }
       }
@@ -596,11 +642,11 @@ app.post('/search/tables', (req, res) => {
   });
 });
 
-app.post('/search/entries', (req, res) => {
+app.post("/search/entries", (req, res) => {
   const value = req.body.value;
   const table = req.body.table;
   let tables = [];
-  const select = 'select * from ' + table;
+  const select = "select * from " + table;
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -610,15 +656,15 @@ app.post('/search/entries', (req, res) => {
       if (err) {
         console.log(err);
       }
-      for (let i = 0; i < result['recordset'].length; i++) {
+      for (let i = 0; i < result["recordset"].length; i++) {
         if (value) {
           const ser = value[0].toUpperCase() + value.slice(1);
 
           if (
-            result['recordset'][i].Name.substring(0, value.length) == ser ||
-            result['recordset'][i].Name.substring(0, value.length) == value
+            result["recordset"][i].Name.substring(0, value.length) == ser ||
+            result["recordset"][i].Name.substring(0, value.length) == value
           ) {
-            tables.push(result['recordset'][i]);
+            tables.push(result["recordset"][i]);
           }
         }
       }
@@ -627,8 +673,8 @@ app.post('/search/entries', (req, res) => {
   });
 });
 
-app.post('/alerts/get', (req, res) => {
-  const select = 'Select * from dbo.alerts';
+app.post("/alerts/get", (req, res) => {
+  const select = "Select * from dbo.alerts";
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -644,8 +690,9 @@ app.post('/alerts/get', (req, res) => {
   });
 });
 
-app.post('/alerts/check', (req, res) => {
-  const select = 'UPDATE TABLE dbo.alerts SET Read = 1 WHERE Number=' + req.body.num;
+app.post("/alerts/check", (req, res) => {
+  const select =
+    "UPDATE TABLE dbo.alerts SET Read = 1 WHERE Number=" + req.body.num;
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -660,7 +707,7 @@ app.post('/alerts/check', (req, res) => {
   });
 });
 
-app.post('/checkref', (req, res) => {
+app.post("/checkref", (req, res) => {
   const table = req.body.table;
   const key = req.body.key;
   const select =
@@ -682,5 +729,189 @@ app.post('/checkref', (req, res) => {
 });
 
 app.listen(3001, () => {
-  console.log('Server is running on port 3001');
+  console.log("Server is running on port 3001");
+});
+
+function updateBuildingProperties(data, table) {
+  for (let i of Object.keys(data)) {
+    const columns = Object.keys(data[i]);
+    const dat = data[i];
+    const guid = data[i]["Guid"];
+    let array = "";
+    let columnList = "";
+    let amount = "";
+    let setlist = "";
+    console.log("Columns are", columns);
+    console.log("data is", data);
+    for (let i = 0; i < columns.length; i++) {
+      if (
+        typeof dat[columns[i]] !== "undefined" &&
+        columns[i] !== "Guid" &&
+        columns[i] !== "Number" &&
+        dat[columns[i]] !== null
+      ) {
+        if (i == columns.length - 1) {
+          setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "'";
+        } else {
+          setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "', ";
+        }
+      }
+    }
+
+    const insert =
+      "UPDATE " + table + " SET " + setlist + " WHERE Guid= '" + guid + "'";
+    console.log(insert);
+    sql.connect(sqlConfig, function (err) {
+      if (err) {
+        console.log(err);
+      }
+      var db = new sql.Request();
+
+      db.query(insert, (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("good");
+        }
+      });
+    });
+  }
+}
+
+function updateTable(data, table) {
+  for (let i of Object.keys(data)) {
+    if (data[i]["Guid"]) {
+      const columns = Object.keys(data[i]);
+      const dat = data[i];
+      const num = data[i]["Guid"];
+      let array = "";
+      let columnList = "";
+      let amount = "";
+      let setlist = "";
+      console.log("Columns are", columns);
+      console.log("data is", data);
+      for (let i = 0; i < columns.length; i++) {
+        if (
+          typeof dat[columns[i]] !== "undefined" &&
+          columns[i] !== "Guid" &&
+          columns[i] !== "Number" &&
+          dat[columns[i]] !== null
+        ) {
+          if (i == columns.length - 1) {
+            setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "'";
+          } else {
+            setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "', ";
+          }
+        }
+      }
+
+      const insert =
+        "UPDATE " + table + " SET " + setlist + " WHERE Guid= '" + num + "'";
+      console.log(insert);
+      sql.connect(sqlConfig, function (err) {
+        if (err) {
+          console.log(err);
+        }
+        var db = new sql.Request();
+
+        db.query(insert, (err, result) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("good");
+          }
+        });
+      });
+    } else {
+      let dat = data[i];
+      const columns = Object.keys(data[i]);
+      let array = "";
+      let columnList = "";
+      let amount = "";
+      for (let i = 0; i < columns.length; i++) {
+        if (
+          typeof dat[columns[i]] !== "undefined" &&
+          dat[columns[i]] !== null
+        ) {
+          if (i == columns.length - 1) {
+            columnList = columnList + columns[i];
+            array = array + "'" + dat[columns[i]] + "'";
+            amount = amount + "?";
+          } else {
+            columnList = columnList + columns[i] + ", ";
+            array = array + "'" + dat[columns[i]] + "'" + ", ";
+            amount = amount + "?,";
+          }
+        }
+      }
+
+      let insert;
+      if (dat["Number"]) {
+        insert =
+          "SET IDENTITY_INSERT " +
+          table +
+          " ON INSERT INTO " +
+          table +
+          "(" +
+          columnList +
+          ") VALUES (" +
+          array +
+          ") SET IDENTITY_INSERT " +
+          table +
+          " OFF";
+      } else {
+        insert =
+          "INSERT INTO " +
+          table +
+          "(" +
+          columnList +
+          ") VALUES (" +
+          array +
+          ")";
+      }
+      console.log(insert);
+      sql.connect(sqlConfig, function (err) {
+        if (err) {
+          console.log(err);
+        }
+        var db = new sql.Request();
+
+        db.query(insert, (err, result) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("success");
+          }
+        });
+      });
+    }
+  }
+}
+
+app.post("/handleColoring", (req, res) => {
+  const data = req.body.data;
+  const colors = req.body.colors;
+  updateTable(colors, "FlatBuildingDetails");
+  for (let key in Object.keys(data)) {
+    updateBuildingProperties(data[key], key);
+  }
+});
+
+app.post("/findPropertyOfBuilding", (req, res) => {
+  const building = req.body.building;
+  const table = req.body.table;
+  const select =
+    "SELECT * FROM " + table + " WHERE BuildingGuid = '" + building + "'";
+  sql.connect(sqlConfig, function (err) {
+    if (err) {
+      console.log(err);
+    }
+    var db = new sql.Request();
+    db.query(select, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      res.send(result);
+    });
+  });
 });

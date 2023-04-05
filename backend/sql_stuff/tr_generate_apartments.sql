@@ -15,8 +15,8 @@ BEGIN
         SET @j = 0;
         WHILE @j < @apartmentCountOfFloor
         BEGIN
-            INSERT INTO Apartment (BuildingGuid, No, FloorNo)
-            VALUES (@buildingId, CONVERT(varchar(10),@i*100 + @j + 101), @i+1);
+            INSERT INTO Apartment (BuildingGuid, No, FloorNo, UnifiedNum)
+            VALUES (@buildingId, CONVERT(varchar(10),@i*100 + @j + 101), @i+1, j + 1);
 
             SET @j = @j + 1;
         END;

@@ -1,15 +1,17 @@
+import axios from "axios";
 import React, { useContext } from "react";
-import { useLocation, useParams } from "react-router-dom";
-import BlockPaper from "../../Components/BlockPaper/BlockPaper";
-import Layout from "../../Layout";
-import formsApi from "../../Helpers/Forms/formsApi";
-import SuperForm from "../../Components/CustomForm/SuperForm";
 import { useMemo } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import axios from "axios";
-import { AlertContext } from "../../Context/AlertContext";
+import { useLocation, useParams } from "react-router-dom";
+
+import BlockPaper from "../../Components/BlockPaper/BlockPaper";
+import SuperForm from "../../Components/CustomForm/SuperForm";
 import FormHeadingTitleSteps from "../../Components/Global/FormHeadingTitleSteps";
+import { AlertContext } from "../../Context/AlertContext";
+import formsApi from "../../Helpers/Forms/formsApi";
+import { generateApartments } from "../../Helpers/functions";
+import Layout from "../../Layout";
 
 function getForm(form) {
   return formsApi[form];
@@ -26,7 +28,7 @@ const Update = () => {
   const [loading, setLoading] = useState(false);
   const { alertMessage, dispatchAlert } = useContext(AlertContext);
   // Get data
-  let singleList = useMemo(() => getForm(name), [name]);
+  let singleList = useMemo(() => getForm(name?.toLowerCase()), [name]);
   const forms = singleList?.forms;
   const steps = singleList?.steps;
   // check if form is more then step
@@ -71,6 +73,9 @@ const Update = () => {
         type: "success",
         msg: "Added Successfully...",
       });
+      if (name?.toLowerCase() === "building") {
+        generateApartments(values, res?.data);
+      }
       setOpen(false);
     } else {
     }

@@ -1,5 +1,5 @@
 export const FlatContractFee = [
-  { name: "Number", type: "number", label: "Number", required: false },
+  // { name: "Number", type: "number", label: "Number", required: false },
   {
     name: "EntryNumber",
     type: "number",

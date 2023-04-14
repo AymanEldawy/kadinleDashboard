@@ -1,7 +1,7 @@
 import { DropDowns } from "../functions";
 
 export const mat = [
-  { name: "Number", type: "number", label: "Number", required: false },
+  // { name: "Number", type: "number", label: "Number", required: false },
   {
     name: "SecLvl",
     key: "select",
@@ -10,7 +10,7 @@ export const mat = [
     list: DropDowns("SecLvl"),
   },
   { name: "Code", type: "text", label: "Code", required: false },
-  { name: "Name", type: "text", label: "Name", required: false },
+  { name: "Name", type: "text", label: "Name", required: true },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
   { name: "Unity1", type: "text", label: "Unity1", required: false },
   { name: "Unity2", type: "text", label: "Unity2", required: false },
@@ -83,7 +83,7 @@ export const mat = [
 ];
 
 export const matgroup = [
-  { name: "Number", type: "number", label: "Number", required: false },
+  // { name: "Number", type: "number", label: "Number", required: false },
   {
     name: "SecLvl",
     key: "select",
@@ -92,7 +92,7 @@ export const matgroup = [
     list: DropDowns("SecLvl"),
   },
   { name: "Code", type: "text", label: "Code", required: false },
-  { name: "Name", type: "text", label: "Name", required: false },
+  { name: "Name", type: "text", label: "Name", required: true },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
   { name: "Note", type: "text", label: "Note", required: false },
   {
@@ -106,7 +106,7 @@ export const matgroup = [
 ];
 
 export const Store = [
-  { name: "Number", type: "number", label: "Number", required: false },
+  // { name: "Number", type: "number", label: "Number", required: false },
   {
     name: "SecLvl",
     key: "select",
@@ -115,7 +115,7 @@ export const Store = [
     list: DropDowns("SecLvl"),
   },
   { name: "Code", type: "text", label: "Code", required: false },
-  { name: "Name", type: "text", label: "Name", required: false },
+  { name: "Name", type: "text", label: "Name", required: true },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
   { name: "Address", type: "text", label: "Address", required: false },
   {
@@ -134,7 +134,7 @@ export const Store = [
     list: [],
   },
   {
-    table: "account",
+    table: "Account",
     name: "AcFinalGUID",
     type: "unique",
     label: "AcFinalGUID",

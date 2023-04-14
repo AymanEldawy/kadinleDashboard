@@ -1,7 +1,7 @@
 import { DropDowns } from "../functions";
 
 export const AssetsGroup = [
-  { name: "Number", type: "number", label: "Number", required: false },
+  // { name: "Number", type: "number", label: "Number", required: false },
   {
     name: "SecLvl",
     key: "select",
@@ -10,7 +10,7 @@ export const AssetsGroup = [
     list: DropDowns("SecLvl"),
   },
   { name: "Code", type: "text", label: "Code", required: false },
-  { name: "Name", type: "text", label: "Name", required: false },
+  { name: "Name", type: "text", label: "Name", required: true },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
   { name: "Note", type: "text", label: "Note", required: false },
   {
@@ -24,12 +24,12 @@ export const AssetsGroup = [
 ];
 
 const Assets_General = [
-  {
-    type: "text",
-    required: false,
-    label: "Number",
-    name: "Number",
-  },
+  // {
+  //   type: "text",
+  //   required: false,
+  //   label: "Number",
+  //   name: "Number",
+  // },
   {
     required: false,
     label: "AssetsGroupGuid",
@@ -38,7 +38,7 @@ const Assets_General = [
     table: "AssetsGroup",
   },
   { name: "Code", type: "text", label: "Code", required: false },
-  { name: "Name", type: "text", label: "Name", required: false },
+  { name: "Name", type: "text", label: "Name", required: true },
   { name: "Barcode", type: "text", label: "Barcode", required: false },
   { name: "Note", type: "text", label: "Note", required: false },
   { name: "IsActive", type: "checkbox", label: "IsActive", required: false },
@@ -64,7 +64,7 @@ const Assets_General = [
 
 const Assets_Accounts = [
   {
-    table: "account",
+    table: "Account",
     name: "AsstesAccountGuid",
     key: "unique",
     label: "AsstesAccountGuid",
@@ -72,7 +72,7 @@ const Assets_Accounts = [
     list: [],
   },
   {
-    table: "account",
+    table: "Account",
     name: "ExpenseAccountGuid",
     key: "unique",
     label: "ExpenseAccountGuid",
@@ -80,7 +80,7 @@ const Assets_Accounts = [
     list: [],
   },
   {
-    table: "account",
+    table: "Account",
     name: "DepreciationAccountGuid",
     key: "unique",
     label: "DepreciationAccountGuid",
@@ -88,7 +88,7 @@ const Assets_Accounts = [
     list: [],
   },
   {
-    table: "account",
+    table: "Account",
     name: "DepreciationTotalAccountGuid",
     key: "unique",
     label: "DepreciationTotalAccountGuid",
@@ -96,7 +96,7 @@ const Assets_Accounts = [
     list: [],
   },
   {
-    table: "account",
+    table: "Account",
 
     name: "ProfitAccountGuid",
     key: "unique",
@@ -105,7 +105,7 @@ const Assets_Accounts = [
     list: [],
   },
   {
-    table: "account",
+    table: "Account",
     name: "lossesAccountGuid",
     key: "unique",
     label: "lossesAccountGuid",
@@ -113,7 +113,7 @@ const Assets_Accounts = [
     list: [],
   },
   {
-    table: "account",
+    table: "Account",
     name: "EvaluationAccountGuid",
     key: "unique",
     label: "EvaluationAccountGuid",
@@ -124,7 +124,7 @@ const Assets_Accounts = [
 const Assets_Input = [
   { name: "Importer", type: "text", label: "Importer", required: false },
   {
-    table: "account",
+    table: "Account",
     name: "EnterAccountGuid",
     key: "unique",
     label: "EnterAccountGuid",
@@ -299,7 +299,7 @@ const Assets_Asset_sale = [
     required: false,
   },
   {
-    table: "account",
+    table: "Account",
     name: "SalesAccountGuid",
     key: "unique",
     label: "SalesAccountGuid",

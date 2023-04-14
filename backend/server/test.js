@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const sql = require("mssql");
+const bcrypt = require("bcrypt");
 
 const cors = require("cors");
 
@@ -39,8 +40,9 @@ app.post("/pullguid", (req, res) => {
 
 app.post("/delete", (req, res) => {
   const table = req.body.table;
-  const Guid = req.body.Guid;
-  const select = "DELETE FROM " + table + " WHERE Guid='" + Guid + "'";
+  const guids = req.body.guids;
+  const select = `DELETE FROM ${table} WHERE Guid IN ('${guids.join("','")}')`;
+
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -59,6 +61,60 @@ app.get("/hello", (req, res) => {
   res.send("Hello World!");
 });
 
+// app.post("/create", (req, res) => {
+//   const dat = req.body.dat;
+//   const table = req.body.table;
+//   const columns = req.body.columns;
+//   let array = "";
+//   let columnList = "";
+//   let amount = "";
+//   for (let i = 0; i < columns.length; i++) {
+//     if (i == columns.length - 1) {
+//       columnList = columnList + columns[i];
+//       array = array + "'" + dat[columns[i]] + "'";
+//       amount = amount + "?";
+//     } else {
+//       columnList = columnList + columns[i] + ", ";
+//       array = array + "'" + dat[columns[i]] + "'" + ", ";
+//       amount = amount + "?,";
+//     }
+//   }
+
+//   let insert;
+//   if (dat["Number"]) {
+//     insert =
+//       "SET IDENTITY_INSERT " +
+//       table +
+//       " ON INSERT INTO " +
+//       table +
+//       "(" +
+//       columnList +
+//       ") VALUES (" +
+//       array +
+//       ") SET IDENTITY_INSERT " +
+//       table +
+//       " OFF";
+//   } else {
+//     insert =
+//       "INSERT INTO " + table + "(" + columnList + ") VALUES (" + array + ")";
+//   }
+//   sql.connect(sqlConfig, function (err) {
+//     if (err) {
+//       console.log(err);
+//     }
+//     var db = new sql.Request();
+
+//     db.query(insert, (err, result) => {
+//       if (err) {
+//         res.send(err);
+//       } else {
+//         // res.send(result);
+//         const insertedRow = result.recordset[0];
+//         res.send(insertedRow);
+//       }
+//     });
+//   });
+// });
 app.post("/create", (req, res) => {
   const dat = req.body.dat;
   const table = req.body.table;
@@ -87,15 +143,23 @@ app.post("/create", (req, res) => {
       table +
       "(" +
       columnList +
-      ") VALUES (" +
+      ") OUTPUT inserted.Guid VALUES (" +
       array +
       ") SET IDENTITY_INSERT " +
       table +
       " OFF";
   } else {
     insert =
-      "INSERT INTO " + table + "(" + columnList + ") VALUES (" + array + ")";
+      "INSERT INTO " +
+      table +
+      "(" +
+      columnList +
+      ") OUTPUT inserted.Guid VALUES (" +
+      array +
+      ")";
   }
+
+  // Execute the INSERT statement
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -106,10 +170,92 @@ app.post("/create", (req, res) => {
       if (err) {
         res.send(err);
       } else {
-        res.send(result);
+        let Guid = result?.recordset?.[0]?.Guid;
+        res.send(Guid);
       }
     });
   });
+});
+
+// app.post("/createApartments", (req, res) => {
+//   const { BuildingGuid, No, FloorNo, table } = req?.body;
+
+//   if (BuildingGuid) {
+//     const insert = `INSERT INTO ${table} (BuildingGuid, No, FloorNo) VALUES ('${BuildingGuid}','${No}', '${FloorNo}')`;
+//     sql.connect(sqlConfig, function (err) {
+//       if (err) {
+//         console.log(err);
+//       }
+//       var db = new sql.Request();
+//       db.query(insert, (err, result) => {
+//         if (err) {
+//           res.send(err);
+//         } else {
+//           res.send(result);
+//         }
+//       });
+//     });
+//   }
+// });
+app.post("/createNewApartments", (req, res) => {
+  const { data, table } = req?.body;
+  let columnList = Object.keys(data);
+  let values = Object.values(data);
+
+  for (let i = 0; i < columnList.length; i++) {
+    if (i == columnList.length - 1) {
+      columnList = columnList + columnList[i];
+      values = values + "'" + data[columnList[i]] + "'";
+    } else {
+      columnList = columnList + columnList[i] + ", ";
+      values = values + "'" + data[columnList[i]] + "'" + ", ";
+    }
+  }
+
+
+  const insert =
+    "INSERT INTO " + table + " (" + columnList.join(',') + ") VALUES (" + values.join(',') + ")";
+  sql.connect(sqlConfig, function (err) {
+    if (err) {
+      console.log(err);
+    }
+    var db = new sql.Request();
+    db.query(insert, (err, result) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send({
+          columnList,
+          values,
+          table,
+          payload: result,
+        });
+      }
+    });
+  });
+});
+
+app.post("/deleteApartments", (req, res) => {
+  const { guids } = req?.body;
+  if (guids) {
+    const deleteApartments = `DELETE FROM Apartment WHERE Guid IN ('${guids.join(
+      "','"
+    )}')`;
+
+    sql.connect(sqlConfig, function (err) {
+      if (err) {
+        console.log(err);
+      }
+      var db = new sql.Request();
+      db.query(deleteApartments, (err, result) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send(result);
+        }
+      });
+    });
+  }
 });
 
 app.post("/createEntryParent", (req, res) => {
@@ -247,15 +393,26 @@ function createEntryChild(data, table, columns, guid) {
 }
 
 app.post("/login", (req, res) => {
-  const email = req.body.email;
-  const password = req.body.email;
+  const loginName = req.body.LoginName;
+  const password = req.body.Password;
 
+  const saltRounds = 2;
+  // const salt = bcrypt.genSaltSync(saltRounds);
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const hashedPassword = bcrypt.hashSync(password, salt);
+
+  console.log(hashedPassword);
+  // const passwordsMatch = bcrypt.compareSync(password, hashedPassword);
+
+  // console.log(passwordsMatch);
+  // const authenticate =
+  //   "SELECT * from dbo.Realty_Users Where LoginName='" + loginName + "'";
   const authenticate =
-    "SELECT * from dbo.users Where Email='" +
-    email +
-    " AND Password= '" +
-    password +
-    "'";
+    "INSERT INTO Realty_Users (LoginName, Password) Values('" +
+    loginName +
+    "','" +
+    hashedPassword +
+    "')";
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -266,11 +423,49 @@ app.post("/login", (req, res) => {
       if (err) {
         res.send(err);
       } else {
-        res.send(result);
+        if (result) {
+          console.log(result);
+        }
+        // res.send(result);
       }
     });
   });
 });
+
+// app.post("/update", (req, res) => {
+//   const dat = req.body.dat;
+//   const table = req.body.table;
+//   const columns = req.body.columns;
+//   const num = req.body.num;
+//   let array = "";
+//   let columnList = "";
+//   let amount = "";
+//   let setlist = "";
+//   for (let i = 0; i < columns.length; i++) {
+//     if (i == columns.length - 1) {
+//       setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "'";
+//     } else {
+//       setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "', ";
+//     }
+//   }
+
+//   const insert =
+//     "UPDATE " + table + " SET " + setlist + " WHERE Guid= '" + num + "'";
+//   sql.connect(sqlConfig, function (err) {
+//     if (err) {
+//       console.log(err);
+//     }
+//     var db = new sql.Request();
+
+//     db.query(insert, (err, result) => {
+//       if (err) {
+//         res.send(err);
+//       } else {
+//         res.send(result);
+//       }
+//     });
+//   });
+// });
 
 app.post("/update", (req, res) => {
   const dat = req.body.dat;
@@ -282,10 +477,12 @@ app.post("/update", (req, res) => {
   let amount = "";
   let setlist = "";
   for (let i = 0; i < columns.length; i++) {
-    if (i == columns.length - 1) {
-      setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "'";
-    } else {
-      setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "', ";
+    if (columns[i] !== "Number" || columns[i] !== "Guid") {
+      if (i == columns.length - 1) {
+        setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "'";
+      } else {
+        setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "', ";
+      }
     }
   }
 
@@ -889,12 +1086,12 @@ function updateTable(data, table) {
 }
 
 app.post("/handleColoring", (req, res) => {
-  const data = req.body.data;
+  // const data = req.body.data;
   const colors = req.body.colors;
   updateTable(colors, "FlatBuildingDetails");
-  for (let key in Object.keys(data)) {
-    updateBuildingProperties(data[key], key);
-  }
+  // for (let key in Object.keys(data)) {
+  //   updateBuildingProperties(data[key], key);
+  // }
 });
 
 app.post("/findPropertyOfBuilding", (req, res) => {

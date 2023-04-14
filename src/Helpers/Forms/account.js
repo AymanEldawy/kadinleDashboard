@@ -1,7 +1,7 @@
 import { DropDowns, getData } from "../functions";
 
 export const account = [
-  { name: "Number", type: "number", label: "Number", required: false },
+  // { name: "Number", type: "number", label: "Number", required: false },
   {
     name: "SecLvl",
     key: "select",
@@ -9,7 +9,7 @@ export const account = [
     required: false,
     list: DropDowns("SecLvl"),
   },
-  { name: "Name", type: "text", label: "Name", required: false },
+  { name: "Name", type: "text", label: "Name", required: true },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
   { name: "Code", type: "text", label: "Code", required: false },
   { name: "CDate", type: "datetime-local", label: "CDate", required: false },
@@ -31,7 +31,7 @@ export const account = [
   },
   { name: "Type", type: "number", label: "Type", required: false },
   {
-    table: "account",
+    table: "Account",
     name: "ParentGUID",
     key: "unique",
     label: "ParentGUID",
@@ -39,7 +39,7 @@ export const account = [
     list: [],
   },
   {
-    table: "account",
+    table: "Account",
     name: "FinalGUID",
     key: "unique",
     label: "FinalGUID",
@@ -55,7 +55,7 @@ export const account = [
 ];
 
 export const cost = [
-  { name: "Number", type: "number", label: "Number", required: false },
+  // { name: "Number", type: "number", label: "Number", required: false },
   {
     name: "SecLvl",
     key: "select",
@@ -64,7 +64,7 @@ export const cost = [
     list: DropDowns("SecLvl"),
   },
   { name: "Code", type: "text", label: "Code", required: false },
-  { name: "Name", type: "text", label: "Name", required: false },
+  { name: "Name", type: "text", label: "Name", required: true },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
   {
     table: "cost",
@@ -77,7 +77,7 @@ export const cost = [
   { name: "Note", type: "text", label: "Note", required: false },
 ];
 export const Currency = [
-  { name: "Number", type: "number", label: "Number", required: false },
+  // { name: "Number", type: "number", label: "Number", required: false },
   {
     name: "SecLvl",
     key: "select",
@@ -88,7 +88,7 @@ export const Currency = [
 
   { name: "Code", type: "text", label: "Code", required: false },
   { name: "LtnCode", type: "text", label: "LtnCode", required: false },
-  { name: "Name", type: "text", label: "Name", required: false },
+  { name: "Name", type: "text", label: "Name", required: true },
   { name: "LtnName", type: "text", label: "LtnName", required: false },
   {
     name: "CurrencyVal",

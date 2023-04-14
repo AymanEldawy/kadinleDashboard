@@ -13,7 +13,7 @@ const SelectField = ({
   return (
     <div className="flex flex-col">
       {label ? (
-        <label className="text-sm font-normal mb-1 capitalize">{label}</label>
+        <label className="overflow-hidden text-ellipsis text-sm font-normal mb-1 capitalize">{label}</label>
       ) : null}
       <select
         className={`border rounded p-1 ${className}  ${

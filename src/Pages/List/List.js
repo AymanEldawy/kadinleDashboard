@@ -1,20 +1,22 @@
+import axios from "axios";
 import React, { useContext } from "react";
-import { useParams } from "react-router-dom";
-import BlockPaper from "../../Components/BlockPaper/BlockPaper";
-import formsApi from "../../Helpers/Forms/formsApi";
-import SuperForm from "../../Components/CustomForm/SuperForm";
 import { useMemo } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useCallback } from "react";
+import { useParams } from "react-router-dom";
+
+import BlockPaper from "../../Components/BlockPaper/BlockPaper";
+import ConfirmModal from "../../Components/ConfirmModal/ConfirmModal";
+import SuperForm from "../../Components/CustomForm/SuperForm";
+import SuperTable from "../../Components/CustomTable/SuperTable";
+import FormHeadingTitleSteps from "../../Components/Global/FormHeadingTitleSteps";
 import Modal from "../../Components/Modal/Modal";
 import { TableBar } from "../../Components/TableBar/TableBar";
-import SuperTable from "../../Components/CustomTable/SuperTable";
-import { useCallback } from "react";
-import axios from "axios";
 import { AlertContext } from "../../Context/AlertContext";
-import FormHeadingTitleSteps from "../../Components/Global/FormHeadingTitleSteps";
 import { ListsGuidsContext } from "../../Context/ListsGuidsContext";
-import ConfirmModal from "../../Components/ConfirmModal/ConfirmModal";
+import formsApi from "../../Helpers/Forms/formsApi";
+import { generateApartments } from "../../Helpers/functions";
 
 function getForm(form) {
   return formsApi[form];
@@ -53,7 +55,7 @@ const List = () => {
   const [selectedList, setSelectedList] = useState({});
 
   // Get data
-  let singleList = useMemo(() => getForm(name), [name]);
+  let singleList = useMemo(() => getForm(name?.toLowerCase()), [name]);
   const forms = singleList?.forms;
   const steps = singleList?.steps;
 
@@ -124,6 +126,12 @@ const List = () => {
   // Handel Submit
   const onSubmit = async (values) => {
     if (steps && activeStage !== steps[steps?.length - 1]) return;
+    setOpen(false);
+    dispatchAlert({
+      open: true,
+      type: "loading",
+      msg: "Loading ...",
+    });
     let body = {
       dat: values,
       columns: Object.keys(values),
@@ -132,13 +140,16 @@ const List = () => {
     let res = await axios.post(`/create`, {
       ...body,
     });
+    console.log(res);
     if (res?.statusText === "OK") {
-      setOpen(false);
       dispatchAlert({
         open: true,
         type: "success",
         msg: "Added Successfully...",
       });
+      if (name?.toLowerCase() === "building") {
+        generateApartments(values, res?.data);
+      }
       getData();
     } else {
     }

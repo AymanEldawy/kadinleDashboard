@@ -13,7 +13,7 @@ const Checkbox = ({
     <div className={`flex items-center mr-4 ${className}`}>
       <label
         for={label}
-        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-400 flex gap-1 capitalize items-center p-1 px-2 rounded-md has-checked"
+        className="overflow-hidden text-ellipsis text-sm p-1 font-medium text-gray-900 dark:text-gray-400 flex gap-1 capitalize items-center rounded-md has-checked"
       >
         <input
           name={name}
@@ -25,7 +25,7 @@ const Checkbox = ({
           {...field}
           onChange={onChange}
         />
-        {label ? label : ""}
+        {label ? <span className="ml-1 rtl:mr-1 rtl:ml-0">{label}</span> : ""}
       </label>
     </div>
   );

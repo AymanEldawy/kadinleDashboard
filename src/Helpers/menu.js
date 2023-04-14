@@ -379,9 +379,9 @@ export const menuData = [
         link: "/tools",
       },
       {
-        key: "tool 2",
-        name: "tool 2",
-        link: "",
+        key: "contract type",
+        name: "Contract Type",
+        link: "/ContractType",
       },
     ],
   },

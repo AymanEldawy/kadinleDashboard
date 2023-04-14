@@ -9,8 +9,8 @@ const Building_General_information = [
     list: DropDowns("SecLvl"),
   },
   // shared end
-  { name: "Name", type: "text", label: "Name", required: false },
-  { name: "Number", type: "number", label: "Number", required: false },
+  { name: "Name", type: "text", label: "Name", required: true },
+  // { name: "Number", type: "number", label: "Number", required: false },
   { name: "Emirate", type: "text", label: "Emirate", required: false },
   {
     name: "BuildAutoNumber",
@@ -102,7 +102,7 @@ const Building_account = [
   },
   { name: "BankName", type: "text", label: "BankName", required: false },
   {
-    table: "account",
+    table: "Account",
     name: "AccountGuid",
     key: "unique",
     label: "AccountGuid",
@@ -241,7 +241,7 @@ const Building_ownerships = [
     required: false,
   },
   {
-    table: "account",
+    table: "Account",
     name: "AccountGuid",
     key: "unique",
     label: "AccountGuid",
@@ -256,7 +256,7 @@ const Building_ownerships = [
   },
   // Investment
   {
-    table: "account", // update
+    table: "Account", // update
     name: "OwnerAccountGuid",
     key: "unique",
     label: "OwnerAccountGuid",
@@ -311,7 +311,7 @@ const Building_ownerships = [
     required: false,
   },
   {
-    table: "account",
+    table: "Account",
     name: "AccountCommIncomeGuid",
     key: "unique",
     label: "AccountCommIncomeGuid",

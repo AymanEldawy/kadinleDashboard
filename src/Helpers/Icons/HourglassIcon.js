@@ -1,6 +1,7 @@
 import React from "react";
 
-const HourglassIcon = () => {
+const HourglassIcon = ({ fill }) => {
+  console.log(fill)
   return (
     <svg
       height="800px"
@@ -12,7 +13,7 @@ const HourglassIcon = () => {
     >
       <g>
         <path
-          className="st0 fill-[#fff]"
+          className={`st0 ${fill ? fill : "fill-[#fff]"}`}
           d="M315.883,231.155l82.755-115.143c7.152-9.942,11.038-21.785,11.038-33.92V46.12h23.912V0H78.412v46.12h23.912
         v35.971c0,12.135,3.886,23.978,11.038,33.92l82.755,115.143c2.963,4.135,4.472,8.856,4.483,13.655v22.371
         c-0.011,4.797-1.52,9.519-4.483,13.666l-82.755,115.132c-7.152,9.942-11.038,21.784-11.038,33.93v35.96H78.412V512h355.177v-46.131

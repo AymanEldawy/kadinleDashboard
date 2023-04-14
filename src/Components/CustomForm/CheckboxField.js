@@ -5,7 +5,7 @@ const CheckboxField = ({ label, error, list, name, ...field }) => {
   return (
     <div className="flex flex-col">
       {label ? (
-        <label className="text-sm font-normal mb-1 capitalize">{label}</label>
+        <label className="overflow-hidden text-ellipsis text-sm font-normal mb-1 capitalize">{label}</label>
       ) : null}
       <div className="flex gap-4 items-center">
         {list?.map((item) => (

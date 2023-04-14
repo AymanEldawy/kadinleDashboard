@@ -1,12 +1,9 @@
 import React, { useCallback } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+
 import formsApi from "../../Helpers/Forms/formsApi";
-import {
-  FolderEmptyIcon,
-  FolderMinusIcon,
-  FolderPlusIcon,
-} from "../../Helpers/Icons";
+import { FolderEmptyIcon, FolderMinusIcon, FolderPlusIcon } from "../../Helpers/Icons";
 import SuperForm from "../CustomForm/SuperForm";
 import FormHeadingTitle from "../Global/FormHeadingTitle";
 import Modal from "../Modal/Modal";
@@ -17,7 +14,7 @@ const RenderTree = ({ chartTree, name, deleteItem, onSubmit }) => {
   const [open, setOpen] = useState({});
   const [fields, setFields] = useState([]);
   useEffect(() => {
-    setFields(formsApi[name]);
+    setFields(formsApi[name?.toLowerCase()]);
   }, []);
 
   const toggleOpen = (itemId, level) => {
@@ -102,7 +99,7 @@ const RenderTree = ({ chartTree, name, deleteItem, onSubmit }) => {
       <Modal open={!!selectedItem} onClose={() => setSelectedItem(null)}>
         <FormHeadingTitle title={`Create new ${name}`} />
         <SuperForm
-          initialFields={fields}
+          initialFields={fields && fields?.length ? fields : []}
           oldValues={oldValues}
           onSubmit={submit}
         />

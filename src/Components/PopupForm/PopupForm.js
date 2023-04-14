@@ -2,6 +2,7 @@ import axios from "axios";
 import React from "react";
 import { useMemo } from "react";
 import { useContext } from "react";
+
 import { AlertContext } from "../../Context/AlertContext";
 import { PopupFormContext } from "../../Context/PopupFormContext";
 import formsApi from "../../Helpers/Forms/formsApi";
@@ -13,7 +14,7 @@ const PopupForm = () => {
   const { openForm, dispatchForm } = useContext(PopupFormContext);
   const { dispatchAlert } = useContext(AlertContext);
   const { table, open } = openForm;
-  let initialFields = useMemo(() => formsApi[table], [table]);
+  let initialFields = useMemo(() => formsApi[table?.toLowerCase()], [table]);
   // Handel Submit
   const onSubmit = async (values) => {
     let body = {

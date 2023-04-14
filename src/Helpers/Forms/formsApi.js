@@ -1,5 +1,7 @@
 import { account, cost, Currency } from "./account";
-// import { testentry } from "./testentry";
+import { Assets, AssetsGroup } from "./assets";
+import { building } from "./building";
+// import { apartment, customer, Landcontract, OfferPrice, Owner, parking, RentInfo, salesman, shop, Villa } from "./testentry";
 import {
   customer,
   salesman,
@@ -10,42 +12,43 @@ import {
   parking,
   RentInfo,
   Owner,
+  apartment
 } from "./cards";
-import { mat, matgroup, Store } from "./materials";
-import { Assets, AssetsGroup } from "./assets";
-import { FlatContractFee } from "./transactions";
-import { building } from "./building";
+import { ContractType } from "./contractType";
 import { FlatBuildingDetails } from "./flatBuildingDetails";
 // Manual page
 import { LeaseApartment } from "./LeaseApartment";
+import { mat, matgroup, Store } from "./materials";
+import { FlatContractFee } from "./transactions";
 
-export default {
-  // testentry, // stand allow
-  // Account
+const obj = {
   account,
   cost,
-  Currency,
+  currency: Currency,
   // cards
   customer,
   salesman,
-  Villa,
-  OfferPrice,
-  Landcontract,
+  villa: Villa,
+  offerprice: OfferPrice,
+  landcontract:Landcontract,
   shop,
   parking,
-  RentInfo,
-  Owner,
+  rentinfo:RentInfo,
+  owner:Owner,
+  apartment,
   // Prefer to building manual
   building,
-  FlatBuildingDetails,
+  flatbuildingdetails:FlatBuildingDetails,
   // Materials
   mat,
   matgroup,
-  Store,
+  store:Store,
   // assets,
-  Assets,
-  AssetsGroup,
+  assets:Assets,
+  assetsgroup:AssetsGroup,
 
-  LeaseApartment,
-  FlatContractFee,
-};
+  leaseapartment:LeaseApartment,
+  flatcontractfee:FlatContractFee,
+  contracttype:ContractType,
+}
+export default obj

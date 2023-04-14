@@ -20,18 +20,17 @@ const ToolsTabs = ({
   removeOneItemColor,
   CACHE_LIST_COLORS,
   tabs,
-  row,
   selectedTab,
   setSelectedTab,
 }) => {
   const [isUpdatable, setIsUpdatable] = useState("");
   const [refresh, setRefresh] = useState(false);
-  const changeApartmentName = (e, itemHash) => {
+  const changeApartmentName = (e, itemGuid) => {
     setFlatsDetails((prev) => {
       return {
         ...prev,
-        [`${itemHash}&${selectedTab?.tabName}`]: {
-          ...prev[`${itemHash}&${selectedTab?.tabName}`],
+        [`${itemGuid}&${selectedTab?.tabName}`]: {
+          ...prev[itemGuid],
           NO: e.target.value,
         },
       };
@@ -39,39 +38,47 @@ const ToolsTabs = ({
     setRefresh((p) => !p);
   };
   useEffect(() => {}, [refresh]);
-  const selectAll = (e, index, count, direction) => {
+  const selectAll = (e, indexY, data, direction) => {
     const { tabName } = selectedTab;
     if (e.target.checked) {
       if (direction === "vertical") {
-        for (let i = 0; i < count; i++) {
-          let itemHash = `${tabName}-${i + 1}0${index + 1}`;
-          insertColor(tabName, itemHash);
-          console.log(itemHash);
-        }
-      } else {
-        for (let i = 0; i < count; i++) {
-          let itemHash = `${tabName}-${index + 1}0${i + 1}`;
-          insertColor(tabName, itemHash);
-          console.log(itemHash);
+        for (const rows in data) {
+          for (let index = 0; index < data[rows].length; index++) {
+            if (index === indexY) insertColor(tabName, data[rows][index]);
+          }
         }
       }
+      for (const item of data) {
+        insertColor(tabName, item);
+      }
     } else {
-      removeFromColor(index, count, direction, tabName);
+      removeFromColor(indexY, data, direction, tabName);
     }
     setRefresh((p) => direction);
   };
   const displayTable = (tab) => {
     const { tabName } = tab;
-    let xCount = row[tab?.x];
-    let yCount = row[tab?.y];
-    console.log(xCount, yCount);
+    let sortData = {};
+    if (!data?.length) return;
+    for (const row of data) {
+      if (!sortData[row?.FloorNo]) sortData[row?.FloorNo] = [];
+      if (row?.FloorNo) {
+        sortData[row.FloorNo].push(row);
+      }
+    }
+    let apartmentsLength = 0;
+    for (const key in sortData) {
+      if (apartmentsLength < sortData[key]?.length) {
+        apartmentsLength = sortData[key]?.length;
+      }
+    }
     return (
       <>
         <TableHead classes="!bg-[#0099a5] text-white">
           {canInsertColor ? (
             <TableHeadCol classes="bg-gray-200 border border-gray-400 min-w-[20px]"></TableHeadCol>
           ) : null}
-          {Array(yCount)
+          {Array(apartmentsLength)
             .fill(0)
             .map((row, indexY) => (
               <TableHeadCol
@@ -83,7 +90,9 @@ const ToolsTabs = ({
                     <Checkbox
                       name={tabName}
                       className="mr-2 !ml-0"
-                      onChange={(e) => selectAll(e, indexY, yCount, "vertical")}
+                      onChange={(e) =>
+                        selectAll(e, indexY, sortData, "vertical")
+                      }
                     />
                   ) : null}
                   0{indexY + 1}
@@ -93,45 +102,38 @@ const ToolsTabs = ({
         </TableHead>
 
         <TableBody>
-          {Array(yCount)
-            .fill(0)
-            .map((r, indexX) => (
-              <TableRow key={`${r}-${indexX}`}>
-                {canInsertColor ? (
-                  <TableCol classes="!p-0 !px-2  border border-gray-400">
-                    <Checkbox
-                      name={tabName}
-                      onChange={(e) => selectAll(e, indexX, yCount)}
-                    />
-                  </TableCol>
-                ) : null}
-                {Array(yCount)
-                  .fill(0)
-                  .map((r, indexY) => (
-                    <>
-                      <ToolsColColor
-                        item={{}}
-                        // item={col}
-                        key={`${indexY}-${row}`}
-                        itemHash={`${tabName}-${indexX + 1}0${indexY + 1}`}
-                        tabName={tabName}
-                        apartmentNumber={`${tabName[0]} ${indexX + 1}0${
-                          indexY + 1
-                        }`}
-                        // apartmentNumber={col?.NO}
-                        isUpdatable={isUpdatable}
-                        changeApartmentName={changeApartmentName}
-                        insertColor={insertColor}
-                        canInsertColor={canInsertColor}
-                        setIsUpdatable={setIsUpdatable}
-                        CACHE_LIST_COLORS={CACHE_LIST_COLORS}
-                        flatsDetails={flatsDetails}
-                        removeOneItemColor={removeOneItemColor}
-                      />
-                    </>
-                  ))}
-              </TableRow>
-            ))}
+          {Object.values(sortData).map((row, indexX) => (
+            <TableRow key={`${row}-${indexX}`}>
+              {canInsertColor ? (
+                <TableCol classes="!p-0 !px-2  border border-gray-400">
+                  <Checkbox
+                    name={tabName}
+                    // checked={save_X_Y_selected?.[tabName]}
+                    // onChange={(e) => selectAll(e, xCount, indexY)}
+                    onChange={(e) => selectAll(e, indexX, row)}
+                  />
+                </TableCol>
+              ) : null}
+              {row
+                ?.sort((a, b) => a?.NO - b?.NO)
+                ?.map((col, index) => (
+                  <ToolsColColor
+                    item={col}
+                    key={`${index}-${col?.NO}`}
+                    tabName={tabName}
+                    apartmentNumber={col?.NO}
+                    isUpdatable={isUpdatable}
+                    changeApartmentName={changeApartmentName}
+                    insertColor={insertColor}
+                    canInsertColor={canInsertColor}
+                    setIsUpdatable={setIsUpdatable}
+                    CACHE_LIST_COLORS={CACHE_LIST_COLORS}
+                    flatsDetails={flatsDetails}
+                    removeOneItemColor={removeOneItemColor}
+                  />
+                ))}
+            </TableRow>
+          ))}
         </TableBody>
       </>
     );

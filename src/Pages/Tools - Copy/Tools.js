@@ -10,7 +10,7 @@ import { Button } from "../../Components/Global/Button";
 import ContentBar from "../../Components/Global/ContentBar/ContentBar";
 import FormHeadingTitle from "../../Components/Global/FormHeadingTitle";
 import formsApi from "../../Helpers/Forms/formsApi";
-import { generateApartments, hexToDecimal } from "../../Helpers/functions";
+import { hexToDecimal } from "../../Helpers/functions";
 import { CloseIcon, LockIcon, NotAllowIcon, PlusIcon } from "../../Helpers/Icons";
 import MinusIcon from "../../Helpers/Icons/MinusIcon";
 import ToolsTabs from "./ToolsTabs";
@@ -21,64 +21,29 @@ const getCachedList = (tableName) => {
 };
 const CACHE_LIST_COLORS = {};
 const CACHE_TABS = {};
+const CACHE_COL = {};
 
 const tabs = [
+  // { tabName: "Apartment", x: "ApartmentCountOfFloor", y: "FloorCount" },
+  { tabName: "Apartment", x: "ApartmentCountOfFloor", y: "FloorCount" },
+  { tabName: "Pent Houses", x: "BHouseFloor", y: "BHouseFlatCount" },
+  { tabName: "Mezzanine", x: "MBalanceFloor", y: "MBalanceFlatCount" },
+
+  { tabName: "Office", x: "OfficeFloor", y: "OfficeCount" },
+
+  { tabName: "Car parking", x: "ParkingFloor", y: "ParkingCount" },
   {
-    alias: "apartment 0",
-    tabName: "Apartment",
-    x: "ApartmentCountOfFloor",
-    y: "FloorCount",
-  },
-  {
-    alias: "apartment 2",
-    tabName: "Pent Houses",
-    x: "BHouseFloor",
-    y: "BHouseFlatCount",
-  },
-  {
-    alias: "apartment 1",
-    tabName: "Mezzanine",
-    x: "MBalanceFloor",
-    y: "MBalanceFlatCount",
-  },
-  {
-    alias: "apartment 3",
-    tabName: "Office",
-    x: "OfficeFloor",
-    y: "OfficeCount",
-  },
-  {
-    alias: "Parking",
-    tabName: "Car parking",
-    x: "ParkingFloor",
-    y: "ParkingCount",
-  },
-  {
-    alias: "Parking",
     tabName: "Underground parking",
     x: "ParkingFloorUnder",
     y: "ParkingCountUnder",
   },
-  { alias: "Shop", tabName: "Shops", x: "ShopCount", y: "" },
-  {
-    alias: "apartment 7",
-    tabName: "Driver flats",
-    x: "FlatDriverCount",
-    y: "",
-  },
-  {
-    alias: "apartment 8",
-    tabName: "Servant flats",
-    x: "FlatServantCount",
-    y: "",
-  },
+  { tabName: "Shops", x: "ShopCount", y: "" },
+  { tabName: "Driver flats", x: "FlatDriverCount", y: "" },
+  { tabName: "Servant flats", x: "FlatServantCount", y: "" },
 ];
 
 const Tools = () => {
   const { Guid } = useParams();
-
-  const location = useLocation();
-  const { row } = location?.state;
   const [count, setCount] = useState(25);
   const [refresh, setRefresh] = useState(false);
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
@@ -113,17 +78,35 @@ const Tools = () => {
             // building: "31C8F1EE-6E04-441F-A76C-D15CE60D2327",
           })
           .then((res) => {
-            console.log(res);
             let data = res?.data?.recordset;
             setData(data);
             CACHE_TABS[tabName] = data;
+            for (const key of data) {
+              console.log('----run')
+              CACHE_COL[key?.Guid] = key;
+            }
+            console.log(CACHE_COL)
           });
         setLoading(false);
       };
       getTabData(selectedTab?.tabName);
     }
   }, [selectedTab, Guid]);
+  // const getApartments = async () => {
+  //   setLoading(true);
+  //   await axios
+  //     .post(`/iteminfo`, {
+  //       table: "Building",
+  //       num: "31C8F1EE-6E04-441F-A76C-D15CE60D2327",
+  //     })
+  //     .then((res) => {
+  //       setData(res?.data?.recordset[0]);
+  //     });
+  //   setLoading(false);
+  // };
+
   useEffect(() => {
+    // getApartments();
     getLists("Building");
     getLists("cust");
   }, []);
@@ -157,62 +140,67 @@ const Tools = () => {
     setCanInsertColor(false);
   };
 
-  const insertColor = (tabName, itemHash) => {
-    let hash = itemHash?.split("-");
-    let NoValue = `${tabName[0]} ${hash[1]}`;
-    if (flatsDetails[`${itemHash}&${tabName}`]) {
+  const insertColor = (tabName, item) => {
+    if (flatsDetails[`${item?.Guid}&${tabName}`]) {
       setFlatsDetails((prev) => {
         return {
           ...prev,
-          [`${itemHash}&${tabName}`]: {
-            NO: NoValue,
-            CardKind: selectedTab?.alias,
-            ...prev?.[`${itemHash}&${tabName}`],
-            FlatBuildingDetailsIndex: selectedColor,
+          // [tabName]: {
+          //   ...prev?.[tabName],
+          [`${item?.Guid}&${tabName}`]: {
+            ...CACHE_COL?.[item?.Guid],
+            ...prev?.[`${item?.Guid}&${tabName}`],
+            CardKind: selectedColor,
+            // },
           },
         };
       });
     } else {
-      setFlatsDetails((prev) => {
-        return {
-          ...prev,
-          [`${itemHash}&${tabName}`]: {
-            NO: NoValue,
-            CardKind: selectedTab?.alias,
-            FlatBuildingDetailsIndex: selectedColor,
-          },
-        };
-      });
+      for (const currentItem of data) {
+        if (currentItem?.Guid === item?.Guid) {
+          setFlatsDetails((prev) => {
+            return {
+              ...prev,
+
+              [`${item?.Guid}&${tabName}`]: {
+                ...CACHE_COL?.[item?.Guid],
+                CardKind: selectedColor,
+              },
+            };
+          });
+        }
+      }
     }
     setRefresh((p) => !p);
   };
   const removeOneItemColor = useCallback(
-    (tabName, itemHash) => {
+    (tabName, itemGuid) => {
       let newList = flatsDetails;
-      if (!!newList[`${itemHash}&${tabName}`])
-        newList[`${itemHash}&${tabName}`].FlatBuildingDetailsIndex = null;
+      if (!!newList[`${itemGuid}&${tabName}`])
+        newList[`${itemGuid}&${tabName}`].CardKind = null;
       setFlatsDetails(newList);
       setRefresh((p) => !p);
     },
     [flatsDetails]
   );
   const removeFromColor = useCallback(
-    (index, count, direction, tabName) => {
+    (indexY, data, direction, tabName) => {
       if (direction === "vertical") {
-        for (let i = 0; i < count; i++) {
-          let itemHash = `${tabName}-${i + 1}0${index + 1}`;
-          removeOneItemColor(tabName, itemHash);
+        for (const rows in data) {
+          for (let index = 0; index < data[rows].length; index++) {
+            if (index === indexY)
+              removeOneItemColor(tabName, data[rows][index]?.Guid);
+          }
         }
       } else {
-        for (let i = 0; i < count; i++) {
-          let itemHash = `${tabName}-${index + 1}0${i + 1}`;
-          removeOneItemColor(tabName, itemHash);
+        for (const item of data) {
+          removeOneItemColor(tabName, item?.Guid);
         }
       }
       setRefresh((p) => !p);
     },
 
-    [removeOneItemColor]
+    [flatsDetails]
   );
   const onSubmit = async () => {
     for (const key in CACHE_LIST_COLORS) {
@@ -227,25 +215,24 @@ const Tools = () => {
       let tabName = splitRow?.[1];
       if (!newFlatDetails[tabName]) newFlatDetails[tabName] = [];
 
-      let data = {
-        ...CACHE_LIST_COLORS[flatsDetails[row]?.FlatBuildingDetailsIndex],
-      };
-      if (data?.Color) delete data.Color;
-      if (data?.Guid) delete data.Guid;
+      console.log(flatsDetails[row]);
       newFlatDetails[tabName] = [
         ...newFlatDetails?.[tabName],
         {
           ...flatsDetails?.[row],
-          BuildingGuid: Guid,
-          ...data,
+          ...CACHE_LIST_COLORS[flatsDetails[row]?.CardKind],
         },
       ];
+      delete newFlatDetails?.[row]?.Color;
     }
-    
-    generateApartments(newFlatDetails, Guid);
+
+    console.log(CACHE_LIST_COLORS, "submit");
+    console.log(flatsDetails, "submit");
+    console.log(newFlatDetails, "submit");
     await axios
       .post("/handleColoring", {
         colors: !!CACHE_LIST_COLORS ? Object.values(CACHE_LIST_COLORS) : [],
+        data: newFlatDetails,
       })
       .then((res) => {
         console.log("res", res);
@@ -330,7 +317,6 @@ const Tools = () => {
         tabs={tabs}
         selectedTab={selectedTab}
         setSelectedTab={setSelectedTab}
-        row={row}
       />
       <div className="mt-8 flex justify-end">
         <Button onClick={onSubmit} title="Submit" />

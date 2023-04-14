@@ -29,3 +29,4 @@ export { default as NotAllowIcon } from './NotAllowIcon';
 export { default as HourglassIcon } from './HourglassIcon';
 export { default as CloseIcon } from './CloseIcon';
 export { default as LockIcon } from './LockIcon';
+export { default as PaletteIcon } from './PaletteIcon';

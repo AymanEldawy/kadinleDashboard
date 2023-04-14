@@ -131,7 +131,7 @@ const LeaseApartment_Financial_Information = [
     required: false,
   },
   {
-    table: "account",
+    table: "Account",
     name: "DiscountAccountGuid",
     key: "unique",
     label: "DiscountAccountGuid",
@@ -193,7 +193,7 @@ const LeaseApartment_Financial_Information = [
     list: [],
   },
   {
-    table: "account",
+    table: "Account",
     name: "RevenueAccountGuid",
     key: "unique",
     label: "RevenueAccountGuid",
@@ -201,7 +201,7 @@ const LeaseApartment_Financial_Information = [
     list: [],
   },
   {
-    table: "account",
+    table: "Account",
     name: "CustAccountGuid",
     key: "unique",
     label: "CustAccountGuid",
@@ -209,7 +209,7 @@ const LeaseApartment_Financial_Information = [
     list: [],
   },
   {
-    table: "account",
+    table: "Account",
     name: "InsuranceAccountGuid",
     key: "unique",
     label: "InsuranceAccountGuid",
@@ -229,7 +229,7 @@ const LeaseApartment_Financial_Information = [
     required: false,
   },
   {
-    table: "account",
+    table: "Account",
     name: "FineRevenueAccountGUID",
     key: "unique",
     label: "FineRevenueAccountGUID",
@@ -277,7 +277,7 @@ const LeaseApartment_Commission = [
     required: false,
   },
   {
-    table: "account",
+    table: "Account",
     name: "AcCommissionFromCustGuid",
     key: "unique",
     label: "AcCommissionFromCustGuid",
@@ -303,7 +303,7 @@ const LeaseApartment_Commission = [
     required: false,
   },
   {
-    table: "account",
+    table: "Account",
     name: "AcCommissionFromOwnerGuid",
     key: "unique",
     label: "AcCommissionFromOwnerGuid",
@@ -329,7 +329,7 @@ const LeaseApartment_Commission = [
     required: false,
   },
   {
-    table: "account",
+    table: "Account",
     name: "AcSalesManCommissionGuid",
     key: "unique",
     label: "AcSalesManCommissionGuid",
@@ -337,7 +337,7 @@ const LeaseApartment_Commission = [
     list: [],
   },
   {
-    table: "account",
+    table: "Account",
     name: "AcCommissionExpenseGuid",
     key: "unique",
     label: "AcCommissionExpenseGuid",
@@ -352,7 +352,7 @@ const LeaseApartment_Commission = [
   },
 ];
 const LeaseApartment_Related_parking_contracts = [
-  { name: "Number", type: "text", label: "Number", required: false },
+  // { name: "Number", type: "text", label: "Number", required: false },
   {
     table: "LeaseApartment",
     name: "ParentGuid",
@@ -422,7 +422,7 @@ const LeaseApartment_Contract_termination = [
 const LeaseApartment_Termination_fines = [
   // Increasable
   {
-    table: "account",
+    table: "Account",
     name: "AccountGuid",
     key: "unique",
     label: "AccountGuid",
@@ -446,7 +446,7 @@ const LeaseApartment_Log_file = [
   { name: "Date", type: "date", label: "Date", required: false },
   { name: "Value", type: "text", label: "Value", required: false },
   {
-    table: "account",
+    table: "Account",
     name: "AccountGuid",
     key: "unique",
     label: "AccountGuid",

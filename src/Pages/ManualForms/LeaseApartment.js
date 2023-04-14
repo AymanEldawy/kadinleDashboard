@@ -1,21 +1,22 @@
+import axios from "axios";
 import React, { useContext } from "react";
-import { useParams } from "react-router-dom";
-import BlockPaper from "../../Components/BlockPaper/BlockPaper";
-import Layout from "../../Layout";
-import formsApi from "../../Helpers/Forms/formsApi";
-import SuperForm from "../../Components/CustomForm/SuperForm";
 import { useMemo } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import Modal from "../../Components/Modal/Modal";
-import { TableBar } from "../../Components/TableBar/TableBar";
-import SuperTable from "../../Components/CustomTable/SuperTable";
 import { useCallback } from "react";
-import axios from "axios";
-import { AlertContext } from "../../Context/AlertContext";
+import { useParams } from "react-router-dom";
+
+import BlockPaper from "../../Components/BlockPaper/BlockPaper";
+import SuperForm from "../../Components/CustomForm/SuperForm";
+import SuperTable from "../../Components/CustomTable/SuperTable";
 import TableForm from "../../Components/Forms/TableForm/TableForm";
 import { Button } from "../../Components/Global/Button";
 import FormHeadingTitleSteps from "../../Components/Global/FormHeadingTitleSteps";
+import Modal from "../../Components/Modal/Modal";
+import { TableBar } from "../../Components/TableBar/TableBar";
+import { AlertContext } from "../../Context/AlertContext";
+import formsApi from "../../Helpers/Forms/formsApi";
+import Layout from "../../Layout";
 
 const LeaseApartment = () => {
   const params = useParams();
@@ -31,7 +32,7 @@ const LeaseApartment = () => {
   const [openModalForm, setOpenModalForm] = useState(false);
 
   // Get data
-  let singleList = useMemo(() => formsApi["LeaseApartment"], [name]);
+  let singleList = useMemo(() => formsApi["leaseapartment"], [name]);
   const steps = singleList?.steps;
   const forms = singleList?.forms;
   useEffect(() => {

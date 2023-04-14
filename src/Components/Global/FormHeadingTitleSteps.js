@@ -3,7 +3,7 @@ import React from "react";
 const FormHeadingTitleSteps = ({ steps, name, changeTab, activeStage }) => {
   return (
     <>
-      <div className="flex items-center text-left bg-gray-100 dark:bg-bgmaindark border-t border-gray-100">
+      <div className="flex items-center text-left bg-gray-100 dark:bg-bgmaindark border-t border-gray-100 overflow-auto">
         {steps?.length ? (
           <>
             {steps?.map((step, index) => (

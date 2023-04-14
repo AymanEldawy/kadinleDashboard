@@ -4,9 +4,11 @@ import { useCallback } from "react";
 import { useState } from "react";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
+
+import { PaletteIcon } from "../../Helpers/Icons";
 import ChevronIcon from "../../Helpers/Icons/ChevronIcon";
-import CheckboxField from "../CustomForm/CheckboxField";
 import Checkbox from "../CustomForm/Checkbox";
+import CheckboxField from "../CustomForm/CheckboxField";
 import Table from "./Table";
 import TableBody from "./TableBody";
 import TableCol from "./TableCol";
@@ -14,6 +16,7 @@ import TableHead from "./TableHead";
 import TableHeadCol from "./TableHeadCol";
 import TableRow from "./TableRow";
 import TableUniqueCol from "./TableUniqueCol";
+
 let sorting = {};
 const SuperTable = ({
   columns,
@@ -153,12 +156,12 @@ const SuperTable = ({
               />
             </TableHeadCol>
           ) : null}
+          <TableHeadCol>Actions</TableHeadCol>
           {columns?.map((col, index) => (
             <TableHeadCol key={`${col}-${index}`} sort sortBy={sortBy}>
               {col}
             </TableHeadCol>
           ))}
-          <TableHeadCol>Actions</TableHeadCol>
         </TableHead>
         <TableBody>
           {currentItems?.map((row, index) => {
@@ -179,6 +182,37 @@ const SuperTable = ({
                     />
                   </TableCol>
                 ) : null}
+                <TableCol>
+                  <div className="flex gap-1">
+                    {table && table === "building" ? (
+                      <>
+                        {/* <Link
+                          className="hover:underline text-blue-500 order-2"
+                          to={`/update/building/${row?.Name}/${row?.Guid}`}
+                          state={{ row, table }}
+                        >
+                          Edit
+                        </Link> */}
+                        <Link
+                          className="hover:underline text-blue-500 order-1"
+                          to={`/buildings/${row?.Name}/tools/${row?.Guid}`}
+                          state={{ row, table }}
+                        >
+                          <PaletteIcon />
+                        </Link>
+                      </>
+                    ) : (
+                      ""
+                      // <Link
+                      //   className="hover:underline text-blue-500 order-2"
+                      //   to={`/update/${table}/${row?.Guid}`}
+                      //   state={{ row, table }}
+                      // >
+                      //   Edit
+                      // </Link>
+                    )}
+                  </div>
+                </TableCol>
                 {columns?.map((col, index) => {
                   if (col === "CDate") {
                     let date = new Date(row[col]).toLocaleDateString("en-UK", {
@@ -195,7 +229,7 @@ const SuperTable = ({
                         {date} | {time}
                       </TableCol>
                     );
-                  } else if (col?.toLowerCase()?.indexOf("guid") !== -1) {
+                  } else if (col?.indexOf("Guid") !== -1) {
                     return (
                       <TableUniqueCol
                         row={row}
@@ -205,44 +239,59 @@ const SuperTable = ({
                         val={row[col]}
                       />
                     );
+                  } else if (col === "Name") {
+                    // let link = `/update/building/${row?.Name}/${row?.Guid}`;
+                    // if (table && table !== "building") {
+                    //   link = `/update/${table}/${row?.Guid}`;
+                    // }
+                    return (
+                      <TableCol key={index}>
+                        <Link
+                          className="hover:underline text-blue-500 order-2"
+                          to={`/update/${table}/${row?.Guid}`}
+                          state={{ row, table }}
+                        >
+                          {row[col]}
+                        </Link>
+                      </TableCol>
+                    );
                   } else return <TableCol key={index}>{row[col]}</TableCol>;
                 })}
-                <TableCol>
-                  <Link
-                    className="hover:underline text-blue-500"
-                    to={`/update/${table}/${row?.Guid}`}
-                    state={{ row, table }}
-                  >
-                    Edit
-                  </Link>
-                </TableCol>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
-      <ReactPaginate
-        breakLabel="..."
-        nextLabel={
-          <span className="flex  scale-75 -rotate-90">
-            <ChevronIcon />
-          </span>
-        }
-        onPageChange={handlePageClick}
-        pageRangeDisplayed={5}
-        pageCount={pageCount}
-        previousLabel={
-          <span className="flex scale-75  rotate-90">
-            <ChevronIcon />
-          </span>
-        }
-        renderOnZeroPageCount={null}
-        className="pagination flex gap-6 items-center shadow p-3"
-        activeClassName="bg-blue-500 p-1 px-2 rounded text-sm text-white"
-        previousClassName="rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
-        nextClassName="rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
-        disabledClassName="text-gray-200 dark:text-gray-600"
-      />
+      {currentItems.length ? (
+        <>
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel={
+              <span className="flex  scale-75 -rotate-90">
+                <ChevronIcon />
+              </span>
+            }
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+            previousLabel={
+              <span className="flex scale-75  rotate-90">
+                <ChevronIcon />
+              </span>
+            }
+            renderOnZeroPageCount={null}
+            className="pagination flex gap-6 items-center shadow p-3"
+            activeClassName="bg-blue-500 p-1 px-2 rounded text-sm text-white"
+            previousClassName="rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
+            nextClassName="rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
+            disabledClassName="text-gray-200 dark:text-gray-600"
+          />
+        </>
+      ) : (
+        <div className="text-red-500 text-center mt-2">
+          <strong className="capitalize">{table}</strong> results are empty
+        </div>
+      )}
     </>
   );
 };

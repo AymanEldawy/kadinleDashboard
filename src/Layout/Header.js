@@ -42,7 +42,7 @@ function Header({ setOpen, mode, setMode }) {
     <header className="bg-[#144479] text-white py-2">
       <div className="container  flex py-2">
         <div className="flex items-center gap-4">
-          <Link className="">
+          <Link className="" to="/">
             <img src={logo} alt="Abrepair" className="max-w-[140px]" />
           </Link>
           <button

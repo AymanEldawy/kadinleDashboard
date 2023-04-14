@@ -1,18 +1,32 @@
 import React from "react";
-import {
-  CheckIcon,
-  ExclamationTriangle,
-  HandStopIcon,
-  InformationIcon,
-  NotAllowIcon,
-} from "../../Helpers/Icons";
+
+import { CheckIcon, ExclamationTriangle, HandStopIcon, HourglassIcon, InformationIcon, NotAllowIcon } from "../../Helpers/Icons";
 import Modal from "../Modal/Modal";
 
 const Alert = ({ alertMessage, dispatchAlert }) => {
   // console.log(alertMessage, dispatchAlert);
   // if(!alertMessage) return;
   const alertType = (alert) => {
+    // eslint-disable-next-line default-case
     switch (alert?.type) {
+      case "loading":
+        return (
+          <div className="mt-4">
+            <HourglassIcon fill="fill-gray-300" />
+            <h3 className="text-teal-500  dark:text-white text-2xl mt-1 capitalize">
+              loading
+              <span className="tracking-wider text-3xl delay-100 animate-ping">
+                .
+              </span>
+              <span className="tracking-wider text-3xl delay-500 animate-ping ">
+                .
+              </span>
+              <span className="tracking-wider text-3xl delay-700 animate-ping ">
+                .
+              </span>
+            </h3>
+          </div>
+        );
       case "error":
         return (
           <>

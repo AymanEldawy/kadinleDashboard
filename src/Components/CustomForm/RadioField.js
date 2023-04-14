@@ -8,7 +8,7 @@ const RadioField = ({ label, error, list, name, ...field }) => {
       ) : null}
       <div className="flex gap-4 items-center">
         {list?.map((item) => (
-          <label key={item} className="flex gap-1 capitalize items-center p-1 px-2 rounded-md has-checked">
+          <label key={item} className="overflow-hidden text-ellipsis flex gap-1 capitalize items-center p-1 px-2 rounded-md has-checked">
             <input type="radio" name={name} value={item} {...field} />
             <span>{item}</span>
           </label>

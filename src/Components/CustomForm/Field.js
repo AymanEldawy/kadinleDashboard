@@ -124,7 +124,7 @@ const Field = ({
         />
       ) : null}
       {label ? (
-        <label className="block text-sm font-normal mb-1 capitalize">
+        <label className="overflow-hidden text-ellipsis block text-sm font-normal mb-1 capitalize">
           {label}
         </label>
       ) : null}

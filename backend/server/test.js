@@ -1146,12 +1146,12 @@ app.post("/createNewApartments", (req, res) => {
   // console.log(insert);
   sql.connect(sqlConfig, function (err) {
     if (err) {
-      res.send(err);
+      console.log(err);
     }
     var db = new sql.Request();
     db.query(query, (err, result) => {
       if (err) {
-        res.send(err);
+      console.log(err);
       } else {
         res.send(result);
       }

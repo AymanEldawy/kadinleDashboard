@@ -147,9 +147,6 @@ const List = () => {
         type: "success",
         msg: "Added Successfully...",
       });
-      if (name?.toLowerCase() === "building") {
-        generateApartments(values, res?.data);
-      }
       getData();
     } else {
     }
@@ -229,6 +226,7 @@ const List = () => {
           searchValue={searchValue}
           onSelectChange={setItemsPerPage}
           itemsPerPage={itemsPerPage}
+          selectedList={selectedList}
           // columns={columns}
           // searchKey={searchKey}
           // setSearchKey={setSearchKey}

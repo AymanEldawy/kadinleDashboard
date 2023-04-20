@@ -23,6 +23,7 @@ const ToolsTabs = ({
   row,
   selectedTab,
   setSelectedTab,
+  CACHE_APARTMENTS,
 }) => {
   const [isUpdatable, setIsUpdatable] = useState("");
   const [refresh, setRefresh] = useState(false);
@@ -37,6 +38,19 @@ const ToolsTabs = ({
       };
     });
     setRefresh((p) => !p);
+  };
+  const defaultInsertColor = (itemHash, tabName, data, index) => {
+    console.log(itemHash, tabName, index);
+    setFlatsDetails((prev) => {
+      return {
+        ...prev,
+        [`${itemHash}&${tabName}`]: {
+          ...data,
+          // FlatBuildingDetailsIndex: index,
+        },
+      };
+    });
+    console.log(flatsDetails);
   };
   useEffect(() => {}, [refresh]);
   const selectAll = (e, index, count, direction) => {
@@ -118,7 +132,8 @@ const ToolsTabs = ({
                         apartmentNumber={`${tabName[0]} ${indexX + 1}0${
                           indexY + 1
                         }`}
-                        // apartmentNumber={col?.NO}
+                        defaultInsertColor={defaultInsertColor}
+                        CACHE_APARTMENTS={CACHE_APARTMENTS}
                         isUpdatable={isUpdatable}
                         changeApartmentName={changeApartmentName}
                         insertColor={insertColor}

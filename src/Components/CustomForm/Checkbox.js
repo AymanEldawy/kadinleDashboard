@@ -12,7 +12,7 @@ const Checkbox = ({
   return (
     <div className={`flex items-center mr-4 ${className}`}>
       <label
-        for={label}
+        htmlFor={label}
         className="overflow-hidden text-ellipsis text-sm p-1 font-medium text-gray-900 dark:text-gray-400 flex gap-1 capitalize items-center rounded-md has-checked"
       >
         <input

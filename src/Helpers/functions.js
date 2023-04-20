@@ -74,6 +74,12 @@ export const hexToDecimal = (hex) => parseInt(hex, 16);
 export const decimalToHex = (dec) =>
   (dec + Math.pow(16, 6)).toString(16).substr(-6);
 
+export const getValueOfInputColor = (val) => {
+  if (typeof val === "number") {
+    return `#${decimalToHex(val)}`;
+  }
+};
+
 const tabNames = {
   Apartment: "apartment 0",
   Mezzanine: "apartment 1",
@@ -86,7 +92,7 @@ const tabNames = {
   "Underground parking": "parking",
 };
 
-const insertIntoApartments = async (tabName, data) => {
+const insertIntoApartments = async (tabName, data, guid) => {
   let table = "Apartment";
   switch (tabNames[tabName]) {
     case "shop":
@@ -99,9 +105,21 @@ const insertIntoApartments = async (tabName, data) => {
       table = "Apartment";
       break;
   }
+  let columns = [];
+  let values = [];
+  for (const key in data) {
+    if (data[key] !== null) {
+      columns.push(key);
+      values.push(data[key]);
+    }
+  }
+  columns.push('BuildingGuid')
+  values.push(guid)
+  console.log(columns, values);
   let res = await axios.post(`/createNewApartments`, {
     table,
-    data,
+    columns: columns,
+    values: values,
   });
   console.log(res);
   // console.log(tabName, tabNames[tabName], data);
@@ -125,10 +143,39 @@ const insertIntoApartments = async (tabName, data) => {
 //   console.log("---a", count, tabName, Guid, deleted);
 // };
 
-export const generateApartments = async (data) => {
+export const generateApartments = async (data, guid) => {
   for (const tabName in data) {
     for (const row of data[tabName]) {
-      await insertIntoApartments(tabName, row);
+      // await insertIntoApartments(tabName, row, guid);
+      let table = "Apartment";
+      switch (tabNames[tabName]) {
+        case "shop":
+          table = "shop";
+          break;
+        case "parking":
+          table = "parking";
+          break;
+        default:
+          table = "Apartment";
+          break;
+      }
+      let columns = [];
+      let values = [];
+      for (const key in row) {
+        if (row[key] !== null) {
+          columns.push(key);
+          values.push(row[key]);
+        }
+      }
+      columns.push('BuildingGuid')
+      values.push(guid)
+      console.log(columns, values);
+      await axios.post(`/createNewApartments`, {
+        table,
+        columns: columns,
+        values: values,
+      });
+      // console.log(res);
     }
   }
 };

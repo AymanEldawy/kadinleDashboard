@@ -1,9 +1,11 @@
 import React from "react";
 import { useState } from "react";
+
 import { ChevronIcon, TrashIcon } from "../../Helpers/Icons";
 import Backdrop from "../Backdrop/Backdrop";
 import SelectField from "../CustomForm/SelectField";
 import SearchBar from "../SearchBar/SearchBar";
+
 const itemsListPerPages = [
   { id: "10", name: "Number of rows 10" },
   { id: "20", name: "Number of rows 20" },
@@ -23,6 +25,7 @@ export const TableBar = ({
   columns,
   searchKey,
   setSearchKey,
+  selectedList
 }) => {
   return (
     <div className="flex justify-between gap-2">
@@ -52,17 +55,18 @@ export const TableBar = ({
           add new
         </button>
         <button
-          className="bg-red-500 text-sm text-white rounded px-2 py-1 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300"
+          className="bg-red-500 text-sm text-white rounded px-2 py-1 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300 disabled:bg-red-200"
           onClick={onDeleteClick}
+          disabled={!Object.keys(selectedList)?.length}
         >
           <TrashIcon />{" "}
         </button>
-        <button
+        {/* <button
           className="bg-green-500 text-sm text-white rounded px-2 py-1 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300"
           onClick={onFilterClick}
         >
           Filter
-        </button>
+        </button> */}
       </div>
     </div>
   );

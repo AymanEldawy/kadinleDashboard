@@ -197,43 +197,6 @@ app.post("/create", (req, res) => {
 //     });
 //   }
 // });
-app.post("/createNewApartments", (req, res) => {
-  const { data, table } = req?.body;
-  let columnList = Object.keys(data);
-  let values = Object.values(data);
-
-  for (let i = 0; i < columnList.length; i++) {
-    if (i == columnList.length - 1) {
-      columnList = columnList + columnList[i];
-      values = values + "'" + data[columnList[i]] + "'";
-    } else {
-      columnList = columnList + columnList[i] + ", ";
-      values = values + "'" + data[columnList[i]] + "'" + ", ";
-    }
-  }
-
-
-  const insert =
-    "INSERT INTO " + table + " (" + columnList.join(',') + ") VALUES (" + values.join(',') + ")";
-  sql.connect(sqlConfig, function (err) {
-    if (err) {
-      console.log(err);
-    }
-    var db = new sql.Request();
-    db.query(insert, (err, result) => {
-      if (err) {
-        res.send(err);
-      } else {
-        res.send({
-          columnList,
-          values,
-          table,
-          payload: result,
-        });
-      }
-    });
-  });
-});
 
 app.post("/deleteApartments", (req, res) => {
   const { guids } = req?.body;
@@ -827,7 +790,7 @@ app.post("/search/tables", (req, res) => {
           const serr = value[0].toLowerCase() + value.slice(1);
           if (
             result["recordset"][i].TABLE_NAME.substring(0, value.length) ==
-              ser ||
+            ser ||
             result["recordset"][i].TABLE_NAME.substring(0, value.length) == serr
           ) {
             tables.push(result["recordset"][i].TABLE_NAME);
@@ -929,54 +892,55 @@ app.listen(3001, () => {
   console.log("Server is running on port 3001");
 });
 
-function updateBuildingProperties(data, table) {
+// function updateBuildingProperties(data, table) {
+//   for (let i of Object.keys(data)) {
+//     const columns = Object.keys(data[i]);
+//     const dat = data[i];
+//     const guid = data[i]["Guid"];
+//     let array = "";
+//     let columnList = "";
+//     let amount = "";
+//     let setlist = "";
+//     console.log("Columns are", columns);
+//     console.log("data is", data);
+//     for (let i = 0; i < columns.length; i++) {
+//       if (
+//         typeof dat[columns[i]] !== "undefined" &&
+//         columns[i] !== "Guid" &&
+//         columns[i] !== "Number" &&
+//         dat[columns[i]] !== null
+//       ) {
+//         if (i == columns.length - 1) {
+//           setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "'";
+//         } else {
+//           setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "', ";
+//         }
+//       }
+//     }
+
+//     const insert =
+//       "UPDATE " + table + " SET " + setlist + " WHERE Guid= '" + guid + "'";
+//     console.log(insert);
+//     sql.connect(sqlConfig, function (err) {
+//       if (err) {
+//         console.log(err);
+//       }
+//       var db = new sql.Request();
+
+//       db.query(insert, (err, result) => {
+//         if (err) {
+//           console.log(err);
+//         } else {
+//           console.log("good");
+//         }
+//       });
+//     });
+//   }
+// }
+
+function updateTable(data, table, res) {
   for (let i of Object.keys(data)) {
-    const columns = Object.keys(data[i]);
-    const dat = data[i];
-    const guid = data[i]["Guid"];
-    let array = "";
-    let columnList = "";
-    let amount = "";
-    let setlist = "";
-    console.log("Columns are", columns);
-    console.log("data is", data);
-    for (let i = 0; i < columns.length; i++) {
-      if (
-        typeof dat[columns[i]] !== "undefined" &&
-        columns[i] !== "Guid" &&
-        columns[i] !== "Number" &&
-        dat[columns[i]] !== null
-      ) {
-        if (i == columns.length - 1) {
-          setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "'";
-        } else {
-          setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "', ";
-        }
-      }
-    }
-
-    const insert =
-      "UPDATE " + table + " SET " + setlist + " WHERE Guid= '" + guid + "'";
-    console.log(insert);
-    sql.connect(sqlConfig, function (err) {
-      if (err) {
-        console.log(err);
-      }
-      var db = new sql.Request();
-
-      db.query(insert, (err, result) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("good");
-        }
-      });
-    });
-  }
-}
-
-function updateTable(data, table) {
-  for (let i of Object.keys(data)) {
+    // for (let i of data) {
     if (data[i]["Guid"]) {
       const columns = Object.keys(data[i]);
       const dat = data[i];
@@ -985,8 +949,8 @@ function updateTable(data, table) {
       let columnList = "";
       let amount = "";
       let setlist = "";
-      console.log("Columns are", columns);
-      console.log("data is", data);
+      // console.log("Columns are", columns);
+      // console.log("data is", data);
       for (let i = 0; i < columns.length; i++) {
         if (
           typeof dat[columns[i]] !== "undefined" &&
@@ -994,13 +958,19 @@ function updateTable(data, table) {
           columns[i] !== "Number" &&
           dat[columns[i]] !== null
         ) {
-          if (i == columns.length - 1) {
+          if (i == (columns.length - 1)) {
             setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "'";
           } else {
             setlist = setlist + columns[i] + "= '" + dat[columns[i]] + "', ";
           }
+
         }
       }
+      if (setlist.endsWith(','))
+        setlist = setlist?.slice(0, -1)
+      if (setlist[setlist?.length - 2] === ',')
+        setlist = setlist?.slice(0, -2)
+        console.log(setlist)
 
       const insert =
         "UPDATE " + table + " SET " + setlist + " WHERE Guid= '" + num + "'";
@@ -1015,7 +985,7 @@ function updateTable(data, table) {
           if (err) {
             console.log(err);
           } else {
-            console.log("good");
+            res.send(result)
           }
         });
       });
@@ -1086,12 +1056,25 @@ function updateTable(data, table) {
 }
 
 app.post("/handleColoring", (req, res) => {
-  // const data = req.body.data;
   const colors = req.body.colors;
-  updateTable(colors, "FlatBuildingDetails");
-  // for (let key in Object.keys(data)) {
-  //   updateBuildingProperties(data[key], key);
-  // }
+  console.log(colors)
+  updateTable(colors, "FlatBuildingDetails", res);
+});
+
+app.post("/getColoring", (req, res) => {
+  const select = "SELECT * FROM FlatBuildingDetails";
+  sql.connect(sqlConfig, function (err) {
+    if (err) {
+      console.log(err);
+    }
+    var db = new sql.Request();
+    db.query(select, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      res.send(result);
+    });
+  });
 });
 
 app.post("/findPropertyOfBuilding", (req, res) => {
@@ -1108,7 +1091,70 @@ app.post("/findPropertyOfBuilding", (req, res) => {
       if (err) {
         console.log(err);
       }
+      console.log(result)
       res.send(result);
+    });
+  });
+});
+
+app.post("/createNewApartments", (req, res) => {
+  const { values, columns, table } = req?.body;
+  let query = ''
+  let num = ''
+  if (columns?.includes('Guid')) {
+    console.log('update')
+    let data = ""
+    for (let i = 0; i < columns.length; i++) {
+      if (columns[i] === 'Guid') {
+        num = values[i]
+        continue;
+      }
+      if (columns[i] === 'BuildingGuid') {
+        continue;
+      }
+      if (i == columns.length - 1) {
+        data = data + columns[i] + "= '" + values[i] + "'";
+      } else {
+        data = data + columns[i] + "= '" + values[i] + "', ";
+      }
+
+
+    }
+    if (data.endsWith(','))
+      data = data?.slice(0, -1)
+    if (data[data?.length - 2] === ',')
+      data = data?.slice(0, -2)
+    console.log(data)
+    query =
+      "update " +
+      table +
+      " SET " +
+      data +
+      " WHERE Guid= '" + num + "'"
+    console.log(query)
+  } else {
+    query =
+      "INSERT INTO " +
+      table +
+      " ( " +
+      columns.join(", ") +
+      ") VALUES (" +
+      values.map((v) => "'" + v + "'").join(", ") +
+      ")";
+    console.log(query)
+  }
+  // console.log(insert);
+  sql.connect(sqlConfig, function (err) {
+    if (err) {
+      res.send(err);
+    }
+    var db = new sql.Request();
+    db.query(query, (err, result) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(result);
+      }
     });
   });
 });

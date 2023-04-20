@@ -7,8 +7,6 @@ import { Link } from "react-router-dom";
 
 import { PaletteIcon } from "../../Helpers/Icons";
 import ChevronIcon from "../../Helpers/Icons/ChevronIcon";
-import Checkbox from "../CustomForm/Checkbox";
-import CheckboxField from "../CustomForm/CheckboxField";
 import Table from "./Table";
 import TableBody from "./TableBody";
 import TableCol from "./TableCol";
@@ -42,17 +40,19 @@ const SuperTable = ({
 
   useEffect(() => {
     // Needed more work
-    setItemOffset(1);
+    console.log('un...')
     console.log(itemOffset, itemsPerPage);
     const endOffset = itemOffset + parseInt(itemsPerPage);
     setCurrentItems(filterList?.slice(itemOffset, endOffset));
     setPageCount(Math.ceil(filterList?.length / parseInt(itemsPerPage)));
   }, [filterList, itemsPerPage, itemOffset]);
 
-  useEffect(() => {}, [refresh]);
+  useEffect(() => { }, [refresh]);
 
   useEffect(() => {
+    console.log('run..')
     if (searchValue) {
+      console.log('run..233')
       let newList = [];
       for (const col of columns) {
         for (const item of data) {
@@ -72,14 +72,14 @@ const SuperTable = ({
           }
         }
       }
-      setItemOffset(1);
+      // setItemOffset(1);
       setCurrentItems(newList?.slice(0, itemsPerPage));
     } else {
-      setItemOffset(1);
+      // setItemOffset(1);
       setFilterList(data);
       setCurrentItems(data?.slice(0, itemsPerPage));
     }
-  }, [searchValue]);
+  }, [searchValue, data, ]);
 
   useEffect(() => {
     console.log("rendering");
@@ -168,9 +168,8 @@ const SuperTable = ({
             return (
               <TableRow
                 key={`${row?.Name}-${index}`}
-                classes={`border-b dark:border-borderdark whitespace-nowrap ${
-                  !!selectedList[row?.Guid] ? "bg-gray-100 dark:bg-[#1115]" : ""
-                }`}
+                classes={`border-b dark:border-borderdark whitespace-nowrap ${!!selectedList[row?.Guid] ? "bg-gray-100 dark:bg-[#1115]" : ""
+                  }`}
               >
                 {allowSelect ? (
                   <TableCol>
@@ -186,13 +185,6 @@ const SuperTable = ({
                   <div className="flex gap-1">
                     {table && table === "building" ? (
                       <>
-                        {/* <Link
-                          className="hover:underline text-blue-500 order-2"
-                          to={`/update/building/${row?.Name}/${row?.Guid}`}
-                          state={{ row, table }}
-                        >
-                          Edit
-                        </Link> */}
                         <Link
                           className="hover:underline text-blue-500 order-1"
                           to={`/buildings/${row?.Name}/tools/${row?.Guid}`}
@@ -201,16 +193,7 @@ const SuperTable = ({
                           <PaletteIcon />
                         </Link>
                       </>
-                    ) : (
-                      ""
-                      // <Link
-                      //   className="hover:underline text-blue-500 order-2"
-                      //   to={`/update/${table}/${row?.Guid}`}
-                      //   state={{ row, table }}
-                      // >
-                      //   Edit
-                      // </Link>
-                    )}
+                    ) : null}
                   </div>
                 </TableCol>
                 {columns?.map((col, index) => {
@@ -229,7 +212,7 @@ const SuperTable = ({
                         {date} | {time}
                       </TableCol>
                     );
-                  } else if (col?.indexOf("Guid") !== -1) {
+                  } else if (col?.toLowerCase()?.includes("guid")) {
                     return (
                       <TableUniqueCol
                         row={row}
@@ -240,10 +223,6 @@ const SuperTable = ({
                       />
                     );
                   } else if (col === "Name") {
-                    // let link = `/update/building/${row?.Name}/${row?.Guid}`;
-                    // if (table && table !== "building") {
-                    //   link = `/update/${table}/${row?.Guid}`;
-                    // }
                     return (
                       <TableCol key={index}>
                         <Link

@@ -1,9 +1,11 @@
 import React from "react";
 import { memo } from "react";
+import { useEffect } from "react";
 
 import InputField from "../../Components/CustomForm/InputField";
 import TableCol from "../../Components/CustomTable/TableCol";
 import { Button } from "../../Components/Global/Button";
+import { getValueOfInputColor } from "../../Helpers/functions";
 import { EditIcon } from "../../Helpers/Icons";
 
 const ToolsColColor = ({
@@ -18,14 +20,26 @@ const ToolsColColor = ({
   removeOneItemColor,
   itemHash,
   tabName,
+  CACHE_APARTMENTS,
+  defaultInsertColor,
 }) => {
   let itemData =
-    CACHE_LIST_COLORS[flatsDetails?.[`${itemHash}&${tabName}`]?.FlatBuildingDetailsIndex];
+    CACHE_LIST_COLORS[
+      flatsDetails?.[`${itemHash}&${tabName}`]?.FlatBuildingDetailsIndex
+    ];
   let ItemColor = itemData?.Color;
   let itemValue = flatsDetails?.[`${itemHash}&${tabName}`]?.NO;
-  console.log(CACHE_LIST_COLORS, 'clc')
-  console.log(flatsDetails, 'fbd')
-  console.log(flatsDetails, 'fbd')
+  useEffect(() => {
+    if (CACHE_APARTMENTS[apartmentNumber]) {
+      console.log('run...')
+      defaultInsertColor(
+        itemHash,
+        tabName,
+        CACHE_APARTMENTS[apartmentNumber],
+        // CACHE_APARTMENTS[apartmentNumber]?.FlatBuildingDetailsIndex
+      );
+    }
+  }, [apartmentNumber]);
   return (
     <TableCol
       classes="!p-0  border border-gray-400
@@ -53,7 +67,10 @@ const ToolsColColor = ({
             if (ItemColor) removeOneItemColor(tabName, itemHash);
           }}
           style={{
-            background: ItemColor,
+            background:
+              typeof ItemColor === "number"
+                ? getValueOfInputColor(ItemColor)
+                : ItemColor,
           }}
           className={`${
             ItemColor ? "cursor-default" : "cursor-cell"

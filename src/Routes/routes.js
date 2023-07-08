@@ -57,6 +57,9 @@ import ColorsContent from "../Pages/Tables/ColorsContent";
 import SizesContent from "../Pages/Tables/SizesContent";
 import AddColorContent from "../Pages/Forms/AddColorContent";
 import AddSizeContent from "../Pages/Forms/AddSizeContent";
+import AddProductContent from "../Pages/Forms/AddProductContent";
+import AddProductVariants from "../Pages/Forms/AddProductVariants";
+import AddProductImages from "../Pages/Forms/AddProductImages";
 
 const authProtectedRoutes = [
   // add paths
@@ -113,6 +116,9 @@ const authProtectedRoutes = [
   { path: "/add-size", component: <AddSize /> },
   { path: "/add-size-content", component: <AddSizeContent /> },
   { path: "/add-product", component: <AddProduct /> },
+  { path: "/add-product-content", component: <AddProductContent /> },
+  { path: "/add-product-variants", component: <AddProductVariants /> },
+  { path: "/add-product-images", component: <AddProductImages /> },
 
   // { path: "/add-color", component: <Color /> },
   // list or table paths

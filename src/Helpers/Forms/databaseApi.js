@@ -1,7 +1,7 @@
 // address
 const address = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "country", type: "uuid", key: "ref", tableName: "country" },
   { name: "city", type: "text" },
   { name: "postal_code", type: "number" },
@@ -16,7 +16,7 @@ const brand = [
 
 const bulk_alert = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "content", type: "text" },
 ];
 
@@ -81,7 +81,7 @@ const chart_data = [
     tableName: "product_content",
   },
   { name: "size_id", type: "uuid", key: "ref", tableName: "size_content" },
-  { name: "column1", type: "float8" },
+  { name: "column1", type: "number" },
 ];
 const collar = [{ name: "id", type: "uuid" }];
 const collar_content = [
@@ -93,12 +93,12 @@ const collar_content = [
 
 const collection = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "display_home", type: "checkbox" },
 ];
 const collection_content = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   {
     name: "collection_id",
     type: "uuid",
@@ -111,7 +111,7 @@ const collection_content = [
 ];
 const collection_product = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   {
     name: "collection_id",
     type: "uuid",
@@ -140,7 +140,7 @@ const color_content = [
 ];
 const comment = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
   {
     name: "product_id",
@@ -154,7 +154,7 @@ const comment_media = [
   { name: "id", type: "uuid" },
   { name: "comment_id", type: "uuid", key: "ref", tableName: "comment" },
   { name: "url", type: "text" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
 ];
 const country = [
   { name: "id", type: "uuid" },
@@ -165,14 +165,14 @@ const country = [
 ];
 const coupon = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "code", type: "text" },
-  { name: "value", type: "float8" },
+  { name: "value", type: "number" },
   { name: "percentage", type: "checkbox" },
 ];
 const credit_card = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
   { name: "number", type: "number" },
   { name: "exp_date", type: "date" },
@@ -181,8 +181,8 @@ const currency = [
   { name: "id", type: "uuid" },
   { name: "name", type: "text" },
   { name: "code", type: "text" },
-  { name: "rate", type: "float8" },
-  { name: "exchange_percent", type: "float8" },
+  { name: "rate", type: "number" },
+  { name: "exchange_percent", type: "number" },
 ];
 const fabric = [{ name: "id", type: "uuid" }];
 const fabric_content = [
@@ -201,7 +201,7 @@ const feature_content = [
 const home_reviews = [
   { name: "id", type: "uuid" },
   { name: "name", type: "text" },
-  { name: "rating", type: "int2" },
+  { name: "rating", type: "number" },
   { name: "content", type: "text" },
   { name: "image", type: "text" },
 ];
@@ -218,7 +218,7 @@ const lining_content = [
 ];
 const logs = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "description", type: "text" },
 ];
 const material = [{ name: "id", type: "uuid" }];
@@ -229,18 +229,18 @@ const material_content = [
 ];
 const news = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "content", type: "text" },
 ];
 const newsletter = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "subject", type: "text" },
 ];
 const newsletter_subscription = [{ name: "email", type: "text" }];
 const offer = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "numerical", type: "number" },
 ];
 const offer_content = [
@@ -260,7 +260,7 @@ const offer_product = [
 ];
 const order = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
 ];
 const order_content = [
@@ -275,12 +275,12 @@ const order_content = [
 ];
 const order_return_request = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "order_id", type: "uuid", key: "ref", tableName: "order_content" },
 ];
 const order_status = [
   { name: "id", type: "uuid" },
-  { name: "numerical", type: "int2" },
+  { name: "numerical", type: "number" },
 ];
 const order_status_content = [
   { name: "id", type: "uuid" },
@@ -300,7 +300,7 @@ const pattern_content = [
 ];
 const payment_status = [
   { name: "id", type: "uuid" },
-  { name: "numerical", type: "int2" },
+  { name: "numerical", type: "number" },
 ];
 const payment_status_content = [
   { name: "id", type: "uuid" },
@@ -321,12 +321,51 @@ const point_type = [
   { name: "id", type: "uuid" },
   { name: "numeric", type: "number" },
 ];
-const product = [
+export const product = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "timestamptz" },
   { name: "product_sku", type: "text" },
+  {
+    name: "category_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "category_content",
+  },
+  { name: "price", type: "number" },
+  { name: "tax_percent", type: "number" },
+  { name: "display", type: "checkbox" },
+  { name: "discount", type: "number" },
+  { name: "featured", type: "checkbox" },
+  { name: "views", type: "number", hide_in_add_form: true },
+  { name: "barcode", type: "number" },
+  { name: "fabric_id", type: "uuid", key: "ref", tableName: "fabric_content" },
+  {
+    name: "material_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "material_content",
+  },
+  { name: "lining_id", type: "uuid", key: "ref", tableName: "lining_content" },
+  { name: "collar_id", type: "uuid", key: "ref", tableName: "collar_content" },
+  { name: "sleeve_id", type: "uuid", key: "ref", tableName: "sleeve_content" },
+  { name: "season_id", type: "uuid", key: "ref", tableName: "season_content" },
+  {
+    name: "feature_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "feature_content",
+  },
+  { name: "brand_id", type: "uuid", key: "ref", tableName: "brand" },
+  { name: "origin_id", type: "uuid", key: "ref", tableName: "origin_content" },
+  {
+    name: "pattern_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "pattern_content",
+  },
 ];
-const product_content = [
+
+export const product_content = [
   { name: "id", type: "uuid" },
   {
     name: "product_id",
@@ -335,8 +374,14 @@ const product_content = [
     tableName: "product_content",
   },
   { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
+  { name: "name", type: "text" },
+  { name: "description", type: "text" },
+  { name: "seo_title", type: "text" },
+  { name: "seo_description", type: "text" },
+  { name: "image_alt", type: "text" },
 ];
-const product_image = [
+
+export const product_image = [
   { name: "id", type: "uuid" },
   {
     name: "product_id",
@@ -344,9 +389,13 @@ const product_image = [
     key: "ref",
     tableName: "product_content",
   },
-  { name: "color_id", type: "uuid", key: "ref", tableName: "color" },
+  { name: "color_id", type: "uuid", key: "ref", tableName: "color_content" },
+  { name: "image", type: "text" },
+  { name: "size_id", type: "uuid", key: "ref", tableName: "size_content" },
+  { name: "pattern_sku", type: "number" },
 ];
-const product_variant = [
+
+export const product_variant = [
   { name: "id", type: "uuid" },
   {
     name: "product_id",
@@ -354,15 +403,19 @@ const product_variant = [
     key: "ref",
     tableName: "product_content",
   },
-  { name: "color_id", type: "uuid", key: "ref", tableName: "color" },
+  { name: "color_id", type: "uuid", key: "ref", tableName: "color_content" },
+  { name: "size_id", type: "uuid", key: "ref", tableName: "size_content" },
+  { name: "weight", type: "number" },
+  { name: "sku", type: "text" },
 ];
+
 const region = [
   { name: "id", type: "uuid" },
   { name: "name", type: "text" },
 ];
 const return_status = [
   { name: "id", type: "uuid" },
-  { name: "numerical", type: "int2" },
+  { name: "numerical", type: "number" },
 ];
 const return_status_content = [
   { name: "id", type: "uuid" },
@@ -376,7 +429,7 @@ const return_status_content = [
 ];
 const sale = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   {
     name: "product_id",
     type: "uuid",
@@ -392,7 +445,7 @@ const season_content = [
 ];
 const showreel = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
 ];
 const showreel_like = [
@@ -432,26 +485,26 @@ const stock = [
   { name: "warehouse_id", type: "uuid", key: "ref", tableName: "warehouse" },
 ];
 const user = [
-  { name: "id", format: "uuid" },
-  { name: "created_at", format: "date" },
-  { name: "first_name", format: "text" },
-  { name: "last_name", format: "text" },
-  { name: "email", format: "email" },
-  { name: "phone", format: "text" },
-  { name: "profile_img", format: "text" },
-  { name: "wallet", format: "number" },
-  { name: "country", format: "uuid", key: "ref", tableName: "country" },
-  { name: "line_one", format: "text" },
-  { name: "line_two", format: "text" },
-  { name: "city", format: "text" },
-  { name: "postal_code", format: "number" },
+  { name: "id", type: "uuid" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
+  { name: "first_name", type: "text" },
+  { name: "last_name", type: "text" },
+  { name: "email", type: "email" },
+  { name: "phone", type: "text" },
+  { name: "profile_img", type: "text" },
+  { name: "wallet", type: "number" },
+  { name: "country", type: "uuid", key: "ref", tableName: "country" },
+  { name: "line_one", type: "text" },
+  { name: "line_two", type: "text" },
+  { name: "city", type: "text" },
+  { name: "postal_code", type: "number" },
   {
     name: "default_address_id",
-    format: "uuid",
+    type: "uuid",
     key: "ref",
     tableName: "address",
   },
-  { name: "points", format: "number" },
+  { name: "points", type: "number" },
 ];
 const user_address = [
   { name: "id", type: "uuid" },
@@ -460,22 +513,22 @@ const user_address = [
 ];
 const user_alert = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
 ];
 const user_cart = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
 ];
 const user_invite = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
 ];
 const user_like = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
 ];
 const user_point = [
@@ -485,12 +538,12 @@ const user_point = [
 ];
 const user_suggestion = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
 ];
 const user_ticket = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
 ];
 const user_wallet = [

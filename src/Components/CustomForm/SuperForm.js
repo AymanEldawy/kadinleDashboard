@@ -103,7 +103,7 @@ const SuperForm = ({ onSubmit, initialFields, oldValues, resetForm }) => {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
         {!!initialFields
           ? initialFields?.map((field, i) => {
-              if (field?.name === "id") return null;
+              if (field?.name === "id" || field?.hide_in_add_form) return null;
               if (field?.key === "input") {
                 return (
                   <InputField

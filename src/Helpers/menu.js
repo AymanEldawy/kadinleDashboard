@@ -47,6 +47,9 @@ export const menuData = [
     children: [
       { path: "/product", name: "Mange Products" },
       { path: "/add-product", name: "Add Product" },
+      { path: "/add-product-content", name: "Add Product content" },
+      { path: "/add-product-variants", name: "Add Product variants" },
+      { path: "/add-product-images", name: "Add Product images" },
     ],
   },
   {

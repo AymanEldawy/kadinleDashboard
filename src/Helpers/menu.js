@@ -67,6 +67,8 @@ export const menuData = [
     children: [
       { path: "/color", name: "Mange Colors" },
       { path: "/add-color", name: "Add Color" },
+      { path: "/colors-content", name: "Colors content" },
+      { path: "/add-color-content", name: "Add Color content" },
     ],
   },
   {
@@ -87,6 +89,8 @@ export const menuData = [
     children: [
       { path: "/size", name: "Mange Sizes" },
       { path: "/add-size", name: "Add Size" },
+      { path: "/sizes-content", name: "Sizes content" },
+      { path: "/add-size-content", name: "Add size content" },
     ],
   },
   {
@@ -114,6 +118,8 @@ export const menuData = [
     children: [
       { path: "/collection", name: "Mange Collections" },
       { path: "/add-collection", name: "Add Collection" },
+      { path: "/collection-content", name: "Collections Content" },
+      { path: "/add-collection-content", name: "Add Collection content" },
     ],
   },
   {

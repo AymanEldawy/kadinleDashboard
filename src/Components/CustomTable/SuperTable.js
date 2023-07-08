@@ -272,18 +272,30 @@ const SuperTable = ({
                     ) : null}
                     {columns?.map((col, index) => {
                       if (col === "id") return null;
-                      if (col?.toLowerCase() === "image")
+                      if (
+                        col?.indexOf("img") !== -1 ||
+                        col?.indexOf("image") !== -1 ||
+                        col?.toLowerCase() === "hex"
+                      )
                         return (
                           <TableCol
                             classes={`!py-4 border ${classes?.colBody}`}
                           >
-                            <FullImage
-                              src={row?.[col]}
-                              alt="image description"
-                              height={50}
-                              width={70}
-                              className="block mx-auto cursor-pointer"
-                            />
+                            {col?.indexOf("image") !== -1 ||
+                            col?.indexOf("img") !== -1 ? (
+                              <FullImage
+                                src={row?.[col]}
+                                alt="image description"
+                                height={50}
+                                width={70}
+                                className="block mx-auto cursor-pointer"
+                              />
+                            ) : (
+                              <span
+                                className="block min-h-[30px] w-full h-full border border-gray-200"
+                                style={{ background: row?.[col] }}
+                              ></span>
+                            )}
                           </TableCol>
                         );
                       else if (
@@ -302,7 +314,7 @@ const SuperTable = ({
                                 row?.[col]
                               }`}
                             >
-                              {getCachedList(col, row?.[col]) || "None"}
+                              {getCachedList(col, row?.[col]) || row?.[col]}
                             </Link>
                           </TableCol>
                         );

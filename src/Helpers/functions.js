@@ -36,6 +36,22 @@ const tables = {
     referenceTableName: "language",
     referenceId: "id",
   },
+  collection: {
+    referenceTableName: "collection_content",
+    referenceId: "id",
+  },
+  collection_content: {
+    referenceTableName: "collection_content",
+    referenceId: "id",
+  },
+  color: {
+    referenceTableName: "color_content",
+    referenceId: "color_id",
+  },
+  size: {
+    referenceTableName: "size_content",
+    referenceId: "size_id",
+  },
 };
 
 export const getTableContentName = (table) => {

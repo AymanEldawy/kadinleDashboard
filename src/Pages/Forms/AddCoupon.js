@@ -1,7 +1,8 @@
 import React from "react";
+import DynamicForm from "./../Dynamics/DynamicForm";
 
 const AddCoupon = () => {
-  return <div>AddCoupon</div>;
+  return <DynamicForm SUPABASE_TABLE_NAME="coupon" title="Add coupons" />;
 };
 
 export default AddCoupon;

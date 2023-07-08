@@ -1,7 +1,11 @@
 import React from "react";
 
+import DynamicForm from "./../Dynamics/DynamicForm";
+
 const AddCollection = () => {
-  return <div>AddCollection</div>;
+  return (
+    <DynamicForm SUPABASE_TABLE_NAME="collection" title="Add collection" />
+  );
 };
 
 export default AddCollection;

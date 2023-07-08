@@ -2,16 +2,21 @@ import React, { useState } from "react";
 import Modal from "../../Modal/Modal";
 
 export const FullImage = ({ src, alt, height, width, ...imgProps }) => {
+  console.log(src);
   const [open, setOpen] = useState(false);
   return (
     <>
-      <img
-        src={src}
-        alt={alt}
-        onClick={() => setOpen(true)}
-        className="cursor-pointer"
-        {...imgProps}
-      />
+      {!!src ? (
+        <img
+          src={src}
+          alt={alt}
+          onClick={() => setOpen(true)}
+          className="cursor-pointer"
+          {...imgProps}
+        />
+      ) : (
+        "No image"
+      )}
       <Modal
         open={open}
         close={() => setOpen(false)}

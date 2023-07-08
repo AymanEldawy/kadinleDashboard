@@ -139,7 +139,7 @@ const Sidebar = ({ open, setOpen }) => {
   return (
     <aside
       className={`max-[757px]:fixed h-screen shadow overflow-hidden flex flex-col z-50 transition-all duration-300 bg-white dark:bg-bgmaindark ${
-        open ? "translate-x-0 w-72 " : "w-12 overflow-x-hidden"
+        open ? "translate-x-0 min-w-[250px] " : "w-12 overflow-x-hidden"
       }`}
     >
       <div className=" h-20 flex items-center justify-center ">

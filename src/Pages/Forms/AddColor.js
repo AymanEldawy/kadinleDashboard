@@ -1,7 +1,8 @@
 import React from "react";
+import DynamicForm from "./../Dynamics/DynamicForm";
 
 const AddColor = () => {
-  return <div>AddColor</div>;
+  return <DynamicForm SUPABASE_TABLE_NAME="color" title="Add Color" />;
 };
 
 export default AddColor;

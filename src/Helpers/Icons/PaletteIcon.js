@@ -3,13 +3,13 @@ import React from "react";
 const PaletteIcon = () => {
   return (
     <svg
-      fill="#ebc024"
+      fill="currentColor"
       height="23px"
       width="23px"
       version="1.1"
       id="Layer_1"
       viewBox="-51.2 -51.2 614.40 614.40"
-      stroke="#ebc024"
+      stroke="currentColor"
       stroke-width="2.56"
       transform="matrix(1, 0, 0, 1, 0, 0)rotate(90)"
     >

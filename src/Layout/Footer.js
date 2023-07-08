@@ -10,18 +10,16 @@ const Footer = () => {
     }
   }, []);
   return (
-    <React.Fragment>
-      <footer className={extraClasses}>
-        <div className="bg-white dark:bg-bgmaindark text-xs">
-          <div className="container">
-            <div className="flex justify-between gap-2 items-center p-2 text-gray-400 font-normal">
-              <div>{new Date().getFullYear()} © AB Repair.</div>
-              <div className="text-right">Developed by Why Not Tech</div>
-            </div>
+    <footer className={extraClasses}>
+      <div className="bg-white dark:bg-bgmaindark text-xs">
+        <div className="container">
+          <div className="flex justify-between gap-2 items-center p-2 text-gray-400 font-normal">
+            <div>{new Date().getFullYear()} © AB Repair.</div>
+            <div className="text-right">Developed by Why Not Tech</div>
           </div>
         </div>
-      </footer>
-    </React.Fragment>
+      </div>
+    </footer>
   );
 };
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-const Backdrop = ({ open, onClose, classes }) => {
+const Backdrop = ({ open, onClose, classes, hideInLarge }) => {
   return (
     <div
       onClick={onClose}
@@ -8,7 +8,7 @@ const Backdrop = ({ open, onClose, classes }) => {
         open
           ? "opacity-60 pointer-events-auto"
           : "opacity-0 pointer-events-none"
-      } `}
+      } ${hideInLarge ? "md:!hidden" : ""} `}
     ></div>
   );
 };

@@ -3,12 +3,9 @@ import React from "react";
 const TableHead = ({ children, classes }) => {
   return (
     <thead
-      className={`text-xs text-gray-700 uppercase dark:bg-borderdark dark:text-gray-300 bg-gray-200 ${classes}`}
+      className={`bg-[#e9ebec] text-xs text-secondary capitalize font-medium dark:text-gray-300 ${classes}`}
     >
-      <tr>
-        {/* <tr>{children}</tr> */}
-        {children}
-      </tr>
+      {children}
     </thead>
   );
 };

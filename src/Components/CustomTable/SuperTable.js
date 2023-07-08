@@ -1,21 +1,26 @@
 import React, { memo } from "react";
-import { useEffect } from "react";
-import { useCallback } from "react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useContext } from "react";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
 
-import { PaletteIcon } from "../../Helpers/Icons";
-import ChevronIcon from "../../Helpers/Icons/ChevronIcon";
+import { getTableContentName } from "../../Helpers/functions";
+import { ChevronIcon } from "../../Helpers/Icons";
+import { useFetch } from "../../hooks/useFetch";
+import { FullImage } from "../Global/FullImage/FullImage";
+import { LanguageContext } from "./../../Context/LangContext";
+import { fetchWord } from "./../lang/fetchWord";
+// import { ChevronIcon, SortIcon } from "../Icons";
 import Table from "./Table";
 import TableBody from "./TableBody";
 import TableCol from "./TableCol";
 import TableHead from "./TableHead";
 import TableHeadCol from "./TableHeadCol";
 import TableRow from "./TableRow";
-import TableUniqueCol from "./TableUniqueCol";
 
 let sorting = {};
+let CACHED_TABLE = {};
+
 const SuperTable = ({
   columns,
   data,
@@ -24,35 +29,49 @@ const SuperTable = ({
   itemsPerPage,
   selectedList,
   setSelectedList,
-  table,
-  // searchKey,
-  reffedTables,
+  classes: classesProps,
+  allowActions,
+  actionKey,
+  actionsContent,
+  primaryStyles,
+  loading,
+  tableName,
 }) => {
+  const { getData } = useFetch();
+  const { lang } = useContext(LanguageContext);
   const [filterList, setFilterList] = useState(data);
   const [itemOffset, setItemOffset] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(1);
   const [refresh, setRefresh] = useState(false);
-
+  let defaultPrimaryStyle = primaryStyles
+    ? {
+        table: "!border-none !rounded-none",
+        headRow: "border-b !border-primary",
+        colHead: "border-b !border-primary !py-4",
+        colBody:
+          "ltr:first:border-l-0  rtl:first:border-r-0 ltr:last:border-r-0 rtl:last:border-l-0",
+      }
+    : {};
+  let classes = {
+    colHead: "!py-3",
+    ...classesProps,
+    ...defaultPrimaryStyle,
+    containerClassName: "!rounded-none",
+  };
   useEffect(() => {
     setFilterList(data);
   }, [data]);
 
   useEffect(() => {
     // Needed more work
-    console.log('un...')
-    console.log(itemOffset, itemsPerPage);
     const endOffset = itemOffset + parseInt(itemsPerPage);
     setCurrentItems(filterList?.slice(itemOffset, endOffset));
     setPageCount(Math.ceil(filterList?.length / parseInt(itemsPerPage)));
   }, [filterList, itemsPerPage, itemOffset]);
-
-  useEffect(() => { }, [refresh]);
-
+  useEffect(() => {}, [refresh]);
   useEffect(() => {
-    console.log('run..')
     if (searchValue) {
-      console.log('run..233')
       let newList = [];
       for (const col of columns) {
         for (const item of data) {
@@ -79,12 +98,43 @@ const SuperTable = ({
       setFilterList(data);
       setCurrentItems(data?.slice(0, itemsPerPage));
     }
-  }, [searchValue, data, ]);
+  }, [searchValue, data]);
 
   useEffect(() => {
-    console.log("rendering");
-  }, []);
+    CACHED_TABLE = {};
+    checkRefTable(columns);
+  }, [columns?.length]);
 
+  async function checkRefTable(fields) {
+    if (!fields?.length) return;
+    for (const col of columns) {
+      if (col === "parent_id" || col === "country" || col?.includes("_id")) {
+        let table =
+          col === "parent_id"
+            ? tableName
+            : col === "country"
+            ? col
+            : col?.replace("_id", "");
+
+        // pass table name and return where is the content name and the name id for content name
+        // example referenceTableName = [table || table_content]
+        // referenceId referenceId = [id || table_id]
+        const { referenceTableName, referenceId } = getTableContentName(table);
+        const data = await getData(referenceTableName);
+
+        let hashList = {};
+        for (const item of data) {
+          hashList[item?.[referenceId]] = item?.name || item?.title;
+        }
+        CACHED_TABLE[col] = hashList;
+      }
+    }
+  }
+
+  const getCachedList = (tableName, value) => {
+    console.log(tableName, value, CACHED_TABLE);
+    return CACHED_TABLE?.[tableName]?.[value];
+  };
   const handelSelect = useCallback(
     (itemId) => {
       if (selectedList[itemId]) {
@@ -114,7 +164,7 @@ const SuperTable = ({
       } else {
         let newList = {};
         for (const key in data) {
-          newList[data?.[key]?.Guid] = data?.[key]?.Guid;
+          newList[data?.[key]?.id] = data?.[key]?.id;
         }
         setSelectedList(newList);
       }
@@ -145,108 +195,156 @@ const SuperTable = ({
   };
   return (
     <>
-      <Table>
-        <TableHead>
-          {allowSelect ? (
-            <TableHeadCol>
-              <input
-                type="checkbox"
-                className="w-4 h-4 "
-                onChange={handleSelectedAll}
-              />
-            </TableHeadCol>
-          ) : null}
-          <TableHeadCol>Actions</TableHeadCol>
-          {columns?.map((col, index) => (
-            <TableHeadCol key={`${col}-${index}`} sort sortBy={sortBy}>
-              {col}
-            </TableHeadCol>
-          ))}
-        </TableHead>
-        <TableBody>
-          {currentItems?.map((row, index) => {
-            return (
-              <TableRow
-                key={`${row?.Name}-${index}`}
-                classes={`border-b dark:border-borderdark whitespace-nowrap ${!!selectedList[row?.Guid] ? "bg-gray-100 dark:bg-[#1115]" : ""
-                  }`}
+      <Table
+        containerClassName={classes?.containerClassName}
+        tableClassName={classes?.table}
+      >
+        <TableHead classes={classes?.head}>
+          <TableRow classes={classes?.headRow}>
+            {allowSelect ? (
+              <TableHeadCol
+                contentClassName={` ${classes?.colHeadContentClassName} flex justify-center `}
+                classes={`${classes?.colHead}  !w-[50px]`}
               >
-                {allowSelect ? (
-                  <TableCol>
-                    <input
-                      className="w-4 h-4"
-                      type="checkbox"
-                      checked={!!selectedList[row?.Guid]}
-                      onChange={() => handelSelect(row?.Guid)}
-                    />
-                  </TableCol>
-                ) : null}
-                <TableCol>
-                  <div className="flex gap-1">
-                    {table && table === "building" ? (
-                      <>
-                        <Link
-                          className="hover:underline text-blue-500 order-1"
-                          to={`/buildings/${row?.Name}/tools/${row?.Guid}`}
-                          state={{ row, table }}
-                        >
-                          <PaletteIcon />
-                        </Link>
-                      </>
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 "
+                  onChange={handleSelectedAll}
+                />
+              </TableHeadCol>
+            ) : null}
+            {columns?.map((col, index) => {
+              if (col === "id") return null;
+              else
+                return (
+                  <TableHeadCol
+                    contentClassName={classes?.colHeadContentClassName}
+                    classes={classes?.colHead}
+                    key={`${col}-${index}`}
+                    sort
+                    sortBy={sortBy}
+                  >
+                    {/* {fetchWord(col, lang)} */}
+                    {col}
+                  </TableHeadCol>
+                );
+            })}
+            {allowActions ? (
+              <TableHeadCol
+                contentClassName={classes?.colHeadContentClassName}
+                classes={classes?.colHead}
+              >
+                {fetchWord(actionKey, lang)}
+              </TableHeadCol>
+            ) : null}
+          </TableRow>
+        </TableHead>
+        <TableBody classes={classes?.body}>
+          {loading ? (
+            <tr className="h-16">
+              <td colSpan={columns.length + 1}>
+                <p className="flex items-center justify-center text-blue-500">
+                  Loading...
+                </p>
+              </td>
+            </tr>
+          ) : (
+            <>
+              {currentItems?.map((row, index) => {
+                return (
+                  <TableRow
+                    key={`${row?.Name}-${index}`}
+                    classes={`border-b dark:border-borderdark ${
+                      !!selectedList?.[row?.id]
+                        ? "bg-gray-100 dark:bg-[#1115]"
+                        : ""
+                    } ${classes?.row}`}
+                  >
+                    {allowSelect ? (
+                      <TableCol classes={`!py-4 border ${classes?.colBody}`}>
+                        <input
+                          className="w-4 h-4 mx-auto block"
+                          type="checkbox"
+                          checked={!!selectedList?.[row?.id]}
+                          onChange={() => handelSelect(row?.id)}
+                        />
+                      </TableCol>
                     ) : null}
-                  </div>
-                </TableCol>
-                {columns?.map((col, index) => {
-                  if (col === "CDate") {
-                    let date = new Date(row[col]).toLocaleDateString("en-UK", {
-                      year: "numeric",
-                      month: "numeric",
-                      day: "numeric",
-                      weekday: "short",
-                    });
-                    let time = new Date(row[col]).toLocaleTimeString("en-UK", {
-                      timeStyle: "short",
-                    });
-                    return (
-                      <TableCol classes="whitespace-nowrap" key={index}>
-                        {date} | {time}
+                    {columns?.map((col, index) => {
+                      if (col === "id") return null;
+                      if (col?.toLowerCase() === "image")
+                        return (
+                          <TableCol
+                            classes={`!py-4 border ${classes?.colBody}`}
+                          >
+                            <FullImage
+                              src={row?.[col]}
+                              alt="image description"
+                              height={50}
+                              width={70}
+                              className="block mx-auto cursor-pointer"
+                            />
+                          </TableCol>
+                        );
+                      else if (
+                        col === "parent_id" ||
+                        col === "country" ||
+                        col?.includes("_id")
+                      ) {
+                        return (
+                          <TableCol
+                            classes={`!py-4 border ${classes?.colBody}`}
+                            key={index}
+                          >
+                            <Link
+                              className="text-blue-600"
+                              to={`/update/${col?.replace("_id", "")}/${
+                                row?.[col]
+                              }`}
+                            >
+                              {getCachedList(col, row?.[col]) || "None"}
+                            </Link>
+                          </TableCol>
+                        );
+                      } else if (typeof row?.[col] === "boolean")
+                        return <TableCol>{row?.[col] ? "Yes" : "No"}</TableCol>;
+                      else if (col?.toLowerCase() === "created_at")
+                        return (
+                          <TableCol
+                            classes={`!py-4 border ${classes?.colBody}`}
+                            key={index}
+                          >
+                            {new Date(row?.[col])?.toLocaleDateString("en-UK")}
+                          </TableCol>
+                        );
+                      else
+                        return (
+                          <TableCol
+                            classes={`!py-4 border ${classes?.colBody}`}
+                            key={index}
+                          >
+                            {row?.[col]}
+                          </TableCol>
+                        );
+                    })}
+                    {allowActions ? (
+                      <TableCol classes={`!py-4 border ${classes?.colBody}`}>
+                        {actionsContent(row)}
                       </TableCol>
-                    );
-                  } else if (col?.toLowerCase()?.includes("guid")) {
-                    return (
-                      <TableUniqueCol
-                        row={row}
-                        col={col}
-                        reffedTables={reffedTables}
-                        key={index}
-                        val={row[col]}
-                      />
-                    );
-                  } else if (col === "Name") {
-                    return (
-                      <TableCol key={index}>
-                        <Link
-                          className="hover:underline text-blue-500 order-2"
-                          to={`/update/${table}/${row?.Guid}`}
-                          state={{ row, table }}
-                        >
-                          {row[col]}
-                        </Link>
-                      </TableCol>
-                    );
-                  } else return <TableCol key={index}>{row[col]}</TableCol>;
-                })}
-              </TableRow>
-            );
-          })}
+                    ) : null}
+                  </TableRow>
+                );
+              })}
+            </>
+          )}
         </TableBody>
       </Table>
-      {currentItems.length ? (
+      {currentItems?.length && !loading ? (
         <>
           <ReactPaginate
             breakLabel="..."
             nextLabel={
-              <span className="flex  scale-75 -rotate-90">
+              <span className="flex  scale-75 ltr:rotate-180 rtl:-rotate-180">
                 <ChevronIcon />
               </span>
             }
@@ -254,25 +352,26 @@ const SuperTable = ({
             pageRangeDisplayed={5}
             pageCount={pageCount}
             previousLabel={
-              <span className="flex scale-75  rotate-90">
+              <span className="flex scale-75 rtl:rotate-180">
                 <ChevronIcon />
               </span>
             }
             renderOnZeroPageCount={null}
-            className="pagination flex gap-6 items-center shadow p-3"
+            className="pagination flex gap-6 items-center shadow p-3 bg-white"
             activeClassName="bg-blue-500 p-1 px-2 rounded text-sm text-white"
-            previousClassName="rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
-            nextClassName="rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
+            previousClassName="ltr:rotate-90 rtl:-rotate-90 rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
+            nextClassName="ltr:rotate-90 rtl:-rotate-90 rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
             disabledClassName="text-gray-200 dark:text-gray-600"
           />
         </>
-      ) : (
+      ) : null}
+      {!loading && !currentItems?.length ? (
         <div className="text-red-500 text-center mt-2">
-          <strong className="capitalize">{table}</strong> results are empty
+          {fetchWord("no_results", lang)}
         </div>
-      )}
+      ) : null}
     </>
   );
 };
 
-export default memo(SuperTable);
+export default SuperTable;

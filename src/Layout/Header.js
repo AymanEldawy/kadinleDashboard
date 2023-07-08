@@ -13,7 +13,6 @@ import {
   MoonIcon,
   SunIcon,
 } from "../Helpers/Icons";
-import logo from "../abrepair-logo.svg";
 import { exitFullscreen, openFullscreen } from "../Helpers/functions";
 import { useRef } from "react";
 import { useEffect } from "react";
@@ -40,15 +39,9 @@ function Header({ setOpen, mode, setMode }) {
   return (
     // <div className="bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 ">
     <header className="bg-[#144479] text-white py-2">
-      <div className="container  flex py-2">
+      <div className="flex py-2 px-4">
         <div className="flex items-center gap-4">
-          <Link className="" to="/">
-            <img src={logo} alt="Abrepair" className="max-w-[140px]" />
-          </Link>
-          <button
-            className="lg:hidden"
-            onClick={() => setOpen((prev) => !prev)}
-          >
+          <button className="" onClick={() => setOpen((prev) => !prev)}>
             <BarsIcon />
           </button>
           <div className="">

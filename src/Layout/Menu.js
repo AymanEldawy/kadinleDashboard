@@ -60,14 +60,14 @@ const Menu = () => {
       }
       return (
         <li key={item?.name} className="relative">
-          {item?.link === "" ? (
+          {item?.path === "" ? (
             <button className="whitespace-nowrap hover:text-blue-600 dark:hover:bg-transparent dark:hover:text-white py-2 px-4 w-full flex">
               {item.name}
             </button>
           ) : (
             <Link
               className="whitespace-nowrap  hover:text-blue-600 dark:hover:bg-transparent dark:hover:text-white py-2 px-4 w-full flex"
-              to={item?.link}
+              to={item?.path}
             >
               {item.name}
             </Link>
@@ -78,11 +78,9 @@ const Menu = () => {
   };
   return (
     <div className="shadow bg-white dark:bg-bgmaindark hidden lg:block">
-      <div className="container">
-        <ul className="primary-menu text-gray-500 dark:text-gray-400 text-sm font-medium min-h-[40px] flex gap-1 items-center justify-between capitalize">
-          {list(menuData)}
-        </ul>
-      </div>
+      <ul className="primary-menu overflow-auto text-gray-500 dark:text-gray-400 text-sm font-medium min-h-[40px] flex gap-1 items-center justify-between capitalize">
+        {/* {list(menuData)} */}
+      </ul>
     </div>
   );
 };

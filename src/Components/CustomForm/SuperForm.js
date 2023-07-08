@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { useFetch } from "../../hooks/useFetch";
 import { Button } from "../Global/Button";
 import CheckboxField from "./CheckboxField";
 import Field from "./Field";
@@ -10,20 +11,38 @@ import InputField from "./InputField";
 import RadioField from "./RadioField";
 import SelectField from "./SelectField";
 
-const SuperForm = ({
-  onSubmit,
-  initialFields,
-  goBack,
-  goNext,
-  allowSteps,
-  oldValues,
-  getCachedList,
-}) => {
+let CACHED_TABLE = {};
+
+const SuperForm = ({ onSubmit, initialFields, oldValues, resetForm }) => {
+  const { getData } = useFetch();
+
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   // Clean up component
   const location = useLocation();
+  useEffect(() => {
+    checkRefTable(initialFields);
+  }, [initialFields]);
+  async function checkRefTable(fields) {
+    console.log(fields);
+    if (!fields?.length) return;
+    for (const field of fields) {
+      if (field.key === "ref") {
+        const data = await getData(field?.tableName);
+        CACHED_TABLE[field?.tableName] = data;
+      }
+    }
+  }
+  console.log(CACHED_TABLE);
+
+  useEffect(() => {
+    if (resetForm) {
+      setValues({});
+      setErrors({});
+      setTouched({});
+    }
+  }, [resetForm]);
   useEffect(() => {
     setErrors({});
     setTouched({});
@@ -33,11 +52,11 @@ const SuperForm = ({
       setValues({});
     }
   }, [location?.pathname, oldValues]);
-  // useEffect(() => {
-  //   if (oldValues) {
-  //     setValues(oldValues);
-  //   }
-  // }, [oldValues]);
+
+  const getCachedList = (tableName) => {
+    console.log(tableName);
+    return CACHED_TABLE?.[tableName];
+  };
 
   const insertIntoErrors = (name, value) => {
     if (value === "") {
@@ -77,16 +96,14 @@ const SuperForm = ({
     e.preventDefault();
     if (!errors.length) {
       onSubmit(values);
-      if (goNext) {
-        goNext();
-      }
     }
   };
   return (
     <form onSubmit={submit} className="mb-8">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
         {!!initialFields
           ? initialFields?.map((field, i) => {
+              if (field?.name === "id") return null;
               if (field?.key === "input") {
                 return (
                   <InputField
@@ -94,7 +111,7 @@ const SuperForm = ({
                     key={`${field?.name}`}
                     type={field?.type}
                     name={field?.name}
-                    label={field?.label}
+                    label={field?.name}
                     onFocus={() => onTouched(field?.name)}
                     required={field?.required}
                     error={
@@ -111,19 +128,18 @@ const SuperForm = ({
                     }
                   />
                 );
-              } else if (field?.key === "unique") {
+              } else if (field?.key === "ref") {
                 return (
-                  <Field
-                    value={values?.[field?.name]}
-                    table={field?.table}
+                  <SelectField
                     key={`${field?.name}`}
-                    list={!!getCachedList ? getCachedList(field?.table) : []}
-                    type={field?.type}
-                    label={field?.label}
+                    value={values?.[field?.name]}
+                    label={field?.name}
+                    list={
+                      !!getCachedList ? getCachedList(field?.tableName) : []
+                    }
+                    keyLabel={field?.refName || "name"}
                     name={field?.name}
-                    onFocus={() => onTouched(field?.name)}
                     required={field?.required}
-                    getSelectedValue={handelChangeField}
                   />
                 );
               } else if (field?.key === "radio") {
@@ -156,7 +172,7 @@ const SuperForm = ({
                     defaultValue={values?.[field?.name]}
                     key={`${field?.name}`}
                     name={field?.name}
-                    label={field?.label}
+                    label={field?.name}
                     onFocus={() => onTouched(field?.name)}
                     required={field?.required}
                     list={field?.list}
@@ -179,7 +195,7 @@ const SuperForm = ({
                   <CheckboxField
                     defaultChecked={values?.[field?.name]}
                     key={`${field?.name}`}
-                    label={field?.label}
+                    label={field?.name}
                     name={field?.name}
                     required={field?.required}
                     onFocus={() => onTouched(field?.name)}
@@ -205,7 +221,7 @@ const SuperForm = ({
                     key={`${field?.name}`}
                     name={field?.name}
                     type={field?.type}
-                    label={field?.label}
+                    label={field?.name}
                     onFocus={() => onTouched(field?.name)}
                     required={field?.required}
                     error={
@@ -227,17 +243,10 @@ const SuperForm = ({
           : null}
       </div>
       <div className="flex justify-between gap-4 items-center">
-        {allowSteps ? (
-          <Button title="Back" onClick={goBack} type="button" />
-        ) : null}
-        {!!goNext && allowSteps ? (
-          <Button type="button" title="Next" onClick={submit} />
-        ) : (
-          <Button type="submit" title="Submit" />
-        )}
+        <Button type="submit" title="Submit" />
       </div>
     </form>
   );
 };
 
-export default memo(SuperForm);
+export default SuperForm;

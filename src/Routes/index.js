@@ -1,18 +1,31 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import { authProtectedRoutes } from "./routes";
+import { Route, Routes } from "react-router-dom";
+
+import { authProtectedRoutes, publicRoutes } from "./routes";
+import Layout from "../Layout";
+
 const Index = () => {
   return (
-    <Routes>
-      {authProtectedRoutes.map((item) => (
-        <Route path={item.path} Component={item.component} />
-      ))}
-      {/* <Route /> */}
-      {/* <Route /> */}
-      {/* <Route /> */}
-      {/* <Route /> */}
-      {/* <Route /> */}
-    </Routes>
+    <Layout>
+      <Routes>
+        {publicRoutes.map((route, index) => (
+          <Route
+            path={route.path}
+            element={route.component}
+            key={index}
+            exact={true}
+          />
+        ))}
+        {authProtectedRoutes.map((route, index) => (
+          <Route
+            path={route.path}
+            element={route.component}
+            key={index}
+            exact={true}
+          />
+        ))}
+      </Routes>
+    </Layout>
   );
 };
 

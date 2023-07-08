@@ -25,10 +25,10 @@ export const TableBar = ({
   columns,
   searchKey,
   setSearchKey,
-  selectedList
+  selectedList,
 }) => {
   return (
-    <div className="flex justify-between gap-2">
+    <div className="flex justify-between gap-2 mb-4">
       <div className="flex gap-2 items-center">
         <div className="relative">
           <SearchBar
@@ -48,12 +48,14 @@ export const TableBar = ({
         />
       </div>
       <div className="flex gap-2">
-        <button
-          className="bg-blue-500 text-sm text-white rounded px-2 py-1 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300"
-          onClick={onAddClick}
-        >
-          add new
-        </button>
+        {onAddClick ? (
+          <button
+            className="bg-blue-500 whitespace-nowrap text-sm text-white rounded px-2 py-1 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300"
+            onClick={onAddClick}
+          >
+            add new
+          </button>
+        ) : null}
         <button
           className="bg-red-500 text-sm text-white rounded px-2 py-1 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300 disabled:bg-red-200"
           onClick={onDeleteClick}

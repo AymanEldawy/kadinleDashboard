@@ -25,6 +25,13 @@
   border: 3px solid #ffffff;
 }
 
+aside::-webkit-scrollbar {
+  display: none;
+  position: sticky;
+  height: 100vh;
+  top: 0;
+}
+
 input[type="color"] {
 	-webkit-appearance: none;
 	border: none;

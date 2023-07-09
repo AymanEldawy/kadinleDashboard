@@ -1,14 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { FullImage } from "../Global/FullImage/FullImage";
 
-const InputField = ({ label, error, className, ...field }) => {
+const UploadFile = ({ label, error, className, src, ...field }) => {
+  const [preview, setPreview] = useState("");
   let additionalInfo = {};
   if (field?.type === "number") {
     additionalInfo = {
       min: 0,
     };
   }
+  useEffect(() => {
+    setPreview(src ? URL.createObjectURL(src) : "");
+  }, [src]);
   return (
-    <div className={`flex flex-col ${field?.type === "checkbox" ? "" : ""} `}>
+    <div
+      className={`flex flex-col relative ${
+        field?.type === "checkbox" ? "" : ""
+      } `}
+    >
+      {!!src ? (
+        <FullImage
+          src={preview}
+          alt="preview"
+          className="absolute ltr:right-0 rtl:left-0 top-0 h-16 cursor-pointer border-2 rounded-md border-black w-20 object-contain shadow"
+        />
+      ) : null}
       {label ? (
         <label
           htmlFor={label}
@@ -19,6 +35,7 @@ const InputField = ({ label, error, className, ...field }) => {
       ) : null}
       <input
         id={label}
+        type="file"
         {...field}
         min={field?.type === "number" ? "0" : ""}
         className={`border read-only:bg-blue-100 dark:read-only:bg-[#444] rounded p-1 ${className} ${
@@ -34,4 +51,4 @@ const InputField = ({ label, error, className, ...field }) => {
   );
 };
 
-export default InputField;
+export default UploadFile;

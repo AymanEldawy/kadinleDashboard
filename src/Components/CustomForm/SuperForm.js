@@ -10,6 +10,7 @@ import Field from "./Field";
 import InputField from "./InputField";
 import RadioField from "./RadioField";
 import SelectField from "./SelectField";
+import UploadFile from "./UploadFile";
 
 let CACHED_TABLE = {};
 
@@ -83,7 +84,7 @@ const SuperForm = ({ onSubmit, initialFields, oldValues, resetForm }) => {
   };
   const handelChangeField = (name, value, required) => {
     if (required) {
-      insertIntoErrors(name, value);
+      insertIntoErrors(name, "value");
     }
     setValues((prev) => {
       return {
@@ -92,6 +93,20 @@ const SuperForm = ({ onSubmit, initialFields, oldValues, resetForm }) => {
       };
     });
   };
+
+  const handelFieldUpload = (name, e, required) => {
+    if (required) {
+      // insertIntoErrors(name, value);
+    }
+    console.log(e.target.files, name);
+    setValues((prev) => {
+      return {
+        ...prev,
+        [name]: e.target.files[0],
+      };
+    });
+  };
+
   const submit = (e) => {
     e.preventDefault();
     if (!errors.length) {
@@ -138,6 +153,7 @@ const SuperForm = ({ onSubmit, initialFields, oldValues, resetForm }) => {
                       !!getCachedList ? getCachedList(field?.tableName) : []
                     }
                     keyLabel={field?.refName || "name"}
+                    keyValue={field?.refId || "id"}
                     name={field?.name}
                     required={field?.required}
                   />
@@ -211,6 +227,25 @@ const SuperForm = ({ onSubmit, initialFields, oldValues, resetForm }) => {
                         e.target.value,
                         field?.required
                       )
+                    }
+                  />
+                );
+              } else if (field?.key === "image") {
+                return (
+                  <UploadFile
+                    src={values?.[field?.name]}
+                    key={`${field?.name}`}
+                    name={field?.name}
+                    label={field?.name}
+                    onFocus={() => onTouched(field?.name)}
+                    required={field?.required}
+                    error={
+                      touched[field?.name] && errors[field?.name]
+                        ? errors[field?.name]
+                        : null
+                    }
+                    onChange={(e) =>
+                      handelFieldUpload(field?.name, e, field?.required)
                     }
                   />
                 );

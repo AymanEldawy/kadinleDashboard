@@ -58,8 +58,8 @@ export const menuData = [
     icon: <TagsIcon />,
     children: [
       { path: "/category", name: "Mange Categories" },
-      { path: "/categories-content", name: "Categories content" },
       { path: "/add-category", name: "Add Category" },
+      { path: "/categories-content", name: "Categories content" },
       { path: "/add-category-content", name: "Add Category content" },
     ],
   },
@@ -132,6 +132,10 @@ export const menuData = [
     children: [
       { path: "/chart", name: "Mange Chart" },
       { path: "/add-chart", name: "Add Chart" },
+      { path: "/chart-content", name: "Chart content" },
+      { path: "/add-chart-content", name: "Add Chart content" },
+      { path: "/chart-data", name: " Chart data" },
+      { path: "/add-chart-data", name: "Add Chart data" },
     ],
   },
   {

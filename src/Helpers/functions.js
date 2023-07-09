@@ -52,6 +52,10 @@ const tables = {
     referenceTableName: "size_content",
     referenceId: "size_id",
   },
+  region: {
+    referenceTableName: "region",
+    referenceId: "id",
+  },
 };
 
 export const getTableContentName = (table) => {

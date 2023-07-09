@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Modal from "../../Modal/Modal";
 
 export const FullImage = ({ src, alt, height, width, ...imgProps }) => {
-  console.log(src);
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -19,9 +18,9 @@ export const FullImage = ({ src, alt, height, width, ...imgProps }) => {
       )}
       <Modal
         open={open}
-        close={() => setOpen(false)}
+        onClose={() => setOpen(false)}
         modalClassName="!p-2"
-        containerClassName="max-w-[575px]"
+        containerClassName="max-w-[575px] z-[100]"
       >
         <img
           src={src}

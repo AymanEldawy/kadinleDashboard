@@ -24,6 +24,14 @@ import {
   AddSale,
   AddSize,
   InsertOne,
+  AddCollectionContent,
+  AddColorContent,
+  AddSizeContent,
+  AddProductContent,
+  AddProductVariants,
+  AddProductImages,
+  AddChartContent,
+  AddChartData,
 } from "./../Pages/Forms";
 import Home from "./../Pages/Home/Home";
 import {
@@ -50,16 +58,12 @@ import {
   Sales,
   Sizes,
   Users,
+  CollectionsContent,
+  ColorsContent,
+  SizesContent,
+  ChartContent,
+  ChartData,
 } from "./../Pages/Tables";
-import AddCollectionContent from "../Pages/Forms/AddCollectionContent";
-import CollectionsContent from "../Pages/Tables/CollectionsContent";
-import ColorsContent from "../Pages/Tables/ColorsContent";
-import SizesContent from "../Pages/Tables/SizesContent";
-import AddColorContent from "../Pages/Forms/AddColorContent";
-import AddSizeContent from "../Pages/Forms/AddSizeContent";
-import AddProductContent from "../Pages/Forms/AddProductContent";
-import AddProductVariants from "../Pages/Forms/AddProductVariants";
-import AddProductImages from "../Pages/Forms/AddProductImages";
 
 const authProtectedRoutes = [
   // add paths
@@ -73,6 +77,8 @@ const authProtectedRoutes = [
   { path: "/add-collection-content", component: <AddCollectionContent /> },
   { path: "/add-collection", component: <AddCollection /> },
   { path: "/add-chart", component: <AddChart /> },
+  { path: "/add-chart-content", component: <AddChartContent /> },
+  { path: "/add-chart-data", component: <AddChartData /> },
   { path: "/add-bulk-alert", component: <AddBulkAlert /> },
   { path: "/add-region", component: <AddRegion /> },
   { path: "/add-news", component: <AddNews /> },
@@ -129,13 +135,15 @@ const authProtectedRoutes = [
   { path: "/categories-content", component: <CategoriesContent /> },
   { path: "/language", component: <Languages /> },
   { path: "/size", component: <Sizes /> },
-  { path: "/size", component: <SizesContent /> },
+  { path: "/sizes-content", component: <SizesContent /> },
   { path: "/address", component: <Addresses /> },
   { path: "/country", component: <Countries /> },
   { path: "/region", component: <Regions /> },
   { path: "/order", component: <Orders /> },
   { path: "/user", component: <Users /> },
   { path: "/chart", component: <Chart /> },
+  { path: "/chart-content", component: <ChartContent /> },
+  { path: "/chart-data", component: <ChartData /> },
   { path: "/collection", component: <Collections /> },
   { path: "/collection-content", component: <CollectionsContent /> },
   { path: "/bulk-alert", component: <BulkAlert /> },

@@ -21,3 +21,8 @@ export { default as Coupons } from "./Coupons";
 export { default as Currency } from "./Currency";
 export { default as GlobalList } from "./GlobalList";
 export { default as Sales } from "./Sales";
+export { default as CollectionsContent } from "./CollectionsContent";
+export { default as ColorsContent } from "./ColorsContent";
+export { default as SizesContent } from "./SizesContent";
+export { default as ChartContent } from "./ChartContent";
+export { default as ChartData } from "./ChartData";

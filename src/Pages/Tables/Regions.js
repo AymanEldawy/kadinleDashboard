@@ -9,7 +9,7 @@ const Regions = () => {
 
   return (
     <DynamicLayout
-      SUPABASE_TABLE_NAME="regions"
+      SUPABASE_TABLE_NAME="region"
       columns={columns}
       title="Regions"
       onAddClick={() => navigate(`/add-region`)}

@@ -26,7 +26,7 @@ const SelectField = ({
         {!hideText ? <option>Choose...</option> : null}
         {list?.map((item, index) => (
           <option key={item[keyValue]} className="p-1" value={item[keyValue]}>
-            {item[keyLabel]}
+            {item[keyLabel] || item?.id}
           </option>
         ))}
       </select>

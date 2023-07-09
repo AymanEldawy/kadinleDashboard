@@ -138,7 +138,7 @@ const Sidebar = ({ open, setOpen }) => {
   };
   return (
     <aside
-      className={`max-[757px]:fixed h-screen shadow overflow-hidden flex flex-col z-50 transition-all duration-300 bg-white dark:bg-bgmaindark ${
+      className={` h-screen shadow overflow-hidden flex flex-col z-50 transition-all duration-300 bg-white dark:bg-bgmaindark ${
         open ? "translate-x-0 min-w-[250px] " : "w-12 overflow-x-hidden"
       }`}
     >

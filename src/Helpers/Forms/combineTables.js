@@ -60,7 +60,7 @@ const combine_chart_data = [
 //   { name: "language", type: "uuid", key: "ref", tableName: "language" },
 //   { name: "name", type: "text" },
 // ];
-const combine_combine_collection = [
+const combine_collection = [
   "id",
   "created_at",
   "display_home",
@@ -72,8 +72,8 @@ const combine_combine_collection = [
 const combine_collection_product = [
   "id",
   "created_at",
-  "collection_id",
-  "product_id",
+  "collection",
+  "product",
 ];
 const combine_color = [
   "id",
@@ -88,8 +88,8 @@ const combine_color = [
 const combine_comment = [
   "id",
   "created_at",
-  "user_id",
-  "product_id",
+  "user",
+  "product",
   "rating",
   "content",
   "url",
@@ -100,10 +100,9 @@ const combine_country = [
   "name",
   "alph-2",
   "alph-3",
-  "code",
   "currency",
-  "region",
-  "code",
+  // "region",
+  // "code",
   "rate",
   "exchange_percent",
 ];
@@ -119,7 +118,7 @@ const combine_coupon = [
 const combine_credit_card = [
   "id",
   "created_at",
-  "user_id",
+  "user",
   "number",
   "exp_date",
   "CCV",
@@ -364,7 +363,7 @@ const COMBINE_DB_API = {
   combine_chart,
   combine_chart_data,
   // combine_content,
-  combine_combine_collection,
+  combine_collection,
   combine_collection_product,
   combine_color,
   combine_comment,

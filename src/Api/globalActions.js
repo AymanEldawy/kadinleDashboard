@@ -4,14 +4,29 @@ import {
   getCategories,
   getChartContent,
   getChartData,
+  getCollections,
   getColors,
+  getComments,
   getCountries,
   getSizes,
   uuidLanguageEn,
 } from "./data";
 
 // get data
-const IGNORE_LANGUAGES = ["size", "size_content", "language", "brand"];
+const IGNORE_LANGUAGES = [
+  "logs",
+  "news",
+  "user",
+  "size",
+  "size_content",
+  "language",
+  "brand",
+  "region",
+  "bulk_alert",
+  "newsletter",
+  "newsletter_subscription",
+  "currency",
+];
 
 const fetches = {
   address: getAddresses(),
@@ -21,6 +36,8 @@ const fetches = {
   color: getColors(),
   country: getCountries(),
   size: getSizes(),
+  collection: getCollections(),
+  comment: getComments(),
 };
 
 const normalFetch = async (table) => {

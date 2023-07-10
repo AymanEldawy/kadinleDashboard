@@ -5,11 +5,11 @@ import DynamicLayout from "../Dynamics/DynamicLayout";
 
 const Comments = () => {
   const navigate = useNavigate();
-  const columns = COMBINE_DB_API.combine_Comment || [];
+  const columns = COMBINE_DB_API.combine_comment || [];
 
   return (
     <DynamicLayout
-      SUPABASE_TABLE_NAME="Comment"
+      SUPABASE_TABLE_NAME="comment"
       columns={columns}
       title="Comments"
       onAddClick={() => navigate(`/add-Comment`)}

@@ -25,6 +25,7 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title, layout }) => {
     DB_API?.[
       layout ? tableName + "_content" : SUPABASE_TABLE_NAME + "_content"
     ];
+
   const fetchData = async (table, id) => {
     const response = await getData(table, id);
     console.log(response?.[0]);

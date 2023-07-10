@@ -30,13 +30,39 @@ export const getCountries = async () => {
   return response;
 };
 
+export const getCollections = async () => {
+  const response = await supabase
+    .from("collection")
+    .select(
+      `
+    *,
+    collection_content(id, name, 
+      language:language_id (id, name )
+      )
+     `
+    )
+    .eq("collection_content.language_id", uuidLanguageEn);
+  return response;
+};
+export const getComments = async () => {
+  const response = await supabase.from("comment").select(
+    `
+    *,
+    comment_media(*),
+    user(id, first_name, last_name, profile_img),
+    product(id, product_content(product_id,name))
+     `
+  );
+  return response;
+};
+
 export const getColors = async () => {
   const response = await supabase
     .from("color")
     .select(
       `
     *,
-     color_content(name, 
+     color_content(id, name, 
       language:language_id (id, name )
       )
      `

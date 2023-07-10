@@ -6,9 +6,64 @@ import DynamicForm from "../Pages/Dynamics/DynamicForm";
 import AddCategoryContent from "../Pages/Forms/AddCategoryContent";
 import NotFoundPage from "../Pages/NotFoundPage/NotFoundPage";
 import CategoriesContent from "../Pages/Tables/CategoriesContent";
-import { AddAddress, AddBrand, AddBulkAlert, AddCategory, AddChart, AddChartContent, AddChartData, AddCollection, AddCollectionContent, AddColor, AddColorContent, AddCountry, AddCoupon, AddCurrency, AddLanguage, AddNews, AddNewsletter, AddProduct, AddProductImages, AddProductVariants, AddRegion, AddSale, AddSize, AddSizeContent, InsertOne } from "./../Pages/Forms";
+import {
+  AddAddress,
+  AddBrand,
+  AddBulkAlert,
+  AddCategory,
+  AddChart,
+  AddChartContent,
+  AddChartData,
+  AddCollection,
+  AddCollectionContent,
+  AddColor,
+  AddColorContent,
+  AddCountry,
+  AddCoupon,
+  AddCurrency,
+  AddLanguage,
+  AddNews,
+  AddNewsletter,
+  AddProduct,
+  AddProductImages,
+  AddProductVariants,
+  AddRegion,
+  AddSale,
+  AddSize,
+  AddSizeContent,
+  InsertOne,
+} from "./../Pages/Forms";
 import Home from "./../Pages/Home/Home";
-import { Addresses, Brands, BulkAlert, Categories, Chart, ChartContent, ChartData, Collar, Collections, CollectionsContent, Colors, ColorsContent, Comments, Countries, Coupons, Currency, GlobalList, Languages, Logs, News, Newsletter, Orders, Products, Regions, Sales, Sizes, SizesContent, Users } from "./../Pages/Tables";
+import {
+  Addresses,
+  Brands,
+  BulkAlert,
+  Categories,
+  Chart,
+  ChartContent,
+  ChartData,
+  Collections,
+  CollectionsContent,
+  Colors,
+  ColorsContent,
+  Comments,
+  Countries,
+  Coupons,
+  Currency,
+  GlobalList,
+  Languages,
+  Logs,
+  News,
+  Newsletter,
+  Orders,
+  ProductFeatures,
+  Products,
+  Regions,
+  Sales,
+  Sizes,
+  SizesContent,
+  Users,
+} from "./../Pages/Tables";
 
 const authProtectedRoutes = [
   // add paths
@@ -98,7 +153,7 @@ const authProtectedRoutes = [
   { path: "/newsletter", component: <Newsletter /> },
   { path: "/comments", component: <Comments /> },
   { path: "/brand", component: <Brands /> },
-  { path: "/collar", component: <Collar /> },
+  { path: "/product-features", component: <ProductFeatures /> },
   { path: "/coupons", component: <Coupons /> },
   { path: "/currency", component: <Currency /> },
   {

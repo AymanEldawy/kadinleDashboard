@@ -16,7 +16,7 @@ export { default as News } from "./News";
 export { default as Newsletter } from "./Newsletter";
 export { default as Comments } from "./Comments";
 export { default as Brands } from "./Brands";
-export { default as Collar } from "./Collar";
+export { default as ProductFeatures } from "./ProductFeatures";
 export { default as Coupons } from "./Coupons";
 export { default as Currency } from "./Currency";
 export { default as GlobalList } from "./GlobalList";

@@ -17,7 +17,6 @@ import TableHead from "./TableHead";
 import TableHeadCol from "./TableHeadCol";
 import TableRow from "./TableRow";
 import { uuidLanguageEn, uuidRegionEn } from "../../Api/data";
-import { UserInfo } from "../Global/UserInfo/UserInfo";
 
 let sorting = {};
 const SuperTable = ({
@@ -179,24 +178,27 @@ const SuperTable = ({
   const goDeepData = ({ row, col, path }) => {
     switch (path) {
       case "product": {
-        // let data = row?.product_content?.find(
-        //   (c) => c?.language_id === uuidLanguageEn
-        // );
-        let data = row?.product_content?.[0];
-        console.log(data, "produc");
-        return {
-          name: data?.[col === "product" ? "name" : col],
-          id: data?.product_id,
-          path,
-        };
+        let data = row?.product_content?.find(
+          (c) => c?.language_id === uuidLanguageEn
+        );
+        console.log(data, "da");
+        return { name: data?.[col], id: data?.product_id, path };
       }
-      case "size":
-      case "category":
+      case "category": {
+        let data = row;
+        return { name: data?.[col], id: data?.category_id, path };
+      }
       case "collection": {
-        return { name: row?.[col], id: row?.[`${path}_id`], path };
+        let data = row;
+        return { name: data?.[col], id: data?.collection_id, path };
+      }
+      case "size": {
+        console.log(row, "da");
+        return { name: row?.[col], id: row?.size_id, path };
       }
       case "color": {
         let data = row?.color_content?.[0];
+        console.log(data, row?.color_content);
         return { name: data?.name, id: data?.color_id || data?.id, path };
       }
       case "region": {
@@ -208,16 +210,19 @@ const SuperTable = ({
         };
       }
       case "currency": {
+        console.log(row, "da cure", col);
         return {
           name: row?.[col === "currency" ? "name" : col],
           id: row?.id,
           path,
         };
       }
-      case "comment":
-      case "country":
-      case "language":
+      case "language": {
         return { name: row?.[col], id: row?.id, path };
+      }
+      case "country": {
+        return { name: row?.[col], id: row?.id, path };
+      }
       default:
         return row[col];
     }
@@ -334,15 +339,6 @@ const SuperTable = ({
                             : row?.category?.category_content?.[0],
                           path: "category",
                         });
-                      if (
-                        tableName === "comment" &&
-                        row?.comment_media?.[0]?.hasOwnProperty(col)
-                      )
-                        value = goDeepData({
-                          col,
-                          row: row?.comment_media?.[0],
-                          path: "comment",
-                        });
                       if (col === "language")
                         value = goDeepData({
                           col: "name",
@@ -412,22 +408,12 @@ const SuperTable = ({
                             classes={`!py-4 border ${classes?.colBody}`}
                             key={index}
                           >
-                            {col === "url" ? (
-                              <FullImage
-                                src={value?.name}
-                                alt="image description"
-                                height={50}
-                                width={70}
-                                className="block mx-auto cursor-pointer w-[70px] h-[60px] object-contain"
-                              />
-                            ) : (
-                              <Link
-                                className="text-blue-600"
-                                to={`/update/${value?.path}/${value?.id}`}
-                              >
-                                {value?.name}
-                              </Link>
-                            )}
+                            <Link
+                              className="text-blue-600"
+                              to={`/update/${value?.path}/${value?.id}`}
+                            >
+                              {value?.name}
+                            </Link>
                           </TableCol>
                         );
                       } else if (
@@ -454,19 +440,6 @@ const SuperTable = ({
                                 style={{ background: row?.[col] }}
                               ></span>
                             )}
-                          </TableCol>
-                        );
-                      else if (tableName === "comment" && col === "user")
-                        return (
-                          <TableCol
-                            classes={`!py-4 border ${classes?.colBody}`}
-                          >
-                            <UserInfo
-                              first_name={row?.user?.first_name}
-                              last_name={row?.user?.last_name}
-                              profile_img={row?.user?.profile_img}
-                              id={row?.user?.id}
-                            />
                           </TableCol>
                         );
                       else if (col === "parent_id") {

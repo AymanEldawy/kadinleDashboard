@@ -25,6 +25,7 @@ export const useAdd = () => {
         autoClose: 4000,
       });
       setStatus("success");
+      return response;
     }
   };
   return { addItem, status };

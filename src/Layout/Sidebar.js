@@ -14,7 +14,7 @@ const Sidebar = ({ open, setOpen }) => {
     if (!open) setDropdown("");
   }, [open]);
   const handleClick = (key, level) => {
-    if (!open) return;
+    // if (!open) return;
     if (dropdown[level] == key) {
       setDropdown((prev) => {
         return { ...prev, [level]: "" };
@@ -36,7 +36,7 @@ const Sidebar = ({ open, setOpen }) => {
         return (
           <li
             key={item?.name}
-            className={`relative group capitalize w-full border-b border-gray-200 py-2 ${
+            className={`relative group capitalize w-full border-b border-gray-200 dark:!border-[#444] py-2 ${
               dropdown[level] === item?.name
                 ? "bg-gray-100 bg_dark border-b border-t border-gray-200"
                 : ""
@@ -52,9 +52,7 @@ const Sidebar = ({ open, setOpen }) => {
             >
               <span className="">{item?.icon}</span>
               {item?.children?.length ? (
-                <span
-                  className={`flex-1 capitalize flex ${open ? "" : "hidden"}`}
-                >
+                <span className={`flex-1 capitalize flex ${open ? "" : ""}`}>
                   {item.name}
                   <span
                     className={`scale-[60%] ml-auto rtl:mr-auto pl-2 rtl:pr-2 -rotate-90 transition-transform duration-200 ${
@@ -68,7 +66,7 @@ const Sidebar = ({ open, setOpen }) => {
                 <Link
                   to={item?.path}
                   // onClick={() => setOpen(false)}
-                  className={`flex-1 flex ${open ? "" : "hidden"}`}
+                  className={`flex-1 flex ${open ? "" : ""}`}
                 >
                   {item?.name}
                 </Link>
@@ -86,7 +84,7 @@ const Sidebar = ({ open, setOpen }) => {
         return (
           <li
             key={item?.name}
-            className={`relative group w-full capitalize ${
+            className={`relative group w-full capitalize dark:border-[#444] ${
               dropdown[level] === item?.name
                 ? "bg-gray-100 bg_dark border-b border-t border-gray-200"
                 : ""
@@ -138,9 +136,10 @@ const Sidebar = ({ open, setOpen }) => {
   };
   return (
     <aside
-      className={` h-screen shadow overflow-hidden flex flex-col z-50 transition-all duration-300 bg-white dark:bg-bgmaindark ${
+      className={`h-[100dvh] top-0 sticky shadow overflow-hidden flex flex-col z-50 transition-all duration-300 bg-white dark:bg-bgmaindark ${
         open ? "translate-x-0 min-w-[250px] " : "w-12 overflow-x-hidden"
-      }`}
+      } hover:w-[250px]`}
+      onMouseLeave={() => (dropdown ? setDropdown("") : undefined)}
     >
       <div className=" h-20 flex items-center justify-center ">
         <img

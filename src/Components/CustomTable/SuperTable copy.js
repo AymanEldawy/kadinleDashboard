@@ -185,7 +185,7 @@ const SuperTable = ({
         return { name: data?.[col], id: data?.product_id, path };
       }
       case "category": {
-        let data = row;
+        let data = row?.category_content?.[0];
         console.log(path, data);
         return { name: data?.title, id: data?.category_id, path };
       }
@@ -304,16 +304,10 @@ const SuperTable = ({
                           row: row?.product,
                           path: "product",
                         });
-                      if (
-                        col === "category" ||
-                        (row?.category_content?.[0]?.hasOwnProperty(col) &&
-                          row?.hasOwnProperty("category_content"))
-                      )
+                      if (col === "category")
                         value = goDeepData({
                           col,
-                          row: row?.hasOwnProperty("category_content")
-                            ? row?.category_content?.[0]
-                            : row?.category?.category_content?.[0],
+                          row: row?.category,
                           path: "category",
                         });
                       if (col === "language")
@@ -436,31 +430,6 @@ const SuperTable = ({
                             {new Date(row?.[col])?.toLocaleDateString("en-UK")}
                           </TableCol>
                         );
-                      // else if (
-                      //   col !== "id" &&
-                      //   row?.hasOwnProperty(tableContentName) &&
-                      //   row?.[tableContentName]?.[0]?.hasOwnProperty(col)
-                      // ) {
-                      //   let value = row?.[tableContentName]?.[0]?.[col];
-                      //   console.log(value, "value", col);
-                      //   return (
-                      //     <TableCol
-                      //       classes={`!py-4 border ${classes?.colBody}`}
-                      //       key={index}
-                      //     >
-                      //       <Link
-                      //         className="text-blue-600"
-                      //         to={`/update/${col?.replace("_id", "")}/${
-                      //           row?.[col]
-                      //         }`}
-                      //       >
-                      //         {typeof value === "string"
-                      //           ? value
-                      //           : value?.name || row?.[col]}
-                      //       </Link>
-                      //     </TableCol>
-                      //   );
-                      // }
                       else if (col === "number" && tableName === "chart")
                         return (
                           <TableCol

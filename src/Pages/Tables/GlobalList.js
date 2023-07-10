@@ -5,11 +5,11 @@ import DynamicLayout from "../Dynamics/DynamicLayout";
 
 const GlobalList = ({ table, addHref, title }) => {
   const navigate = useNavigate();
-  const columns = DB_API?.[table]?.map((col) => col?.name);
+  const columns = DB_API?.[`${table}_content`];
 
   return (
     <DynamicLayout
-      SUPABASE_TABLE_NAME={table}
+      SUPABASE_TABLE_NAME={`${table}_content`}
       columns={columns}
       title={title}
       onAddClick={() => navigate(addHref)}

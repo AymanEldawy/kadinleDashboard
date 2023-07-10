@@ -57,12 +57,12 @@ function Header({ setOpen, mode, setMode }) {
               {/* {isFullScreen ? <FitScreenIcon /> : <FullScreenIcon />} */}
               <FullScreenIcon />
             </button>
-            <LanguageBar />
+            {/* <LanguageBar /> */}
             <ToggleThemeBar theme={theme} changeTheme={changeTheme} />
 
             <NotificationBar />
           </div>
-          <UserBar />
+          {/* <UserBar /> */}
         </div>
       </div>
     </header>

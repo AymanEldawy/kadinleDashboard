@@ -10,14 +10,14 @@ const PaletteIcon = () => {
       id="Layer_1"
       viewBox="-51.2 -51.2 614.40 614.40"
       stroke="currentColor"
-      stroke-width="2.56"
+      strokeWidth="2.56"
       transform="matrix(1, 0, 0, 1, 0, 0)rotate(90)"
     >
-      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
       <g
         id="SVGRepo_tracerCarrier"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       ></g>
       <g id="SVGRepo_iconCarrier">
         {" "}

@@ -33,7 +33,7 @@ const Layout = ({ children }) => {
       <div id="layout-wrapper" className="flex flex-col h-full">
         <div className="flex">
           <Sidebar open={open} setOpen={setOpen} />
-          <div className="flex-1">
+          <div className="flex-1 overflow-hidden shrink">
             <Header setOpen={setOpen} mode={mode} setMode={setMode} />
             <Menu />
             <Backdrop open={open} onClose={() => setOpen(false)} hideInLarge />

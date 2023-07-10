@@ -176,42 +176,39 @@ const SuperTable = ({
   useEffect(() => {}, [CACHED_TABLE]);
 
   const goDeepData = ({ row, col, path }) => {
+    // console.log(row, path, col);
     switch (path) {
       case "product": {
         let data = row?.product_content?.find(
           (c) => c?.language_id === uuidLanguageEn
         );
         console.log(data, "da");
-        return { name: data?.[col], id: data?.product_id, path };
-      }
-      case "category": {
-        let data = row;
-        console.log(path, data);
-        return { name: data?.title, id: data?.category_id, path };
+        return data?.[col];
       }
       case "size": {
-        console.log(row, "da");
-        return { name: row?.[col], id: row?.size_id, path };
+        let data = row?.size_content?.find(
+          (c) => c?.region_id === uuidRegionEn
+        );
+        console.log(data, "da");
+        return data?.[col];
       }
       case "color": {
         let data = row?.color_content?.find(
           (c) => c?.language_id === uuidLanguageEn
         );
-        return { name: data?.[col], id: data?.color_id, path };
+        console.log(data, "da");
+        return data?.[col];
       }
       case "region": {
-        console.log(row, "region", col);
-        return { name: row?.[col], id: row?.id, path };
+        console.log(data, "da reg");
+        return row?.[col];
       }
       case "currency": {
         console.log(row, "da cure");
-        return { name: row?.[col], id: row?.id, path };
-      }
-      case "language": {
-        return { name: row?.[col], id: row?.id, path };
+        return row?.[col];
       }
       case "country": {
-        return { name: row?.[col], id: row?.id, path };
+        return row?.[col];
       }
       default:
         return row[col];
@@ -304,34 +301,10 @@ const SuperTable = ({
                           row: row?.product,
                           path: "product",
                         });
-                      if (
-                        col === "category" ||
-                        (row?.category_content?.[0]?.hasOwnProperty(col) &&
-                          row?.hasOwnProperty("category_content"))
-                      )
+                      if (col === "size")
                         value = goDeepData({
                           col,
-                          row: row?.hasOwnProperty("category_content")
-                            ? row?.category_content?.[0]
-                            : row?.category?.category_content?.[0],
-                          path: "category",
-                        });
-                      if (col === "language")
-                        value = goDeepData({
-                          col: "name",
-                          row: row?.language,
-                          path: "language",
-                        });
-                      if (
-                        col === "size" ||
-                        (tableName === "size" && col === "name")
-                      )
-                        value = goDeepData({
-                          col,
-                          row:
-                            col === "name"
-                              ? row?.size_content?.[0]
-                              : row?.size?.size_content?.[0],
+                          row: row?.size,
                           path: "size",
                         });
                       if (col === "color")
@@ -341,16 +314,12 @@ const SuperTable = ({
                           path: "color",
                         });
                       if (
-                        (row.hasOwnProperty("region") &&
-                          row?.region?.hasOwnProperty(col)) ||
-                        (col === "region" &&
-                          row?.size_content?.[0]?.hasOwnProperty("region"))
+                        row.hasOwnProperty("region") &&
+                        row?.region?.hasOwnProperty(col)
                       )
                         value = goDeepData({
-                          col: "name",
-                          row: row?.region?.hasOwnProperty(col)
-                            ? row?.region
-                            : row?.size_content?.[0]?.region,
+                          col,
+                          row: row?.region,
                           path: "region",
                         });
                       if (
@@ -369,6 +338,7 @@ const SuperTable = ({
                           path: "country",
                         });
 
+                      let tableContentName = `${tableName}_content`;
                       if (value)
                         return (
                           <TableCol
@@ -377,12 +347,55 @@ const SuperTable = ({
                           >
                             <Link
                               className="text-blue-600"
-                              to={`/update/${value?.path}/${value?.id}`}
+                              to={`/update/${col?.replace("_id", "")}/${
+                                row?.[col?.id]
+                              }`}
                             >
-                              {value?.name}
+                              {value}
                             </Link>
                           </TableCol>
                         );
+                      // if (col === "country") {
+                      //   return (
+                      //     <TableCol
+                      //       classes={`!py-4 border ${classes?.colBody}`}
+                      //       key={index}
+                      //     >
+                      //       <Link
+                      //         className="text-blue-600"
+                      //         to={`/update/${col?.replace("_id", "")}/${
+                      //           row?.[col?.id]
+                      //         }`}
+                      //       >
+                      //         {row?.[col]?.name}
+                      //       </Link>
+                      //     </TableCol>
+                      //   );
+                      // }
+                      // if (
+                      //   col !== "id" &&
+                      //   row?.hasOwnProperty(tableContentName) &&
+                      //   row?.[tableContentName]?.[0]?.hasOwnProperty(col)
+                      // ) {
+                      //   let value = row?.[tableContentName]?.[0]?.[col];
+                      //   return (
+                      //     <TableCol
+                      //       classes={`!py-4 border ${classes?.colBody}`}
+                      //       key={index}
+                      //     >
+                      //       <Link
+                      //         className="text-blue-600"
+                      //         to={`/update/${col?.replace("_id", "")}/${
+                      //           row?.[col]
+                      //         }`}
+                      //       >
+                      //         {typeof value === "string"
+                      //           ? value
+                      //           : value?.name || row?.[col]}
+                      //       </Link>
+                      //     </TableCol>
+                      //   );
+                      // }
                       if (
                         col?.indexOf("img") !== -1 ||
                         col?.indexOf("image") !== -1 ||
@@ -436,47 +449,15 @@ const SuperTable = ({
                             {new Date(row?.[col])?.toLocaleDateString("en-UK")}
                           </TableCol>
                         );
-                      // else if (
-                      //   col !== "id" &&
-                      //   row?.hasOwnProperty(tableContentName) &&
-                      //   row?.[tableContentName]?.[0]?.hasOwnProperty(col)
-                      // ) {
-                      //   let value = row?.[tableContentName]?.[0]?.[col];
-                      //   console.log(value, "value", col);
-                      //   return (
-                      //     <TableCol
-                      //       classes={`!py-4 border ${classes?.colBody}`}
-                      //       key={index}
-                      //     >
-                      //       <Link
-                      //         className="text-blue-600"
-                      //         to={`/update/${col?.replace("_id", "")}/${
-                      //           row?.[col]
-                      //         }`}
-                      //       >
-                      //         {typeof value === "string"
-                      //           ? value
-                      //           : value?.name || row?.[col]}
-                      //       </Link>
-                      //     </TableCol>
-                      //   );
-                      // }
-                      else if (col === "number" && tableName === "chart")
-                        return (
-                          <TableCol
-                            classes={`!py-4 border ${classes?.colBody}`}
-                            key={index}
-                          >
-                            {row?.chart?.number}
-                          </TableCol>
-                        );
                       else
                         return (
                           <TableCol
                             classes={`!py-4 border ${classes?.colBody}`}
                             key={index}
                           >
-                            {typeof row?.[col] !== "object" ? row?.[col] : null}
+                            {typeof row?.[col] !== "object"
+                              ? row?.[col]
+                              : "non"}
                           </TableCol>
                         );
                     })}

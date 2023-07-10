@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-import { getTableData } from "../Api/globalActions";
+import { getTableData, getTableDataById } from "../Api/globalActions";
 
 export const useFetch = () => {
   const [loading, setLoading] = useState();
-  const [data, setData] = useState();
-  const getData = async (table) => {
+  const getData = async (table, id) => {
     setLoading(true);
     let loadLanguage = toast.loading("Please wait...");
-    const response = await getTableData(table);
+    const response = id
+      ? await getTableDataById(table, id)
+      : await getTableData(table);
     if (response.error) {
       toast.update(loadLanguage, {
         render: "Oops! Field to fetch data",
@@ -26,8 +27,8 @@ export const useFetch = () => {
       });
     }
     setLoading(false);
-    return response?.data || [];
+    return response?.data;
   };
 
-  return { loading, data, getData };
+  return { loading, getData };
 };

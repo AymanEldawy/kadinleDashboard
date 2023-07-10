@@ -7,25 +7,15 @@ import DynamicList from "../Dynamics/DynamicList";
 import { useFetch } from "./../../hooks/useFetch";
 
 const DynamicLayout = ({ SUPABASE_TABLE_NAME, columns, title, onAddClick }) => {
-  const { loading, getData } = useFetch();
-  const [data, setData] = useState([]);
-  const [refresh, setRefresh] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      setData(await getData(SUPABASE_TABLE_NAME));
-    })();
-  }, [refresh]);
-
   return (
     <BlockPaper title={title}>
       <DynamicList
         tableName={SUPABASE_TABLE_NAME}
         columns={columns}
-        data={data}
-        loading={loading}
+        // data={data}
+        // loading={loading}
+        // setRefresh={setRefresh}
         onAddClick={onAddClick}
-        setRefresh={setRefresh}
       />
     </BlockPaper>
   );

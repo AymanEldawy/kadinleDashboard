@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import DB_API from "../../Helpers/Forms/databaseApi";
+import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import DynamicLayout from "../Dynamics/DynamicLayout";
 
 const CategoriesContent = () => {
   const navigate = useNavigate();
-  const columns = DB_API.category_content?.map((col) => col?.name) || [];
+  const columns = COMBINE_DB_API.combine_category_content || [];
 
   return (
     <DynamicLayout

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import { FullImage } from "../Global/FullImage/FullImage";
 
 const UploadFile = ({ label, error, className, src, ...field }) => {
@@ -10,7 +11,7 @@ const UploadFile = ({ label, error, className, src, ...field }) => {
     };
   }
   useEffect(() => {
-    setPreview(src ? URL.createObjectURL(src) : "");
+    setPreview(src ? src : "");
   }, [src]);
   return (
     <div

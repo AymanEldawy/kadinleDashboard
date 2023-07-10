@@ -6,7 +6,11 @@ module.exports = {
     // extend: {},
     colors: ({ colors }) => ({
       ...colors,
-      primary: "",
+      "primary-blue": "#0079FF",
+      "primary-green": "#00DFA2",
+      "primary-yellow": "#F6FA70",
+      "primary-red": "#FF0060",
+      "dark-blue": "#0C134F",
       secondary: "",
       secondarydark: "#aaaaaa",
       bgmaindark: "#212121",
@@ -19,7 +23,5 @@ module.exports = {
     textColor: ["responsive", "hover", "focus", "group-hover"],
     opacity: ["responsive", "hover", "focus", "group-hover"],
   },
-  plugins: [
-    
-  ],
+  plugins: [],
 };

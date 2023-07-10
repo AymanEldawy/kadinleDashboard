@@ -64,6 +64,7 @@ import {
   ChartContent,
   ChartData,
 } from "./../Pages/Tables";
+import DynamicForm from "../Pages/Dynamics/DynamicForm";
 
 const authProtectedRoutes = [
   // add paths
@@ -126,7 +127,9 @@ const authProtectedRoutes = [
   { path: "/add-product-variants", component: <AddProductVariants /> },
   { path: "/add-product-images", component: <AddProductImages /> },
 
-  // { path: "/add-color", component: <Color /> },
+  // update
+  { path: "/update/:name/:id", component: <DynamicForm layout="update" /> },
+
   // list or table paths
   { path: "/product", component: <Products /> },
   { path: "/color", component: <Colors /> },

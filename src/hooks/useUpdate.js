@@ -3,8 +3,8 @@ import { useState } from "react";
 export const useUpdate = () => {
   const [loading, setLoading] = useState();
 
-  const update = () => {
+  const updateItem = () => {
     console.log("successfully update");
   };
-  return { update };
+  return { updateItem };
 };

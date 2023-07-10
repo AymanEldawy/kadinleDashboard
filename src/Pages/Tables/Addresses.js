@@ -1,11 +1,13 @@
 import React from "react";
-import DynamicLayout from "../Dynamics/DynamicLayout";
 import { useNavigate } from "react-router-dom";
+
+import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import DB_API from "../../Helpers/Forms/databaseApi";
+import DynamicLayout from "../Dynamics/DynamicLayout";
 
 const Addresses = () => {
   const navigate = useNavigate();
-  const columns = DB_API.address?.map((col) => col?.name);
+  const columns = COMBINE_DB_API.combine_address;
 
   return (
     <DynamicLayout

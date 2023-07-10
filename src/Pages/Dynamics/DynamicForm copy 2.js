@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
-import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
 import SuperForm from "../../Components/CustomForm/SuperForm";
 import DB_API from "../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../hooks/useAdd";
@@ -15,10 +14,8 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title, layout }) => {
   const { getData } = useFetch();
   const { updateItem } = useUpdate();
   const [data, setData] = useState({});
-  const { name: tableName, id } = params;
-
   const [resetForm, setResetForm] = useState(false);
-  const [itemId, setItemId] = useState();
+  const { name: tableName, id } = params;
 
   const fields = DB_API?.[layout ? tableName : SUPABASE_TABLE_NAME];
   const fields_content =
@@ -38,26 +35,9 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title, layout }) => {
     if (layout === "update") {
       await updateItem(tableName, data);
     } else {
-      const response = await addItem(SUPABASE_TABLE_NAME, data);
-      if (response) {
-        setItemId(response?.data?.[0].id);
-      }
+      await addItem(SUPABASE_TABLE_NAME, data);
       if (status === "success") setResetForm(true);
     }
-  };
-  const onSubmitContent = async (data) => {
-    const list = Object.values(data);
-    if (list?.length && itemId) {
-      for (const item of list) {
-        const response = await addItem(`${SUPABASE_TABLE_NAME}_content`, {
-          ...item,
-          [`${SUPABASE_TABLE_NAME}_id`]: itemId,
-        });
-        console.log(response, " -- ", item);
-      }
-    }
-    console.log(data);
-    // itemId
   };
 
   return (
@@ -77,20 +57,21 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title, layout }) => {
           oldValues={data}
         />
       </BlockPaper>
-      {fields_content?.length ? (
-        <BlockPaper
-          title={
-            layout === "update"
-              ? `Update ${tableName} / ${data?.name || data?.title || data?.id}`
-              : title
-          }
-        >
-          <FormIncreasable
-            onSubmit={onSubmitContent}
-            initialFields={fields_content}
-          />
-        </BlockPaper>
-      ) : null}
+      <BlockPaper
+        title={
+          layout === "update"
+            ? `Update ${tableName} / ${data?.name || data?.title || data?.id}`
+            : title
+        }
+      >
+        <SuperForm
+          initialFields={fields_content}
+          onSubmit={onSubmit}
+          resetForm={resetForm}
+          layout={layout}
+          oldValues={data}
+        />
+      </BlockPaper>
     </>
   );
 };

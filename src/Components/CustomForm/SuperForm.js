@@ -14,7 +14,14 @@ import UploadFile from "./UploadFile";
 
 let CACHED_TABLE = {};
 
-const SuperForm = ({ onSubmit, initialFields, oldValues, resetForm }) => {
+const SuperForm = ({
+  onSubmit,
+  initialFields,
+  oldValues,
+  resetForm,
+  layout,
+  outerValues,
+}) => {
   const { getData } = useFetch();
 
   const [values, setValues] = useState({});
@@ -26,7 +33,7 @@ const SuperForm = ({ onSubmit, initialFields, oldValues, resetForm }) => {
     checkRefTable(initialFields);
   }, [initialFields]);
   async function checkRefTable(fields) {
-    console.log(fields);
+    // console.log(fields);
     if (!fields?.length) return;
     for (const field of fields) {
       if (field.key === "ref") {
@@ -35,7 +42,7 @@ const SuperForm = ({ onSubmit, initialFields, oldValues, resetForm }) => {
       }
     }
   }
-  console.log(CACHED_TABLE);
+  // console.log(CACHED_TABLE);
 
   useEffect(() => {
     if (resetForm) {
@@ -55,7 +62,7 @@ const SuperForm = ({ onSubmit, initialFields, oldValues, resetForm }) => {
   }, [location?.pathname, oldValues]);
 
   const getCachedList = (tableName) => {
-    console.log(tableName);
+    // console.log(tableName);
     return CACHED_TABLE?.[tableName];
   };
 
@@ -98,11 +105,11 @@ const SuperForm = ({ onSubmit, initialFields, oldValues, resetForm }) => {
     if (required) {
       // insertIntoErrors(name, value);
     }
-    console.log(e.target.files, name);
+    // console.log(e.target.files, name);
     setValues((prev) => {
       return {
         ...prev,
-        [name]: e.target.files[0],
+        [name]: URL.createObjectURL(e.target.files[0]),
       };
     });
   };
@@ -278,7 +285,10 @@ const SuperForm = ({ onSubmit, initialFields, oldValues, resetForm }) => {
           : null}
       </div>
       <div className="flex justify-between gap-4 items-center">
-        <Button type="submit" title="Submit" />
+        <Button
+          type="submit"
+          title={layout === "update" ? "Update" : "Submit"}
+        />
       </div>
     </form>
   );

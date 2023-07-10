@@ -18,19 +18,27 @@ import UploadFile from "./UploadFile";
 
 let CACHED_TABLE = {};
 
-export const FormIncreasable = ({ initialFields, onSubmit }) => {
+export const FormIncreasable = ({
+  initialFields,
+  onSubmit,
+  increasableTitle,
+  onChangeValues,
+}) => {
   const { getData } = useFetch();
   const location = useLocation();
 
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
-  const [listCount, setListCount] = useState([uuidv4()]);
+  const [listCount, setListCount] = useState([`00 ${uuidv4()}`]);
   const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     checkRefTable(initialFields);
   }, [initialFields]);
+  useEffect(() => {
+    if (!!onChangeValues) onChangeValues(values);
+  }, [values]);
 
   async function checkRefTable(fields) {
     if (!fields?.length) return;
@@ -117,13 +125,15 @@ export const FormIncreasable = ({ initialFields, onSubmit }) => {
     resetItemData(listCount[index]);
     if (index === activeTab) {
       if (index !== 0) {
-        setActiveTab((prev) => index - 1);
+        setActiveTab((prev, i) => i - 1);
       } else {
-        setActiveTab((prev) => index + 1);
+        setActiveTab((prev, i) => i + 1);
       }
+      // setActiveTab(() =);
     }
     setListCount((prev) => prev?.filter((item, i) => i !== index));
   };
+  useEffect(() => {}, [activeTab]);
 
   return (
     <div className="">
@@ -138,7 +148,7 @@ export const FormIncreasable = ({ initialFields, onSubmit }) => {
               }`}
               onClick={() => setActiveTab(index)}
             >
-              choose language
+              {increasableTitle ? increasableTitle : "choose language"}
               {listCount.length === 1 ? null : (
                 <CloseIcon
                   className="!text-red-500 w-4 h-4"
@@ -157,9 +167,7 @@ export const FormIncreasable = ({ initialFields, onSubmit }) => {
       </div>
       {listCount?.map((item, index) => (
         <form
-          className={`mb-8 ${
-            activeTab === index ? "" : index === 0 ? "" : "hidden"
-          }`}
+          className={`mb-8 ${activeTab === index ? "" : "hidden"}`}
           tabName={item}
           key={item}
         >

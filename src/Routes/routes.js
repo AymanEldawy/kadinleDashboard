@@ -2,69 +2,13 @@ import React from "react";
 import { redirect } from "react-router-dom";
 
 import { menuData } from "../Helpers/menu";
+import DynamicForm from "../Pages/Dynamics/DynamicForm";
 import AddCategoryContent from "../Pages/Forms/AddCategoryContent";
 import NotFoundPage from "../Pages/NotFoundPage/NotFoundPage";
 import CategoriesContent from "../Pages/Tables/CategoriesContent";
-import {
-  AddAddress,
-  AddBrand,
-  AddBulkAlert,
-  AddCategory,
-  AddChart,
-  AddCollection,
-  AddColor,
-  AddCountry,
-  AddCoupon,
-  AddCurrency,
-  AddLanguage,
-  AddNews,
-  AddNewsletter,
-  AddProduct,
-  AddRegion,
-  AddSale,
-  AddSize,
-  InsertOne,
-  AddCollectionContent,
-  AddColorContent,
-  AddSizeContent,
-  AddProductContent,
-  AddProductVariants,
-  AddProductImages,
-  AddChartContent,
-  AddChartData,
-} from "./../Pages/Forms";
+import { AddAddress, AddBrand, AddBulkAlert, AddCategory, AddChart, AddChartContent, AddChartData, AddCollection, AddCollectionContent, AddColor, AddColorContent, AddCountry, AddCoupon, AddCurrency, AddLanguage, AddNews, AddNewsletter, AddProduct, AddProductImages, AddProductVariants, AddRegion, AddSale, AddSize, AddSizeContent, InsertOne } from "./../Pages/Forms";
 import Home from "./../Pages/Home/Home";
-import {
-  Addresses,
-  Brands,
-  BulkAlert,
-  Categories,
-  Chart,
-  Collar,
-  Collections,
-  Colors,
-  Comments,
-  Countries,
-  Coupons,
-  Currency,
-  GlobalList,
-  Languages,
-  Logs,
-  News,
-  Newsletter,
-  Orders,
-  Products,
-  Regions,
-  Sales,
-  Sizes,
-  Users,
-  CollectionsContent,
-  ColorsContent,
-  SizesContent,
-  ChartContent,
-  ChartData,
-} from "./../Pages/Tables";
-import DynamicForm from "../Pages/Dynamics/DynamicForm";
+import { Addresses, Brands, BulkAlert, Categories, Chart, ChartContent, ChartData, Collar, Collections, CollectionsContent, Colors, ColorsContent, Comments, Countries, Coupons, Currency, GlobalList, Languages, Logs, News, Newsletter, Orders, Products, Regions, Sales, Sizes, SizesContent, Users } from "./../Pages/Tables";
 
 const authProtectedRoutes = [
   // add paths
@@ -123,7 +67,6 @@ const authProtectedRoutes = [
   { path: "/add-size", component: <AddSize /> },
   { path: "/add-size-content", component: <AddSizeContent /> },
   { path: "/add-product", component: <AddProduct /> },
-  { path: "/add-product-content", component: <AddProductContent /> },
   { path: "/add-product-variants", component: <AddProductVariants /> },
   { path: "/add-product-images", component: <AddProductImages /> },
 

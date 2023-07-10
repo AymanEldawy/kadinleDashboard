@@ -19,7 +19,6 @@ export { default as AddSize } from "./AddSize";
 export { default as AddSizeContent } from "./AddSizeContent";
 export { default as InsertOne } from "./InsertOne";
 export { default as AddChart } from "./AddChart";
-export { default as AddProductContent } from "./AddProductContent";
 export { default as AddProductVariants } from "./AddProductVariants";
 export { default as AddProductImages } from "./AddProductImages";
 export { default as AddChartContent } from "./AddChartContent";

@@ -7,10 +7,11 @@ import {
   getColors,
   getCountries,
   getSizes,
+  uuidLanguageEn,
 } from "./data";
 
-const en = `c53d7987-f51a-4b47-9ee0-3215becdce17`;
 // get data
+const IGNORE_LANGUAGES = ["size", "size_content", "language", "brand"];
 
 const fetches = {
   address: getAddresses(),
@@ -24,8 +25,16 @@ const fetches = {
 
 const normalFetch = async (table) => {
   console.log(table);
-  const response = await supabase.from(table).select();
-  return response;
+  if (table?.indexOf("_content") && !IGNORE_LANGUAGES?.includes(table)) {
+    const response = await supabase
+      .from(table)
+      .select()
+      .eq("language_id", uuidLanguageEn);
+    return response;
+  } else {
+    const response = await supabase.from(table).select();
+    return response;
+  }
 };
 
 export const getTableData = async (table) => {

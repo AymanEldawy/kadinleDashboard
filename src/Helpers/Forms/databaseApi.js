@@ -575,7 +575,7 @@ export const product_content = [
     key: "ref",
     tableName: "product_content",
     refId: "product_id",
-    hide_in_add_form: true,
+    hide_in_add_form_add: true,
   },
   { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
   { name: "name", type: "text" },
@@ -594,6 +594,7 @@ export const product_image = [
     key: "ref",
     tableName: "product_content",
     refId: "product_id",
+    hide_in_add_form_add: true,
   },
   {
     name: "color_id",
@@ -621,6 +622,7 @@ export const product_variant = [
     key: "ref",
     tableName: "product_content",
     refId: "product_id",
+    hide_in_add_form_add: true,
   },
   {
     name: "color_id",
@@ -638,6 +640,19 @@ export const product_variant = [
   },
   { name: "weight", type: "number" },
   { name: "sku", type: "text" },
+];
+const stock = [
+  { name: "id", type: "uuid" },
+  {
+    name: "variant_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "product_variant",
+    hide_in_add_form: true,
+    // refId: "product_id",
+  },
+  { name: "warehouse_id", type: "uuid", key: "ref", tableName: "warehouse" },
+  { name: "stock", type: "number" },
 ];
 
 const region = [
@@ -747,18 +762,7 @@ const sleeve_content = [
   { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
   { name: "name", type: "text" },
 ];
-const stock = [
-  { name: "id", type: "uuid" },
-  {
-    name: "variant_id",
-    type: "uuid",
-    key: "ref",
-    tableName: "product_variant",
-    // refId: "product_id",
-  },
-  { name: "warehouse_id", type: "uuid", key: "ref", tableName: "warehouse" },
-  { name: "stock", type: "number" },
-];
+
 const user = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },

@@ -2,9 +2,15 @@ import React from "react";
 
 import Layout from "../../Layout";
 
-const BlockPaper = ({ title, contentBar, children, fullWidth }) => {
+const BlockPaper = ({
+  title,
+  contentBar,
+  children,
+  fullWidth,
+  containerClassName,
+}) => {
   return (
-    <div className="!mb-8 overflow-hidden">
+    <div className={`!mb-8 overflow-hidden ${containerClassName}`}>
       <div className={`overflow-hidden`}>
         <div className="p-4 shadow bg-white  dark:bg-bgmaindark rounded-md">
           {title ? (

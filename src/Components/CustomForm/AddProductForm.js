@@ -6,42 +6,25 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useFetch } from "../../hooks/useFetch";
 import { Button } from "../Global/Button";
 import CheckboxField from "./CheckboxField";
-import Field from "./Field";
 import InputField from "./InputField";
 import RadioField from "./RadioField";
 import SelectField from "./SelectField";
 import UploadFile from "./UploadFile";
 
-let CACHED_TABLE = {};
-
-const SuperForm = ({
+const AddProductForm = ({
   onSubmit,
   initialFields,
   oldValues,
   resetForm,
   layout,
-  outerValues,
+  getCachedList,
+  values,
+  setValues,
 }) => {
-  const { getData } = useFetch();
-
-  const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   // Clean up component
   const location = useLocation();
-  useEffect(() => {
-    checkRefTable(initialFields);
-  }, [initialFields]);
-  async function checkRefTable(fields) {
-    // console.log(fields);
-    if (!fields?.length) return;
-    for (const field of fields) {
-      if (field.key === "ref") {
-        const data = await getData(field?.tableName);
-        CACHED_TABLE[field?.tableName] = data;
-      }
-    }
-  }
 
   useEffect(() => {
     if (resetForm) {
@@ -59,11 +42,6 @@ const SuperForm = ({
       setValues({});
     }
   }, [location?.pathname, oldValues]);
-
-  const getCachedList = (tableName) => {
-    // console.log(tableName);
-    return CACHED_TABLE?.[tableName];
-  };
 
   const insertIntoErrors = (name, value) => {
     if (value === "") {
@@ -102,9 +80,7 @@ const SuperForm = ({
 
   const handelFieldUpload = (name, e, required) => {
     if (required) {
-      // insertIntoErrors(name, value);
     }
-    // console.log(e.target.files, name);
     setValues((prev) => {
       return {
         ...prev,
@@ -124,7 +100,12 @@ const SuperForm = ({
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
         {!!initialFields
           ? initialFields?.map((field, i) => {
-              if (field?.name === "id" || field?.hide_in_add_form) return null;
+              if (
+                field?.name === "id" ||
+                field?.hide_in_add_form ||
+                field?.hide_in_add_form_add
+              )
+                return null;
               if (field?.key === "input") {
                 return (
                   <InputField
@@ -293,4 +274,4 @@ const SuperForm = ({
   );
 };
 
-export default SuperForm;
+export default AddProductForm;

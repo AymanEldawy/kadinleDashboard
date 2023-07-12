@@ -3,6 +3,8 @@ import StatisticsCards from "../../Components/StatisticsCards/StatisticsCards";
 import { useState } from "react";
 import MoneyIcon from "../../Components/icons/MoneyIcon";
 import ShoppingBagIcon from "../../Components/icons/ShoppingBagIcon";
+import UserIcon from "../../Components/icons/UserIcon";
+import WalletIcon from "../../Components/icons/WalletIcon";
 
 const dummyStatistics = [
   {
@@ -29,7 +31,7 @@ const dummyStatistics = [
   {
     name: "customers",
     statistics: "183.35",
-    icon: <MoneyIcon className="text-[#f7b84b]" />,
+    icon: <UserIcon className="text-[#f7b84b]" />,
     color: "bg-[#f7b84b2e]",
     percentage: "29.08",
     isIncreased: true,
@@ -40,7 +42,7 @@ const dummyStatistics = [
     name: "myBalance",
     statistics: "165.89",
     preStatistics: "$",
-    icon: <MoneyIcon className="text-[#405189]" />,
+    icon: <WalletIcon className="text-[#405189]" />,
     color: "bg-[#4051892e]",
     percentage: "0.00",
     isIncreased: "stable",

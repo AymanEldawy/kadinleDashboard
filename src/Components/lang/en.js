@@ -763,6 +763,18 @@ export const en = {
   /*********************************/
 
 
+  /***********Home PAGE************/
+  totalEarnings: "Total earnings",
+  orders: "orders",
+  customers: "customers",
+  myBalance: "my balance",
+  viewNetEarnings: "View net earnings",
+  viewAllOrders: "View all Orders",
+  seeDetails: "See details",
+  withdrawMoney: "Withdraw money"
+  /********************************/
+
+
 
 
 

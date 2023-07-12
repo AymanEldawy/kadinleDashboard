@@ -176,13 +176,7 @@ const combine_order_return_request = [
   "return_status",
 ];
 
-const combine_order_status = [
-  "numerical",
-  "id",
-  "language",
-  "order_status_id",
-  "status",
-];
+const combine_order_status = ["id", "language", "numerical", "status"];
 const combine_payment_status = [
   "numerical",
   "id",
@@ -242,13 +236,7 @@ const combine_product_variant = [
 ];
 
 const combine_region = ["id", "name"];
-const combine_return_status = [
-  "id",
-  "numerical",
-  "language",
-  "return_status",
-  "status",
-];
+const combine_return_status = ["id", "numerical", "language", "status"];
 const combine_sale = ["id", "created_at", "product", "end_date"];
 
 const combine_showreel = [
@@ -314,11 +302,9 @@ const combine_user_suggestion = [
 ];
 const combine_user_ticket = ["id", "created_at", "user", "ticket", "status"];
 const combine_user_wallet = ["id", "user", "amount", "created_at"];
-const combine_warehouse = [
+const combine_warehouse_availability = [
   "id",
-  "name",
-  "address",
-  "number",
+  "warehouse",
   "country",
   "shipping_cost",
   "fast_shipping",
@@ -327,8 +313,11 @@ const combine_warehouse = [
   "min_price_free_shipping",
   "fast_shipping_duration",
   "fast_shipping_price",
-  "stock",
 ];
+
+const combine_warehouse = ["id", "name", "address", "number"];
+
+const combine_stock = ["id", "variant", "warehouse", "stock"];
 
 // product features
 const combine_collar = ["collar_id", "language", "name"];
@@ -395,6 +384,8 @@ const COMBINE_DB_API = {
   combine_user_suggestion,
   combine_user_ticket,
   combine_user_wallet,
+  combine_warehouse_availability,
   combine_warehouse,
+  combine_stock,
 };
 export default COMBINE_DB_API;

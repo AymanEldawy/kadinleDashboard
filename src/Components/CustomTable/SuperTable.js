@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useContext } from "react";
 import ReactPaginate from "react-paginate";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { uuidLanguageEn, uuidRegionEn } from "../../Api/data";
 import { ChevronIcon } from "../../Helpers/Icons";
@@ -36,12 +36,13 @@ const SuperTable = ({
   loading,
   tableName,
 }) => {
+  const location = useLocation();
   const { getData } = useFetch();
   const { lang } = useContext(LanguageContext);
   const [filterList, setFilterList] = useState(data);
   const [itemOffset, setItemOffset] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
-  const [CACHED_TABLE, setCACHED_TABLE] = useState([]);
+  const [CACHED_TABLE, setCACHED_TABLE] = useState({});
   const [pageCount, setPageCount] = useState(1);
   const [refresh, setRefresh] = useState(false);
   let defaultPrimaryStyle = primaryStyles
@@ -103,7 +104,25 @@ const SuperTable = ({
   useEffect(() => {
     if (columns?.includes("parent_id")) checkRefTable(columns);
   }, [columns?.length]);
+  useEffect(() => {
+    if (columns?.includes("user") && location?.pathname === "/user")
+      getAndCacheUserData();
+  }, [location?.pathname, columns?.length, tableName]);
 
+  async function getAndCacheUserData() {
+    const response = await getData("user");
+    let hash = {};
+    for (const user of response) {
+      hash[user?.id] = user;
+    }
+    console.log(hash);
+    setCACHED_TABLE((prev) => {
+      return {
+        ...prev,
+        ...hash,
+      };
+    });
+  }
   async function checkRefTable(fields) {
     if (!data?.length) return;
     let hash = {};
@@ -113,7 +132,12 @@ const SuperTable = ({
         ? item?.[content]?.[0]?.name || item?.[content]?.[0]?.title
         : item?.name || item?.title;
     }
-    setCACHED_TABLE(hash);
+    setCACHED_TABLE((prev) => {
+      return {
+        ...prev,
+        ...hash,
+      };
+    });
   }
 
   const handelSelect = useCallback(
@@ -176,6 +200,7 @@ const SuperTable = ({
   };
   useEffect(() => {}, [CACHED_TABLE]);
 
+  console.log(CACHED_TABLE, "cache");
   return (
     <>
       <Table
@@ -281,20 +306,17 @@ const SuperTable = ({
                             )}
                           </TableCol>
                         );
-                      else if (col === "user")
+                      else if (col === "user") {
                         return (
                           <TableCol
                             classes={`!py-4 border ${classes?.colBody}`}
                           >
                             <UserInfo
-                              first_name={row?.user?.first_name}
-                              last_name={row?.user?.last_name}
-                              profile_img={row?.user?.profile_img}
-                              id={row?.user?.id}
+                              user={CACHED_TABLE?.[row?.user_id] || row?.user}
                             />
                           </TableCol>
                         );
-                      else if (col === "parent_id") {
+                      } else if (col === "parent_id") {
                         return (
                           <TableCol
                             classes={`!py-4 border ${classes?.colBody}`}
@@ -335,13 +357,14 @@ const SuperTable = ({
                         typeof row[col] === "object" &&
                         row?.[col]?.[`${col}_content`]
                       ) {
-                        console.log(
-                          "condition one run",
-                          row?.[col][`${col}_content`]
-                        );
-                        let content = row?.[col][`${col}_content`]?.find(
-                          (c) => c?.language_id === uuidLanguageEn
-                        );
+                        let content =
+                          col === "size"
+                            ? row?.[col][`${col}_content`]?.find(
+                                (c) => c?.region_id === uuidRegionEn
+                              )
+                            : row?.[col][`${col}_content`]?.find(
+                                (c) => c?.language_id === uuidLanguageEn
+                              );
                         value = {
                           name: content?.name,
                           path: col,
@@ -350,37 +373,92 @@ const SuperTable = ({
                         };
                         // content
                       }
-                      if (typeof row[col] === "object" && row?.[col]?.name) {
-                        console.log(
-                          "condition three run",
-                          row[col],
-                          row[col].name
+                      if (col === "variant") {
+                        console.log("herr");
+                        let content = {};
+                        let product_content = !!row?.hasOwnProperty(
+                          "product_variant"
+                        )
+                          ? row?.product_variant?.product?.product_content
+                          : row?.order_content?.[0].product_variant?.product
+                              ?.product_content;
+                        content = product_content?.find(
+                          (c) => c?.language_id === uuidLanguageEn
                         );
+                        let variants = !!row?.hasOwnProperty("product_variant")
+                          ? row?.product_variant
+                          : row?.order_content?.[0].product_variant;
+                        console.log(variants);
+                        value = {
+                          name: variants?.sku,
+                          path: col,
+                          id: content?.product_id,
+                          link: true,
+                        };
+                        // content
+                      }
+                      if (typeof row[col] === "object" && row?.[col]?.name) {
                         value = {
                           name: row?.[col]?.name,
                           path: col,
                           id: row?.[col].id,
                         };
                       }
+                      if (
+                        tableName === "order" &&
+                        (row?.order_status?.[col] || col === "order_status")
+                      ) {
+                        let content = row?.order_status?.status_content?.find(
+                          (c) => c?.language_id === uuidLanguageEn
+                        );
+                        value = {
+                          name:
+                            col === "order_status"
+                              ? content?.order_status
+                              : row?.order_status?.[col],
+                          path: "order",
+                          // id: row?.[col]?.id,
+                        };
+                      }
+                      if (
+                        tableName === "comment" &&
+                        row?.comment_media?.[0]?.[col]
+                      ) {
+                        value = {
+                          name: row?.comment_media?.[0]?.[col],
+                          path: "comment",
+                          id: row?.[col]?.id,
+                        };
+                      }
+                      if (row?.currency?.[col]) {
+                        value = {
+                          name: row?.currency?.[col],
+                          path: "currency",
+                          id: row?.[col]?.id,
+                        };
+                      }
 
                       if (row?.[tableNameContent]?.[0]?.hasOwnProperty(col)) {
-                        console.log(
-                          "condition two run",
-                          row?.[tableNameContent]?.[0],
-                          col
-                        );
                         let content = row?.[tableNameContent]?.find(
                           (c) => c?.language_id === uuidLanguageEn
                         );
                         if (typeof content?.[col] !== "object") {
+                          let quantity =
+                            col === "quantity"
+                              ? row?.[tableNameContent]?.reduce(
+                                  (accumulator, currentItem) => {
+                                    return accumulator + currentItem.quantity;
+                                  },
+                                  0
+                                )
+                              : null;
                           value = {
-                            name: content?.[col],
+                            name: quantity || content?.[col],
                             path: tableName,
                             id: content?.[`${tableName}_id`],
                             link: col === "name",
                           };
                         } else {
-                          console.log(content[col], "collll");
                           value = {
                             name: content?.[col]?.name,
                             path: col,
@@ -390,7 +468,6 @@ const SuperTable = ({
                       }
 
                       if (value) {
-                        console.log(value, "va");
                         return (
                           <TableCol
                             classes={`!py-4 border ${classes?.colBody}`}

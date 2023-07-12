@@ -194,7 +194,13 @@ const color_content = [
 const comment = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
-  { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
+  {
+    name: "user_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "user",
+    refName: "full_name",
+  },
   {
     name: "product_id",
     type: "uuid",
@@ -233,7 +239,13 @@ const coupon = [
 const credit_card = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
-  { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
+  {
+    name: "user_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "user",
+    refName: "full_name",
+  },
   { name: "number", type: "number" },
   { name: "exp_date", type: "date" },
   { name: "CCV", type: "number" },
@@ -374,17 +386,36 @@ const offer_product = [
 export const order = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date" },
-  { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
+  {
+    name: "user_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "user",
+    refName: "full_name",
+  },
   { name: "shipping_adress", type: "uuid" },
   { name: "price", type: "number" },
   { name: "discount", type: "number" },
-  { name: "payment_status", type: "uuid" },
-  { name: "warehouse_from", type: "uuid" },
+  // { name: "payment_status", type: "uuid" },
+  { name: "warehouse_from", type: "uuid", key: "ref", tableName: "warehouse" },
   { name: "shipping_date", type: "date" },
-  { name: "credit_card_id", type: "uuid" },
-  { name: "coupon_id", type: "uuid", key: "ref", tableName: "coupon" },
+  // { name: "credit_card_id", type: "uuid" },
+  {
+    name: "coupon_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "coupon",
+    refName: "code",
+  },
   { name: "order_number", type: "number" },
-  { name: "order_status", type: "uuid" },
+  {
+    name: "order_status",
+    type: "uuid",
+    key: "ref",
+    tableName: "order_status_content",
+    refId: "order_status_id",
+    refName: "status",
+  },
 ];
 
 const order_content = [
@@ -402,7 +433,7 @@ const order_content = [
     type: "uuid",
     key: "ref",
     tableName: "product_variant",
-    // refId: "product_id",
+    refName: "sku",
   },
   { name: "quantity", type: "number" },
 ];
@@ -421,7 +452,7 @@ export const order_return_request = [
     type: "uuid",
     key: "ref",
     tableName: "product_variant",
-    // refId: "product_id",
+    refName: "sku",
   },
   { name: "reason", type: "text" },
   { name: "return_status", type: "uuid" },
@@ -438,7 +469,9 @@ const order_status_content = [
     name: "order_status_id",
     type: "uuid",
     key: "ref",
-    tableName: "order_status",
+    tableName: "order_status_content",
+    refName: "status",
+    hide_in_add_form: true,
   },
   { name: "status", type: "text" },
 ];
@@ -650,8 +683,8 @@ const stock = [
     type: "uuid",
     key: "ref",
     tableName: "product_variant",
-    hide_in_add_form: true,
-    // refId: "product_id",
+    // hide_in_add_form: true,
+    refName: "sku",
   },
   { name: "warehouse_id", type: "uuid", key: "ref", tableName: "warehouse" },
   { name: "stock", type: "number" },
@@ -674,6 +707,7 @@ const return_status_content = [
     key: "ref",
     tableName: "return_status_content",
     refId: "return_status_id",
+    hide_in_add_form: true,
   },
   { name: "status", type: "text" },
 ];
@@ -706,7 +740,13 @@ const season_content = [
 const showreel = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
-  { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
+  {
+    name: "user_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "user",
+    refName: "full_name",
+  },
   {
     name: "product_id",
     type: "uuid",
@@ -719,7 +759,13 @@ const showreel = [
 ];
 const showreel_like = [
   { name: "id", type: "uuid" },
-  { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
+  {
+    name: "user_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "user",
+    refName: "full_name",
+  },
   { name: "showreel_id", type: "uuid", key: "ref", tableName: "showreel" },
 ];
 export const size = [
@@ -768,7 +814,7 @@ const sleeve_content = [
 const user = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
-  { name: "first_name", type: "text" },
+  { name: "full_name", type: "text" },
   { name: "last_name", type: "text" },
   { name: "email", type: "email" },
   { name: "phone", type: "text" },
@@ -790,14 +836,26 @@ const user = [
 const user_address = [
   { name: "id", type: "uuid" },
   { name: "title", type: "text" },
-  { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
+  {
+    name: "user_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "user",
+    refName: "full_name",
+  },
   { name: "address_id", type: "uuid", key: "ref", tableName: "address" },
   { name: "created_at", type: "date" },
 ];
 const user_alert = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
-  { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
+  {
+    name: "user_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "user",
+    refName: "full_name",
+  },
   { name: "content", type: "text" },
   { name: "status", type: "checkbox" },
   { name: "url", type: "text" },
@@ -805,12 +863,19 @@ const user_alert = [
 const user_cart = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
-  { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
+  {
+    name: "user_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "user",
+    refName: "full_name",
+  },
   {
     name: "variant_id",
     type: "uuid",
     key: "ref",
     tableName: "product_variant",
+    refName: "sku",
     // refId: "product_id",
   },
   { name: "quantity", type: "number" },
@@ -818,19 +883,37 @@ const user_cart = [
 const user_invite = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
-  { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
+  {
+    name: "user_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "user",
+    refName: "full_name",
+  },
   { name: "email", type: "email" },
   { name: "status", type: "checkbox" },
 ];
 const user_like = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
-  { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
+  {
+    name: "user_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "user",
+    refName: "full_name",
+  },
   { name: "product_id", type: "uuid" },
 ];
 const user_point = [
   { name: "id", type: "uuid" },
-  { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
+  {
+    name: "user_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "user",
+    refName: "full_name",
+  },
   { name: "point", type: "number" },
   { name: "created_at", type: "date" },
   { name: "status", type: "text" },
@@ -839,20 +922,38 @@ const user_point = [
 const user_suggestion = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
-  { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
+  {
+    name: "user_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "user",
+    refName: "full_name",
+  },
   { name: "suggestion", type: "text" },
   { name: "status", type: "checkbox" },
 ];
 const user_ticket = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
-  { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
+  {
+    name: "user_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "user",
+    refName: "full_name",
+  },
   { name: "ticket", type: "text" },
   { name: "status", type: "checkbox" },
 ];
 const user_wallet = [
   { name: "id", type: "uuid" },
-  { name: "user_id", type: "uuid", key: "ref", tableName: "user" },
+  {
+    name: "user_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "user",
+    refName: "full_name",
+  },
   { name: "amount", type: "number" },
   { name: "created_at", type: "date" },
 ];

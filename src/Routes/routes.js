@@ -25,11 +25,13 @@ import {
   AddNews,
   AddNewsletter,
   AddOffer,
+  AddOrderStatus,
   AddPoint,
   AddProduct,
   AddProductImages,
   AddProductVariants,
   AddRegion,
+  AddReturnStatus,
   AddSale,
   AddSize,
   AddSizeContent,
@@ -62,17 +64,22 @@ import {
   NewsletterSubscription,
   Offers,
   OrderReturnRequests,
+  OrderStatus,
   Orders,
   Points,
   ProductFeatures,
   Products,
   Regions,
+  ReturnStatus,
   Sales,
+  Showreels,
   Sizes,
   SizesContent,
+  Stocks,
   Users,
+  WarehouseAvailability,
+  Warehouses,
 } from "./../Pages/Tables";
-import UserManagement from "../Pages/Tables/UserManagement";
 
 const authProtectedRoutes = [
   // add paths
@@ -135,6 +142,8 @@ const authProtectedRoutes = [
   { path: "/add-product-images", component: <AddProductImages /> },
   { path: "/add-offer", component: <AddOffer /> },
   { path: "/add-point", component: <AddPoint /> },
+  { path: "/add-order-status", component: <AddOrderStatus /> },
+  { path: "/add-return-status", component: <AddReturnStatus /> },
 
   // update
   // { path: "/update/:name/:id", component: <DynamicForm layout="update" /> },
@@ -153,8 +162,7 @@ const authProtectedRoutes = [
   { path: "/country", component: <Countries /> },
   { path: "/region", component: <Regions /> },
   { path: "/order", component: <Orders /> },
-  // { path: "/user", component: <Users /> },
-  { path: "/user", component: <UserManagement /> },
+  { path: "/user", component: <Users /> },
   { path: "/chart", component: <Chart /> },
   { path: "/chart-content", component: <ChartContent /> },
   { path: "/chart-data", component: <ChartData /> },
@@ -217,6 +225,13 @@ const authProtectedRoutes = [
   { path: "/sale", component: <Sales /> },
   { path: "/home-reviews", component: <HomeReviews /> },
   { path: "/order-return-requests", component: <OrderReturnRequests /> },
+  { path: "/order-return-requests", component: <OrderReturnRequests /> },
+  { path: "/stocks", component: <Stocks /> },
+  { path: "/warehouse-availability", component: <WarehouseAvailability /> },
+  { path: "/showreels", component: <Showreels /> },
+  { path: "/warehouses", component: <Warehouses /> },
+  { path: "/order-status", component: <OrderStatus /> },
+  { path: "/return-status", component: <ReturnStatus /> },
 
   // not found page
   { path: "*", component: <NotFoundPage /> },

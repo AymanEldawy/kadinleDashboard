@@ -24,8 +24,38 @@ export const getOrders = async () => {
       address(country(name), name:city),
       warehouse_from(name),
       coupon(name:code),
-      order_content(quantity),
+      order_content(quantity, product_variant(id, sku, product(product_content(product_id, name, language_id)))),
       order_status(numerical, status_content:order_status_content(order_status:status, language_id))
+   `
+  );
+  return response;
+};
+export const getReturnStatus = async () => {
+  const response = await supabase.from("return_status").select(
+    `
+      *,
+      return_status_content(*,language(id,name))
+   `
+  );
+  return response;
+};
+export const getOrderStatus = async () => {
+  const response = await supabase.from("order_status").select(
+    `
+      *,
+      order_status_content(*,language(id,name))
+      
+   `
+  );
+  return response;
+};
+export const getReturnRequests = async () => {
+  const response = await supabase.from("order_return_request").select(
+    `
+      *,
+      return_status(*, name:numerical),
+      product_variant(id, sku, product(product_content(product_id, name, language_id))),
+      order(*, name:order_number))
    `
   );
   return response;
@@ -160,38 +190,76 @@ export const getAddresses = async () => {
 
   return response;
 };
-export const getUserAddresses = async () => {
-  const response = await supabase.from("user_address").select(`
-    *,
-    address(*, name:line_one),
-    users(*)
-    `);
 
-  // user(first_name, last_name, profile_img),
-  return response;
-};
-export const getUsersCart = async () => {
-  const response = await supabase.from("user_cart").select(`
-    *,
-    user(first_name, last_name, profile_img),
-    variant(product(product_content(product_id, name, language_id)))
-    `);
-
-  return response;
-};
-export const getUserInvite = async () => {
-  const response = await supabase.from("user_invite").select(`
-    *,
-    auth(*)
-    `);
-
-  return response;
-};
 export const getPoints = async () => {
   const response = await supabase.from("point").select(`
     *,
     point_content(*, language_id,language(name))
   `);
 
+  return response;
+};
+export const getStocks = async () => {
+  const response = await supabase.from("stock").select(`
+    *,
+    warehouse(name),
+    product_variant(id, sku, product(product_content(product_id, name, language_id)))
+  `);
+
+  return response;
+};
+export const getWarehouses = async () => {
+  const response = await supabase.from("warehouse").select(`
+    *,
+    address(id,name:line_one)
+  `);
+
+  return response;
+};
+export const getWarehouseAvailability = async () => {
+  const response = await supabase.from("warehouse_availability").select(`
+    *,
+    warehouse(name),
+    country(name)
+  `);
+
+  return response;
+};
+export const getShowreels = async () => {
+  const response = await supabase.from("showreel").select(`
+    *,
+    user(*),
+    product(id,product_content(*))
+  `);
+
+  return response;
+};
+// user
+export const getUserAddresses = async () => {
+  const response = await supabase.from("user_address").select(`
+    *,
+    address(*, name:line_one)
+    `);
+
+  // users(*)
+  // user(first_name, last_name, profile_img),
+  return response;
+};
+export const getUsersCart = async () => {
+  const response = await supabase.from("user_cart").select(`
+    *,
+    product_variant(id, sku, product(product_content(product_id, name, language_id)))
+    `);
+
+  return response;
+  // user(first_name, last_name, profile_img),
+};
+export const getUserSubTable = async (table) => {
+  // const response = await supabase.from(table).select(`
+  //   *,
+  //   `);
+  const response = await supabase.from(table).select("*");
+
+  // user(*)
   return response;
 };

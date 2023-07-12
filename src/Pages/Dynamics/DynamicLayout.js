@@ -6,15 +6,22 @@ import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import DynamicList from "../Dynamics/DynamicList";
 import { useFetch } from "./../../hooks/useFetch";
 
-const DynamicLayout = ({ SUPABASE_TABLE_NAME, columns, title, onAddClick }) => {
+const DynamicLayout = ({
+  SUPABASE_TABLE_NAME,
+  columns,
+  title,
+  onAddClick,
+  renderTableAction,
+  oldValue,
+}) => {
   return (
     <BlockPaper title={title}>
       <DynamicList
         tableName={SUPABASE_TABLE_NAME}
         columns={columns}
         // data={data}
-        // loading={loading}
-        // setRefresh={setRefresh}
+        renderTableAction={renderTableAction}
+        oldValue={oldValue}
         onAddClick={onAddClick}
       />
     </BlockPaper>

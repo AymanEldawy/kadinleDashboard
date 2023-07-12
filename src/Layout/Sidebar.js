@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import logoIcon from "../Assets/Images/logo-icon.png";
 import logo from "../Assets/Images/logo.svg";
@@ -9,7 +9,7 @@ import { menuData } from "../Helpers/menu";
 
 const Sidebar = ({ open, setOpen }) => {
   const [dropdown, setDropdown] = React.useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (!open) setDropdown("");
   }, [open]);
@@ -36,6 +36,9 @@ const Sidebar = ({ open, setOpen }) => {
         return (
           <li
             key={item?.name}
+            onClick={() =>
+              item?.children?.length ? undefined : navigate(item?.path)
+            }
             className={`relative group capitalize w-full border-b border-gray-200 dark:!border-[#444] py-2 ${
               dropdown[level] === item?.name
                 ? "bg-gray-100 bg_dark border-b border-t border-gray-200"
@@ -43,7 +46,7 @@ const Sidebar = ({ open, setOpen }) => {
             }`}
           >
             <button
-              className={`whitespace-nowrap px-2 gap-3 flex justify-between items-center hover:text-blue-600  dark:hover:bg-transparent dark:hover:text-white py-2 w-full ${
+              className={`whitespace-nowrap capitalize px-2 gap-3 flex justify-between items-center hover:text-blue-600  dark:hover:bg-transparent dark:hover:text-white py-2 w-full ${
                 dropdown[level] == item?.name
                   ? " text-blue-600 dark:text-white"
                   : ""
@@ -55,7 +58,7 @@ const Sidebar = ({ open, setOpen }) => {
                 <span className={`flex-1 capitalize flex ${open ? "" : ""}`}>
                   {item.name}
                   <span
-                    className={`scale-[60%] ml-auto rtl:mr-auto pl-2 rtl:pr-2 -rotate-90 transition-transform duration-200 ${
+                    className={`scale-[60%] ml-auto capitalize rtl:mr-auto pl-2 rtl:pr-2 -rotate-90 transition-transform duration-200 ${
                       dropdown[level] === item?.name ? "rotate-0" : ""
                     }`}
                   >
@@ -66,7 +69,7 @@ const Sidebar = ({ open, setOpen }) => {
                 <Link
                   to={item?.path}
                   // onClick={() => setOpen(false)}
-                  className={`flex-1 flex ${open ? "" : ""}`}
+                  className={`flex-1 capitalize flex ${open ? "" : ""}`}
                 >
                   {item?.name}
                 </Link>
@@ -84,6 +87,7 @@ const Sidebar = ({ open, setOpen }) => {
         return (
           <li
             key={item?.name}
+            // onClick={() => navigate(item?.path)}
             className={`relative group w-full capitalize dark:border-[#444] ${
               dropdown[level] === item?.name
                 ? "bg-gray-100 bg_dark border-b border-t border-gray-200"
@@ -91,7 +95,7 @@ const Sidebar = ({ open, setOpen }) => {
             }`}
           >
             <button
-              className={`whitespace-nowrap gap-3 justify-between hover:text-blue-600 py-2 hover:bg-gray-100 dark:hover:bg-transparent dark:hover:text-white px-4 w-full flex ${
+              className={`whitespace-nowrap gap-3 capitalize justify-between hover:text-blue-600 py-2 hover:bg-gray-100 dark:hover:bg-transparent dark:hover:text-white px-4 w-full flex ${
                 dropdown[level] === item?.name
                   ? " text-blue-600 dark:text-white"
                   : ""
@@ -100,7 +104,7 @@ const Sidebar = ({ open, setOpen }) => {
             >
               {item.name}
               <span
-                className={`scale-[60%] ml-auto rtl:mr-auto pl-2 rtl:pr-2 -rotate-90 transition-transform duration-200 ${
+                className={`scale-[60%] ml-auto capitalize rtl:mr-auto pl-2 rtl:pr-2 -rotate-90 transition-transform duration-200 ${
                   dropdown[level] === item?.name ? "rotate-0" : ""
                 }`}
               >
@@ -116,14 +120,18 @@ const Sidebar = ({ open, setOpen }) => {
         );
       }
       return (
-        <li key={item?.name} className="relative w-full capitalize">
+        <li
+          key={item?.name}
+          // onClick={() => navigate(item?.path)}
+          className="relative w-full capitalize"
+        >
           {item?.path === "" ? (
-            <button className="whitespace-nowrap hover:text-blue-600 dark:hover:bg-transparent dark:hover:text-white py-2 px-4 w-full flex">
+            <button className="whitespace-nowrap capitalize hover:text-blue-600 dark:hover:bg-transparent dark:hover:text-white py-2 px-4 w-full flex">
               {item.name}
             </button>
           ) : (
             <Link
-              className="whitespace-nowrap  hover:text-blue-600 dark:hover:bg-transparent dark:hover:text-white py-2 px-4 w-full flex"
+              className="whitespace-nowrap capitalize hover:text-blue-600 dark:hover:bg-transparent dark:hover:text-white py-2 px-4 w-full flex"
               to={item?.path}
               // onClick={() => setOpen(false)}
             >

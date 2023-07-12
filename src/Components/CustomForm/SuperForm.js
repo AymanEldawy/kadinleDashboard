@@ -20,7 +20,6 @@ const SuperForm = ({
   oldValues,
   resetForm,
   layout,
-  outerValues,
 }) => {
   const { getData } = useFetch();
 
@@ -120,7 +119,7 @@ const SuperForm = ({
     }
   };
   return (
-    <form onSubmit={submit} className="mb-8">
+    <form onSubmit={submit} className="mb-2">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
         {!!initialFields
           ? initialFields?.map((field, i) => {
@@ -154,6 +153,7 @@ const SuperForm = ({
                   <SelectField
                     key={`${field?.name}`}
                     value={values?.[field?.name]}
+                    // defaultValue={values?.[field?.name]}
                     label={field?.name}
                     list={
                       !!getCachedList ? getCachedList(field?.tableName) : []
@@ -162,6 +162,7 @@ const SuperForm = ({
                     keyValue={field?.refId || "id"}
                     name={field?.name}
                     required={field?.required}
+                    onChange
                   />
                 );
               } else if (field?.key === "radio") {

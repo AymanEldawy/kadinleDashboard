@@ -247,3 +247,8 @@ body.dark .has-checked:has(input:checked) input {
   opacity: 1;
   pointer-events: unset;
 } 
+
+button:active {
+  opacity: .7;
+  box-shadow: 0 5px 8px #00000020 inset;
+}

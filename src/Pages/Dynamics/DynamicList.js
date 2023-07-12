@@ -8,7 +8,13 @@ import { TableBar } from "../../Components/TableBar/TableBar";
 import { useDelete } from "../../hooks/useDelete";
 import { useFetch } from "../../hooks/useFetch";
 
-const DynamicList = ({ tableName, columns, onAddClick }) => {
+const DynamicList = ({
+  tableName,
+  columns,
+  onAddClick,
+  oldData,
+  renderTableAction,
+}) => {
   const { loading, getData } = useFetch();
   const { deleteItem } = useDelete();
   const [data, setData] = useState([]);
@@ -24,12 +30,30 @@ const DynamicList = ({ tableName, columns, onAddClick }) => {
   };
   useEffect(() => {
     (async () => {
-      setData(await getData(tableName));
+      if (!!oldData) {
+        setData(oldData);
+      } else {
+        setData(await getData(tableName));
+      }
     })();
   }, [refresh]);
 
   return (
     <>
+      {/* <PopupFormOne
+        setInitialFields={setInitialFields}
+        setOldValues={setOldValues}
+        open={openFeaturesForm}
+        setOpen={setOpenFeaturesForm}
+        oldValues={oldValues}
+        table={activeStage}
+        layout={layout}
+        setLayout={setLayout}
+        initialFields={initialFields}
+        onSubmit={onSubmit}
+        resetForm={resetForm}
+      /> */}
+
       <ConfirmModal
         onConfirm={() => {
           handleDeleteItem(selectedList);
@@ -62,9 +86,11 @@ const DynamicList = ({ tableName, columns, onAddClick }) => {
           allowActions
           actionKey="Actions"
           actionsContent={(data) => {
+            if (!!renderTableAction) return renderTableAction(data);
             return (
               <Link
                 to={`/update/${tableName}/${data?.id}`}
+                state={data}
                 className="text-blue-400 underline"
               >
                 Edit

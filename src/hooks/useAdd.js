@@ -11,7 +11,7 @@ export const useAdd = () => {
     const response = await addNewItem(table, data);
     if (response.error) {
       toast.update(loading, {
-        render: "Oops! Field to added new",
+        render: "Oops! failed to added new",
         type: "error",
         isLoading: false,
         autoClose: 4000,

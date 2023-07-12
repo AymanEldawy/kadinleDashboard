@@ -23,6 +23,7 @@ export const FormIncreasable = ({
   onSubmit,
   increasableTitle,
   onChangeValues,
+  resetForm,
 }) => {
   const { getData } = useFetch();
   const location = useLocation();
@@ -33,6 +34,9 @@ export const FormIncreasable = ({
   const [listCount, setListCount] = useState([`00 ${uuidv4()}`]);
   const [activeTab, setActiveTab] = useState(0);
 
+  useEffect(() => {
+    if (resetForm) setValues({});
+  }, [resetForm]);
   useEffect(() => {
     checkRefTable(initialFields);
   }, [initialFields]);

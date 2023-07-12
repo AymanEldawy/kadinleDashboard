@@ -8,25 +8,17 @@ import {
   getColors,
   getComments,
   getCountries,
+  getOffers,
+  getOrders,
+  getPoints,
+  getProductFeatures,
+  getProducts,
   getSizes,
+  getUserAddresses,
+  getUserInvite,
+  getUsersCart,
   uuidLanguageEn,
 } from "./data";
-
-// get data
-const IGNORE_LANGUAGES = [
-  "logs",
-  "news",
-  "user",
-  "size",
-  "size_content",
-  "language",
-  "brand",
-  "region",
-  "bulk_alert",
-  "newsletter",
-  "newsletter_subscription",
-  "currency",
-];
 
 const fetches = {
   address: getAddresses(),
@@ -38,20 +30,25 @@ const fetches = {
   size: getSizes(),
   collection: getCollections(),
   comment: getComments(),
+  fabric: getProductFeatures("fabric_content"),
+  material: getProductFeatures("material_content"),
+  lining: getProductFeatures("lining_content"),
+  collar: getProductFeatures("collar_content"),
+  sleeve: getProductFeatures("sleeve_content"),
+  season: getProductFeatures("season_content"),
+  feature: getProductFeatures("feature_content"),
+  pattern: getProductFeatures("pattern_content"),
+  offer: getOffers(),
+  product: getProducts(),
+  order: getOrders(),
+  point: getPoints(),
+  user_address: getUserAddresses(),
+  user_cart: getUsersCart(),
+  user_invite: getUserInvite(),
 };
-
 const normalFetch = async (table) => {
-  console.log(table);
-  if (table?.indexOf("_content") && !IGNORE_LANGUAGES?.includes(table)) {
-    const response = await supabase
-      .from(table)
-      .select()
-      .eq("language_id", uuidLanguageEn);
-    return response;
-  } else {
-    const response = await supabase.from(table).select();
-    return response;
-  }
+  const response = await supabase.from(table).select();
+  return response;
 };
 
 export const getTableData = async (table) => {
@@ -62,9 +59,14 @@ export const getTableData = async (table) => {
   return response;
 };
 export const getTableDataById = async (table, itemId) => {
-  console.log(table, itemId);
   const response = await supabase.from(table).select("*").eq("id", itemId);
-  // .eq("language_id", en);
+  return response;
+};
+export const getTableContentDataById = async (table, itemId) => {
+  const response = await supabase
+    .from(`${table}_content`)
+    .select("*")
+    .eq(`${table}_id`, itemId);
   return response;
 };
 
@@ -81,11 +83,11 @@ export const deleteItems = async (table, ids) => {
 };
 
 // update items
-export const updateItem = async (table, item, itemId) => {
+export const updateItem = async (table, item) => {
   const response = await supabase
     .from(table)
     .update(item)
-    .eq("id", itemId)
+    .eq("id", item?.id)
     .single();
   return response;
 };

@@ -21,6 +21,7 @@ import {
   SparklesIcon,
   TagsIcon,
   ToolsIcon,
+  UserGroupIcon,
   UserIcon,
   WorldIcon,
 } from "./Icons";
@@ -28,6 +29,7 @@ import BookOpenIcon from "./Icons/BookOpenIcon";
 import ClipboardIcon from "./Icons/ClipboardIcon";
 import ExclamationTriangleIcon from "./Icons/ExclamationTriangleIcon";
 import MessageIcon from "./Icons/MessageIcon";
+import PackageIcon from "./Icons/PackageIcon";
 
 export const menuData = [
   {
@@ -148,6 +150,16 @@ export const menuData = [
     ],
   },
   {
+    key: "point",
+    name: "point",
+    icon: <BulkIcon />,
+    path: "/points",
+    children: [
+      // { path: "/bulk-alert", name: "Mange BulkAlert" },
+      // { path: "/add-bulk-alert", name: "Add BulkAlert" },
+    ],
+  },
+  {
     key: "Brands",
     name: "Brands",
     icon: <BrandIcon />,
@@ -185,6 +197,16 @@ export const menuData = [
     children: [],
   },
   {
+    key: "News",
+    name: "News",
+    icon: <NewsIcon />,
+    path: "/news",
+    children: [
+      // { path: "/news", name: "Mange News" },
+      // { path: "/add-news", name: "Add News" },
+    ],
+  },
+  {
     key: "Newsletter",
     name: "Newsletter",
     icon: <BookOpenIcon />,
@@ -195,15 +217,16 @@ export const menuData = [
     ],
   },
   {
-    key: "News",
-    name: "News",
-    icon: <NewsIcon />,
-    path: "/news",
+    key: "Newsletter",
+    name: "Newsletter subscription",
+    icon: <UserGroupIcon />,
+    path: "/Newsletter-subscription",
     children: [
-      // { path: "/news", name: "Mange News" },
-      // { path: "/add-news", name: "Add News" },
+      // { path: "/newsletter", name: "Mange Newsletter" },
+      // { path: "/add-newsletter", name: "Add Newsletter" },
     ],
   },
+
   {
     key: "Sales",
     name: "Sales",
@@ -219,7 +242,13 @@ export const menuData = [
     icon: <BoxIcon />,
     name: "Orders",
     path: "/order",
-
+    children: [],
+  },
+  {
+    key: "order-return-requests",
+    icon: <BoxIcon />,
+    name: "order return requests",
+    path: "/order-return-requests",
     children: [],
   },
   {
@@ -241,6 +270,20 @@ export const menuData = [
     icon: <ExclamationTriangleIcon />,
     path: "/logs",
     name: "Logs",
+    children: [],
+  },
+  {
+    key: "offers",
+    icon: <PackageIcon />,
+    path: "/offers",
+    name: "offers",
+    children: [],
+  },
+  {
+    key: "home-reviews",
+    icon: <PackageIcon />,
+    path: "/home-reviews",
+    name: "home reviews",
     children: [],
   },
 ];

@@ -23,3 +23,6 @@ export { default as AddProductVariants } from "./AddProductVariants";
 export { default as AddProductImages } from "./AddProductImages";
 export { default as AddChartContent } from "./AddChartContent";
 export { default as AddChartData } from "./AddChartData";
+export { default as AddCategoryContent } from "./AddCategoryContent";
+export { default as AddOffer } from "./AddOffer";
+export { default as AddPoint } from "./AddPoint";

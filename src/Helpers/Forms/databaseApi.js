@@ -127,7 +127,7 @@ const collar_content = [
 ];
 const collection = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date", hide_in_add_form: true },
+  { name: "created_at", type: "date" },
   { name: "display_home", type: "checkbox" },
 ];
 const collection_content = [
@@ -322,19 +322,19 @@ const material_content = [
 ];
 const news = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date", hide_in_add_form: true },
+  { name: "created_at", type: "date" },
   { name: "content", type: "text" },
 ];
 const newsletter = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date", hide_in_add_form: true },
+  { name: "created_at", type: "date" },
   { name: "subject", type: "text" },
   { name: "content", type: "text" },
 ];
 const newsletter_subscription = [{ name: "email", type: "email" }];
 const offer = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date", hide_in_add_form: true },
+  { name: "created_at", type: "date" },
   { name: "numerical", type: "number" },
   { name: "display_home", type: "checkbox" },
 ];
@@ -480,11 +480,13 @@ const point_content = [
     key: "ref",
     tableName: "point_content",
     refId: "point_id",
+    refName: "numeric",
+    hide_in_add_form: true,
   },
   { name: "cause", type: "text" },
   { name: "point_count", type: "number" },
 ];
-const point_type = [
+const point = [
   { name: "id", type: "uuid" },
   { name: "numeric", type: "number" },
 ];
@@ -677,7 +679,7 @@ const return_status_content = [
 ];
 const sale = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date", hide_in_add_form: true },
+  { name: "created_at", type: "date" },
   {
     name: "product_id",
     type: "uuid",
@@ -922,7 +924,7 @@ const DB_API = {
   payment_status,
   payment_status_content,
   point_content,
-  point_type,
+  point,
   product,
   product_content,
   product_image,

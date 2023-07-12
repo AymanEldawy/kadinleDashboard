@@ -1,48 +1,38 @@
 "use client";
-import { cartList } from "@/data/dummyData";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
+import { useFetch } from "../hooks/useFetch";
 
 export const GlobalOptions = createContext();
 
+let CACHE_LANGUAGES = {};
 export const GlobalOptionsProvider = ({ children }) => {
-  const [cart, setCart] = useState();
-  const [user, setUser] = useState({
-    name: "Monga",
-    role: "seller"
-  })
+  const { getData } = useFetch();
+  const [refresh, setRefresh] = useState(false);
+  const [openLanguageForm, setOpenLanguageForm] = useState(false);
+
+  const [languages, setLanguages] = useState([]);
   useEffect(() => {
-    setCart(cartList)
+    (async () => {
+      const response = await getData("language");
+      setLanguages(response?.data);
+      for (const item of response) {
+        CACHE_LANGUAGES[item?.id] = item?.name;
+      }
+    })();
   }, []);
 
-  const changeUserRole = () => {
-    if (user?.role === 'user')
-      setUser(prev => { return { ...prev, role: "seller" } })
-    else
-      setUser(prev => { return { ...prev, role: "user" } })
-  }
-
-  const addToCart = (item) => {
-    setCart(prev => [...prev, {
-      ...item
-    }])
-  }
-  const removeFromCart = (id) => {
-    console.log(id)
-    setCart(prev => prev?.filter(item => item?.id !== id))
-  }
-  const updateQuantity = (id, quantity) => {
-    let newCart = cart?.map(item => {
-      if (item?.id === id) {
-        return { ...item, quantity }
-      } else return item
-    })
-    setCart(newCart)
-  }
-
-  const values = { user, changeUserRole, cart, updateQuantity, addToCart, removeFromCart, cartLength: cart?.length }
+  const values = {
+    languages,
+    CACHE_LANGUAGES,
+    setRefresh,
+    openLanguageForm,
+    setOpenLanguageForm,
+  };
   return (
-    <GlobalOptions.Provider value={values}>
-      {children}
-    </GlobalOptions.Provider>
+    <GlobalOptions.Provider value={values}>{children}</GlobalOptions.Provider>
   );
+};
+
+export const useGlobalOptions = () => {
+  return useContext(GlobalOptions);
 };

@@ -124,11 +124,8 @@ const combine_credit_card = [
   "CCV",
 ];
 const combine_currency = ["id", "name", "code", "rate", "exchange_percent"];
-const combine_fabric = ["id", "language", "name"];
-const combine_feature = ["id", "language", "name"];
 const combine_home_reviews = ["id", "name", "rating", "content", "image"];
 const combine_language = ["id", "name", "code"];
-const combine_lining = ["id", "language", "name"];
 const combine_logs = [
   "id",
   "created_at",
@@ -136,7 +133,7 @@ const combine_logs = [
   "row_id",
   "table_name",
 ];
-const combine_material = ["id", "material_id", "language", "name"];
+
 const combine_news = ["id", "created_at", "content"];
 const combine_newsletter = ["id", "created_at", "subject", "content"];
 const combine_newsletter_subscription = ["email"];
@@ -151,30 +148,30 @@ const combine_offer = [
   "media",
 ];
 
-const combine_offer_product = ["id", "product_id", "offer_id"];
+const combine_offer_product = ["id", "product", "offer"];
 const combine_order = [
   "id",
   "created_at",
-  "user_id",
-  "shipping_adress",
+  "order_number",
+  "address",
   "price",
   "discount",
-  "payment_status",
   "warehouse_from",
   "shipping_date",
-  "credit_card_id",
-  "coupon_id",
-  "order_number",
+  "coupon",
+  "numerical",
   "order_status",
-  "variant_id",
+  "variant",
   "quantity",
+  // "payment_status",
+  "user",
 ];
 
 const combine_order_return_request = [
   "id",
   "created_at",
-  "order_id",
-  "variant_id",
+  "order",
+  "variant",
   "reason",
   "return_status",
 ];
@@ -186,7 +183,6 @@ const combine_order_status = [
   "order_status_id",
   "status",
 ];
-const combine_pattern = ["id", "pattern_id", "language", "name"];
 const combine_payment_status = [
   "numerical",
   "id",
@@ -194,41 +190,34 @@ const combine_payment_status = [
   "payment_status_id",
   "status",
 ];
-const combine_point = [
-  "id",
-  "language",
-  "point_id",
-  "cause",
-  "point_count",
-  "numeric",
-];
+const combine_point = ["id", "numeric", "point_count", "cause", "language"];
 
 const combine_product = [
   "id",
-  "created_at",
   "product_sku",
-  "category_id",
+  "name",
+  "description",
+  "category",
+  "created_at",
   "price",
+  "barcode",
   "tax_percent",
   "display",
   "discount",
   "featured",
   "views",
-  "barcode",
-  "fabric_id",
-  "material_id",
-  "lining_id",
-  "collar_id",
-  "sleeve_id",
-  "season_id",
-  "feature_id",
-  "brand_id",
-  "origin_id",
-  "pattern_id",
-  "product_id",
+  "fabric",
+  "material",
+  "lining",
+  "collar",
+  "sleeve",
+  "season",
+  "feature",
+  "brand",
+  // "origin",
+  "pattern",
+  // "product",
   "language",
-  "name",
-  "description",
   "seo_title",
   "seo_description",
   "image_alt",
@@ -236,18 +225,18 @@ const combine_product = [
 
 const combine_product_image = [
   "id",
-  "product_id",
-  "color_id",
+  "product",
+  "color",
   "image",
-  "size_id",
+  "size",
   "pattern_sku",
 ];
 
 const combine_product_variant = [
   "id",
-  "product_id",
-  "color_id",
-  "size_id",
+  "product",
+  "color",
+  "size",
   "weight",
   "sku",
 ];
@@ -257,19 +246,18 @@ const combine_return_status = [
   "id",
   "numerical",
   "language",
-  "return_status_id",
+  "return_status",
   "status",
 ];
-const combine_sale = ["id", "created_at", "product_id", "end_date"];
-const combine_season = ["id", "language", "name"];
+const combine_sale = ["id", "created_at", "product", "end_date"];
+
 const combine_showreel = [
   "id",
   "created_at",
-  "user_id",
-  "product_id",
+  "user",
+  "product",
   "url",
   "views",
-  "user_id",
 ];
 const combine_size = [
   "id",
@@ -280,7 +268,6 @@ const combine_size = [
   "region",
 ];
 
-const combine_sleeve = ["id", "sleeve_id", "language", "name"];
 const combine_user = [
   "id",
   "created_at",
@@ -295,36 +282,24 @@ const combine_user = [
   "line_two",
   "city",
   "postal_code",
-  "default_address_id",
+  // "default_address_id",
   "points",
 ];
-const combine_user_address = [
-  "id",
-  "title",
-  "user_id",
-  "address_id",
-  "created_at",
-];
+const combine_user_address = ["id", "title", "user", "address", "created_at"];
 const combine_user_alert = [
   "id",
   "created_at",
-  "user_id",
+  "user",
   "content",
   "status",
   "url",
 ];
-const combine_user_cart = [
-  "id",
-  "created_at",
-  "user_id",
-  "variant_id",
-  "quantity",
-];
-const combine_user_invite = ["id", "created_at", "user_id", "email", "status"];
-const combine_user_like = ["id", "created_at", "user_id", "product_id"];
+const combine_user_cart = ["id", "created_at", "user", "variant", "quantity"];
+const combine_user_invite = ["id", "created_at", "user", "email", "status"];
+const combine_user_like = ["id", "created_at", "user", "product"];
 const combine_user_point = [
   "id",
-  "user_id",
+  "user",
   "point",
   "created_at",
   "status",
@@ -333,18 +308,18 @@ const combine_user_point = [
 const combine_user_suggestion = [
   "id",
   "created_at",
-  "user_id",
+  "user",
   "suggestion",
   "status",
 ];
-const combine_user_ticket = ["id", "created_at", "user_id", "ticket", "status"];
-const combine_user_wallet = ["id", "user_id", "amount", "created_at"];
+const combine_user_ticket = ["id", "created_at", "user", "ticket", "status"];
+const combine_user_wallet = ["id", "user", "amount", "created_at"];
 const combine_warehouse = [
   "id",
   "name",
-  "address_id",
+  "address",
   "number",
-  "country_id",
+  "country",
   "shipping_cost",
   "fast_shipping",
   "shipping_duration_min",
@@ -354,6 +329,16 @@ const combine_warehouse = [
   "fast_shipping_price",
   "stock",
 ];
+
+// product features
+const combine_collar = ["collar_id", "language", "name"];
+const combine_feature = ["feature_id", "language", "name"];
+const combine_lining = ["lining_id", "language", "name"];
+const combine_fabric = ["fabric_id", "language", "name"];
+const combine_season = ["season_id", "language", "name"];
+const combine_sleeve = ["sleeve_id", "language", "name"];
+const combine_material = ["material_id", "language", "name"];
+const combine_pattern = ["pattern_id", "language", "name"];
 
 const COMBINE_DB_API = {
   combine_address,
@@ -373,6 +358,7 @@ const COMBINE_DB_API = {
   combine_currency,
   combine_fabric,
   combine_feature,
+  combine_collar,
   combine_home_reviews,
   combine_language,
   combine_lining,

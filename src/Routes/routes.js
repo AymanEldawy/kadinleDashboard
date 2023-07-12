@@ -3,14 +3,14 @@ import { redirect } from "react-router-dom";
 
 import { menuData } from "../Helpers/menu";
 import DynamicForm from "../Pages/Dynamics/DynamicForm";
-import AddCategoryContent from "../Pages/Forms/AddCategoryContent";
+import Update from "../Pages/Dynamics/Update";
 import NotFoundPage from "../Pages/NotFoundPage/NotFoundPage";
-import CategoriesContent from "../Pages/Tables/CategoriesContent";
 import {
   AddAddress,
   AddBrand,
   AddBulkAlert,
   AddCategory,
+  AddCategoryContent,
   AddChart,
   AddChartContent,
   AddChartData,
@@ -24,6 +24,8 @@ import {
   AddLanguage,
   AddNews,
   AddNewsletter,
+  AddOffer,
+  AddPoint,
   AddProduct,
   AddProductImages,
   AddProductVariants,
@@ -39,6 +41,7 @@ import {
   Brands,
   BulkAlert,
   Categories,
+  CategoriesContent,
   Chart,
   ChartContent,
   ChartData,
@@ -51,11 +54,16 @@ import {
   Coupons,
   Currency,
   GlobalList,
+  HomeReviews,
   Languages,
   Logs,
   News,
   Newsletter,
+  NewsletterSubscription,
+  Offers,
+  OrderReturnRequests,
   Orders,
+  Points,
   ProductFeatures,
   Products,
   Regions,
@@ -64,6 +72,7 @@ import {
   SizesContent,
   Users,
 } from "./../Pages/Tables";
+import UserManagement from "../Pages/Tables/UserManagement";
 
 const authProtectedRoutes = [
   // add paths
@@ -124,9 +133,12 @@ const authProtectedRoutes = [
   { path: "/add-product", component: <AddProduct /> },
   { path: "/add-product-variants", component: <AddProductVariants /> },
   { path: "/add-product-images", component: <AddProductImages /> },
+  { path: "/add-offer", component: <AddOffer /> },
+  { path: "/add-point", component: <AddPoint /> },
 
   // update
-  { path: "/update/:name/:id", component: <DynamicForm layout="update" /> },
+  // { path: "/update/:name/:id", component: <DynamicForm layout="update" /> },
+  { path: "/update/:name/:id", component: <Update /> },
 
   // list or table paths
   { path: "/product", component: <Products /> },
@@ -141,7 +153,8 @@ const authProtectedRoutes = [
   { path: "/country", component: <Countries /> },
   { path: "/region", component: <Regions /> },
   { path: "/order", component: <Orders /> },
-  { path: "/user", component: <Users /> },
+  // { path: "/user", component: <Users /> },
+  { path: "/user", component: <UserManagement /> },
   { path: "/chart", component: <Chart /> },
   { path: "/chart-content", component: <ChartContent /> },
   { path: "/chart-data", component: <ChartData /> },
@@ -151,11 +164,14 @@ const authProtectedRoutes = [
   { path: "/logs", component: <Logs /> },
   { path: "/news", component: <News /> },
   { path: "/newsletter", component: <Newsletter /> },
+  { path: "/newsletter-subscription", component: <NewsletterSubscription /> },
   { path: "/comments", component: <Comments /> },
   { path: "/brand", component: <Brands /> },
   { path: "/product-features", component: <ProductFeatures /> },
   { path: "/coupons", component: <Coupons /> },
   { path: "/currency", component: <Currency /> },
+  { path: "/offers", component: <Offers /> },
+  { path: "/points", component: <Points /> },
   {
     path: "/fabric",
     component: (
@@ -199,6 +215,8 @@ const authProtectedRoutes = [
     ),
   },
   { path: "/sale", component: <Sales /> },
+  { path: "/home-reviews", component: <HomeReviews /> },
+  { path: "/order-return-requests", component: <OrderReturnRequests /> },
 
   // not found page
   { path: "*", component: <NotFoundPage /> },

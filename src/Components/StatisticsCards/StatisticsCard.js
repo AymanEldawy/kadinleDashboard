@@ -22,7 +22,7 @@ const StatisticsCard = ({
   return (
     <div className="bg-white rounded-[2px] p-4 text-[#212529]">
       <div className="flex justify-between items-center gap-1">
-        <h2 className="w-1/2 overflow-hidden whitespace-nowrap text-ellipsis uppercase text-sm">
+        <h2 className="w-1/2 overflow-hidden whitespace-nowrap text-ellipsis uppercase text-sm font-medium">
           {fetchWord(name, lang)}
         </h2>
         <p

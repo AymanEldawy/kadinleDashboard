@@ -76,6 +76,15 @@ const SuperTable = ({
       let newList = [];
       for (const col of columns) {
         for (const item of data) {
+          let stringItem = JSON.stringify(item);
+          if (
+            stringItem
+              ?.toLocaleLowerCase()
+              ?.indexOf(searchValue?.toLowerCase()) !== -1
+          )
+            newList.push(item);
+          console.log(JSON.stringify(item));
+          // if(item[col] === 'object')
           if (typeof item[col] == "string") {
             if (
               item[col]?.toLowerCase()?.startsWith(searchValue?.toLowerCase())
@@ -140,41 +149,44 @@ const SuperTable = ({
     });
   }
 
-  const handelSelect = useCallback(
-    (itemId) => {
-      if (selectedList[itemId]) {
-        let newSelectedList = selectedList;
-        delete newSelectedList[itemId];
-        setSelectedList((prev) => {
-          return {
-            ...prev,
-            ...newSelectedList,
-          };
-        });
-      } else {
-        setSelectedList((prev) => {
-          return {
-            ...prev,
-            [itemId]: itemId,
-          };
-        });
-      }
-    },
-    [selectedList]
-  );
+  const handelSelect = (itemId) => {
+    if (selectedList[itemId]) {
+      let newSelectedList = selectedList;
+      delete newSelectedList[itemId];
+      setSelectedList((prev) => {
+        return {
+          ...prev,
+          ...newSelectedList,
+        };
+      });
+    } else {
+      setSelectedList((prev) => {
+        return {
+          ...prev,
+          [itemId]: itemId,
+        };
+      });
+    }
+  };
+  //   [selectedList]
+  // );
   const handleSelectedAll = useCallback(
     (e) => {
       if (!e?.target?.checked) {
         setSelectedList({});
       } else {
         let newList = {};
+        let count = 0;
         for (const key in data) {
-          newList[data?.[key]?.id] = data?.[key]?.id;
+          let uniqueKey = data?.[key]?.id ? data?.[key]?.id : data?.[key].email;
+          if (count >= itemsPerPage) break;
+          newList[uniqueKey] = uniqueKey;
+          count++;
         }
         setSelectedList(newList);
       }
     },
-    [selectedList]
+    [selectedList, itemsPerPage, data]
   );
 
   const handlePageClick = (event) => {
@@ -272,8 +284,10 @@ const SuperTable = ({
                         <input
                           className="w-4 h-4 mx-auto block"
                           type="checkbox"
-                          checked={!!selectedList?.[row?.id]}
-                          onChange={() => handelSelect(row?.id)}
+                          checked={
+                            !!selectedList?.[row?.id ? row?.id : row?.email]
+                          }
+                          onChange={() => handelSelect(row?.id || row?.email)}
                         />
                       </TableCol>
                     ) : null}

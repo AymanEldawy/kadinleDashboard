@@ -14,6 +14,8 @@ const DynamicList = ({
   onAddClick,
   oldData,
   renderTableAction,
+  setSelectedList,
+  selectedList,
 }) => {
   const { loading, getData } = useFetch();
   const { deleteItem } = useDelete();
@@ -22,12 +24,13 @@ const DynamicList = ({
   const [searchValue, setSearchValue] = useState("");
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [itemsPerPage, setItemsPerPage] = useState(20);
-  const [selectedList, setSelectedList] = useState({});
+  const [,] = useState({});
 
   const handleDeleteItem = async (selectedList) => {
     await deleteItem(tableName, selectedList);
     setRefresh((p) => !p);
   };
+
   useEffect(() => {
     (async () => {
       if (!!oldData) {

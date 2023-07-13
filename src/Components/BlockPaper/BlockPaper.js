@@ -8,16 +8,20 @@ const BlockPaper = ({
   children,
   fullWidth,
   containerClassName,
+  subTitle,
 }) => {
   return (
-    <div className={`!mb-8 overflow-hidden ${containerClassName}`}>
+    <div className={`!mb-8 overflow-hidden relative ${containerClassName}`}>
       <div className={`overflow-hidden`}>
         <div className="p-4 shadow bg-white  dark:bg-bgmaindark rounded-md">
           {title ? (
-            <h3 className="capitalize border-b mb-4 pb-2 text-lg font-medium text-gray-600 dark:border-[#333] dark:text-white">
-              {" "}
-              {title}{" "}
-            </h3>
+            <div className=" border-b mb-4 pb-2 ">
+              <h3 className="capitalizetext-lg font-medium text-gray-600 dark:border-[#333] dark:text-white">
+                {" "}
+                {title}{" "}
+              </h3>
+              {subTitle ? `subTitle` : null}
+            </div>
           ) : null}
           {contentBar ? contentBar : null}
           <div className="overflow-hidden">{children}</div>

@@ -80,6 +80,8 @@ import {
   WarehouseAvailability,
   Warehouses,
 } from "./../Pages/Tables";
+import SelectProduct from "../Pages/ActionsFeatures/SelectProducts";
+import UploadSheet from "../Pages/ActionsFeatures/UploadSheet";
 
 const authProtectedRoutes = [
   // add paths
@@ -233,6 +235,11 @@ const authProtectedRoutes = [
   { path: "/order-status", component: <OrderStatus /> },
   { path: "/return-status", component: <ReturnStatus /> },
 
+  // actions
+  { path: "/return-status", component: <ReturnStatus /> },
+  { path: "/select-products", component: <SelectProduct /> },
+  { path: "/upload-sheet", component: <UploadSheet /> },
+  { path: "/send-email", component: "" },
   // not found page
   { path: "*", component: <NotFoundPage /> },
 ];

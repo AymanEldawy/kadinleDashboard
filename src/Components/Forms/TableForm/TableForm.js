@@ -52,17 +52,16 @@ const TableForm = ({
 
   const handelChangeField = useCallback(
     (index, name, value) => {
-      
       setGrid((prev) => {
         return {
           ...prev,
           [index]: { ...prev?.[index], [name]: value },
         };
       });
-      if(!!setGetIndexOfRowUpdated){
+      if (!!setGetIndexOfRowUpdated) {
         setGetIndexOfRowUpdated(index);
       }
-      console.log(index)
+      // console.log(index)
     },
     [grid]
   );
@@ -73,8 +72,9 @@ const TableForm = ({
   return (
     <>
       <Table
-        className={`${columns?.length > 5 ? "" : "max-w-[900px]"
-          } mx-auto pb-8 overflow-auto max-h-[420px] dark:border-borderdark`}
+        className={`${
+          columns?.length > 5 ? "" : "max-w-[900px]"
+        } mx-auto pb-8 overflow-auto max-h-[420px] dark:border-borderdark`}
       >
         <TableHead classes="dark:bg-[##5490d3] !bg-[#5490d3] text-white dark:text-gray-200">
           <TableHeadCol classes="border border-gray-300 dark:border-borderdark !py-3 !text-center">
@@ -95,22 +95,28 @@ const TableForm = ({
             .map((r, index) => (
               <TableRow
                 key={`${r}-${index}`}
-                classes={!!onSelectColor ? selectedColor === index + 1 ? "bg-gray-200" : "" : ""}
+                classes={
+                  !!onSelectColor
+                    ? selectedColor === index + 1
+                      ? "bg-gray-200"
+                      : ""
+                    : ""
+                }
               >
                 <TableCol classes="max-w-fit !p-0 border dark:border-borderdark text-center">
                   {!!setIndex || onSelectColor ? (
                     <button
                       className="hover:bg-gray-200 hover:font-medium block w-full p-2"
                       onClick={() => {
-                        console.log("run...", index, selectedColor);
-                        console.log(grid?.[index + 1]);
+                        // console.log("run...", index, selectedColor);
+                        // console.log(grid?.[index + 1]);
                         if (onOpen) {
                           onOpen();
                           setIndex(index + 1);
                         }
                         if (!!onSelectColor && grid?.[index]?.Color) {
                           onSelectColor(index + 1);
-                          console.log(grid?.[index]?.Color)
+                          // console.log(grid?.[index]?.Color)
                         }
                       }}
                     >
@@ -141,12 +147,13 @@ const TableForm = ({
                         value={
                           field?.type === "color"
                             ? getValueOfInputColor(
-                              grid?.[index + 1]?.[field?.name]
-                            )
+                                grid?.[index + 1]?.[field?.name]
+                              )
                             : grid?.[index + 1]?.[field?.name]
                         }
-                        className={`!border-0 !rounded-none !bg-transparent ${field?.type === "color" ? "" : "!h-full"
-                          }`}
+                        className={`!border-0 !rounded-none !bg-transparent ${
+                          field?.type === "color" ? "" : "!h-full"
+                        }`}
                         name={field?.name}
                         type={field?.type}
                         required={field?.required}

@@ -1,62 +1,38 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
-import TabsList from "../../Components/Tabs/TabsList";
-import { CloseIcon, PlusIcon } from "../../Helpers/Icons";
-import { useFetch } from "../../hooks/useFetch";
-import { Button } from "../Global/Button";
-import TabsContent from "./../../Components/Tabs/TabsContent";
-import CheckboxField from "./CheckboxField";
-import InputField from "./InputField";
-import RadioField from "./RadioField";
-import SelectField from "./SelectField";
-import UploadFile from "./UploadFile";
+import CheckboxField from "../../../Components/CustomForm/CheckboxField";
+import InputField from "../../../Components/CustomForm/InputField";
+import RadioField from "../../../Components/CustomForm/RadioField";
+import SelectField from "../../../Components/CustomForm/SelectField";
+import UploadFile from "../../../Components/CustomForm/UploadFile";
+import { Button } from "../../../Components/Global/Button";
+import { CloseIcon, PlusIcon } from "../../../Helpers/Icons";
 
-let CACHED_TABLE = {};
-
-export const FormIncreasable = ({
+export const FormProductIncreasable = ({
   initialFields,
   onSubmit,
   increasableTitle,
   onChangeValues,
   resetForm,
+  getCachedList,
+  values,
+  setValues,
 }) => {
-  const { getData } = useFetch();
-  const location = useLocation();
-
-  const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
-  const [listCount, setListCount] = useState([`00 ${uuidv4()}`]);
+  const [listCount, setListCount] = useState([uuidv4()]);
   const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     if (resetForm) setValues({});
   }, [resetForm]);
   useEffect(() => {
-    checkRefTable(initialFields);
-  }, [initialFields]);
-  useEffect(() => {
     if (!!onChangeValues) onChangeValues(values);
   }, [values]);
-
-  async function checkRefTable(fields) {
-    if (!fields?.length) return;
-    for (const field of fields) {
-      if (field.key === "ref") {
-        const data = await getData(field?.tableName);
-        CACHED_TABLE[field?.tableName] = data;
-      }
-    }
-  }
-  const getCachedList = (tableName) => {
-    // console.log(tableName);
-    return CACHED_TABLE?.[tableName];
-  };
 
   const insertIntoErrors = (name, value) => {
     if (value === "") {
@@ -113,29 +89,33 @@ export const FormIncreasable = ({
 
   const submit = (e) => {
     e.preventDefault();
+    if (!values) {
+      toast.error("Please Fill the required Fields");
+      return;
+    }
     if (!errors.length) {
       onSubmit(values);
     }
   };
   const increaseLanguages = () => {
-    setListCount((prev) => [...prev, `index ${uuidv4()}`]);
+    setListCount((prev) => [...prev, uuidv4()]);
   };
   const resetItemData = (item) => {
     let list = values;
     delete list[item];
     setValues(list);
+    console.log(list);
   };
-  const decreaseLanguages = (index) => {
-    resetItemData(listCount[index]);
+  const decreaseLanguages = (item, index) => {
     if (index === activeTab) {
-      if (index !== 0) {
+      if (item !== 0) {
         setActiveTab((prev, i) => i - 1);
       } else {
         setActiveTab((prev, i) => i + 1);
       }
-      // setActiveTab(() =);
     }
-    setListCount((prev) => prev?.filter((item, i) => i !== index));
+    setListCount((prev) => prev?.filter((currentItem, i) => i !== index));
+    setActiveTab(0);
   };
   useEffect(() => {}, [activeTab]);
 
@@ -145,6 +125,7 @@ export const FormIncreasable = ({
         <div className="mb-4 border-b flex flex-wrap w-full">
           {listCount?.map((item, index) => (
             <button
+              key={index}
               className={`text-gray-500 pb-2 text-xs border-b-2 -mb-[2px] !gap-1 !px-1 p-2 capitalize flex items-center ${
                 index === activeTab
                   ? "border-primary-blue text-primary-blue font-medium"
@@ -156,7 +137,7 @@ export const FormIncreasable = ({
               {listCount.length === 1 ? null : (
                 <CloseIcon
                   className="!text-red-500 w-4 h-4"
-                  onClick={() => decreaseLanguages(index)}
+                  onClick={() => decreaseLanguages(item, index)}
                 />
               )}
             </button>
@@ -173,12 +154,16 @@ export const FormIncreasable = ({
         <form
           className={`mb-8 ${activeTab === index ? "" : "hidden"}`}
           tabName={item}
-          key={item}
+          key={`${index}-add`}
         >
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
             {!!initialFields
               ? initialFields?.map((field, i) => {
-                  if (field?.name === "id" || field?.hide_in_add_form)
+                  if (
+                    field?.name === "id" ||
+                    field?.hide_in_add_form ||
+                    field?.hide_in_add_form_add
+                  )
                     return null;
                   if (field?.key === "input") {
                     return (

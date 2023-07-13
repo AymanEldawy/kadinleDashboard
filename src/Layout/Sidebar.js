@@ -1,6 +1,5 @@
-import * as React from "react";
-import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import logoIcon from "../Assets/Images/logo-icon.png";
 import logo from "../Assets/Images/logo.svg";
@@ -8,7 +7,8 @@ import { ChevronIcon } from "../Helpers/Icons";
 import { menuData } from "../Helpers/menu";
 
 const Sidebar = ({ open, setOpen }) => {
-  const [dropdown, setDropdown] = React.useState(false);
+  const location = useLocation();
+  const [dropdown, setDropdown] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     if (!open) setDropdown("");
@@ -46,9 +46,9 @@ const Sidebar = ({ open, setOpen }) => {
             }`}
           >
             <button
-              className={`whitespace-nowrap capitalize px-2 gap-3 flex justify-between items-center hover:text-blue-600  dark:hover:bg-transparent dark:hover:text-white py-2 w-full ${
-                dropdown[level] == item?.name
-                  ? " text-blue-600 dark:text-white"
+              className={`whitespace-nowrap capitalize px-2 gap-3 flex justify-between items-center hover:text-primary-blue  dark:hover:bg-transparent dark:hover:text-white py-2 w-full ${
+                dropdown[level] === item?.name
+                  ? " text-primary-blue dark:text-white"
                   : ""
               } `}
               onClick={() => handleClick(item?.name, level)}
@@ -69,7 +69,12 @@ const Sidebar = ({ open, setOpen }) => {
                 <Link
                   to={item?.path}
                   // onClick={() => setOpen(false)}
-                  className={`flex-1 capitalize flex ${open ? "" : ""}`}
+                  className={`flex-1 capitalize flex ${open ? "" : ""} ${
+                    dropdown[level] === item?.name ||
+                    item?.path === location?.pathname
+                      ? "text-primary-blue"
+                      : ""
+                  }`}
                 >
                   {item?.name}
                 </Link>
@@ -95,9 +100,10 @@ const Sidebar = ({ open, setOpen }) => {
             }`}
           >
             <button
-              className={`whitespace-nowrap gap-3 capitalize justify-between hover:text-blue-600 py-2 hover:bg-gray-100 dark:hover:bg-transparent dark:hover:text-white px-4 w-full flex ${
-                dropdown[level] === item?.name
-                  ? " text-blue-600 dark:text-white"
+              className={`whitespace-nowrap gap-3 capitalize justify-between hover:text-primary-blue py-2 hover:bg-gray-100 dark:hover:bg-transparent dark:hover:text-white px-4 w-full flex ${
+                dropdown[level] === item?.name ||
+                item?.path === location?.pathname
+                  ? " text-primary-blue dark:text-white"
                   : ""
               } `}
               onClick={() => handleClick(item?.name, level)}
@@ -126,12 +132,17 @@ const Sidebar = ({ open, setOpen }) => {
           className="relative w-full capitalize"
         >
           {item?.path === "" ? (
-            <button className="whitespace-nowrap capitalize hover:text-blue-600 dark:hover:bg-transparent dark:hover:text-white py-2 px-4 w-full flex">
+            <button className="whitespace-nowrap capitalize hover:text-primary-blue dark:hover:bg-transparent dark:hover:text-white py-2 px-4 w-full flex">
               {item.name}
             </button>
           ) : (
             <Link
-              className="whitespace-nowrap capitalize hover:text-blue-600 dark:hover:bg-transparent dark:hover:text-white py-2 px-4 w-full flex"
+              className={`whitespace-nowrap capitalize hover:text-primary-blue dark:hover:bg-transparent dark:hover:text-white py-2 px-4 w-full flex ${
+                dropdown[level] === item?.name ||
+                item?.path === location?.pathname
+                  ? " text-primary-blue dark:text-white"
+                  : ""
+              }`}
               to={item?.path}
               // onClick={() => setOpen(false)}
             >
@@ -147,7 +158,7 @@ const Sidebar = ({ open, setOpen }) => {
       className={`h-[100dvh] top-0 sticky shadow overflow-hidden flex flex-col z-50 transition-all duration-300 bg-white dark:bg-bgmaindark ${
         open ? "translate-x-0 min-w-[250px] " : "w-12 overflow-x-hidden"
       } hover:w-[250px]`}
-      onMouseLeave={() => (dropdown ? setDropdown("") : undefined)}
+      onMouseLeave={() => (dropdown && !open ? setDropdown("") : undefined)}
     >
       <div className=" h-20 flex items-center justify-center ">
         <img

@@ -3,13 +3,12 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { useFetch } from "../../hooks/useFetch";
-import { Button } from "../Global/Button";
-import CheckboxField from "./CheckboxField";
-import InputField from "./InputField";
-import RadioField from "./RadioField";
-import SelectField from "./SelectField";
-import UploadFile from "./UploadFile";
+import CheckboxField from "../../../Components/CustomForm/CheckboxField";
+import InputField from "../../../Components/CustomForm/InputField";
+import RadioField from "../../../Components/CustomForm/RadioField";
+import SelectField from "../../../Components/CustomForm/SelectField";
+import UploadFile from "../../../Components/CustomForm/UploadFile";
+import { Button } from "../../../Components/Global/Button";
 
 const AddProductForm = ({
   onSubmit,
@@ -20,6 +19,8 @@ const AddProductForm = ({
   getCachedList,
   values,
   setValues,
+  allMultiple,
+  getImagesValueOnChange,
 }) => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -27,11 +28,9 @@ const AddProductForm = ({
   const location = useLocation();
 
   useEffect(() => {
-    if (resetForm) {
-      setValues({});
-      setErrors({});
-      setTouched({});
-    }
+    setValues({});
+    setErrors({});
+    setTouched({});
   }, [resetForm]);
   useEffect(() => {
     setErrors({});
@@ -68,7 +67,7 @@ const AddProductForm = ({
   };
   const handelChangeField = (name, value, required) => {
     if (required) {
-      insertIntoErrors(name, "value");
+      insertIntoErrors(name, value);
     }
     setValues((prev) => {
       return {
@@ -84,9 +83,14 @@ const AddProductForm = ({
     setValues((prev) => {
       return {
         ...prev,
-        [name]: URL.createObjectURL(e.target.files[0]),
+        [name]: !!allMultiple
+          ? Array.from(e.target.files)?.length
+          : URL.createObjectURL(e.target.files[0]),
       };
     });
+    if (!!allMultiple && !!getImagesValueOnChange) {
+      getImagesValueOnChange(e.target.files);
+    }
   };
 
   const submit = (e) => {
@@ -110,7 +114,7 @@ const AddProductForm = ({
                 return (
                   <InputField
                     value={values?.[field?.name]}
-                    key={`${field?.name}`}
+                    index={i}
                     type={field?.type}
                     name={field?.name}
                     label={field?.name}
@@ -124,7 +128,9 @@ const AddProductForm = ({
                     onChange={(e) =>
                       handelChangeField(
                         field?.name,
-                        e.target.value,
+                        field?.type === "number"
+                          ? +e.target.value
+                          : e.target.value,
                         field?.required
                       )
                     }
@@ -133,7 +139,7 @@ const AddProductForm = ({
               } else if (field?.key === "ref") {
                 return (
                   <SelectField
-                    key={`${field?.name}`}
+                    index={i}
                     value={values?.[field?.name]}
                     label={field?.name}
                     list={
@@ -143,13 +149,20 @@ const AddProductForm = ({
                     keyValue={field?.refId || "id"}
                     name={field?.name}
                     required={field?.required}
+                    onChange={(e) =>
+                      handelChangeField(
+                        field?.name,
+                        e.target.value,
+                        field?.required
+                      )
+                    }
                   />
                 );
               } else if (field?.key === "radio") {
                 return (
                   <RadioField
                     defaultChecked={values?.[field?.name]}
-                    key={`${field?.name}`}
+                    index={i}
                     label={field?.label}
                     name={field?.name}
                     required={field?.required}
@@ -169,35 +182,11 @@ const AddProductForm = ({
                     }
                   />
                 );
-              } else if (field?.key === "select") {
-                return (
-                  <SelectField
-                    defaultValue={values?.[field?.name]}
-                    key={`${field?.name}`}
-                    name={field?.name}
-                    label={field?.name}
-                    onFocus={() => onTouched(field?.name)}
-                    required={field?.required}
-                    list={field?.list}
-                    error={
-                      touched[field?.name] && errors[field?.name]
-                        ? errors[field?.name]
-                        : null
-                    }
-                    onChange={(e) =>
-                      handelChangeField(
-                        field?.name,
-                        e.target.value,
-                        field?.required
-                      )
-                    }
-                  />
-                );
               } else if (field?.key === "checkbox") {
                 return (
                   <CheckboxField
                     defaultChecked={values?.[field?.name]}
-                    key={`${field?.name}`}
+                    index={i}
                     label={field?.name}
                     name={field?.name}
                     required={field?.required}
@@ -208,20 +197,20 @@ const AddProductForm = ({
                         : null
                     }
                     list={field?.list}
-                    onChange={(e) =>
+                    onChange={(e) => {
                       handelChangeField(
                         field?.name,
-                        e.target.value,
+                        e.target.checked,
                         field?.required
-                      )
-                    }
+                      );
+                    }}
                   />
                 );
               } else if (field?.key === "image") {
                 return (
                   <UploadFile
                     src={values?.[field?.name]}
-                    key={`${field?.name}`}
+                    index={i}
                     name={field?.name}
                     label={field?.name}
                     onFocus={() => onTouched(field?.name)}
@@ -234,13 +223,14 @@ const AddProductForm = ({
                     onChange={(e) =>
                       handelFieldUpload(field?.name, e, field?.required)
                     }
+                    multiple={allMultiple}
                   />
                 );
               } else {
                 return (
                   <InputField
                     value={values?.[field?.name]}
-                    key={`${field?.name}`}
+                    index={i}
                     name={field?.name}
                     type={field?.type}
                     label={field?.name}
@@ -254,7 +244,9 @@ const AddProductForm = ({
                     onChange={(e) =>
                       handelChangeField(
                         field?.name,
-                        e.target.value,
+                        field?.type === "number"
+                          ? +e.target.value
+                          : e.target.value,
                         field?.required
                       )
                     }

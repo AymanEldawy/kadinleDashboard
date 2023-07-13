@@ -19,10 +19,10 @@ const Checkbox = ({
           name={name}
           checked={checked}
           id={label}
-          type="checkbox"
           value={value}
           className="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
           {...field}
+          type="checkbox"
           onChange={onChange}
         />
         {label ? <span className="ml-1 rtl:mr-1 rtl:ml-0">{label}</span> : ""}

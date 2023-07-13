@@ -40,26 +40,13 @@ const Update = () => {
   useEffect(() => {}, [tableContentData]);
 
   const onSubmit = async (data) => {
-    console.log(data);
-    // await updateItem(tableName, data);
+    const response = await updateItem(tableName, data);
+    console.log(response);
   };
-  const onSubmitContent = async (data) => {
-    const list = Object.values(data);
-    if (list?.length) {
-      for (const item of list) {
-        // const response = await updateItem(`${tableName}_content`, item?.id);
-        console.log(" -- ", item);
-      }
-    }
-    console.log(data);
-
-    // let filterData = {};
-    // let fields = CACHE_FIELDS[activeStage];
-    // for (const item of Object.keys(data)) {
-    //   if (fields?.find((field) => field?.name === item)) {
-    //     filterData[item] = data[item];
-    //   }
-    // }
+  const onSubmitContent = async (data, index) => {
+    console.log(data, index);
+    const response = await updateItem(`${tableName}_content`, data);
+    console.log(response);
   };
   console.log(tableData);
   return (
@@ -73,7 +60,7 @@ const Update = () => {
       </BlockPaper>
       {tableContentData?.length ? (
         <div>
-          {tableContentData?.map((item) => {
+          {tableContentData?.map((item, index) => {
             console.log(item);
             return (
               <div key={item?.id}>
@@ -81,7 +68,7 @@ const Update = () => {
                   <SuperForm
                     oldValues={item}
                     initialFields={fields_content}
-                    onSubmit={onSubmit}
+                    onSubmit={(data) => onSubmitContent(data, index)}
                   />
                 </BlockPaper>
               </div>

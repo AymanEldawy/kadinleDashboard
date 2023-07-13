@@ -1,22 +1,49 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useCallback } from "react";
 import { useParams } from "react-router-dom";
 
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
-import AddProductForm from "../../Components/CustomForm/AddProductForm";
-import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
-import SuperForm from "../../Components/CustomForm/SuperForm";
-import DB_API from "../../Helpers/Forms/databaseApi";
+import {
+  product as fields,
+  product_content as fields_content,
+  product_image as fields_image,
+  product_variant as fields_variant,
+  stock_fields,
+} from "../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../hooks/useAdd";
 import { useFetch } from "../../hooks/useFetch";
 import { useUpdate } from "../../hooks/useUpdate";
-import DynamicForm from "./../Dynamics/DynamicForm";
-import { PlusIcon } from "../../Helpers/Icons";
-import AddProductVariants from "./AddProductVariants";
+import AddProductImages from "./ProductFormsComponents/AddProductImages";
+import AddProductVariants from "./ProductFormsComponents/AddProductVariants";
+import { FormProductIncreasable } from "./ProductFormsComponents/FormProductIncreasable";
+import { toast } from "react-toastify";
+import AddProductForm from "./ProductFormsComponents/AddProductForm";
 
 const CACHED_TABLE = [];
 const STAGES = ["details", "variant", "images"];
+
+const checkRefTable = async (fields, getData) => {
+  console.log("callled");
+  if (!fields?.length) return;
+  console.log(fields);
+  for (const field of fields) {
+    if (
+      field.key === "ref" &&
+      !CACHED_TABLE[field?.tableName] &&
+      !field?.hide_in_add_form_add
+    ) {
+      const data = await getData(field?.tableName);
+      CACHED_TABLE[field?.tableName] = data;
+    }
+  }
+};
+
+const getCachedList = (tableName) => {
+  return CACHED_TABLE?.[tableName];
+};
+
 const AddProduct = ({ layout }) => {
   const params = useParams();
   const { addItem, status } = useAdd();
@@ -24,86 +51,76 @@ const AddProduct = ({ layout }) => {
   const { updateItem } = useUpdate();
   const [data, setData] = useState({});
 
-  const [resetForm, setResetForm] = useState(false);
-  const [itemId, setItemId] = useState();
-  const [increasableVariantsCount, setIncreasableVariantsCount] = useState([1]);
+  const [loading, setLoading] = useState(false);
+
+  const [productId, setProductId] = useState();
+  const [variantIds, setVariantIds] = useState([]);
   const [activeStage, setActiveStage] = useState(STAGES[0]);
   const [productValues, setProductValues] = useState({});
   const [productContentValues, setProductContentValues] = useState({});
   const [productImagesValues, setProductImagesValues] = useState({});
-  const [productVariantValues, setProductVariantValues] = useState({});
-  const [productWarehouseValues, setProductWarehouseValues] = useState({});
+  const [increasableImagesCount, setIncreasableImagesCount] = useState([1]);
 
   const { name: tableName, id } = params;
-
-  const fields = DB_API?.product;
-  const fields_content = DB_API?.product_content;
-  const fields_variant = DB_API?.product_variant;
-  const fields_image = DB_API?.product_image;
-  const fields_color = DB_API?.product_color;
-  const fields_size = DB_API?.product_size;
-  const fields_stock = DB_API?.stock;
   const fetchData = async (table, id) => {
+    if (CACHED_TABLE[tableName]) return;
+    console.log("callled");
     const response = await getData(table, id);
     console.log(response?.[0]);
     setData(response?.[0]);
   };
   useEffect(() => {
     if (layout === "update") fetchData("product", id);
-  }, [id]);
-  useEffect(() => {
-    checkRefTable(fields);
-    checkRefTable(fields_content);
-    checkRefTable(fields_variant);
-    checkRefTable(fields_image);
   }, []);
-  async function checkRefTable(fields) {
-    // console.log(fields);
-    if (!fields?.length) return;
-    for (const field of fields) {
-      if (field.key === "ref") {
-        const data = await getData(field?.tableName);
-        CACHED_TABLE[field?.tableName] = data;
-      }
-    }
-  }
-  const getCachedList = (tableName) => {
-    // console.log(tableName);
-    return CACHED_TABLE?.[tableName];
-  };
+
+  useEffect(() => {
+    let loadingToast = toast.loading("Loading ...");
+    setLoading(true);
+    checkRefTable(fields_content, getData);
+    checkRefTable(fields_variant, getData);
+    checkRefTable(fields_image, getData);
+    checkRefTable(stock_fields, getData);
+    checkRefTable(fields, getData).then((res) => {
+      toast.update(loadingToast, {
+        type: "success",
+        isLoading: false,
+        autoClose: 1000,
+      });
+      setLoading(false);
+    }, []);
+  }, []);
+
   // On Submit product
   const onSubmit = async (data) => {
-    if (layout === "update") {
-      await updateItem(tableName, data);
-    } else {
-      const response = await addItem("product", data);
-      if (response) {
-        setItemId(response?.data?.[0].id);
-      }
-      if (status === "success") setResetForm(true);
+    console.log(data, "product");
+    const response = await addItem("product", data);
+    if (response) {
+      setProductId(response?.data?.[0].id);
     }
+    // if (status === "success") setResetForm(true);
   };
-  // On Submit product content
 
+  // On Submit product content
   const onSubmitContent = async (data) => {
     const list = Object.values(data);
-    if (list?.length && itemId) {
+    if (list?.length && productId) {
       for (const item of list) {
         const response = await addItem(`product_content`, {
           ...item,
-          [`product_id`]: itemId,
+          [`product_id`]: productId,
         });
-        console.log(response, " -- ", item);
+        console.log(response, "content");
       }
     }
-    console.log(data);
-    // itemId
+    console.log(data, "content");
   };
-  // On Submit product variant
-  // On Submit product images
 
+  console.log(CACHED_TABLE);
   return (
     <div>
+      {loading ? (
+        <div className="fixed top-0 left-0 w-full h-full z-[100] bg-[#0003]" />
+      ) : null}
       <BlockPaper title={"Add Product"}>
         <div className="mb-4 border-b flex flex-wrap w-full">
           {STAGES?.map((stage, index) => (
@@ -128,28 +145,20 @@ const AddProduct = ({ layout }) => {
             onSubmit={onSubmit}
           />
         ) : null}
-
-        {activeStage === STAGES[2] ? (
-          <AddProductForm
-            getCachedList={getCachedList}
-            initialFields={fields_image}
-            values={productImagesValues}
-            setValues={setProductImagesValues}
-            onSubmit={onSubmit}
-          />
-        ) : null}
       </BlockPaper>
       {activeStage === STAGES[1] ? (
         <AddProductVariants
           getCachedList={getCachedList}
           fields_variant={fields_variant}
-          productVariantValues={productVariantValues}
-          setProductVariantValues={setProductVariantValues}
-          increasableVariantsCount={increasableVariantsCount}
-          fields_stock={fields_stock}
-          setIncreasableVariantsCount={setIncreasableVariantsCount}
-          productWarehouseValues={productWarehouseValues}
-          setProductWarehouseValues={setProductWarehouseValues}
+          fields_stock={stock_fields}
+          productId={productId}
+        />
+      ) : null}
+      {activeStage === STAGES[2] ? (
+        <AddProductImages
+          getCachedList={getCachedList}
+          fields_image={fields_image}
+          productId={productId}
         />
       ) : null}
       {fields_content?.length && STAGES[0] === activeStage ? (
@@ -162,11 +171,12 @@ const AddProduct = ({ layout }) => {
               : "Add Product Content"
           }
         >
-          <FormIncreasable
+          <FormProductIncreasable
             values={productContentValues}
             setValues={setProductContentValues}
             onSubmit={onSubmitContent}
             initialFields={fields_content}
+            getCachedList={getCachedList}
           />
         </BlockPaper>
       ) : null}

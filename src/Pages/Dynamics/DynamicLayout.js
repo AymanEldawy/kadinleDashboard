@@ -13,16 +13,38 @@ const DynamicLayout = ({
   onAddClick,
   renderTableAction,
   oldValue,
+  getSelectedList,
+  contentBar,
 }) => {
+  const [selectedList, setSelectedList] = useState({});
+  useEffect(() => {
+    console.log(Object.keys(selectedList)?.length);
+    if (!!getSelectedList) getSelectedList(setSelectedList);
+  }, [selectedList]);
+
   return (
-    <BlockPaper title={title}>
+    <BlockPaper
+      title={title}
+      subTitle={
+        Object.keys(selectedList)?.length ? (
+          <p className="text-gray-500 text-xs flex gap-1 items-center">
+            <span className="border-gray-300 border text-black px-1 rounded bg-gray-200">
+              {Object.keys(selectedList)?.length}
+            </span>
+            Selected rows{" "}
+          </p>
+        ) : null
+      }
+      contentBar={contentBar}
+    >
       <DynamicList
         tableName={SUPABASE_TABLE_NAME}
         columns={columns}
-        // data={data}
         renderTableAction={renderTableAction}
         oldValue={oldValue}
         onAddClick={onAddClick}
+        setSelectedList={setSelectedList}
+        selectedList={selectedList}
       />
     </BlockPaper>
   );

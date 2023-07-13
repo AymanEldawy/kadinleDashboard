@@ -328,4 +328,15 @@ export const menuData = [
     name: "warehouse availability",
     children: [],
   },
+  {
+    key: "actions",
+    icon: <GearIcon />,
+    path: "/actions",
+    name: "Actions",
+    children: [
+      { path: "/select-products", name: "Select products" },
+      { path: "/upload-sheet", name: "Upload XLS Sheets" },
+      { path: "/send-email", name: "send newsLetter" },
+    ],
+  },
 ];

@@ -2,22 +2,28 @@
 const address = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
-  { name: "country", type: "uuid", key: "ref", tableName: "country" },
-  { name: "city", type: "text" },
+  {
+    name: "country",
+    type: "uuid",
+    key: "ref",
+    tableName: "country",
+    required: true,
+  },
+  { name: "city", type: "text", required: true },
   { name: "postal_code", type: "number" },
-  { name: "line_one", type: "text" },
+  { name: "line_one", type: "text", required: true },
   { name: "line_two", type: "text" },
 ];
 
 const brand = [
   { name: "id", type: "uuid" },
-  { name: "name", type: "text" },
+  { name: "name", type: "text", required: true },
 ];
 
 const bulk_alert = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
-  { name: "content", type: "text" },
+  { name: "content", type: "text", required: true },
 ];
 
 const category = [
@@ -30,13 +36,13 @@ const category = [
     refName: "title",
     refId: "category_id",
   },
-  { name: "display_homepage", type: "checkbox" },
+  { name: "display_homepage", key: "checkbox" },
   { name: "numeric", type: "text" },
 ];
 
 const category_content = [
   { name: "id", type: "uuid" },
-  { name: "title", type: "text" },
+  { name: "title", type: "text", required: true },
   { name: "description", type: "text" },
   {
     name: "category_id",
@@ -46,9 +52,11 @@ const category_content = [
     refName: "title",
     refId: "category_id",
     hide_in_add_form: true,
+    required: true,
   },
   {
     name: "language_id",
+    required: true,
     type: "uuid",
     key: "ref",
     tableName: "language",
@@ -64,7 +72,13 @@ const chart = [
 
 export const chart_content = [
   { name: "id", type: "uuid" },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
   { name: "name", type: "text" },
   { name: "column1", type: "text" },
   { name: "column2", type: "text" },
@@ -81,18 +95,26 @@ export const chart_content = [
     tableName: "chart",
     refId: "id",
     hide_in_add_form: true,
+    required: true,
   },
 ];
 
 export const chart_data = [
   { name: "id", type: "uuid" },
-  { name: "chart_id", type: "uuid", key: "ref", tableName: "chart" },
+  {
+    name: "chart_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "chart",
+    required: true,
+  },
   {
     name: "product_id",
     type: "uuid",
     key: "ref",
     tableName: "product_content",
     refId: "product_id",
+    required: true,
   },
   {
     name: "size_id",
@@ -100,6 +122,7 @@ export const chart_data = [
     key: "ref",
     tableName: "size_content",
     refId: "size_id",
+    required: true,
   },
   { name: "column1", type: "number" },
   { name: "column2", type: "number" },
@@ -121,14 +144,21 @@ const collar_content = [
     tableName: "collar_content",
     refId: "collar_id",
     hide_in_add_form: true,
+    required: true,
   },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
-  { name: "name", type: "text" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
+  { name: "name", type: "text", required: true },
 ];
 const collection = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date" },
-  { name: "display_home", type: "checkbox" },
+  { name: "display_home", key: "checkbox" },
 ];
 const collection_content = [
   { name: "id", type: "uuid" },
@@ -140,9 +170,16 @@ const collection_content = [
     tableName: "collection_content",
     refId: "collection_id",
     hide_in_add_form: true,
+    required: true,
   },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
-  { name: "name", type: "text" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
+  { name: "name", type: "text", required: true },
   { name: "description", type: "text" },
   { name: "image", type: "text", key: "image" },
 ];
@@ -155,6 +192,7 @@ const collection_product = [
     key: "ref",
     tableName: "collection_content",
     refId: "collection_id",
+    required: true,
   },
   {
     name: "product_id",
@@ -162,12 +200,13 @@ const collection_product = [
     key: "ref",
     tableName: "product_content",
     refId: "product_id",
+    required: true,
   },
 ];
 const color = [
   { name: "id", type: "uuid" },
-  { name: "color_sku", type: "number" },
-  { name: "hex", type: "color" },
+  { name: "color_sku", type: "number", required: true },
+  { name: "hex", type: "color", required: true },
   { name: "image", type: "text", key: "image" },
   {
     name: "parent_id",
@@ -187,9 +226,16 @@ const color_content = [
     tableName: "color_content",
     refId: "color_id",
     hide_in_add_form: true,
+    required: true,
   },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
-  { name: "name", type: "text" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
+  { name: "name", type: "text", required: true },
 ];
 const comment = [
   { name: "id", type: "uuid" },
@@ -200,6 +246,7 @@ const comment = [
     key: "ref",
     tableName: "user",
     refName: "full_name",
+    required: true,
   },
   {
     name: "product_id",
@@ -207,34 +254,53 @@ const comment = [
     key: "ref",
     tableName: "product_content",
     refId: "product_id",
+    required: true,
   },
   { name: "rating", type: "number" },
-  { name: "content", type: "text" },
+  { name: "content", type: "text", required: true },
 ];
 const comment_media = [
   { name: "id", type: "uuid" },
-  { name: "comment_id", type: "uuid", key: "ref", tableName: "comment" },
+  {
+    name: "comment_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "comment",
+    required: true,
+  },
   { name: "url", type: "text" },
   { name: "created_at", type: "date", hide_in_add_form: true },
   { name: "views", type: "number" },
 ];
 const country = [
   { name: "id", type: "uuid" },
-  { name: "name", type: "text" },
+  { name: "name", type: "text", required: true },
   { name: "alph-2", type: "text" },
   { name: "alph-3", type: "text" },
-  { name: "code", type: "text" },
-  { name: "currency_id", type: "uuid", key: "ref", tableName: "currency" },
-  { name: "region_id", type: "uuid", key: "ref", tableName: "region" },
+  { name: "code", type: "text", required: true },
+  {
+    name: "currency_id",
+    type: "uuid",
+    key: "ref",
+    required: true,
+    tableName: "currency",
+  },
+  {
+    name: "region_id",
+    type: "uuid",
+    key: "ref",
+    required: true,
+    tableName: "region",
+  },
 ];
 const coupon = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
-  { name: "code", type: "text" },
-  { name: "value", type: "number" },
-  { name: "percentage", type: "checkbox" },
-  { name: "expiration_date", type: "date" },
-  { name: "public", type: "checkbox" },
+  { name: "code", type: "text", required: true },
+  { name: "value", type: "number", required: true },
+  { name: "percentage", key: "checkbox" },
+  { name: "expiration_date", type: "date", required: true },
+  { name: "public", key: "checkbox" },
 ];
 const credit_card = [
   { name: "id", type: "uuid" },
@@ -243,6 +309,7 @@ const credit_card = [
     name: "user_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "user",
     refName: "full_name",
   },
@@ -252,8 +319,8 @@ const credit_card = [
 ];
 const currency = [
   { name: "id", type: "uuid" },
-  { name: "name", type: "text" },
-  { name: "code", type: "text" },
+  { name: "name", type: "text", required: true },
+  { name: "code", type: "text", required: true },
   { name: "rate", type: "number" },
   { name: "exchange_percent", type: "number" },
 ];
@@ -264,11 +331,18 @@ const fabric_content = [
     name: "fabric_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "fabric_content",
     refId: "fabric_id",
     hide_in_add_form: true,
   },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
   { name: "name", type: "text" },
 ];
 const feature = [{ name: "id", type: "uuid" }];
@@ -278,24 +352,31 @@ const feature_content = [
     name: "feature_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "feature_content",
     refId: "feature_id",
     hide_in_add_form: true,
   },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
   { name: "name", type: "text" },
 ];
 const home_reviews = [
   { name: "id", type: "uuid" },
-  { name: "name", type: "text" },
+  { name: "name", type: "text", required: true },
   { name: "rating", type: "number" },
-  { name: "content", type: "text" },
+  { name: "content", type: "text", required: true },
   { name: "image", type: "text", key: "image" },
 ];
 const language = [
   { name: "id", type: "uuid" },
-  { name: "name", type: "text" },
-  { name: "code", type: "text" },
+  { name: "name", type: "text", required: true },
+  { name: "code", type: "text", required: true },
 ];
 const lining = [{ name: "id", type: "uuid" }];
 const lining_content = [
@@ -304,17 +385,24 @@ const lining_content = [
     name: "lining_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "lining_content",
     refId: "lining_id",
     hide_in_add_form: true,
   },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
   { name: "name", type: "text" },
 ];
 const logs = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
-  { name: "description", type: "text" },
+  { name: "description", type: "text", required: true },
   { name: "row_id", type: "uuid" },
   { name: "table_name", type: "text" },
 ];
@@ -325,41 +413,57 @@ const material_content = [
     name: "material_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "material_content",
     refId: "material_id",
     hide_in_add_form: true,
   },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
   { name: "name", type: "text" },
 ];
 const news = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date" },
-  { name: "content", type: "text" },
+  { name: "content", type: "text", required: true },
 ];
 const newsletter = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date" },
-  { name: "subject", type: "text" },
-  { name: "content", type: "text" },
+  { name: "subject", type: "text", required: true },
+  { name: "content", type: "text", required: true },
 ];
-const newsletter_subscription = [{ name: "email", type: "email" }];
+const newsletter_subscription = [
+  { name: "email", type: "email", required: true },
+];
 const offer = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date" },
   { name: "numerical", type: "number" },
-  { name: "display_home", type: "checkbox" },
+  { name: "display_home", key: "checkbox" },
 ];
 export const offer_content = [
   { name: "id", type: "uuid" },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
-  { name: "name", type: "text" },
-  { name: "description", type: "text" },
-  { name: "media", type: "text" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
+  { name: "name", type: "text", required: true },
+  { name: "description", type: "text", required: true },
+  { name: "media", type: "text", required: true },
   {
     name: "offer_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "offer_content",
     refId: "offer_id",
     hide_in_add_form: true,
@@ -372,6 +476,7 @@ const offer_product = [
     name: "product_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "product_content",
     refId: "product_id",
   },
@@ -379,6 +484,7 @@ const offer_product = [
     name: "offer_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "offer_content",
     refId: "offer_id",
   },
@@ -390,20 +496,28 @@ export const order = [
     name: "user_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "user",
     refName: "full_name",
   },
   { name: "shipping_adress", type: "uuid" },
-  { name: "price", type: "number" },
+  { name: "price", type: "number", required: true },
   { name: "discount", type: "number" },
   // { name: "payment_status", type: "uuid" },
-  { name: "warehouse_from", type: "uuid", key: "ref", tableName: "warehouse" },
+  {
+    name: "warehouse_from",
+    type: "uuid",
+    key: "ref",
+    required: true,
+    tableName: "warehouse",
+  },
   { name: "shipping_date", type: "date" },
   // { name: "credit_card_id", type: "uuid" },
   {
     name: "coupon_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "coupon",
     refName: "code",
   },
@@ -412,6 +526,7 @@ export const order = [
     name: "order_status",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "order_status_content",
     refId: "order_status_id",
     refName: "status",
@@ -424,6 +539,7 @@ const order_content = [
     name: "order_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "order_content",
     refId: "order_id",
     hide_in_add_form: true,
@@ -432,10 +548,11 @@ const order_content = [
     name: "variant_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "product_variant",
     refName: "sku",
   },
-  { name: "quantity", type: "number" },
+  { name: "quantity", type: "number", required: true },
 ];
 export const order_return_request = [
   { name: "id", type: "uuid" },
@@ -444,6 +561,7 @@ export const order_return_request = [
     name: "order_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "order_content",
     refId: "order_id",
   },
@@ -451,11 +569,18 @@ export const order_return_request = [
     name: "variant_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "product_variant",
     refName: "sku",
   },
-  { name: "reason", type: "text" },
-  { name: "return_status", type: "uuid" },
+  { name: "reason", type: "text", required: true },
+  {
+    name: "return_status",
+    type: "uuid",
+    tableName: "return_status_content",
+    refId: "return_status_id",
+    required: true,
+  },
 ];
 
 const order_status = [
@@ -464,16 +589,23 @@ const order_status = [
 ];
 const order_status_content = [
   { name: "id", type: "uuid" },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
   {
     name: "order_status_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "order_status_content",
     refName: "status",
     hide_in_add_form: true,
   },
-  { name: "status", type: "text" },
+  { name: "status", type: "text", required: true },
 ];
 const pattern = [{ name: "id", type: "uuid" }];
 const pattern_content = [
@@ -482,11 +614,18 @@ const pattern_content = [
     name: "pattern_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "pattern_content",
     refId: "pattern_id",
     hide_in_add_form: true,
   },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
   { name: "name", type: "text" },
 ];
 const payment_status = [
@@ -495,29 +634,43 @@ const payment_status = [
 ];
 const payment_status_content = [
   { name: "id", type: "uuid" },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
   {
     name: "payment_status_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "payment_status",
   },
   { name: "status", type: "text" },
 ];
 const point_content = [
   { name: "id", type: "uuid" },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
   {
     name: "point_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "point_content",
     refId: "point_id",
     refName: "numeric",
     hide_in_add_form: true,
   },
-  { name: "cause", type: "text" },
-  { name: "point_count", type: "number" },
+  { name: "cause", type: "text", required: true },
+  { name: "point_count", type: "number", required: true },
 ];
 const point = [
   { name: "id", type: "uuid" },
@@ -525,27 +678,29 @@ const point = [
 ];
 export const product = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
-  { name: "product_sku", type: "text" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
+  { name: "product_sku", type: "text", required: true },
   {
     name: "category_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "category_content",
     refId: "category_id",
     refName: "title",
   },
-  { name: "price", type: "number" },
+  { name: "price", type: "number", required: true },
   { name: "tax_percent", type: "number" },
-  { name: "display", type: "checkbox" },
+  { name: "display", key: "checkbox" },
   { name: "discount", type: "number" },
-  { name: "featured", type: "checkbox" },
+  { name: "featured", key: "checkbox" },
   { name: "views", type: "number", hide_in_add_form: true },
-  { name: "barcode", type: "number" },
+  { name: "barcode", type: "number", required: true },
   {
     name: "fabric_id",
     type: "uuid",
     key: "ref",
+    // required: true,
     tableName: "fabric_content",
     refId: "fabric_id",
   },
@@ -553,6 +708,7 @@ export const product = [
     name: "material_id",
     type: "uuid",
     key: "ref",
+    // required: true,
     tableName: "material_content",
     refId: "material_id",
   },
@@ -560,6 +716,7 @@ export const product = [
     name: "lining_id",
     type: "uuid",
     key: "ref",
+    // required: true,
     tableName: "lining_content",
     refId: "lining_id",
   },
@@ -567,6 +724,7 @@ export const product = [
     name: "collar_id",
     type: "uuid",
     key: "ref",
+    // required: true,
     tableName: "collar_content",
     refId: "collar_id",
   },
@@ -574,6 +732,7 @@ export const product = [
     name: "sleeve_id",
     type: "uuid",
     key: "ref",
+    // required: true,
     tableName: "sleeve_content",
     refId: "sleeve_id",
   },
@@ -581,6 +740,7 @@ export const product = [
     name: "season_id",
     type: "uuid",
     key: "ref",
+    // required: true,
     tableName: "season_content",
     refId: "season_id",
   },
@@ -588,15 +748,29 @@ export const product = [
     name: "feature_id",
     type: "uuid",
     key: "ref",
+    // required: true,
     tableName: "feature_content",
     refId: "feature_id",
   },
-  { name: "brand_id", type: "uuid", key: "ref", tableName: "brand" },
-  { name: "origin_id", type: "uuid", key: "ref", tableName: "country" },
+  {
+    name: "brand_id",
+    type: "uuid",
+    key: "ref",
+    required: true,
+    tableName: "brand",
+  },
+  {
+    name: "origin_id",
+    type: "uuid",
+    key: "ref",
+    // required: true,
+    tableName: "country",
+  },
   {
     name: "pattern_id",
     type: "uuid",
     key: "ref",
+    // required: true,
     tableName: "pattern_content",
     refId: "pattern_id",
   },
@@ -608,13 +782,20 @@ export const product_content = [
     name: "product_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "product_content",
     refId: "product_id",
     hide_in_add_form_add: true,
   },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
-  { name: "name", type: "text" },
-  { name: "description", type: "text" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
+  { name: "name", type: "text", required: true },
+  { name: "description", type: "text", required: true },
   { name: "seo_title", type: "text" },
   { name: "seo_description", type: "text" },
 
@@ -627,6 +808,7 @@ export const product_image = [
     name: "product_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "product_content",
     refId: "product_id",
     hide_in_add_form_add: true,
@@ -635,14 +817,16 @@ export const product_image = [
     name: "color_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "color_content",
     refId: "color_id",
   },
-  { name: "image", type: "text", key: "image" },
+  { name: "image", type: "text", key: "image", required: true },
   {
     name: "size_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "size_content",
     refId: "size_id",
   },
@@ -655,6 +839,7 @@ export const product_variant = [
     name: "product_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "product_content",
     refId: "product_id",
     hide_in_add_form_add: true,
@@ -663,6 +848,7 @@ export const product_variant = [
     name: "color_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "color_content",
     refId: "color_id",
   },
@@ -670,11 +856,12 @@ export const product_variant = [
     name: "size_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "size_content",
     refId: "size_id",
   },
   { name: "weight", type: "number" },
-  { name: "sku", type: "text" },
+  { name: "sku", type: "text", required: true },
 ];
 const stock = [
   { name: "id", type: "uuid" },
@@ -682,17 +869,24 @@ const stock = [
     name: "variant_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "product_variant",
     // hide_in_add_form: true,
     refName: "sku",
   },
-  { name: "warehouse_id", type: "uuid", key: "ref", tableName: "warehouse" },
-  { name: "stock", type: "number" },
+  {
+    name: "warehouse_id",
+    type: "uuid",
+    key: "ref",
+    required: true,
+    tableName: "warehouse",
+  },
+  { name: "stock", type: "number", required: true },
 ];
 
 const region = [
   { name: "id", type: "uuid" },
-  { name: "name", type: "text" },
+  { name: "name", type: "text", required: true },
 ];
 const return_status = [
   { name: "id", type: "uuid" },
@@ -700,16 +894,23 @@ const return_status = [
 ];
 const return_status_content = [
   { name: "id", type: "uuid" },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
   {
     name: "return_status_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "return_status_content",
     refId: "return_status_id",
     hide_in_add_form: true,
   },
-  { name: "status", type: "text" },
+  { name: "status", type: "text", required: true },
 ];
 const sale = [
   { name: "id", type: "uuid" },
@@ -718,10 +919,11 @@ const sale = [
     name: "product_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "product_content",
     refId: "product_id",
   },
-  { name: "end_date", type: "date" },
+  { name: "end_date", type: "date", required: true },
 ];
 const season = [{ name: "id", type: "uuid" }];
 const season_content = [
@@ -730,11 +932,18 @@ const season_content = [
     name: "season_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "season_content",
     refId: "season_id",
     hide_in_add_form: true,
   },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
   { name: "name", type: "text" },
 ];
 const showreel = [
@@ -744,6 +953,7 @@ const showreel = [
     name: "user_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "user",
     refName: "full_name",
   },
@@ -751,10 +961,11 @@ const showreel = [
     name: "product_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "product_content",
     refId: "product_id",
   },
-  { name: "url", type: "text" },
+  { name: "url", type: "text", required: true },
   { name: "views", type: "number" },
 ];
 const showreel_like = [
@@ -763,10 +974,17 @@ const showreel_like = [
     name: "user_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "user",
     refName: "full_name",
   },
-  { name: "showreel_id", type: "uuid", key: "ref", tableName: "showreel" },
+  {
+    name: "showreel_id",
+    type: "uuid",
+    key: "ref",
+    required: true,
+    tableName: "showreel",
+  },
 ];
 export const size = [
   { name: "id", type: "uuid" },
@@ -774,26 +992,34 @@ export const size = [
     name: "category_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "category_content",
     refId: "category_id",
     refName: "title",
   },
-  { name: "size_sku", type: "text" },
+  { name: "size_sku", type: "text", required: true },
   { name: "numeric", type: "number" },
 ];
 
 export const size_content = [
   { name: "id", type: "uuid" },
-  { name: "name", type: "text" },
+  { name: "name", type: "text", required: true },
   {
     name: "size_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "size_content",
     refId: "size_id",
     hide_in_add_form: true,
   },
-  { name: "region_id", type: "uuid", key: "ref", tableName: "region" },
+  {
+    name: "region_id",
+    type: "uuid",
+    key: "ref",
+    required: true,
+    tableName: "region",
+  },
 ];
 
 const sleeve = [{ name: "id", type: "uuid" }];
@@ -803,24 +1029,37 @@ const sleeve_content = [
     name: "sleeve_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "sleeve_content",
     refId: "sleeve_id",
     hide_in_add_form: true,
   },
-  { name: "language_id", type: "uuid", key: "ref", tableName: "language" },
-  { name: "name", type: "text" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
+  { name: "name", type: "text", required: true },
 ];
 
 const user = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
-  { name: "full_name", type: "text" },
+  { name: "full_name", type: "text", required: true },
   { name: "last_name", type: "text" },
-  { name: "email", type: "email" },
+  { name: "email", type: "email", required: true },
   { name: "phone", type: "text" },
   { name: "profile_img", type: "text" },
   { name: "wallet", type: "number" },
-  { name: "country", type: "uuid", key: "ref", tableName: "country" },
+  {
+    name: "country",
+    type: "uuid",
+    key: "ref",
+    required: true,
+    tableName: "country",
+  },
   { name: "line_one", type: "text" },
   { name: "line_two", type: "text" },
   { name: "city", type: "text" },
@@ -840,10 +1079,17 @@ const user_address = [
     name: "user_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "user",
     refName: "full_name",
   },
-  { name: "address_id", type: "uuid", key: "ref", tableName: "address" },
+  {
+    name: "address_id",
+    type: "uuid",
+    key: "ref",
+    required: true,
+    tableName: "address",
+  },
   { name: "created_at", type: "date" },
 ];
 const user_alert = [
@@ -853,11 +1099,12 @@ const user_alert = [
     name: "user_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "user",
     refName: "full_name",
   },
-  { name: "content", type: "text" },
-  { name: "status", type: "checkbox" },
+  { name: "content", type: "text", required: true },
+  { name: "status", key: "checkbox" },
   { name: "url", type: "text" },
 ];
 const user_cart = [
@@ -867,6 +1114,7 @@ const user_cart = [
     name: "user_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "user",
     refName: "full_name",
   },
@@ -874,11 +1122,12 @@ const user_cart = [
     name: "variant_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "product_variant",
     refName: "sku",
     // refId: "product_id",
   },
-  { name: "quantity", type: "number" },
+  { name: "quantity", type: "number", required: true },
 ];
 const user_invite = [
   { name: "id", type: "uuid" },
@@ -887,11 +1136,12 @@ const user_invite = [
     name: "user_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "user",
     refName: "full_name",
   },
-  { name: "email", type: "email" },
-  { name: "status", type: "checkbox" },
+  { name: "email", type: "email", required: true },
+  { name: "status", key: "checkbox" },
 ];
 const user_like = [
   { name: "id", type: "uuid" },
@@ -900,10 +1150,17 @@ const user_like = [
     name: "user_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "user",
     refName: "full_name",
   },
-  { name: "product_id", type: "uuid" },
+  {
+    name: "product_id",
+    type: "uuid",
+    tableName: "product_id",
+    refId: "product_id",
+    required: true,
+  },
 ];
 const user_point = [
   { name: "id", type: "uuid" },
@@ -911,13 +1168,14 @@ const user_point = [
     name: "user_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "user",
     refName: "full_name",
   },
-  { name: "point", type: "number" },
+  { name: "point", type: "number", required: true },
   { name: "created_at", type: "date" },
-  { name: "status", type: "text" },
-  { name: "cause", type: "text" },
+  { name: "status", type: "text", required: true },
+  { name: "cause", type: "text", required: true },
 ];
 const user_suggestion = [
   { name: "id", type: "uuid" },
@@ -926,11 +1184,12 @@ const user_suggestion = [
     name: "user_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "user",
     refName: "full_name",
   },
-  { name: "suggestion", type: "text" },
-  { name: "status", type: "checkbox" },
+  { name: "suggestion", type: "text", required: true },
+  { name: "status", key: "checkbox" },
 ];
 const user_ticket = [
   { name: "id", type: "uuid" },
@@ -939,11 +1198,12 @@ const user_ticket = [
     name: "user_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "user",
     refName: "full_name",
   },
-  { name: "ticket", type: "text" },
-  { name: "status", type: "checkbox" },
+  { name: "ticket", type: "text", required: true },
+  { name: "status", key: "checkbox" },
 ];
 const user_wallet = [
   { name: "id", type: "uuid" },
@@ -951,24 +1211,43 @@ const user_wallet = [
     name: "user_id",
     type: "uuid",
     key: "ref",
+    required: true,
     tableName: "user",
     refName: "full_name",
   },
-  { name: "amount", type: "number" },
+  { name: "amount", type: "number", required: true },
   { name: "created_at", type: "date" },
 ];
 const warehouse = [
   { name: "id", type: "uuid" },
-  { name: "name", type: "text" },
-  { name: "address_id", type: "uuid", key: "ref", tableName: "address" },
+  { name: "name", type: "text", required: true },
+  {
+    name: "address_id",
+    type: "uuid",
+    key: "ref",
+    required: true,
+    tableName: "address",
+  },
   { name: "number", type: "text" },
 ];
 const warehouse_availability = [
   { name: "id", type: "uuid" },
-  { name: "warehouse_id", type: "uuid", key: "ref", tableName: "address" },
-  { name: "country_id", type: "uuid", key: "ref", tableName: "country" },
-  { name: "shipping_cost", type: "number" },
-  { name: "fast_shipping", type: "checkbox" },
+  {
+    name: "warehouse_id",
+    type: "uuid",
+    key: "ref",
+    required: true,
+    tableName: "address",
+  },
+  {
+    name: "country_id",
+    type: "uuid",
+    key: "ref",
+    required: true,
+    tableName: "country",
+  },
+  { name: "shipping_cost", type: "number", required: true },
+  { name: "fast_shipping", key: "checkbox" },
   { name: "shipping_duration_min", type: "number" },
   { name: "shipping_duration_max", type: "number" },
   { name: "min_price_free_shipping", type: "number" },
@@ -976,7 +1255,10 @@ const warehouse_availability = [
   { name: "fast_shipping_price", type: "number" },
 ];
 
+export const stock_fields = stock;
+
 const DB_API = {
+  stock_fields,
   address,
   brand,
   bulk_alert,
@@ -1042,8 +1324,8 @@ const DB_API = {
   size_content,
   sleeve,
   sleeve_content,
-  stock,
   user,
+  stock,
   user_address,
   user_alert,
   user_cart,

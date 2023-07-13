@@ -1,9 +1,11 @@
-import { updateItem as updateTheItem } from "../Api/globalActions";
 import { toast } from "react-toastify";
+
+import { updateItem as updateTheItem } from "../Api/globalActions";
 
 export const useUpdate = () => {
   const updateItem = async (table, data) => {
     let loading = toast.loading("Please wait...");
+    console.log(table, data);
     const response = await updateTheItem(table, data);
     if (response.error) {
       toast.update(loading, {

@@ -20,7 +20,9 @@ const TableHeadCol = ({
       }`}
       onClick={() => (!!sort ? sortBy(children) : undefined)}
     >
-      <div className={`flex gap-2 items-center ${contentClassName}`}>
+      <div
+        className={`flex gap-2 items-center justify-center ${contentClassName}`}
+      >
         {children}
         {!!sort ? (
           <span className="text-xs opacity-0 ">

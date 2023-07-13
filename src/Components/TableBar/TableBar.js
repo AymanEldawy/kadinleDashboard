@@ -27,6 +27,7 @@ export const TableBar = ({
   setSearchKey,
   selectedList,
 }) => {
+  let length = Object.keys(selectedList)?.length;
   return (
     <div className="flex justify-between gap-2 mb-4">
       <div className="flex gap-2 items-center">

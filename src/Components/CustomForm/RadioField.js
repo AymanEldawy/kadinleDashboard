@@ -2,13 +2,26 @@ import React from "react";
 
 const RadioField = ({ label, error, list, name, ...field }) => {
   return (
-    <div className="flex flex-col">
+    <div
+      className="flex flex-col"
+      key={`${field?.index}-${field?.label}` || Math.round()}
+    >
       {label ? (
-        <label className="text-sm font-normal mb-1 capitalize">{label}</label>
+        <label className="text-sm font-normal mb-1 capitalize">
+          {label}
+          {field?.required ? (
+            <span className="text-red-500 font-semibold">*</span>
+          ) : (
+            ""
+          )}
+        </label>
       ) : null}
       <div className="flex gap-4 items-center">
         {list?.map((item) => (
-          <label key={item} className="overflow-hidden text-ellipsis flex gap-1 capitalize items-center p-1 px-2 rounded-md has-checked">
+          <label
+            key={item}
+            className="overflow-hidden text-ellipsis flex gap-1 capitalize items-center p-1 px-2 rounded-md has-checked"
+          >
             <input type="radio" name={name} value={item} {...field} />
             <span>{item}</span>
           </label>

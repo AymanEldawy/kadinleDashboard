@@ -105,7 +105,7 @@ export const FormIncreasable = ({
         ...prev,
         [row]: {
           ...prev?.[row],
-          [name]: URL.createObjectURL(e.target.files[0]),
+          [name]: e.target.files[0], //URL.createObjectURL(),
         },
       };
     });

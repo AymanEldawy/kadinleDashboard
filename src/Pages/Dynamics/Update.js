@@ -7,15 +7,21 @@ import SuperForm from "../../Components/CustomForm/SuperForm";
 import DB_API from "../../Helpers/Forms/databaseApi";
 import { useFetch } from "../../hooks/useFetch";
 import { useUpdate } from "../../hooks/useUpdate";
+import {
+  handleUploadCategoryImages,
+  handleUploadColorImage,
+  handleUploadOfferImage,
+  handleUploadReviewerImage,
+} from "../../Api/DynamicUploadHandler";
+import { useGlobalOptions } from "../../Context/GlobalOptions";
 
 const Update = () => {
   const params = useParams();
-  const location = useLocation();
-  const { getData, loading } = useFetch();
+  const { CACHE_LANGUAGES } = useGlobalOptions();
+  const { getData } = useFetch();
   const { updateItem } = useUpdate();
   const { name: tableName, id } = params;
 
-  const [open, setOpen] = useState(false);
   const [tableData, setTableData] = useState(false);
   const [tableContentData, setTableContentData] = useState(false);
   // Handel Submit
@@ -41,9 +47,30 @@ const Update = () => {
 
   const onSubmit = async (data) => {
     const response = await updateItem(tableName, data);
+    if (tableName === "home_reviews") {
+      await handleUploadReviewerImage(data, "update");
+    } else {
+      const response = await updateItem(tableName, data);
+      if (response) {
+        if (tableName === "color") await handleUploadColorImage(data);
+      }
+    }
     console.log(response);
   };
   const onSubmitContent = async (data, index) => {
+    if (!data?.id) return;
+    let list = data;
+    for (const item of list) {
+      if (tableName === "category") {
+        await handleUploadCategoryImages(item, item?.id, CACHE_LANGUAGES);
+      }
+      if (tableName === "offer") {
+        await handleUploadOfferImage(item, item?.id, CACHE_LANGUAGES);
+      }
+      if (tableName === "collection") {
+        await handleUploadOfferImage(item, item?.id, CACHE_LANGUAGES);
+      }
+    }
     console.log(data, index);
     const response = await updateItem(`${tableName}_content`, data);
     console.log(response);

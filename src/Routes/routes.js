@@ -6,6 +6,7 @@ import DynamicForm from "../Pages/Dynamics/DynamicForm";
 import Update from "../Pages/Dynamics/Update";
 import NotFoundPage from "../Pages/NotFoundPage/NotFoundPage";
 import {
+  AddHomeReviewer,
   AddAddress,
   AddBrand,
   AddBulkAlert,
@@ -102,6 +103,7 @@ const authProtectedRoutes = [
   { path: "/add-news", component: <AddNews /> },
   { path: "/add-newsletter", component: <AddNewsletter /> },
   { path: "/add-brand", component: <AddBrand /> },
+  { path: "/add-review", component: <AddHomeReviewer /> },
   {
     path: "/add-collar",
     component: <InsertOne layout="collar" title="add collar" />,

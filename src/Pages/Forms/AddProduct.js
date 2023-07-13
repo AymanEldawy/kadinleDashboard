@@ -20,9 +20,10 @@ import AddProductVariants from "./ProductFormsComponents/AddProductVariants";
 import { FormProductIncreasable } from "./ProductFormsComponents/FormProductIncreasable";
 import { toast } from "react-toastify";
 import AddProductForm from "./ProductFormsComponents/AddProductForm";
+import AddSizeChart from "./ProductFormsComponents/AddSizeChart";
 
 const CACHED_TABLE = [];
-const STAGES = ["details", "variant", "images"];
+const STAGES = ["details", "variant", "images", "size_chart"];
 
 const checkRefTable = async (fields, getData) => {
   console.log("callled");
@@ -122,12 +123,12 @@ const AddProduct = ({ layout }) => {
         <div className="fixed top-0 left-0 w-full h-full z-[100] bg-[#0003]" />
       ) : null}
       <BlockPaper title={"Add Product"}>
-        <div className="mb-4 border-b flex flex-wrap w-full">
+        <div className="mb-4 border-b dark:border-[#333] flex flex-wrap w-full">
           {STAGES?.map((stage, index) => (
             <button
-              className={`text-gray-500 px-4 text-sm border-b-2 -mb-[2px] !gap-1 p-2 capitalize flex items-center ${
+              className={`text-gray-500 px-4 text-sm border-b-2 dark:border-[#333] -mb-[2px] !gap-1 p-2 capitalize flex items-center ${
                 stage === activeStage
-                  ? "border-primary-red text-primary-red font-medium"
+                  ? "!border-primary-red text-primary-red font-medium"
                   : ""
               }`}
               onClick={() => setActiveStage(stage)}
@@ -160,6 +161,9 @@ const AddProduct = ({ layout }) => {
           fields_image={fields_image}
           productId={productId}
         />
+      ) : null}
+      {activeStage === STAGES[3] ? (
+        <AddSizeChart getCachedList={getCachedList} productId={productId} />
       ) : null}
       {fields_content?.length && STAGES[0] === activeStage ? (
         <BlockPaper

@@ -85,7 +85,7 @@ const AddProductForm = ({
         ...prev,
         [name]: !!allMultiple
           ? Array.from(e.target.files)?.length
-          : URL.createObjectURL(e.target.files[0]),
+          : e.target.files[0],
       };
     });
     if (!!allMultiple && !!getImagesValueOnChange) {

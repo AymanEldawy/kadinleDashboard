@@ -6,8 +6,19 @@ import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
 import SuperForm from "../../Components/CustomForm/SuperForm";
 import DB_API from "../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../hooks/useAdd";
+import { uploadCategoryImage } from "../../Api/upload";
+import { useGlobalOptions } from "../../Context/GlobalOptions";
+import {
+  handleUploadCategoryImages,
+  handleUploadColorImage,
+  handleUploadOfferImage,
+  handleUploadReviewerImage,
+} from "../../Api/DynamicUploadHandler";
+
+const MEDIA_NAMES = ["web_image", "mobile_image", "media", "image"];
 
 const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
+  const { CACHE_LANGUAGES } = useGlobalOptions();
   const location = useLocation();
   const { addItem, status } = useAdd();
   console.log(location);
@@ -20,20 +31,37 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   const fields_content = DB_API?.[SUPABASE_TABLE_NAME + "_content"];
 
   const onSubmit = async (data) => {
-    const response = await addItem(SUPABASE_TABLE_NAME, data);
-    if (response) {
-      setItemId(response?.data?.[0].id);
-      setResetForm(true);
+    if (SUPABASE_TABLE_NAME === "home_reviews") {
+      await handleUploadReviewerImage(data);
+    } else {
+      const response = await addItem(SUPABASE_TABLE_NAME, data);
+      if (response) {
+        setItemId(response?.data?.[0].id);
+        if (SUPABASE_TABLE_NAME === "color")
+          await handleUploadColorImage({
+            ...data,
+            id: response?.data?.[0].id,
+          });
+
+        setResetForm(true);
+      }
     }
   };
   const onSubmitContent = async (data) => {
+    console.log(data);
+    if (!itemId && !data?.[`${SUPABASE_TABLE_NAME}_id`]) return;
     const list = Object.values(data);
-    if (list?.length && itemId) {
+    if (list?.length) {
       for (const item of list) {
-        await addItem(`${SUPABASE_TABLE_NAME}_content`, {
-          ...item,
-          [`${SUPABASE_TABLE_NAME}_id`]: itemId,
-        });
+        if (SUPABASE_TABLE_NAME === "category") {
+          await handleUploadCategoryImages(item, itemId, CACHE_LANGUAGES);
+        }
+        if (SUPABASE_TABLE_NAME === "offer") {
+          await handleUploadOfferImage(item, itemId, CACHE_LANGUAGES);
+        }
+        if (SUPABASE_TABLE_NAME === "collection") {
+          await handleUploadOfferImage(item, itemId, CACHE_LANGUAGES);
+        }
       }
     }
     setResetContentForm({});

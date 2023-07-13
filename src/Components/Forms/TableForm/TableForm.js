@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { memo } from "react";
 
-import { getValueOfInputColor } from "../../../Helpers/functions";
-import Field from "../../CustomForm/Field";
 import InputField from "../../CustomForm/InputField";
 import Table from "../../CustomTable/Table";
 import TableBody from "../../CustomTable/TableBody";
@@ -11,17 +9,17 @@ import TableHead from "../../CustomTable/TableHead";
 import TableHeadCol from "../../CustomTable/TableHeadCol";
 import TableRow from "../../CustomTable/TableRow";
 import { Button } from "../../Global/Button";
+import SelectField from "../../CustomForm/SelectField";
+import { PlusIcon } from "../../../Helpers/Icons";
+import MinusIcon from "../../../Helpers/Icons/MinusIcon";
 
 const TableForm = ({
-  onOpen,
+  hideIncreasable,
   rowLength,
+  setRowLength,
   initialFields,
-  setIndex,
   oldValues,
   onSubmit,
-  goBack,
-  goNext,
-  steps,
   getCachedList,
   getValuesWithoutSubmit,
   setGetIndexOfRowUpdated,
@@ -29,10 +27,10 @@ const TableForm = ({
   onSelectColor,
 }) => {
   const [grid, setGrid] = useState([]);
-  const [columns, setColumns] = useState([]);
+  // const [columns, setColumns] = useState([]);
   useEffect(() => {
-    let names = initialFields?.map((_) => _.name);
-    setColumns(names);
+    // let names = initialFields?.map((_) => _.name);
+    // setColumns(names);
   }, [initialFields]);
 
   useEffect(() => {
@@ -72,25 +70,28 @@ const TableForm = ({
   return (
     <>
       <Table
-        className={`${
-          columns?.length > 5 ? "" : "max-w-[900px]"
-        } mx-auto pb-8 overflow-auto max-h-[420px] dark:border-borderdark`}
+        tableClassName={`!rounded-none mx-auto pb-8 overflow-auto max-h-[420px] dark:border-borderdark`}
       >
-        <TableHead classes="dark:bg-[##5490d3] !bg-[#5490d3] text-white dark:text-gray-200">
-          <TableHeadCol classes="border border-gray-300 dark:border-borderdark !py-3 !text-center">
+        <TableHead classes="dark:text-gray-200">
+          <TableHeadCol classes="border !w-[90px] border-gray-300 dark:border-borderdark !py-3 !text-center">
             <div className="text-center w-full block">#</div>
           </TableHeadCol>
-          {columns?.map((col) => (
-            <TableHeadCol
-              classes="border border-gray-300 dark:border-borderdark !py-3"
-              key={col}
-            >
-              {col}
-            </TableHeadCol>
-          ))}
+          {initialFields?.map((col) => {
+            if (col?.hide_in_add_form || col?.name === "id") return;
+            else {
+              return (
+                <TableHeadCol
+                  classes="border border-gray-300 !w-[90px] dark:border-borderdark !py-3"
+                  key={col?.name}
+                >
+                  {col?.name}
+                </TableHeadCol>
+              );
+            }
+          })}
         </TableHead>
         <TableBody>
-          {Array(rowLength)
+          {Array(hideIncreasable ? 1 : rowLength)
             .fill(0)
             .map((r, index) => (
               <TableRow
@@ -103,95 +104,92 @@ const TableForm = ({
                     : ""
                 }
               >
-                <TableCol classes="max-w-fit !p-0 border dark:border-borderdark text-center">
-                  {!!setIndex || onSelectColor ? (
-                    <button
-                      className="hover:bg-gray-200 hover:font-medium block w-full p-2"
-                      onClick={() => {
-                        // console.log("run...", index, selectedColor);
-                        // console.log(grid?.[index + 1]);
-                        if (onOpen) {
-                          onOpen();
-                          setIndex(index + 1);
-                        }
-                        if (!!onSelectColor && grid?.[index]?.Color) {
-                          onSelectColor(index + 1);
-                          // console.log(grid?.[index]?.Color)
-                        }
-                      }}
-                    >
-                      {index + 1}
-                    </button>
-                  ) : (
-                    index + 1
-                  )}
+                <TableCol classes="max-w-fit !p-0 !w-[90px] border dark:!border-borderdark text-center">
+                  {index + 1}
                 </TableCol>
-                {initialFields?.map((field) => (
-                  <TableCol
-                    classes="!p-0 border  dark:border-borderdark text-center"
-                    key={field?.name}
-                  >
-                    {field?.key === "unique" ? (
-                      <Field
-                        value={grid?.[index + 1]?.[field?.name]}
-                        className="min-w-[140px] !border-0 !rounded-none !h-full !bg-transparent"
-                        name={field?.name}
-                        getSelectedValueWithIndex={handelChangeField}
-                        tableForHashed={field?.table}
-                        list={
-                          !!getCachedList ? getCachedList(field?.table) : []
-                        }
-                      />
-                    ) : (
-                      <InputField
-                        value={
-                          field?.type === "color"
-                            ? getValueOfInputColor(
-                                grid?.[index + 1]?.[field?.name]
-                              )
-                            : grid?.[index + 1]?.[field?.name]
-                        }
-                        className={`!border-0 !rounded-none !bg-transparent ${
-                          field?.type === "color" ? "" : "!h-full"
-                        }`}
-                        name={field?.name}
-                        type={field?.type}
-                        required={field?.required}
-                        onChange={(e) => {
-                          handelChangeField(
-                            index + 1,
-                            field?.name,
-                            e.target.value
-                          );
-                        }}
-                      />
-                    )}
-                  </TableCol>
-                ))}
+                {initialFields?.map((field) => {
+                  if (field?.hide_in_add_form || field?.name === "id")
+                    return null;
+                  if (field?.key === "ref") {
+                    return (
+                      <TableCol
+                        classes="!p-0 border !w-[90px] dark:!border-borderdark text-center"
+                        key={field?.name}
+                      >
+                        <SelectField
+                          list={
+                            !!getCachedList
+                              ? getCachedList(field?.tableName)
+                              : []
+                          }
+                          value={grid?.[index + 1]?.[field?.name]}
+                          className={`!border-0 !rounded-none !bg-transparent`}
+                          name={field?.name}
+                          required={field?.required}
+                          onChange={(e) => {
+                            handelChangeField(
+                              index + 1,
+                              field?.name,
+                              e.target.value
+                            );
+                          }}
+                        />
+                      </TableCol>
+                    );
+                  } else
+                    return (
+                      <TableCol
+                        classes="!p-0 border  dark:!border-borderdark text-center"
+                        key={field?.name}
+                      >
+                        <InputField
+                          value={grid?.[index + 1]?.[field?.name]}
+                          className={`!border-0 !rounded-none !bg-transparent `}
+                          name={field?.name}
+                          type={field?.type}
+                          required={field?.required}
+                          onChange={(e) => {
+                            handelChangeField(
+                              index + 1,
+                              field?.name,
+                              e.target.value
+                            );
+                          }}
+                        />
+                      </TableCol>
+                    );
+                })}
               </TableRow>
             ))}
         </TableBody>
       </Table>
+      {hideIncreasable ? null : (
+        <div className="flex gap-4 items-center justify-between mt-1">
+          <button
+            onClick={() => setRowLength((prev) => prev + 1)}
+            className="dark:bg-[#5c5c5c] bg-gray-200 text-black dark:hover:bg-[#444] dark:text-white p-2 rounded-full h-7 w-7 flex items-center justify-center"
+          >
+            <PlusIcon className="w-4 h-4" />
+          </button>
+          <button
+            disabled={rowLength === 1}
+            onClick={() => setRowLength((prev) => (prev > 1 ? prev - 1 : prev))}
+            className="dark:bg-[#5c5c5c] disabled:opacity-50 disabled:pointer-events-none bg-gray-200 text-black dark:hover:bg-[#444] dark:text-white p-2 rounded-full h-7 w-7 flex items-center justify-center"
+          >
+            <MinusIcon className="w-4 h-4" />
+          </button>
+        </div>
+      )}
       <div className="flex justify-between gap-4 items-center mt-4">
-        {steps?.length ? (
-          <>
-            <Button title="Back" onClick={goBack} type="button" />
-            <Button
-              title="Next"
-              onClick={() => {
-                goNext();
-                submit();
-              }}
-              type="button"
-            />
-          </>
-        ) : null}
-        {!steps?.length && !!onSubmit ? (
-          <Button title="Submit" onClick={submit} type="button" />
-        ) : null}
+        <Button
+          title="Submit"
+          onClick={submit}
+          type="button"
+          classes="w-[140px] hover:bg-primary-blue"
+        />
       </div>
     </>
   );
 };
 
-export default memo(TableForm);
+export default TableForm;

@@ -12,7 +12,7 @@ const HomeReviews = () => {
       SUPABASE_TABLE_NAME="home_reviews"
       columns={columns}
       title="Home Reviews"
-      // onAddClick={() => navigate(`/add-coupon`)}
+      onAddClick={() => navigate(`/add-review`)}
     />
   );
 };

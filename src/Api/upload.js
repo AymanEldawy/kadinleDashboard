@@ -1,4 +1,4 @@
-async function uploadFile(formData) {
+async function uploadFile(formData, action) {
   const headers = new Headers();
   headers.append(
     "key",
@@ -13,51 +13,65 @@ async function uploadFile(formData) {
   };
 
   const response = await fetch(
-    "http://kadinle.com:4321/uploadProduct",
+    `http://kadinle.com:4321/${action}`,
     requestOptions
   );
   return response?.json();
 }
-
-// export const uploadReviewer = async () => {};
-// export const uploadInfluencer = async () => {}; // product_id / user_id
 
 export const uploadProductImage = async ({ productId, colorId, file }) => {
   const formData = new FormData();
   formData.append("sku", productId);
   formData.append("color", colorId);
   formData.append("file", file);
-  return await uploadFile(formData);
+  return await uploadFile(formData, "uploadProduct");
 };
 
-export const uploadCollection = async ({ collectionId, langName, file }) => {
+export const uploadCollectionImage = async ({
+  collectionId,
+  langName,
+  file,
+}) => {
   const formData = new FormData();
   formData.append("id", collectionId);
   formData.append("lang", langName);
   formData.append("file", file);
-  return await uploadFile(formData);
+  return await uploadFile(formData, "uploadCollection");
 };
 
-export const uploadCategory = async ({ categoryId, langName, type, file }) => {
+export const uploadCategoryImage = async ({
+  categoryId,
+  langName,
+  type,
+  file,
+}) => {
   const formData = new FormData();
   formData.append("id", categoryId);
   formData.append("lang", langName);
   formData.append("type", type);
   formData.append("file", file);
-  return await uploadFile(formData);
+  return await uploadFile(formData, "uploadCategory");
 };
 
-export const uploadOffer = async ({ offerId, langName, file }) => {
+export const uploadOfferImage = async ({ offerId, langName, file }) => {
   const formData = new FormData();
   formData.append("id", offerId);
   formData.append("lang", langName);
   formData.append("file", file);
-  return await uploadFile(formData);
+  return await uploadFile(formData, "uploadOffer");
 };
 
-export const uploadColor = async ({ colorId, file }) => {
+export const uploadColorImage = async ({ colorId, file }) => {
   const formData = new FormData();
   formData.append("id", colorId);
   formData.append("file", file);
-  return await uploadFile(formData);
+  return await uploadFile(formData, "uploadColor");
 };
+
+export const uploadReviewerImage = async ({ name, file }) => {
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("file", file);
+  return await uploadFile(formData, "uploadReviewer");
+};
+// export const uploadInfluencer = async () => {}; // product_id / user_id

@@ -160,13 +160,13 @@ const Sidebar = ({ open, setOpen }) => {
       } hover:w-[250px]`}
       onMouseLeave={() => (dropdown && !open ? setDropdown("") : undefined)}
     >
-      <div className=" h-20 flex items-center justify-center ">
+      <Link to="/" className=" h-20 flex items-center justify-center ">
         <img
           src={open ? logo : logoIcon}
           alt="kaindle logo"
           className={`${open ? "w-44" : "w-8"} object-contain`}
         />
-      </div>
+      </Link>
       <ul className="flex-col flex-1 overflow-auto text-gray-500 dark:text-gray-400 text-sm font-medium min-h-[40px] flex items-start justify-between capitalize">
         {list(menuData.sort((a, b) => a.name.localeCompare(b.name)))}
       </ul>

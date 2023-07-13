@@ -28,3 +28,4 @@ export { default as AddOffer } from "./AddOffer";
 export { default as AddPoint } from "./AddPoint";
 export { default as AddOrderStatus } from "./AddOrderStatus";
 export { default as AddReturnStatus } from "./AddReturnStatus";
+export { default as AddHomeReviewer } from "./AddHomeReviewer";

@@ -11,11 +11,13 @@ const BlockPaper = ({
   subTitle,
 }) => {
   return (
-    <div className={`!mb-8 overflow-hidden relative ${containerClassName}`}>
+    <div
+      className={`!mb-8 overflow-hidden shadow relative ${containerClassName}`}
+    >
       <div className={`overflow-hidden`}>
         <div className="p-4 shadow bg-white  dark:bg-bgmaindark rounded-md">
           {title ? (
-            <div className=" border-b mb-4 pb-2 ">
+            <div className=" border-b mb-4 pb-2 dark:border-[#333]">
               <h3 className="capitalizetext-lg font-medium text-gray-600 dark:border-[#333] dark:text-white">
                 {" "}
                 {title}{" "}

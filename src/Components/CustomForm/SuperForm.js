@@ -114,7 +114,7 @@ const SuperForm = ({
     setValues((prev) => {
       return {
         ...prev,
-        [name]: URL.createObjectURL(e.target.files[0]),
+        [name]: e.target.files[0],
       };
     });
   };

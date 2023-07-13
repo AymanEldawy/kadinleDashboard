@@ -107,6 +107,7 @@ export const chart_data = [
     key: "ref",
     tableName: "chart",
     required: true,
+    hide_in_add_form: true,
   },
   {
     name: "product_id",
@@ -115,6 +116,7 @@ export const chart_data = [
     tableName: "product_content",
     refId: "product_id",
     required: true,
+    hide_in_add_form: true,
   },
   {
     name: "size_id",
@@ -458,7 +460,7 @@ export const offer_content = [
   },
   { name: "name", type: "text", required: true },
   { name: "description", type: "text", required: true },
-  { name: "media", type: "text", required: true },
+  { name: "media", type: "text", key: "image", required: true },
   {
     name: "offer_id",
     type: "uuid",

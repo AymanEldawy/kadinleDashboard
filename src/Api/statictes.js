@@ -13,18 +13,14 @@ export const getRecentOrders = async (limit = 10) => {
     )
     .order("created_at", { ascending: false })
     .limit(limit);
-
-  console.log(res, "r--");
 };
 
 export const bestSelling = async () => {
-  getTotalEarning();
   const { data, error } = await supabase
     .from("order_content")
     .select("*, variant:variant_id(product(*,product_content(*)))")
     .order("variant_id", { ascending: false })
     .limit(10);
-  console.log(data, error);
 };
 
 export const getTotalEarning = async () => {

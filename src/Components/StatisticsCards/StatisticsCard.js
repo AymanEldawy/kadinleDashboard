@@ -2,7 +2,7 @@ import React from "react";
 import { useContext } from "react";
 import { LanguageContext } from "../../Context/LangContext";
 import { fetchWord } from "../lang/fetchWord";
-import ArrowIcon from "../icons/ArrowIcon";
+// import ArrowIcon from "../icons/ArrowIcon";
 import { Link } from "react-router-dom";
 import CustomCountUp from "./CountUp";
 
@@ -12,8 +12,8 @@ const StatisticsCard = ({
   preStatistics,
   icon,
   color,
-  percentage,
-  isIncreased,
+  // percentage,
+  // isIncreased,
   link,
   linkText,
 }) => {
@@ -25,7 +25,7 @@ const StatisticsCard = ({
         <h2 className="w-1/2 overflow-hidden whitespace-nowrap text-ellipsis uppercase text-sm font-medium">
           {fetchWord(name, lang)}
         </h2>
-        <p
+        {/* <p
           className={`flex items-center ${
             isIncreased
               ? isIncreased !== "stable"
@@ -42,7 +42,7 @@ const StatisticsCard = ({
             />
           )}
           {percentage} %
-        </p>
+        </p> */}
       </div>
       <div className="flex items-end justify-between mt-5">
         <div>

@@ -13,6 +13,7 @@ export const getRecentOrders = async (limit = 10) => {
     )
     .order("created_at", { ascending: false })
     .limit(limit);
+  return res;
 };
 
 export const bestSelling = async () => {
@@ -21,6 +22,7 @@ export const bestSelling = async () => {
     .select("*, variant:variant_id(product(*,product_content(*)))")
     .order("variant_id", { ascending: false })
     .limit(10);
+  return data;
 };
 
 export const getTotalEarning = async () => {
@@ -36,5 +38,5 @@ export const getCount = async (table) => {
   return { [`${table}_count`]: data?.length };
 };
 
-export const getOrdersCount = getCount("order");
-export const getUserCount = getCount("user");
+// export const getOrdersCount = getCount("order");
+// export const getUserCount = getCount("user");

@@ -88,6 +88,7 @@ export const getTableContentDataById = async (table, itemId) => {
     .from(`${table}_content`)
     .select("*")
     .eq(`${table}_id`, itemId);
+  console.log(table, response, "called ");
   return response;
 };
 

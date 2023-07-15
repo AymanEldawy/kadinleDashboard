@@ -1,24 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
+import { handleUploadCategoryImages, handleUploadColorImage, handleUploadOfferImage, handleUploadReviewerImage } from "../../Api/DynamicUploadHandler";
+import { uploadCategoryImage } from "../../Api/upload";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
 import SuperForm from "../../Components/CustomForm/SuperForm";
+import { useGlobalOptions } from "../../Context/GlobalOptions";
 import DB_API from "../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../hooks/useAdd";
-import { uploadCategoryImage } from "../../Api/upload";
-import { useGlobalOptions } from "../../Context/GlobalOptions";
-import {
-  handleUploadCategoryImages,
-  handleUploadColorImage,
-  handleUploadOfferImage,
-  handleUploadReviewerImage,
-} from "../../Api/DynamicUploadHandler";
 
 const MEDIA_NAMES = ["web_image", "mobile_image", "media", "image"];
 
 const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
-  const { CACHE_LANGUAGES } = useGlobalOptions();
+  const { CACHE_LANGUAGES, languages } = useGlobalOptions();
   const location = useLocation();
   const { addItem, status } = useAdd();
   console.log(location);
@@ -51,6 +46,7 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
     console.log(data);
     if (!itemId && !data?.[`${SUPABASE_TABLE_NAME}_id`]) return;
     const list = Object.values(data);
+    console.log(CACHE_LANGUAGES, data);
     if (list?.length) {
       for (const item of list) {
         if (SUPABASE_TABLE_NAME === "category") {
@@ -82,6 +78,7 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
             onSubmit={onSubmitContent}
             initialFields={fields_content}
             resetForm={resetContentForm}
+            maxCount={languages?.length}
           />
         </BlockPaper>
       ) : null}

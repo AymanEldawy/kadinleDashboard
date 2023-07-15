@@ -3,10 +3,10 @@ import { useState } from "react";
 
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 
-const LanguageBar = () => {
-  const { languages, setDefaultSettings, defaultLanguage } = useGlobalOptions();
+const RegionBar = () => {
+  const { regions, setDefaultSettings, defaultRegion } = useGlobalOptions();
   const [open, setOpen] = useState(false);
-  console.log("called", languages);
+  console.log("called", regions);
   return (
     <div className="relative">
       {open ? (
@@ -19,21 +19,21 @@ const LanguageBar = () => {
         className="p-2 rounded-full hover:bg-[#0002] relative"
         onClick={() => setOpen(true)}
       >
-        {defaultLanguage?.name || "English"}
+        {defaultRegion?.name || "EN"}
       </button>
 
       {open ? (
         <ul className="absolute bg-white left-0 p-3 px-6 min-w-[200px] dark:bg-bgmaindark shadow rounded-md top-12 z-50 text-gray-500 text-sm flex flex-col gap-3">
-          {languages?.map((language) => (
+          {regions?.map((region) => (
             <li
-              key={language?.id}
+              key={region?.id}
               onClick={() => {
-                setDefaultSettings("lang", language);
+                setDefaultSettings("region", region);
                 setOpen(false);
               }}
               className="flex items-center gap-4 cursor-pointer font-medium hover:text-gray-900 dark:hover:text-gray-200"
             >
-              {language?.code}
+              {region?.name}
             </li>
           ))}
         </ul>
@@ -42,4 +42,4 @@ const LanguageBar = () => {
   );
 };
 
-export default LanguageBar;
+export default RegionBar;

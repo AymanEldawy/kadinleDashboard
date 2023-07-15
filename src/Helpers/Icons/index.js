@@ -47,3 +47,4 @@ export { default as SparklesIcon } from "./SparklesIcon";
 export { default as BoxIcon } from "./BoxIcon";
 export { default as MessageIcon } from "./MessageIcon";
 export { default as UserGroupIcon } from "./UserGroupIcon";
+export { default as UploadIcon } from "./UploadIcon";

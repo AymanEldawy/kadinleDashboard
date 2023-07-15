@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-import { getTableContentDataById, getTableData, getTableDataById } from "../Api/globalActions";
+import {
+  getTableContentDataById,
+  getTableData,
+  getTableDataById,
+} from "../Api/globalActions";
 
 export const useFetch = () => {
   const [loading, setLoading] = useState();

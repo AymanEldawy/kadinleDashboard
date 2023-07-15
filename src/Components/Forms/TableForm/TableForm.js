@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { memo } from "react";
 
+import { PlusIcon } from "../../../Helpers/Icons";
+import MinusIcon from "../../../Helpers/Icons/MinusIcon";
 import InputField from "../../CustomForm/InputField";
+import SelectField from "../../CustomForm/SelectField";
 import Table from "../../CustomTable/Table";
 import TableBody from "../../CustomTable/TableBody";
 import TableCol from "../../CustomTable/TableCol";
@@ -9,9 +12,6 @@ import TableHead from "../../CustomTable/TableHead";
 import TableHeadCol from "../../CustomTable/TableHeadCol";
 import TableRow from "../../CustomTable/TableRow";
 import { Button } from "../../Global/Button";
-import SelectField from "../../CustomForm/SelectField";
-import { PlusIcon } from "../../../Helpers/Icons";
-import MinusIcon from "../../../Helpers/Icons/MinusIcon";
 
 const TableForm = ({
   hideIncreasable,
@@ -23,15 +23,10 @@ const TableForm = ({
   getCachedList,
   getValuesWithoutSubmit,
   setGetIndexOfRowUpdated,
-  selectedColor,
-  onSelectColor,
+  selectedChart,
 }) => {
   const [grid, setGrid] = useState([]);
-  // const [columns, setColumns] = useState([]);
-  useEffect(() => {
-    // let names = initialFields?.map((_) => _.name);
-    // setColumns(names);
-  }, [initialFields]);
+  useEffect(() => {}, [initialFields]);
 
   useEffect(() => {
     setGrid((prev) => {
@@ -64,6 +59,7 @@ const TableForm = ({
     [grid]
   );
   const submit = () => {
+    console.log("submit", grid);
     onSubmit(grid);
   };
 
@@ -84,7 +80,7 @@ const TableForm = ({
                   classes="border border-gray-300 !w-[90px] dark:border-borderdark !py-3"
                   key={col?.name}
                 >
-                  {col?.name}
+                  {selectedChart[col?.name] || col?.name}
                 </TableHeadCol>
               );
             }
@@ -94,16 +90,7 @@ const TableForm = ({
           {Array(hideIncreasable ? 1 : rowLength)
             .fill(0)
             .map((r, index) => (
-              <TableRow
-                key={`${r}-${index}`}
-                classes={
-                  !!onSelectColor
-                    ? selectedColor === index + 1
-                      ? "bg-gray-200"
-                      : ""
-                    : ""
-                }
-              >
+              <TableRow key={`${r}-${index}`}>
                 <TableCol classes="max-w-fit !p-0 !w-[90px] border dark:!border-borderdark text-center">
                   {index + 1}
                 </TableCol>

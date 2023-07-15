@@ -7,7 +7,7 @@ export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState("light");
 
   const changeTheme = () => {
-    if (theme == "dark") setTheme("light");
+    if (theme === "dark") setTheme("light");
     else setTheme("dark");
   };
 

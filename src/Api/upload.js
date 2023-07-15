@@ -19,10 +19,10 @@ async function uploadFile(formData, action) {
   return response?.json();
 }
 
-export const uploadProductImage = async ({ productId, colorId, file }) => {
+export const uploadProductImage = async ({ productSku, colorSku, file }) => {
   const formData = new FormData();
-  formData.append("sku", productId);
-  formData.append("color", colorId);
+  formData.append("sku", productSku);
+  formData.append("color", colorSku);
   formData.append("file", file);
   return await uploadFile(formData, "uploadProduct");
 };

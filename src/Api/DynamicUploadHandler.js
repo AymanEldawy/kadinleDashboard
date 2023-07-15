@@ -1,10 +1,5 @@
 import { addNewItem, updateItem } from "./globalActions";
-import {
-  uploadCategoryImage,
-  uploadCollectionImage,
-  uploadColorImage,
-  uploadReviewerImage,
-} from "./upload";
+import { uploadCategoryImage, uploadCollectionImage, uploadColorImage, uploadReviewerImage } from "./upload";
 
 export const handleUploadCategoryImages = async (
   item,
@@ -12,6 +7,7 @@ export const handleUploadCategoryImages = async (
   CACHE_LANGUAGES,
   operation = "add"
 ) => {
+  console.log(item, CACHE_LANGUAGES, "item");
   let theFileWebContent = item?.web_image;
   const webPath =
     typeof theFileWebContent === "object"

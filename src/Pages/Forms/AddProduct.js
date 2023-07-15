@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useCallback } from "react";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import {
@@ -15,28 +16,35 @@ import {
 import { useAdd } from "../../hooks/useAdd";
 import { useFetch } from "../../hooks/useFetch";
 import { useUpdate } from "../../hooks/useUpdate";
+import AddProductForm from "./ProductFormsComponents/AddProductForm";
 import AddProductImages from "./ProductFormsComponents/AddProductImages";
 import AddProductVariants from "./ProductFormsComponents/AddProductVariants";
-import { FormProductIncreasable } from "./ProductFormsComponents/FormProductIncreasable";
-import { toast } from "react-toastify";
-import AddProductForm from "./ProductFormsComponents/AddProductForm";
 import AddSizeChart from "./ProductFormsComponents/AddSizeChart";
+import { FormProductIncreasable } from "./ProductFormsComponents/FormProductIncreasable";
 
 const CACHED_TABLE = [];
-const STAGES = ["details", "variant", "images", "size_chart"];
+const CACHED_TABLES_SKU = [];
+const STAGES = ["details", "variant", "size_chart"];
 
+const checkSkuTable = async (tableName, getData) => {
+  const data = await getData(tableName);
+  let cache = {};
+  for (const item of data) {
+    cache[item?.id] = tableName === "size" ? item?.size_sku : item?.color_sku;
+  }
+  CACHED_TABLES_SKU[tableName] = cache;
+};
 const checkRefTable = async (fields, getData) => {
-  console.log("callled");
   if (!fields?.length) return;
-  console.log(fields);
   for (const field of fields) {
+    let tableName = field?.tableName;
     if (
       field.key === "ref" &&
-      !CACHED_TABLE[field?.tableName] &&
+      !CACHED_TABLE[tableName] &&
       !field?.hide_in_add_form_add
     ) {
-      const data = await getData(field?.tableName);
-      CACHED_TABLE[field?.tableName] = data;
+      const data = await getData(tableName);
+      CACHED_TABLE[tableName] = data;
     }
   }
 };
@@ -54,20 +62,17 @@ const AddProduct = ({ layout }) => {
 
   const [loading, setLoading] = useState(false);
 
-  const [productId, setProductId] = useState();
-  const [variantIds, setVariantIds] = useState([]);
+  const [productSku, setProductSku] = useState(null);
+  const [productId, setProductId] = useState(null);
   const [activeStage, setActiveStage] = useState(STAGES[0]);
   const [productValues, setProductValues] = useState({});
   const [productContentValues, setProductContentValues] = useState({});
-  const [productImagesValues, setProductImagesValues] = useState({});
-  const [increasableImagesCount, setIncreasableImagesCount] = useState([1]);
+  const [allValues, setAllValues] = useState({});
 
   const { name: tableName, id } = params;
   const fetchData = async (table, id) => {
     if (CACHED_TABLE[tableName]) return;
-    console.log("callled");
     const response = await getData(table, id);
-    console.log(response?.[0]);
     setData(response?.[0]);
   };
   useEffect(() => {
@@ -89,16 +94,35 @@ const AddProduct = ({ layout }) => {
       });
       setLoading(false);
     }, []);
+    checkRefTable(
+      [
+        {
+          name: "chart",
+          tableName: "chart",
+          key: "ref",
+          refId: "chart_id",
+          refName: "number",
+        },
+      ],
+      getData
+    );
+    checkSkuTable("color", getData);
+    checkSkuTable("size", getData);
   }, []);
+
+  useEffect(() => {
+    if (productValues?.sku !== productSku) {
+      setProductSku(productValues?.product_sku);
+    }
+    // if(productValues?.sku)
+  }, [productValues]);
 
   // On Submit product
   const onSubmit = async (data) => {
-    console.log(data, "product");
     const response = await addItem("product", data);
     if (response) {
       setProductId(response?.data?.[0].id);
     }
-    // if (status === "success") setResetForm(true);
   };
 
   // On Submit product content
@@ -110,13 +134,13 @@ const AddProduct = ({ layout }) => {
           ...item,
           [`product_id`]: productId,
         });
-        console.log(response, "content");
       }
     }
-    console.log(data, "content");
   };
 
-  console.log(CACHED_TABLE);
+  // submit product
+  // submit contents
+  // submit variants
   return (
     <div>
       {loading ? (
@@ -153,16 +177,20 @@ const AddProduct = ({ layout }) => {
           fields_variant={fields_variant}
           fields_stock={stock_fields}
           productId={productId}
+          productSku={productValues?.product_sku}
+          CACHED_TABLES_SKU={CACHED_TABLES_SKU}
+          allValues={allValues}
+          setAllValues={setAllValues}
         />
       ) : null}
-      {activeStage === STAGES[2] ? (
+      {/* {activeStage === STAGES[2] ? (
         <AddProductImages
           getCachedList={getCachedList}
           fields_image={fields_image}
           productId={productId}
         />
-      ) : null}
-      {activeStage === STAGES[3] ? (
+      ) : null} */}
+      {activeStage === STAGES[2] ? (
         <AddSizeChart getCachedList={getCachedList} productId={productId} />
       ) : null}
       {fields_content?.length && STAGES[0] === activeStage ? (
@@ -181,6 +209,7 @@ const AddProduct = ({ layout }) => {
             onSubmit={onSubmitContent}
             initialFields={fields_content}
             getCachedList={getCachedList}
+            // maxCount={CACHED_TABLE?.language?.length || 3}
           />
         </BlockPaper>
       ) : null}

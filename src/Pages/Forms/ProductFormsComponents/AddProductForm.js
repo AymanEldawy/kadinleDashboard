@@ -13,8 +13,6 @@ import { Button } from "../../../Components/Global/Button";
 const AddProductForm = ({
   onSubmit,
   initialFields,
-  oldValues,
-  resetForm,
   layout,
   getCachedList,
   values,
@@ -24,23 +22,6 @@ const AddProductForm = ({
 }) => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
-  // Clean up component
-  const location = useLocation();
-
-  useEffect(() => {
-    setValues({});
-    setErrors({});
-    setTouched({});
-  }, [resetForm]);
-  useEffect(() => {
-    setErrors({});
-    setTouched({});
-    if (oldValues) {
-      setValues(oldValues);
-    } else {
-      setValues({});
-    }
-  }, [location?.pathname, oldValues]);
 
   const insertIntoErrors = (name, value) => {
     if (value === "") {

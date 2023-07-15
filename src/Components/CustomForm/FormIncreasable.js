@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import TabsList from "../../Components/Tabs/TabsList";
+import { useGlobalOptions } from "../../Context/GlobalOptions";
 import { CloseIcon, PlusIcon } from "../../Helpers/Icons";
 import { useFetch } from "../../hooks/useFetch";
 import { Button } from "../Global/Button";
@@ -24,10 +25,12 @@ export const FormIncreasable = ({
   increasableTitle,
   onChangeValues,
   resetForm,
+  maxCount,
 }) => {
   const { getData } = useFetch();
   const location = useLocation();
-
+  const { CACHE_LANGUAGES } = useGlobalOptions();
+  const [selectedTab, setSelectedTab] = useState([]);
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -54,7 +57,6 @@ export const FormIncreasable = ({
     }
   }
   const getCachedList = (tableName) => {
-    // console.log(tableName);
     return CACHED_TABLE?.[tableName];
   };
 
@@ -82,6 +84,11 @@ export const FormIncreasable = ({
     });
   };
   const handelChangeField = (name, value, required, row) => {
+    console.log(name, value);
+    if (name === "language_id") {
+      if (selectedTab?.includes(value)) return;
+      setSelectedTab((prev) => [...prev, value]);
+    }
     if (required) {
       insertIntoErrors(name, value);
     }
@@ -118,7 +125,8 @@ export const FormIncreasable = ({
     }
   };
   const increaseLanguages = () => {
-    setListCount((prev) => [...prev, `index ${uuidv4()}`]);
+    if (maxCount && listCount?.length < maxCount) return;
+    setListCount((prev) => [...prev, uuidv4()]);
   };
   const resetItemData = (item) => {
     let list = values;
@@ -152,7 +160,11 @@ export const FormIncreasable = ({
               }`}
               onClick={() => setActiveTab(index)}
             >
-              {increasableTitle ? increasableTitle : "choose language"}
+              {increasableTitle
+                ? increasableTitle
+                : values?.[item]?.language_id
+                ? CACHE_LANGUAGES[values?.[item]?.language_id]
+                : "choose language"}
               {listCount.length === 1 ? null : (
                 <CloseIcon
                   className="!text-red-500 w-4 h-4"
@@ -162,8 +174,9 @@ export const FormIncreasable = ({
             </button>
           ))}
           <button
+            disabled={listCount?.length === maxCount}
             onClick={() => increaseLanguages()}
-            className="bg-primary-blue rounded-full text-white mx-1 w-6 h-6 flex items-center justify-center mt-1 text-xs"
+            className="bg-primary-blue rounded-full disabled:bg-gray-400 cursor-not-allowed text-white mx-1 w-6 h-6 flex items-center justify-center mt-1 text-xs"
           >
             <PlusIcon className="w-4 h-4" />
           </button>

@@ -1,11 +1,17 @@
 import * as React from "react";
 import { useContext } from "react";
+import { useRef } from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+
 import LanguageBar from "../Components/LanguageBar/LanguageBar";
+import NotificationBar from "../Components/NotificationBar/NotificationBar";
 import SearchBar from "../Components/SearchBar/SearchBar";
 import ToggleThemeBar from "../Components/ToggleThemeBar/ToggleThemeBar";
 import UserBar from "../Components/UserBar/UserBar";
 import { ThemeContext } from "../Context/ThemeContext";
+import { exitFullscreen, openFullscreen } from "../Helpers/functions";
 import {
   FitScreenIcon,
   FullScreenIcon,
@@ -13,13 +19,9 @@ import {
   MoonIcon,
   SunIcon,
 } from "../Helpers/Icons";
-import { exitFullscreen, openFullscreen } from "../Helpers/functions";
-import { useRef } from "react";
-import { useEffect } from "react";
-import { useState } from "react";
 import BallIcon from "../Helpers/Icons/BallIcon";
-import NotificationBar from "../Components/NotificationBar/NotificationBar";
 import BarsIcon from "../Helpers/Icons/BarsIcon";
+import RegionBar from "../Components/LanguageBar/RegionBar";
 
 function Header({ setOpen, mode, setMode }) {
   const { changeTheme, theme } = useContext(ThemeContext);
@@ -50,6 +52,10 @@ function Header({ setOpen, mode, setMode }) {
         </div>
         <div className="ml-auto :rtl:mr-auto rtl:ml-0 flex items-center gap-4">
           <div className="flex items-center gap-2">
+            <RegionBar />
+            <LanguageBar />
+            <div className="w-[1px] h-6 bg-gray-300" />
+            <div className="divide-x-2 divide-gray-400 divide-solid" />
             <button
               onClick={toggleFullScreen}
               className="p-2 rounded-full hover:bg-[#0002]"
@@ -57,9 +63,7 @@ function Header({ setOpen, mode, setMode }) {
               {/* {isFullScreen ? <FitScreenIcon /> : <FullScreenIcon />} */}
               <FullScreenIcon />
             </button>
-            {/* <LanguageBar /> */}
             <ToggleThemeBar theme={theme} changeTheme={changeTheme} />
-
             <NotificationBar />
           </div>
           {/* <UserBar /> */}

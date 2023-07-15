@@ -863,7 +863,7 @@ export const product_variant = [
     refId: "size_id",
   },
   { name: "weight", type: "number" },
-  { name: "sku", type: "text", required: true },
+  { name: "sku", type: "text", required: true, readonly: true },
 ];
 const stock = [
   { name: "id", type: "uuid" },

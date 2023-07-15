@@ -2,13 +2,13 @@ import { useContext, useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
+import { bestSelling, getRecentOrders } from "./Api/statictes";
 import Modal from "./Components/Modal/Modal";
 import { GlobalOptions } from "./Context/GlobalOptions";
+import { supabase } from "./Helpers/SupabaseConfig/SupabaseConfig";
 import Route from "./Routes/index";
 
 import "react-toastify/dist/ReactToastify.css";
-import { supabase } from "./Helpers/SupabaseConfig/SupabaseConfig";
-import { bestSelling, getRecentOrders } from "./Api/statictes";
 
 // import Routes from "./Routes";
 function App() {
@@ -18,7 +18,7 @@ function App() {
     <BrowserRouter>
       <ToastContainer
         position="top-center"
-        autoClose={5000}
+        autoClose={2000}
         hideProgressBar={false}
         // newestOnTop={false}
         closeOnClick

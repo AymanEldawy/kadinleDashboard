@@ -10,7 +10,9 @@ import RadioField from "../../../Components/CustomForm/RadioField";
 import SelectField from "../../../Components/CustomForm/SelectField";
 import UploadFile from "../../../Components/CustomForm/UploadFile";
 import { Button } from "../../../Components/Global/Button";
+import { useGlobalOptions } from "../../../Context/GlobalOptions";
 import { CloseIcon, PlusIcon } from "../../../Helpers/Icons";
+import { IncreasableBar } from "../../../Components/Global/IncreasableBar";
 
 export const FormProductIncreasable = ({
   initialFields,
@@ -21,10 +23,13 @@ export const FormProductIncreasable = ({
   getCachedList,
   values,
   setValues,
+  maxCount,
 }) => {
+  const { CACHE_LANGUAGES } = useGlobalOptions();
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [listCount, setListCount] = useState([uuidv4()]);
+  const [selectedTab, setSelectedTab] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
@@ -58,6 +63,10 @@ export const FormProductIncreasable = ({
     });
   };
   const handelChangeField = (name, value, required, row) => {
+    if (name === "language_id") {
+      if (selectedTab.includes(value)) return;
+      setSelectedTab((prev) => [...prev, value]);
+    }
     if (required) {
       insertIntoErrors(name, value);
     }
@@ -97,62 +106,23 @@ export const FormProductIncreasable = ({
       onSubmit(values);
     }
   };
-  const increaseLanguages = () => {
-    setListCount((prev) => [...prev, uuidv4()]);
-  };
-  const resetItemData = (item) => {
-    let list = values;
-    delete list[item];
-    setValues(list);
-    console.log(list);
-  };
-  const decreaseLanguages = (item, index) => {
-    if (index === activeTab) {
-      if (item !== 0) {
-        setActiveTab((prev, i) => i - 1);
-      } else {
-        setActiveTab((prev, i) => i + 1);
-      }
-    }
-    setListCount((prev) => prev?.filter((currentItem, i) => i !== index));
-    setActiveTab(0);
-  };
-  useEffect(() => {}, [activeTab]);
 
   return (
     <div className="">
       <div className="flex flex-wrap gap-2 items-start">
-        <div className="mb-4 border-b flex flex-wrap w-full">
-          {listCount?.map((item, index) => (
-            <button
-              key={index}
-              className={`text-gray-500 pb-2 text-xs border-b-2 -mb-[2px] !gap-1 !px-1 p-2 capitalize flex items-center ${
-                index === activeTab
-                  ? "border-primary-blue text-primary-blue font-medium"
-                  : ""
-              }`}
-              onClick={() => setActiveTab(index)}
-            >
-              {increasableTitle ? increasableTitle : "choose language"}
-              {listCount.length === 1 ? null : (
-                <CloseIcon
-                  className="!text-red-500 w-4 h-4"
-                  onClick={() => decreaseLanguages(item, index)}
-                />
-              )}
-            </button>
-          ))}
-          <button
-            onClick={() => increaseLanguages()}
-            className="bg-primary-blue rounded-full text-white mx-1 w-6 h-6 flex items-center justify-center mt-1 text-xs"
-          >
-            <PlusIcon className="w-4 h-4" />
-          </button>
-        </div>
+        <IncreasableBar
+          title={increasableTitle}
+          TitleValue={values}
+          list={listCount}
+          setList={setListCount}
+          // maxCount={maxCount || 3}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
       </div>
       {listCount?.map((item, index) => (
         <form
-          className={`mb-8 ${activeTab === index ? "" : "hidden"}`}
+          className={`mb-8 ${activeTab === item ? "" : "hidden"}`}
           tabName={item}
           key={`${index}-add`}
         >

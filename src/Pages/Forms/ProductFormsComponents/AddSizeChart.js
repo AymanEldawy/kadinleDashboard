@@ -17,49 +17,34 @@ const AddSizeChart = ({ getCachedList, productId }) => {
   const { addItem } = useAdd();
   const { getData } = useFetch();
   const [rowLength, setRowLength] = useState(5);
-  const [chartContent, setChartContent] = useState();
   const [chartId, setChartId] = useState(null);
   const [selectedChart, setSelectedChart] = useState({});
 
   const getChartContent = async (id) => {
-    // const response = await getData("chart", id, "content");
     const response = await getData("chart_content");
     console.log(response);
     for (const chart of response) {
       CACHE_SIZE_CHART_CONTENT[chart?.chart_id] = chart;
     }
-    setChartContent(response);
   };
   useEffect(() => {
     getChartContent();
   }, []);
 
   useEffect(() => {
-    console.log(
-      CACHE_SIZE_CHART_CONTENT["d84ac7fb-4dcf-401a-95d1-afeb607c81b5"],
-      CACHE_SIZE_CHART_CONTENT
-    );
-    // setSelectedChart(CACHE_SIZE_CHART_CONTENT[chartId]);
-    setSelectedChart(
-      CACHE_SIZE_CHART_CONTENT["d84ac7fb-4dcf-401a-95d1-afeb607c81b5"]
-    );
+    setSelectedChart(CACHE_SIZE_CHART_CONTENT[chartId]);
   }, [chartId]);
 
   const onSubmitChartData = async (data) => {
-    // if (chartId) {
-    //   toast.error("You must to add chart content before create chart data");
-    //   return;
-    // }
+    if (chartId) {
+      toast.error("You must to add chart content before create chart data");
+      return;
+    }
     console.log(data);
     const list = Object.values(data);
     for (const item of list) {
       if (item?.size_id && chartId && productId) {
-        // await addItem("chart_data", {
-        //   ...item,
-        //   product_id: productId,
-        //   chart_id: chartId,
-        // });
-        console.log({
+        await addItem("chart_data", {
           ...item,
           product_id: productId,
           chart_id: chartId,

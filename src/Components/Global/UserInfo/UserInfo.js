@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 export const UserInfo = ({ user }) => {
   const theName = user?.first_name + " " + user?.last_name;
-  // console.log(theName, fullName);
   return (
     <Link
       to={`/users/${user?.id}`}

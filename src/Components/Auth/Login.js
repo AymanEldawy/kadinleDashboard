@@ -1,17 +1,25 @@
 import axios from "axios";
 import React from "react";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
 
-import wallpaper from "../../Assets/Images/wallpaper.jpg";
-import InputField from "../../Components/CustomForm/InputField";
 import { Button } from "../../Components/Global/Button";
-import Layout from "../../Layout";
-
+import InputField from "../CustomForm/InputField";
+import logoIcon from "../../Assets/Images/logo-icon.png";
+import { login } from "../../Api/auth";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { useGlobalOptions } from "../../Context/GlobalOptions";
+import { useEffect } from "react";
+// import logo from "../../Assets/Images/logo.svg";
 const Login = () => {
+  const { serRefresh, user } = useGlobalOptions();
+  const navigate = useNavigate();
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
+  useEffect(() => {
+    if (user?.id) navigate("/");
+  }, []);
   const insertIntoErrors = (name, value) => {
     if (value === "") {
       setErrors((prev) => {
@@ -46,31 +54,34 @@ const Login = () => {
   };
   const handelSubmit = async () => {
     if (!Object.keys(errors)?.length) {
-      console.log(errors?.length);
-      let body = {
-        LoginName: values?.email,
-        Password: values?.password,
-      };
-      await axios
-        .post(`/login`, {
-          ...body,
-        })
-        .then((res) => {
-          console.log(res);
-        });
+      const response = await login(values?.email, values?.password);
+      if (response?.error) {
+        toast.error(`Invalid login credentials`);
+      } else {
+        toast.success(`Login Successfully`);
+        serRefresh((p) => !p);
+        setTimeout(() => {
+          navigate("/");
+        }, 500);
+      }
     }
   };
   return (
     <div
-      className=" h-screen w-screen bg-cover bg-no-repeat "
-      style={{ backgroundImage: `url(${wallpaper})` }}
+      className="h-screen flex items-center backdrop-blur-sm bg-pink-50 bg-gradient-to-tr from-pink-300 to-pink-400"
+      // style={{ backgroundImage: `url(${wallpaper})` }}
     >
-      <div className="h-full w-full backdrop-blur-sm absolute bg-[#00000099]"></div>
-      <div className="h-[60%] w-[50%] bg-blue-600 opacity-70 rounded-b-3xl absolute z-20 top-0 left-1/2 -translate-x-1/2"></div>
-      <div className="w-full h-full  flex items-center relative z-20">
+      <div className="w-full h-full flex items-center relative z-20">
         <div className="container">
-          <div className="max-w-md mx-auto shadow bg-white p-8 rounded-md">
-            <h1 className="text-2xl text-center font-medium mb-4">Login</h1>
+          <div className="max-w-md mx-auto shadow bg-white p-8 rounded-md ">
+            <img
+              src={logoIcon}
+              alt="kadinle logo"
+              className="mx-auto w-14 h-14 block"
+            />
+            <h1 className="text-2xl text-center font-medium text-pink-600 mb-4">
+              Login
+            </h1>
             <InputField
               label="email"
               name="email"

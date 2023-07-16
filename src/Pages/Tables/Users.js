@@ -7,6 +7,8 @@ import DB_API from "../../Helpers/Forms/databaseApi";
 import EditIcon from "../../Helpers/Icons/EditIcon";
 import { useFetch } from "../../hooks/useFetch";
 import DynamicLayout from "../Dynamics/DynamicLayout";
+import { Link } from "react-router-dom";
+import { EyeIcon } from "../../Helpers/Icons";
 
 const userOptions = [
   "user_address",
@@ -32,7 +34,6 @@ const Users = () => {
   const [refresh, setRefresh] = useState(false);
   const [openFeaturesForm, setOpenFeaturesForm] = useState(false);
   const [layout, setLayout] = useState("");
-  const [resetForm, setResetForm] = useState("");
 
   const fetchData = async (tableName) => {
     const data = await getData(tableName);
@@ -82,7 +83,6 @@ const Users = () => {
         setLayout={setLayout}
         initialFields={initialFields}
         onSubmit={onSubmit}
-        resetForm={resetForm}
       />
       <div>
         <div className="mb-4 bg-white shadow-sm my-4 w-full p-4">
@@ -117,13 +117,18 @@ const Users = () => {
             onAddClick={onClickAddNew}
             renderTableAction={(data) => {
               return (
-                <button
-                  className="bg-primary-blue mx-auto text-white text-sm min-w-[80px] flex justify-center items-center gap-1 p-1 rounded-md"
-                  onClick={() => onClickEdit(data)}
-                >
-                  <EditIcon className="w-4 h-4" />
-                  Edit
-                </button>
+                <div className="flex gap-4 items-center">
+                  <button
+                    className="bg-primary-blue mx-auto text-white text-sm min-w-[80px] flex justify-center items-center gap-1 p-1 rounded-md"
+                    onClick={() => onClickEdit(data)}
+                  >
+                    <EditIcon className="w-4 h-4" />
+                    Edit
+                  </button>
+                  <Link className="text-primary-blue" to={`/users/${data?.id}`}>
+                    <EyeIcon />
+                  </Link>
+                </div>
               );
             }}
           />

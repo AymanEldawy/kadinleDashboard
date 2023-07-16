@@ -6,7 +6,6 @@ import { useGlobalOptions } from "../../Context/GlobalOptions";
 const RegionBar = () => {
   const { regions, setDefaultSettings, defaultRegion } = useGlobalOptions();
   const [open, setOpen] = useState(false);
-  console.log("called", regions);
   return (
     <div className="relative">
       {open ? (

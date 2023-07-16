@@ -38,7 +38,8 @@ import {
   AddSizeContent,
   InsertOne,
 } from "./../Pages/Forms";
-import Home from "./../Pages/Home/Home";
+import Home from "../Pages/StandAlone/Home";
+import SingleUser from "../Pages/StandAlone/SingleUser";
 import {
   Addresses,
   Brands,
@@ -83,6 +84,9 @@ import {
 } from "./../Pages/Tables";
 import SelectProduct from "../Pages/ActionsFeatures/SelectProducts";
 import UploadSheet from "../Pages/ActionsFeatures/UploadSheet";
+import Login from "../Components/Auth/Login";
+import PageNotFound from "../Components/Auth/PageNotFound";
+import NotAllowed from "../Components/Auth/NotAllowed";
 
 const authProtectedRoutes = [
   // add paths
@@ -165,8 +169,8 @@ const authProtectedRoutes = [
   { path: "/address", component: <Addresses /> },
   { path: "/country", component: <Countries /> },
   { path: "/region", component: <Regions /> },
-  { path: "/order", component: <Orders /> },
-  { path: "/user", component: <Users /> },
+  { path: "/orders", component: <Orders /> },
+  { path: "/users", component: <Users /> },
   { path: "/chart", component: <Chart /> },
   { path: "/chart-content", component: <ChartContent /> },
   { path: "/chart-data", component: <ChartData /> },
@@ -237,14 +241,22 @@ const authProtectedRoutes = [
   { path: "/order-status", component: <OrderStatus /> },
   { path: "/return-status", component: <ReturnStatus /> },
 
+  //
+  { path: "/users/:id", component: <SingleUser /> },
   // actions
   { path: "/return-status", component: <ReturnStatus /> },
   { path: "/select-products", component: <SelectProduct /> },
   { path: "/upload-sheet", component: <UploadSheet /> },
   { path: "/send-email", component: "" },
-  // not found page
-  { path: "*", component: <NotFoundPage /> },
+  { path: "/", component: <Home /> },
 ];
 
-const publicRoutes = [{ path: "/", component: <Home /> }];
+const publicRoutes = [
+  { path: "*", component: <NotAllowed /> },
+  { path: "/not-found", component: <PageNotFound /> },
+  { path: "/login", component: <Login /> },
+];
 export { authProtectedRoutes, publicRoutes };
+
+// const AuthorizedDashboard = withAuthorization(Dashboard, ['admin', 'manager']);
+// const AuthorizedProfile = withAuthorization(Profile, ['admin', 'user']);

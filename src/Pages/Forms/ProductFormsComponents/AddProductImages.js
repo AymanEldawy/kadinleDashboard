@@ -10,7 +10,6 @@ const AddProductImages = ({ getCachedList, fields_image, productId }) => {
     uuidv4(),
   ]);
   const decreaseVariants = (item) => {
-    console.log();
     setIncreasableImagesCount((prev) => prev.filter((i) => i !== item));
   };
 

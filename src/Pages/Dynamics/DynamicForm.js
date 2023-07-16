@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
-import { handleUploadCategoryImages, handleUploadColorImage, handleUploadOfferImage, handleUploadReviewerImage } from "../../Api/DynamicUploadHandler";
+import {
+  handleUploadCategoryImages,
+  handleUploadColorImage,
+  handleUploadOfferImage,
+  handleUploadReviewerImage,
+} from "../../Api/DynamicUploadHandler";
 import { uploadCategoryImage } from "../../Api/upload";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
@@ -16,7 +21,6 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   const { CACHE_LANGUAGES, languages } = useGlobalOptions();
   const location = useLocation();
   const { addItem, status } = useAdd();
-  console.log(location);
 
   const [resetForm, setResetForm] = useState(false);
   const [resetContentForm, setResetContentForm] = useState(false);
@@ -43,10 +47,8 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
     }
   };
   const onSubmitContent = async (data) => {
-    console.log(data);
     if (!itemId && !data?.[`${SUPABASE_TABLE_NAME}_id`]) return;
     const list = Object.values(data);
-    console.log(CACHE_LANGUAGES, data);
     if (list?.length) {
       for (const item of list) {
         if (SUPABASE_TABLE_NAME === "category") {

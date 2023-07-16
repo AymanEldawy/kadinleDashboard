@@ -20,7 +20,7 @@ const StatisticsCard = ({
   const { lang } = useContext(LanguageContext);
 
   return (
-    <div className="bg-white rounded-[2px] p-4 text-[#212529]">
+    <div className="bg-white dark:bg-bgmaindark dark:text-white rounded-[2px] p-4 text-[#212529] shadow">
       <div className="flex justify-between items-center gap-1">
         <h2 className="w-1/2 overflow-hidden whitespace-nowrap text-ellipsis uppercase text-sm font-medium">
           {fetchWord(name, lang)}

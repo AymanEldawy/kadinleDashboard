@@ -33,7 +33,6 @@ const Update = () => {
   };
   const fetchDataContent = async () => {
     const response = await getData(tableName, id, "content");
-    console.log(response);
     setTableContentData(response);
   };
   useEffect(() => {
@@ -55,7 +54,6 @@ const Update = () => {
         if (tableName === "color") await handleUploadColorImage(data);
       }
     }
-    console.log(response);
   };
   const onSubmitContent = async (data, index) => {
     if (!data?.id) return;
@@ -71,11 +69,8 @@ const Update = () => {
         await handleUploadOfferImage(item, item?.id, CACHE_LANGUAGES);
       }
     }
-    console.log(data, index);
-    const response = await updateItem(`${tableName}_content`, data);
-    console.log(response);
+    await updateItem(`${tableName}_content`, data);
   };
-  console.log(tableData);
   return (
     <>
       <BlockPaper title={tableName}>
@@ -88,7 +83,6 @@ const Update = () => {
       {tableContentData?.length ? (
         <div>
           {tableContentData?.map((item, index) => {
-            console.log(item);
             return (
               <div key={item?.id}>
                 <BlockPaper>

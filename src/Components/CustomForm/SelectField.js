@@ -1,11 +1,10 @@
 import React from "react";
-import { uuidLanguageEn, uuidRegionEn } from "../../Api/data";
 
 const SelectField = ({
   label,
   error,
   className,
-  list: theList,
+  list,
   keyLabel = "name",
   keyValue = "id",
   hideText,
@@ -18,11 +17,6 @@ const SelectField = ({
   containerClassName,
   ...field
 }) => {
-  let list = theList?.[0]?.hasOwnProperty("language_id")
-    ? theList?.filter((c) => c?.language_id === uuidLanguageEn)
-    : theList?.[0]?.hasOwnProperty("region_id")
-    ? theList?.filter((c) => c?.region_id === uuidRegionEn)
-    : theList;
   return (
     <div
       className={`flex flex-col ${containerClassName}`}
@@ -50,9 +44,6 @@ const SelectField = ({
       >
         {!hideText ? <option>Choose...</option> : null}
         {list?.map((item, index) => {
-          // let theItem = item?.hasOwnProperty("language_id")
-          //   ? item?.language_id === uuidLanguageEn
-          //   : item;
           return (
             <option
               key={`${item[keyValue]}-${name}`}

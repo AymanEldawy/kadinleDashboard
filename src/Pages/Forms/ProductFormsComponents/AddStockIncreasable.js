@@ -34,7 +34,6 @@ export const AddStockIncreasable = ({
       };
     });
   };
-  console.log(allValues?.[itemKey]?.stocks?.[subItemKey]);
   return (
     <div>
       <IncreasableBar

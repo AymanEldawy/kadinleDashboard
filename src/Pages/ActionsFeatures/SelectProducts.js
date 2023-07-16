@@ -73,7 +73,6 @@ const SelectProduct = ({}) => {
   useEffect(() => {
     setId("");
   }, [activeStage]);
-  console.log(id);
 
   return (
     <div>

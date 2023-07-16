@@ -1,10 +1,18 @@
 "use client";
 import { createContext, useState, useEffect, useContext } from "react";
 import { useFetch } from "../hooks/useFetch";
+import { useLocalStorage } from "../hooks/useLocalStorage";
+import { getUser } from "../Api/auth";
 
 export const GlobalOptions = createContext();
 
 export const GlobalOptionsProvider = ({ children }) => {
+  const [regionId, setRegionId] = useLocalStorage("KADINLE_DEFAULT_REGION", 0);
+  const [languageId, setLanguageId] = useLocalStorage(
+    "KADINLE_DEFAULT_LANGUAGE",
+    ""
+  );
+
   const { getData } = useFetch();
   const [openLanguageForm, setOpenLanguageForm] = useState(false);
   const [languages, setLanguages] = useState([]);
@@ -13,10 +21,11 @@ export const GlobalOptionsProvider = ({ children }) => {
   const [CACHE_REGIONS, setCACHE_REGIONS] = useState({});
   const [defaultLanguage, setDefaultLanguage] = useState();
   const [defaultRegion, setDefaultRegion] = useState();
-
+  const [user, setUser] = useState();
+  const [refresh, serRefresh] = useState(false);
+  // const [languageId, setLanguageId] = useLocalStorage('name', '');
   const getAndCacheData = async (table, setData, setCache) => {
     const response = await getData(table);
-    console.log(response, "----");
     setData(response);
     // if(table === 'language') setLanguages(response)
     let cache = {};
@@ -28,10 +37,11 @@ export const GlobalOptionsProvider = ({ children }) => {
     }
   };
   const setDefaultSettings = (type, data) => {
-    console.log(type, data);
     if (type === "region") {
       setDefaultRegion(data);
+      setRegionId(data);
     } else {
+      setLanguageId(data);
       setDefaultLanguage(data);
     }
   };
@@ -39,14 +49,26 @@ export const GlobalOptionsProvider = ({ children }) => {
   useEffect(() => {
     getAndCacheData("language", setLanguages, setCACHE_LANGUAGES).then(
       (res) => {
-        setDefaultSettings("language", languages[0]);
+        if (languageId) {
+          setDefaultSettings("language", languageId);
+        } else {
+          setDefaultSettings("language", languages[0]);
+        }
       }
     );
     getAndCacheData("region", setRegions, setCACHE_REGIONS).then((res) => {
-      setDefaultSettings("region", regions[0]);
+      if (languageId) {
+        setDefaultSettings("region", regionId);
+      } else {
+        setDefaultSettings("region", regions[0]);
+      }
     });
   }, []);
-  console.log(defaultLanguage, defaultRegion);
+  useEffect(() => {
+    getUser().then((res) => {
+      setUser(res || "ayman");
+    });
+  }, [refresh]);
 
   const values = {
     languages,
@@ -58,6 +80,9 @@ export const GlobalOptionsProvider = ({ children }) => {
     defaultRegion,
     setDefaultSettings,
     setOpenLanguageForm,
+    serRefresh,
+    refresh,
+    user,
   };
   return (
     <GlobalOptions.Provider value={values}>{children}</GlobalOptions.Provider>

@@ -16,47 +16,50 @@ const DynamicList = ({
   renderTableAction,
   setSelectedList,
   selectedList,
+  hideBar,
+  hideAction,
+  hideSelect,
 }) => {
-  const { loading, getData } = useFetch();
+  const { loading, getDataWithPagination } = useFetch();
   const { deleteItem } = useDelete();
   const [data, setData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [openConfirmation, setOpenConfirmation] = useState(false);
-  const [itemsPerPage, setItemsPerPage] = useState(20);
-  const [,] = useState({});
+  const [pageCount, setPageCount] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(50);
+  const [totalCount, setTotalCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(1);
 
   const handleDeleteItem = async (selectedList) => {
     await deleteItem(tableName, selectedList);
     setRefresh((p) => !p);
   };
 
-  useEffect(() => {
-    (async () => {
-      if (!!oldData) {
-        setData(oldData);
-      } else {
-        setData(await getData(tableName));
-      }
-    })();
-  }, [refresh]);
+  const fetchData = async () => {
+    const response = await getDataWithPagination(
+      tableName,
+      itemOffset,
+      itemsPerPage
+    );
+    setData(response?.data);
+    setTotalCount(response?.count);
+    setRefresh((p) => !p);
+    setPageCount(Math.ceil(totalCount / parseInt(itemsPerPage)));
+  };
+  useEffect(() => {}, [refresh, itemOffset]);
 
+  useEffect(() => {
+    fetchData();
+    setRefresh((p) => !p);
+  }, [pageCount, itemsPerPage, itemOffset]);
+
+  const handlePageClick = (index) => {
+    // const newOffset = (event.selected * itemsPerPage) % filterList?.length;
+    setItemOffset(index);
+  };
   return (
     <>
-      {/* <PopupFormOne
-        setInitialFields={setInitialFields}
-        setOldValues={setOldValues}
-        open={openFeaturesForm}
-        setOpen={setOpenFeaturesForm}
-        oldValues={oldValues}
-        table={activeStage}
-        layout={layout}
-        setLayout={setLayout}
-        initialFields={initialFields}
-        onSubmit={onSubmit}
-        resetForm={resetForm}
-      /> */}
-
       <ConfirmModal
         onConfirm={() => {
           handleDeleteItem(selectedList);
@@ -66,27 +69,33 @@ const DynamicList = ({
         setOpen={setOpenConfirmation}
       />
       <div className="">
-        <TableBar
-          onDeleteClick={() => setOpenConfirmation(true)}
-          onAddClick={onAddClick}
-          onSearchChange={setSearchValue}
-          searchValue={searchValue}
-          onSelectChange={setItemsPerPage}
-          itemsPerPage={itemsPerPage}
-          selectedList={selectedList}
-        />
+        {hideBar ? null : (
+          <TableBar
+            onDeleteClick={() => setOpenConfirmation(true)}
+            onAddClick={onAddClick}
+            onSearchChange={setSearchValue}
+            searchValue={searchValue}
+            onSelectChange={setItemsPerPage}
+            itemsPerPage={itemsPerPage}
+            selectedList={selectedList}
+          />
+        )}
         <SuperTable
+          itemOffset={itemOffset}
           itemsPerPage={itemsPerPage}
+          setPageCount={setPageCount}
+          pageCount={pageCount}
           deleteItem={deleteItem}
+          handlePageClick={handlePageClick}
           columns={columns}
           data={data}
-          allowSelect
+          allowSelect={hideSelect}
           searchValue={searchValue}
           selectedList={selectedList}
           setSelectedList={setSelectedList}
           loading={loading}
           tableName={tableName}
-          allowActions
+          allowActions={!hideAction}
           actionKey="Actions"
           actionsContent={(data) => {
             if (!!renderTableAction) return renderTableAction(data);

@@ -5,8 +5,10 @@ import MoneyIcon from "../../Components/icons/MoneyIcon";
 import ShoppingBagIcon from "../../Components/icons/ShoppingBagIcon";
 import UserIcon from "../../Components/icons/UserIcon";
 import WalletIcon from "../../Components/icons/WalletIcon";
-import { getCount, getTotalEarning } from "../../Api/statictes";
+import { bestSelling, getCount, getTotalEarning } from "../../Api/statictes";
 import SkeletonCard from "../../Components/StatisticsCards/SkeletonCard";
+import DynamicList from "../Dynamics/DynamicList";
+import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 
 const dummyStatistics = {
   totalEarnings: {
@@ -17,7 +19,7 @@ const dummyStatistics = {
     color: "bg-[#0ab39c2e]",
     // percentage: "16.24",
     // isIncreased: true,
-    link: "",
+    link: "/order",
     linkText: "viewNetEarnings",
   },
   orders: {
@@ -27,7 +29,7 @@ const dummyStatistics = {
     color: "bg-[#299cdb2e]",
     // percentage: "3.57",
     // isIncreased: false,
-    link: "",
+    link: "/orders",
     linkText: "viewAllOrders",
   },
   customers: {
@@ -37,7 +39,7 @@ const dummyStatistics = {
     color: "bg-[#f7b84b2e]",
     // percentage: "29.08",
     // isIncreased: true,
-    link: "",
+    link: "/users",
     linkText: "seeDetails",
   },
   myBalance: {
@@ -55,11 +57,22 @@ const dummyStatistics = {
 
 const Home = () => {
   const [statistics, setStatistics] = useState(dummyStatistics);
+  const [orders, setOrders] = useState([]);
+  const [bestSelling, setBestSelling] = useState([]);
   const [isLoading, setIsLoading] = useState({
     totalEarnings: true,
     orders: true,
     customers: true,
   });
+
+  const getBestSelling = async () => {
+    const response = await bestSelling();
+    setBestSelling(response);
+  };
+  const getRecentOrders = async () => {
+    const response = await getRecentOrders();
+    setBestSelling(response);
+  };
 
   const getTotalEarningsHandler = async () => {
     try {
@@ -99,6 +112,8 @@ const Home = () => {
     getTotalEarningsHandler();
     getOrdersCountHandler();
     getCustomersCountHandler();
+    getBestSelling();
+    getRecentOrders();
   }, []);
 
   const allIsLoading = Object.values(isLoading).reduce((acc, cur) => {
@@ -119,6 +134,24 @@ const Home = () => {
   return (
     <div>
       <StatisticsCards data={statistics} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="dark:bg-bgmaindark bg-white shadow my-8">
+          <DynamicList
+            tableName="order"
+            columns={COMBINE_DB_API.combine_order_short}
+            hideBar
+            hideAction
+          />
+        </div>
+        <div className="dark:bg-bgmaindark bg-white shadow my-8">
+          <DynamicList
+            tableName="order"
+            columns={COMBINE_DB_API.combine_order_short}
+            hideBar
+            hideAction
+          />
+        </div>
+      </div>
     </div>
   );
 };

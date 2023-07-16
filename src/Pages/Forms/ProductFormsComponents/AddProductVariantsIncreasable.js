@@ -52,8 +52,6 @@ const AddProductVariantsIncreasable = ({
   };
   const handleFiles = (files) => handelChangeTopField("files", files, itemKey);
 
-  console.log(allValues);
-  console.log(getCachedList);
   return (
     <div className="mb-8" key={key}>
       <div>

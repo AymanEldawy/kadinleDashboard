@@ -51,10 +51,8 @@ const AddProductImagesIncreasable = ({
           product_id: productId,
           image: path?.url,
         });
-        console.log(data, "onSubmitProductVariants", response);
       }
     }
-    // setProductImagesValues({});
   };
 
   return (

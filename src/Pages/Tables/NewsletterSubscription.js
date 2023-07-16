@@ -8,8 +8,6 @@ const NewsletterSubscription = () => {
   const [selectedList, setSelectedList] = useState([]);
   const columns = COMBINE_DB_API.combine_newsletter_subscription || [];
 
-  console.log(selectedList);
-
   // onClickRemove
   // onClickSend
   // OnSendMultiple

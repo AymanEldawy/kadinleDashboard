@@ -1,7 +1,6 @@
 import React from "react";
 
 const HourglassIcon = ({ fill }) => {
-  console.log(fill)
   return (
     <svg
       height="800px"

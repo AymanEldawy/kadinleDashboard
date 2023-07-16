@@ -18,7 +18,6 @@ const UploadFile = ({
     if (src && typeof src === "object") {
       setPreview(URL.createObjectURL(src));
     } else {
-      console.log(typeof src);
       setPreview("");
     }
   }, [src]);

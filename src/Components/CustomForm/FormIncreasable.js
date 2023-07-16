@@ -84,7 +84,6 @@ export const FormIncreasable = ({
     });
   };
   const handelChangeField = (name, value, required, row) => {
-    console.log(name, value);
     if (name === "language_id") {
       if (selectedTab?.includes(value)) return;
       setSelectedTab((prev) => [...prev, value]);
@@ -153,6 +152,7 @@ export const FormIncreasable = ({
         <div className="mb-4 border-b flex flex-wrap w-full">
           {listCount?.map((item, index) => (
             <button
+              key={`item-${item}`}
               className={`text-gray-500 pb-2 text-xs border-b-2 -mb-[2px] !gap-1 !px-1 p-2 capitalize flex items-center ${
                 index === activeTab
                   ? "border-primary-blue text-primary-blue font-medium"

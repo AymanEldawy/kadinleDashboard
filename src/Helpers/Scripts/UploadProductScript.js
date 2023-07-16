@@ -30,7 +30,6 @@ let IMAGES_NAME = {};
 const getData = async (tableName, cacheObject) => {
   let key = `${tableName}_id`;
   const res = await supabase.from(`${tableName}_content`).select("*");
-  // console.log(res);
   res?.data?.forEach((item) => {
     cacheObject[item?.name] = item?.[key];
   });
@@ -45,21 +44,18 @@ const getProducts = async () => {
 const getCategories = async () => {
   const res = await supabase.from("category_content").select("*");
   res?.data?.forEach((category) => {
-    // console.log('categories', category?.title, category?.category_id);
     CATEGORIES_ID[category?.title?.trim()] = category?.category_id;
   });
 };
 const getColors = async () => {
   const res = await supabase.from("color").select("*");
   res?.data?.forEach((color) => {
-    // console.log('colors', color?.color_sku, color?.id);
     COLORS_IDS[color?.color_sku] = color?.id;
   });
 };
 const getSizes = async () => {
   const res = await supabase.from("size").select("*");
   res?.data?.forEach((size) => {
-    // console.log('sizes', size?.size_sku, size?.id);
     SIZES_IDS[size?.size_sku] = size?.id;
   });
 };
@@ -176,7 +172,6 @@ const createProductContent = async (productContent, index, setLogs = []) => {
 };
 
 const createStock = async (stockContent, index, setLogs = []) => {
-  console.log(stockContent, "-s");
   const res = await supabase.from("stock").insert(stockContent);
   if (res?.error)
     setLogs((prev) => [
@@ -193,7 +188,6 @@ const createStock = async (stockContent, index, setLogs = []) => {
     ]);
 };
 const createVariant = async (variantContent, index, setLogs = []) => {
-  console.log(variantContent, "-v");
   const res = await supabase
     .from("product_variant")
     .insert(variantContent)
@@ -219,7 +213,6 @@ const createVariant = async (variantContent, index, setLogs = []) => {
 };
 const createProductMedia = async (mediaContent, index, setLogs = []) => {
   const res = await supabase.from("product_image").insert(mediaContent);
-  console.log(mediaContent);
   if (res?.error)
     setLogs((prev) => [
       ...prev,
@@ -259,7 +252,6 @@ const handelChange = async (file, setLogs) => {
       IGNORED_ROWS.push(i + 1);
       continue;
     } else if (!category_id || !size_id || !color_id) {
-      console.log(":", i);
       setLogs((prev) => [
         ...prev,
         {

@@ -166,6 +166,14 @@ const combine_order = [
   // "payment_status",
   "user",
 ];
+const combine_order_short = [
+  "order_number",
+  "user",
+  "variant",
+  "price",
+  "order_status",
+  "quantity",
+];
 
 const combine_order_return_request = [
   "id",
@@ -387,5 +395,6 @@ const COMBINE_DB_API = {
   combine_warehouse_availability,
   combine_warehouse,
   combine_stock,
+  combine_order_short,
 };
 export default COMBINE_DB_API;

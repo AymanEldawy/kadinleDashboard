@@ -12,7 +12,7 @@ const ChartData = () => {
       SUPABASE_TABLE_NAME="chart_data"
       columns={columns}
       title="Chart Data"
-      onAddClick={() => navigate(`/add-chart-data`)}
+      // onAddClick={() => navigate(`/add-chart-data`)}
     />
   );
 };

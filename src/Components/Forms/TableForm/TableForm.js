@@ -54,12 +54,10 @@ const TableForm = ({
       if (!!setGetIndexOfRowUpdated) {
         setGetIndexOfRowUpdated(index);
       }
-      // console.log(index)
     },
     [grid]
   );
   const submit = () => {
-    console.log("submit", grid);
     onSubmit(grid);
   };
 

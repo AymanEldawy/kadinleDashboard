@@ -1,29 +1,19 @@
 import * as React from "react";
 import { useContext } from "react";
-import { useRef } from "react";
-import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import LanguageBar from "../Components/LanguageBar/LanguageBar";
 import NotificationBar from "../Components/NotificationBar/NotificationBar";
-import SearchBar from "../Components/SearchBar/SearchBar";
 import ToggleThemeBar from "../Components/ToggleThemeBar/ToggleThemeBar";
-import UserBar from "../Components/UserBar/UserBar";
 import { ThemeContext } from "../Context/ThemeContext";
 import { exitFullscreen, openFullscreen } from "../Helpers/functions";
-import {
-  FitScreenIcon,
-  FullScreenIcon,
-  LanguageIcon,
-  MoonIcon,
-  SunIcon,
-} from "../Helpers/Icons";
+import { FullScreenIcon, LogoutIcon } from "../Helpers/Icons";
 import BallIcon from "../Helpers/Icons/BallIcon";
 import BarsIcon from "../Helpers/Icons/BarsIcon";
 import RegionBar from "../Components/LanguageBar/RegionBar";
 
-function Header({ setOpen, mode, setMode }) {
+function Header({ open, setOpen, mode, setMode }) {
   const { changeTheme, theme } = useContext(ThemeContext);
   const [isFullScreen, setIsFullScreen] = useState(
     !!document.fullscreenElement
@@ -43,12 +33,14 @@ function Header({ setOpen, mode, setMode }) {
     <header className="bg-[#144479] text-white py-2">
       <div className="flex py-2 px-4">
         <div className="flex items-center gap-4">
-          <button className="" onClick={() => setOpen((prev) => !prev)}>
+          <button
+            className={open ? "p-2 rounded-full hover:bg-[#0002]" : ""}
+            onClick={() => setOpen((prev) => !prev)}
+          >
             <BarsIcon />
           </button>
-          <div className="">
-            <SearchBar />
-          </div>
+          <Link to="/">Dashboard</Link>
+          <div className="">{/* <SearchBar /> */}</div>
         </div>
         <div className="ml-auto :rtl:mr-auto rtl:ml-0 flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -65,6 +57,9 @@ function Header({ setOpen, mode, setMode }) {
             </button>
             <ToggleThemeBar theme={theme} changeTheme={changeTheme} />
             <NotificationBar />
+            <button className="p-2 rounded-full hover:bg-[#0002]">
+              <LogoutIcon />
+            </button>
           </div>
           {/* <UserBar /> */}
         </div>

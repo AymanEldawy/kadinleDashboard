@@ -15,6 +15,9 @@ const DynamicLayout = ({
   oldValue,
   getSelectedList,
   contentBar,
+  hideBar,
+  hideAction,
+  hideSelect,
 }) => {
   const [selectedList, setSelectedList] = useState({});
   useEffect(() => {
@@ -31,7 +34,7 @@ const DynamicLayout = ({
             <span className="border-gray-300 border text-black px-1 rounded bg-gray-200">
               {Object.keys(selectedList)?.length}
             </span>
-            Selected rows{" "}
+            Selected rows
           </p>
         ) : null
       }
@@ -45,6 +48,9 @@ const DynamicLayout = ({
         onAddClick={onAddClick}
         setSelectedList={setSelectedList}
         selectedList={selectedList}
+        hideBar={hideBar}
+        hideAction={hideAction}
+        hideSelect={hideSelect}
       />
     </BlockPaper>
   );

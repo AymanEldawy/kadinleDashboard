@@ -1,5 +1,6 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
 import {
+  contentFilterFetch,
   getAddresses,
   getCategories,
   getChartContent,
@@ -8,6 +9,7 @@ import {
   getColors,
   getComments,
   getCountries,
+  getNews,
   getOffers,
   getOrders,
   getOrderStatus,
@@ -26,19 +28,20 @@ import {
   getUserSubTable,
   getWarehouseAvailability,
   getWarehouses,
-  uuidLanguageEn,
+  normalFetch,
+  normalFetchWithPagination,
 } from "./data";
 
 const fetches = {
-  address: getAddresses(),
-  category: getCategories(),
-  chart: getChartContent(),
-  chart_data: getChartData(),
-  color: getColors(),
-  country: getCountries(),
-  size: getSizes(),
-  collection: getCollections(),
-  comment: getComments(),
+  address: getAddresses,
+  category: getCategories,
+  chart: getChartContent,
+  chart_data: getChartData,
+  color: getColors,
+  country: getCountries,
+  size: getSizes,
+  collection: getCollections,
+  comment: getComments,
   fabric: getProductFeatures("fabric_content"),
   material: getProductFeatures("material_content"),
   lining: getProductFeatures("lining_content"),
@@ -47,36 +50,44 @@ const fetches = {
   season: getProductFeatures("season_content"),
   feature: getProductFeatures("feature_content"),
   pattern: getProductFeatures("pattern_content"),
-  offer: getOffers(),
-  product: getProducts(),
-  order: getOrders(),
-  point: getPoints(),
-  user_address: getUserAddresses(),
-  user_cart: getUsersCart(),
+  offer: getOffers,
+  product: getProducts,
+  order: getOrders,
+  point: getPoints,
+  user_address: getUserAddresses,
+  user_cart: getUsersCart,
   user_invite: getUserSubTable("user_invite"),
   user_Like: getUserSubTable("user_Like"),
   user_Suggestion: getUserSubTable("user_Suggestion"),
   user_Ticket: getUserSubTable("user_Ticket"),
   user_Wallet: getUserSubTable("user_Wallet"),
   user_Point: getUserSubTable("user_Point"),
-  stock: getStocks(),
-  warehouse: getWarehouses(),
-  warehouse_availability: getWarehouseAvailability(),
-  showreel: getShowreels(),
-  order_return_request: getReturnRequests(),
-  order_status: getOrderStatus(),
-  return_status: getReturnStatus(),
+  stock: getStocks,
+  warehouse: getWarehouses,
+  warehouse_availability: getWarehouseAvailability,
+  // showreel: getShowreels,
+  order_return_request: getReturnRequests,
+  order_status: getOrderStatus,
+  return_status: getReturnStatus,
+  news: getNews,
 };
-const normalFetch = async (table) => {
-  const response = await supabase.from(table).select();
-  return response;
+
+export const getTableDataWithPagination = async (table, page, pageSize) => {
+  if (table && fetches.hasOwnProperty(table)) {
+    const fetchData = fetches[table];
+    const response = await fetchData(page, pageSize);
+    return response;
+  } else {
+    const response = normalFetchWithPagination(table, page, pageSize);
+    return response;
+  }
 };
 
 export const getTableData = async (table) => {
-  console.log(table);
-  const response = fetches.hasOwnProperty(table)
-    ? await fetches[table]
-    : await normalFetch(table);
+  const response =
+    table?.indexOf("_content") !== -1
+      ? await contentFilterFetch(table)
+      : await normalFetch(table);
   return response;
 };
 export const getTableDataById = async (table, itemId) => {
@@ -88,7 +99,6 @@ export const getTableContentDataById = async (table, itemId) => {
     .from(`${table}_content`)
     .select("*")
     .eq(`${table}_id`, itemId);
-  console.log(table, response, "called ");
   return response;
 };
 
@@ -101,6 +111,10 @@ export const addNewItem = async (table, item) => {
 // delete items
 export const deleteItems = async (table, ids) => {
   const response = await supabase.from(table).delete().in("id", ids);
+  return response;
+};
+export const deleteItem = async (table, id) => {
+  const response = await supabase.from(table).delete().eq("id", id);
   return response;
 };
 

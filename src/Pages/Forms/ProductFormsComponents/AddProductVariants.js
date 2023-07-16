@@ -83,17 +83,12 @@ const AddProductVariants = ({
         if (values?.files) {
           for (const file of files) {
             // upload files
-            console.log(file);
             const path = await uploadProductImage({
               productSku,
               colorSku: CACHED_TABLES_SKU?.color?.[color_id],
               file: file?.file,
             });
-            console.log("url", {
-              productSku,
-              colorSku: CACHED_TABLES_SKU?.color?.[color_id],
-              file,
-            });
+
             if (!path?.url) {
               toast.error(`Felid to upload ${file?.name}`);
             } else {
@@ -102,12 +97,6 @@ const AddProductVariants = ({
                 color_id,
                 size_id: model_size,
                 image: path?.url,
-              });
-              console.log("img", {
-                product_id: productId,
-                color_id,
-                size_id: model_size,
-                image: "path?.url",
               });
             }
           }
@@ -134,19 +123,12 @@ const AddProductVariants = ({
                 ...stock,
                 variant_id: variantId,
               });
-              console.log("stock", {
-                ...stock,
-                variant_id: variantId,
-              });
             }
           }
         }
-        // add stock
       }
     }
   };
-
-  console.log(Object.values(allValues), "-- values");
 
   return (
     <form className="mb-8" onSubmit={onSubmitProductVariants}>
@@ -158,7 +140,6 @@ const AddProductVariants = ({
         setActiveTab={setActiveTab}
       />
       {increasableVariantsCount?.map((item, index) => {
-        console.log(item, index, activeTab, "----0-0");
         return (
           <div
             className={`relative z-10 ${activeTab !== item ? "hidden" : ""} `}

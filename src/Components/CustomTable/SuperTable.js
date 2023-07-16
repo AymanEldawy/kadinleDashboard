@@ -4,7 +4,6 @@ import { useContext } from "react";
 import ReactPaginate from "react-paginate";
 import { Link, useLocation } from "react-router-dom";
 
-import { uuidLanguageEn, uuidRegionEn } from "../../Api/data";
 import { ChevronIcon } from "../../Helpers/Icons";
 import { useFetch } from "../../hooks/useFetch";
 import { FullImage } from "../Global/FullImage/FullImage";
@@ -35,15 +34,15 @@ const SuperTable = ({
   primaryStyles,
   loading,
   tableName,
+  pageCount,
+  itemOffset,
+  handlePageClick,
 }) => {
   const location = useLocation();
   const { getData } = useFetch();
   const { lang } = useContext(LanguageContext);
-  const [filterList, setFilterList] = useState(data);
-  const [itemOffset, setItemOffset] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
   const [CACHED_TABLE, setCACHED_TABLE] = useState({});
-  const [pageCount, setPageCount] = useState(1);
   const [refresh, setRefresh] = useState(false);
   let defaultPrimaryStyle = primaryStyles
     ? {
@@ -60,16 +59,7 @@ const SuperTable = ({
     ...defaultPrimaryStyle,
     containerClassName: "!rounded-none",
   };
-  useEffect(() => {
-    setFilterList(data);
-  }, [data]);
 
-  useEffect(() => {
-    // Needed more work
-    const endOffset = itemOffset + parseInt(itemsPerPage);
-    setCurrentItems(filterList?.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(filterList?.length / parseInt(itemsPerPage)));
-  }, [filterList, itemsPerPage, itemOffset]);
   useEffect(() => {}, [refresh]);
   useEffect(() => {
     if (searchValue) {
@@ -83,7 +73,6 @@ const SuperTable = ({
               ?.indexOf(searchValue?.toLowerCase()) !== -1
           )
             newList.push(item);
-          console.log(JSON.stringify(item));
           // if(item[col] === 'object')
           if (typeof item[col] == "string") {
             if (
@@ -100,13 +89,10 @@ const SuperTable = ({
               newList.push(item);
           }
         }
+        setCurrentItems(newList);
       }
-      // setItemOffset(1);
-      setCurrentItems(newList?.slice(0, itemsPerPage));
     } else {
-      // setItemOffset(1);
-      setFilterList(data);
-      setCurrentItems(data?.slice(0, itemsPerPage));
+      setCurrentItems(data);
     }
   }, [searchValue, data]);
 
@@ -124,7 +110,6 @@ const SuperTable = ({
     for (const user of response) {
       hash[user?.id] = user;
     }
-    console.log(hash);
     setCACHED_TABLE((prev) => {
       return {
         ...prev,
@@ -189,10 +174,6 @@ const SuperTable = ({
     [selectedList, itemsPerPage, data]
   );
 
-  const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % filterList?.length;
-    setItemOffset(newOffset);
-  };
   const sortBy = async (col) => {
     const list = [...currentItems];
     const newSortOrder = sorting[col] === "asc" ? "desc" : "asc";
@@ -212,9 +193,8 @@ const SuperTable = ({
   };
   useEffect(() => {}, [CACHED_TABLE]);
 
-  console.log(CACHED_TABLE, "cache");
   return (
-    <>
+    <div key={itemOffset}>
       <Table
         containerClassName={classes?.containerClassName}
         tableClassName={classes?.table}
@@ -238,7 +218,11 @@ const SuperTable = ({
               else
                 return (
                   <TableHeadCol
-                    contentClassName={classes?.colHeadContentClassName}
+                    contentClassName={`${classes?.colHeadContentClassName} ${
+                      col === "description" || col === "name"
+                        ? "min-w-[160px]"
+                        : ""
+                    }`}
                     classes={classes?.colHead}
                     key={`${col}-${index}`}
                     sort
@@ -269,7 +253,7 @@ const SuperTable = ({
             </tr>
           ) : (
             <>
-              {currentItems?.slice(0, 25)?.map((row, index) => {
+              {currentItems?.map((row, index) => {
                 return (
                   <TableRow
                     key={`${row?.Name}-${index}`}
@@ -371,16 +355,16 @@ const SuperTable = ({
                         typeof row[col] === "object" &&
                         row?.[col]?.[`${col}_content`]
                       ) {
-                        let content =
-                          col === "size"
-                            ? row?.[col][`${col}_content`]?.find(
-                                (c) => c?.region_id === uuidRegionEn
-                              )
-                            : row?.[col][`${col}_content`]?.find(
-                                (c) => c?.language_id === uuidLanguageEn
-                              );
+                        let content = row?.[col][`${col}_content`]?.[0];
+                        // col === "size"
+                        //   ? row?.[col][`${col}_content`]?.find(
+                        //       (c) => c?.region_id === uuidRegionEn
+                        //     )
+                        //   : row?.[col][`${col}_content`]?.find(
+                        //       (c) => c?.language_id === uuidLanguageEn
+                        //     );
                         value = {
-                          name: content?.name,
+                          name: content?.name || content?.title,
                           path: col,
                           id: content?.[`${col}_id`],
                           link: true,
@@ -388,7 +372,6 @@ const SuperTable = ({
                         // content
                       }
                       if (col === "variant") {
-                        console.log("herr");
                         let content = {};
                         let product_content = !!row?.hasOwnProperty(
                           "product_variant"
@@ -396,13 +379,13 @@ const SuperTable = ({
                           ? row?.product_variant?.product?.product_content
                           : row?.order_content?.[0].product_variant?.product
                               ?.product_content;
-                        content = product_content?.find(
-                          (c) => c?.language_id === uuidLanguageEn
-                        );
+                        content = product_content?.[0];
+                        // ?.find(
+                        //   (c) => c?.language_id === uuidLanguageEn
+                        // );
                         let variants = !!row?.hasOwnProperty("product_variant")
                           ? row?.product_variant
                           : row?.order_content?.[0].product_variant;
-                        console.log(variants);
                         value = {
                           name: variants?.sku,
                           path: col,
@@ -422,9 +405,10 @@ const SuperTable = ({
                         tableName === "order" &&
                         (row?.order_status?.[col] || col === "order_status")
                       ) {
-                        let content = row?.order_status?.status_content?.find(
-                          (c) => c?.language_id === uuidLanguageEn
-                        );
+                        let content = row?.order_status?.status_content?.[0];
+                        // ?.find(
+                        //   (c) => c?.language_id === uuidLanguageEn
+                        // );
                         value = {
                           name:
                             col === "order_status"
@@ -453,9 +437,10 @@ const SuperTable = ({
                       }
 
                       if (row?.[tableNameContent]?.[0]?.hasOwnProperty(col)) {
-                        let content = row?.[tableNameContent]?.find(
-                          (c) => c?.language_id === uuidLanguageEn
-                        );
+                        let content = row?.[tableNameContent]?.[0];
+                        // ?.find(
+                        //   (c) => c?.language_id === uuidLanguageEn
+                        // );
                         if (typeof content?.[col] !== "object") {
                           let quantity =
                             col === "quantity"
@@ -533,7 +518,7 @@ const SuperTable = ({
           )}
         </TableBody>
       </Table>
-      {currentItems?.length && !loading ? (
+      {pageCount && !loading ? (
         <>
           <ReactPaginate
             breakLabel="..."
@@ -542,9 +527,10 @@ const SuperTable = ({
                 <ChevronIcon />
               </span>
             }
-            onPageChange={handlePageClick}
+            onPageChange={({ selected }) => handlePageClick(selected)}
             pageRangeDisplayed={5}
             pageCount={pageCount}
+            forcePage={itemOffset}
             previousLabel={
               <span className="flex scale-75 rtl:rotate-180">
                 <ChevronIcon />
@@ -564,7 +550,7 @@ const SuperTable = ({
           {fetchWord("no_results", lang)}
         </div>
       ) : null}
-    </>
+    </div>
   );
 };
 

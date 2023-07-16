@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-import { deleteItems } from "../Api/globalActions";
+import { deleteItems, deleteItem as deleteSingle } from "../Api/globalActions";
 
 export const useDelete = () => {
-  const deleteItem = async (table, ids) => {
-    console.log(Object.values(ids));
+  const deleteItem = async (table, ids, operation = "multi") => {
     let loadLanguage = toast.loading("Please wait...");
-    const response = await deleteItems(table, Object.values(ids));
-    console.log(table, response);
+    const response =
+      operation === "single"
+        ? await deleteSingle(table, ids)
+        : await deleteItems(table, Object.values(ids));
     if (response.error) {
       toast.update(loadLanguage, {
         render: response.error || "Field delete, please try again",
@@ -25,5 +26,6 @@ export const useDelete = () => {
       });
     }
   };
+
   return { deleteItem };
 };

@@ -22,7 +22,7 @@ const BlockPaper = ({
                 {" "}
                 {title}{" "}
               </h3>
-              {subTitle ? `subTitle` : null}
+              {subTitle ? subTitle : null}
             </div>
           ) : null}
           {contentBar ? contentBar : null}

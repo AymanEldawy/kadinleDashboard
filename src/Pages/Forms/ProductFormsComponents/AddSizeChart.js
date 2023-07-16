@@ -3,14 +3,11 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 
 import BlockPaper from "../../../Components/BlockPaper/BlockPaper";
-import { FormIncreasable } from "../../../Components/CustomForm/FormIncreasable";
 import SelectField from "../../../Components/CustomForm/SelectField";
 import TableForm from "../../../Components/Forms/TableForm/TableForm";
-import { chart_content, chart_data } from "../../../Helpers/Forms/databaseApi";
-import { PlusIcon } from "../../../Helpers/Icons";
+import { chart_data } from "../../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../../hooks/useAdd";
 import { useFetch } from "../../../hooks/useFetch";
-import MinusIcon from "./../../../Helpers/Icons/MinusIcon";
 
 const CACHE_SIZE_CHART_CONTENT = {};
 const AddSizeChart = ({ getCachedList, productId }) => {
@@ -22,7 +19,6 @@ const AddSizeChart = ({ getCachedList, productId }) => {
 
   const getChartContent = async (id) => {
     const response = await getData("chart_content");
-    console.log(response);
     for (const chart of response) {
       CACHE_SIZE_CHART_CONTENT[chart?.chart_id] = chart;
     }
@@ -40,7 +36,6 @@ const AddSizeChart = ({ getCachedList, productId }) => {
       toast.error("You must to add chart content before create chart data");
       return;
     }
-    console.log(data);
     const list = Object.values(data);
     for (const item of list) {
       if (item?.size_id && chartId && productId) {

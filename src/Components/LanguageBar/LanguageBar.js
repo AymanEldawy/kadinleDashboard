@@ -6,7 +6,6 @@ import { useGlobalOptions } from "../../Context/GlobalOptions";
 const LanguageBar = () => {
   const { languages, setDefaultSettings, defaultLanguage } = useGlobalOptions();
   const [open, setOpen] = useState(false);
-  console.log("called", languages);
   return (
     <div className="relative">
       {open ? (

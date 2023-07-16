@@ -18,7 +18,7 @@ const BlockPaper = ({
         <div className="p-4 shadow bg-white  dark:bg-bgmaindark rounded-md">
           {title ? (
             <div className=" border-b mb-4 pb-2 dark:border-[#333]">
-              <h3 className="capitalizetext-lg font-medium text-gray-600 dark:border-[#333] dark:text-white">
+              <h3 className="capitalize text-lg lg:tex-xl font-medium text-gray-600 dark:border-[#333] dark:text-white">
                 {" "}
                 {title}{" "}
               </h3>

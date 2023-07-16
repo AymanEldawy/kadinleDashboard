@@ -37,6 +37,7 @@ import {
   AddSize,
   AddSizeContent,
   InsertOne,
+  AddUser,
 } from "./../Pages/Forms";
 import Home from "../Pages/StandAlone/Home";
 import SingleUser from "../Pages/StandAlone/SingleUser";
@@ -152,6 +153,7 @@ const authProtectedRoutes = [
   { path: "/add-point", component: <AddPoint /> },
   { path: "/add-order-status", component: <AddOrderStatus /> },
   { path: "/add-return-status", component: <AddReturnStatus /> },
+  { path: "/add-user", component: <AddUser /> },
 
   // update
   // { path: "/update/:name/:id", component: <DynamicForm layout="update" /> },

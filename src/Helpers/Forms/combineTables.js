@@ -273,12 +273,6 @@ const combine_user = [
   "phone",
   "profile_img",
   "wallet",
-  "country",
-  "line_one",
-  "line_two",
-  "city",
-  "postal_code",
-  // "default_address_id",
   "points",
 ];
 const combine_user_address = ["id", "title", "user", "address", "created_at"];

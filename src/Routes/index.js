@@ -10,13 +10,13 @@ const Index = () => {
   const navigate = useNavigate();
   const { user } = useGlobalOptions();
   useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
+    // if (!user) {
+    //   navigate("/login");
+    // }
   }, []);
   return (
     <>
-      {!user ? (
+      {user ? (
         <Routes>
           {publicRoutes.map((route, index) => (
             <Route

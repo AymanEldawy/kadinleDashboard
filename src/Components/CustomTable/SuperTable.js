@@ -36,6 +36,7 @@ const SuperTable = ({
   tableName,
   pageCount,
   itemOffset,
+  hidePagination,
   handlePageClick,
 }) => {
   const location = useLocation();
@@ -518,7 +519,7 @@ const SuperTable = ({
           )}
         </TableBody>
       </Table>
-      {pageCount && !loading ? (
+      {pageCount && !loading && !hidePagination ? (
         <>
           <ReactPaginate
             breakLabel="..."

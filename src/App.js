@@ -2,7 +2,6 @@ import { useContext, useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
-import { bestSelling, getRecentOrders } from "./Api/statictes";
 import Modal from "./Components/Modal/Modal";
 import { GlobalOptions } from "./Context/GlobalOptions";
 import { supabase } from "./Helpers/SupabaseConfig/SupabaseConfig";

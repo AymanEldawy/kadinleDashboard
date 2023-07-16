@@ -1,5 +1,13 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
 
+export const getRecentUser = async (limit = 10) => {
+  const res = await supabase
+    .from("user")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  return res;
+};
 export const getRecentOrders = async (limit = 10) => {
   const res = await supabase
     .from("order")
@@ -22,6 +30,7 @@ export const bestSelling = async () => {
     .select("*, variant:variant_id(product(*,product_content(*)))")
     .order("variant_id", { ascending: false })
     .limit(10);
+
   return data;
 };
 

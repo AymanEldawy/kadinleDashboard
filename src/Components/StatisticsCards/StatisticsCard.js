@@ -23,7 +23,7 @@ const StatisticsCard = ({
     <div className="bg-white dark:bg-bgmaindark dark:text-white rounded-[2px] p-4 text-[#212529] shadow">
       <div className="flex justify-between items-center gap-1">
         <h2 className="w-1/2 overflow-hidden whitespace-nowrap text-ellipsis uppercase text-sm font-medium">
-          {fetchWord(name, lang)}
+          {name}
         </h2>
         {/* <p
           className={`flex items-center ${
@@ -50,7 +50,7 @@ const StatisticsCard = ({
             <CustomCountUp end={statistics} prefix={preStatistics} />
           </p>
           <Link to={link} className="text-sm underline first-letter:capitalize">
-            {fetchWord(linkText, lang)}
+            {linkText}
           </Link>
         </div>
         <div

@@ -19,6 +19,7 @@ const DynamicList = ({
   hideBar,
   hideAction,
   hideSelect,
+  hidePagination,
 }) => {
   const { loading, getDataWithPagination } = useFetch();
   const { deleteItem } = useDelete();
@@ -96,6 +97,7 @@ const DynamicList = ({
           loading={loading}
           tableName={tableName}
           allowActions={!hideAction}
+          hidePagination={hidePagination}
           actionKey="Actions"
           actionsContent={(data) => {
             if (!!renderTableAction) return renderTableAction(data);

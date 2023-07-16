@@ -7,8 +7,8 @@ const CustomCountUp = ({ start = 0, end, prefix }) => {
       start={start}
       end={end}
       duration={2}
-      decimals={2}
-      decimal="."
+      // decimals={2}
+      // decimal="."
       prefix={prefix}
     >
       {({ countUpRef }) => (

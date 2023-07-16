@@ -31,6 +31,7 @@ import {
   normalFetch,
   normalFetchWithPagination,
 } from "./data";
+import { getRecentUser } from "./statictes";
 
 const fetches = {
   address: getAddresses,
@@ -70,6 +71,7 @@ const fetches = {
   order_status: getOrderStatus,
   return_status: getReturnStatus,
   news: getNews,
+  recent_user: getRecentUser(),
 };
 
 export const getTableDataWithPagination = async (table, page, pageSize) => {

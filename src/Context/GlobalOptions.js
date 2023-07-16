@@ -66,7 +66,7 @@ export const GlobalOptionsProvider = ({ children }) => {
   }, []);
   useEffect(() => {
     getUser().then((res) => {
-      setUser(res || "ayman");
+      setUser(res);
     });
   }, [refresh]);
 

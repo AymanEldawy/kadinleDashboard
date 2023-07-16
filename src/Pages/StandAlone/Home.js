@@ -183,6 +183,7 @@ const Home = () => {
             hideAction
             oldData={orders}
             hidePagination
+            hideSelect
           />
         </div>
         <div className="dark:bg-bgmaindark bg-white shadow my-8">

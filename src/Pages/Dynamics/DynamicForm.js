@@ -35,11 +35,11 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
     } else {
       const response = await addItem(SUPABASE_TABLE_NAME, data);
       if (response) {
-        setItemId(response?.data?.[0].id);
+        setItemId(response?.data?.[0]?.id);
         if (SUPABASE_TABLE_NAME === "color")
           await handleUploadColorImage({
             ...data,
-            id: response?.data?.[0].id,
+            id: response?.data?.[0]?.id,
           });
 
         setResetForm(true);

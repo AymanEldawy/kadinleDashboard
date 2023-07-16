@@ -38,7 +38,7 @@ const AddProductVariants = ({
   //     product_id: productId,
   //   });
   //   if (response?.data) {
-  //     setVariantId(response?.data?.[0].id);
+  //     setVariantId(response?.data?.[0]?.id);
   //   }
   // };
 

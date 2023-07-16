@@ -92,7 +92,7 @@ import NotAllowed from "../Components/Auth/NotAllowed";
 const authProtectedRoutes = [
   // add paths
   // { path: "/add-address", component: <AddAddress /> },
-  { path: "/add-language", component: <AddLanguage /> },
+  // { path: "/add-language", component: <AddLanguage /> },
   { path: "/add-category", component: <AddCategory /> },
   { path: "/add-category-content", component: <AddCategoryContent /> },
   { path: "/add-color", component: <AddColor /> },
@@ -165,7 +165,7 @@ const authProtectedRoutes = [
   { path: "/colors-content", component: <ColorsContent /> },
   { path: "/category", component: <Categories /> },
   { path: "/categories-content", component: <CategoriesContent /> },
-  { path: "/language", component: <Languages /> },
+  // { path: "/language", component: <Languages /> },
   { path: "/size", component: <Sizes /> },
   { path: "/sizes-content", component: <SizesContent /> },
   { path: "/address", component: <Addresses /> },
@@ -251,13 +251,11 @@ const authProtectedRoutes = [
   { path: "/upload-sheet", component: <UploadSheet /> },
   { path: "/send-email", component: "" },
   { path: "/", component: <Home /> },
-];
-
-const publicRoutes = [
   { path: "*", component: <NotAllowed /> },
   { path: "/not-found", component: <PageNotFound /> },
-  { path: "/login", component: <Login /> },
 ];
+
+const publicRoutes = [{ path: "/login", component: <Login /> }];
 export { authProtectedRoutes, publicRoutes };
 
 // const AuthorizedDashboard = withAuthorization(Dashboard, ['admin', 'manager']);

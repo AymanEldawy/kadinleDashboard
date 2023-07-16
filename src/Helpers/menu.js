@@ -64,12 +64,12 @@ export const menuData = [
         icon: <CurrencyIcon />,
         path: "/currency",
       },
-      {
-        key: "Languages",
-        name: "Languages",
-        icon: <LanguageIcon />,
-        path: "/language",
-      },
+      // {
+      //   key: "Languages",
+      //   name: "Languages",
+      //   icon: <LanguageIcon />,
+      //   path: "/language",
+      // },
       {
         key: "Regions",
         name: "Regions",

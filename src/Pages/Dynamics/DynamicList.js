@@ -90,13 +90,13 @@ const DynamicList = ({
           handlePageClick={handlePageClick}
           columns={columns}
           data={data}
-          allowSelect={hideSelect}
+          allowSelect={hideSelect ? false : true}
           searchValue={searchValue}
           selectedList={selectedList}
           setSelectedList={setSelectedList}
           loading={loading}
           tableName={tableName}
-          allowActions={!hideAction}
+          allowActions={hideAction ? false : true}
           hidePagination={hidePagination}
           actionKey="Actions"
           actionsContent={(data) => {

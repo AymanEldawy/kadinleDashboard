@@ -164,7 +164,9 @@ const SuperTable = ({
         let newList = {};
         let count = 0;
         for (const key in data) {
-          let uniqueKey = data?.[key]?.id ? data?.[key]?.id : data?.[key].email;
+          let uniqueKey = data?.[key]?.id
+            ? data?.[key]?.id
+            : data?.[key]?.email;
           if (count >= itemsPerPage) break;
           newList[uniqueKey] = uniqueKey;
           count++;
@@ -378,7 +380,7 @@ const SuperTable = ({
                           "product_variant"
                         )
                           ? row?.product_variant?.product?.product_content
-                          : row?.order_content?.[0].product_variant?.product
+                          : row?.order_content?.[0]?.product_variant?.product
                               ?.product_content;
                         content = product_content?.[0];
                         // ?.find(
@@ -386,7 +388,7 @@ const SuperTable = ({
                         // );
                         let variants = !!row?.hasOwnProperty("product_variant")
                           ? row?.product_variant
-                          : row?.order_content?.[0].product_variant;
+                          : row?.order_content?.[0]?.product_variant;
                         value = {
                           name: variants?.sku,
                           path: col,
@@ -399,7 +401,7 @@ const SuperTable = ({
                         value = {
                           name: row?.[col]?.name,
                           path: col,
-                          id: row?.[col].id,
+                          id: row?.[col]?.id,
                         };
                       }
                       if (

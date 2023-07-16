@@ -241,7 +241,7 @@ const handelChange = async (file, setLogs) => {
     let color_id = COLORS_IDS?.[parseInt(colorSku)];
     let sizeSku = sliceData?.[i]?.[9];
     let size_id = SIZES_IDS?.[sizeSku?.toString()];
-    let category_id = CATEGORIES_ID?.[sliceData?.[i]?.[3].trim()];
+    let category_id = CATEGORIES_ID?.[sliceData?.[i]?.[3]?.trim()];
     let pattern_sku = sliceData?.[i]?.[13];
     const product_sku = sliceData?.[i]?.[0]?.toString()?.trim();
     if (PRODUCT_IDS?.[product_sku]) {

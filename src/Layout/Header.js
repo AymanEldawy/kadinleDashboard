@@ -12,6 +12,7 @@ import { FullScreenIcon, LogoutIcon } from "../Helpers/Icons";
 import BallIcon from "../Helpers/Icons/BallIcon";
 import BarsIcon from "../Helpers/Icons/BarsIcon";
 import RegionBar from "../Components/LanguageBar/RegionBar";
+import { logout } from "../Api/auth";
 
 function Header({ open, setOpen, mode, setMode }) {
   const { changeTheme, theme } = useContext(ThemeContext);
@@ -57,7 +58,10 @@ function Header({ open, setOpen, mode, setMode }) {
             </button>
             <ToggleThemeBar theme={theme} changeTheme={changeTheme} />
             <NotificationBar />
-            <button className="p-2 rounded-full hover:bg-[#0002]">
+            <button
+              className="p-2 rounded-full hover:bg-[#0002]"
+              onClick={async () => logout()}
+            >
               <LogoutIcon />
             </button>
           </div>

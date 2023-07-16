@@ -3,7 +3,7 @@ import { useEffect } from "react";
 const Footer = () => {
   const [extraClasses, setExtraClasses] = useState("");
   useEffect(() => {
-    let bodyHeight = document.body.getClientRects()[0].height;
+    let bodyHeight = document.body.getClientRects()[0]?.height;
     let warperHeight = document.getElementById("layout-wrapper").clientHeight;
     if (bodyHeight > warperHeight) {
       setExtraClasses("fixed bottom-0 left-0 w-full");

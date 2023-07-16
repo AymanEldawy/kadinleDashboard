@@ -2,7 +2,14 @@ import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
 
 export const getUser = async () => {
   const response = await supabase.auth.getUser();
-  return response?.user;
+  const userType = await supabase
+    .from("user_type")
+    .select("*")
+    .eq("user_id", response?.data?.user?.id);
+  return {
+    ...response?.data?.user,
+    role: userType?.data?.[0],
+  };
 };
 
 // Log in function

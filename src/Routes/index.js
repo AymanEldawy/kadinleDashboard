@@ -10,13 +10,15 @@ const Index = () => {
   const navigate = useNavigate();
   const { user } = useGlobalOptions();
   useEffect(() => {
-    // if (!user) {
-    //   navigate("/login");
-    // }
+    if (!user) {
+      navigate("/login");
+    } else if (user?.role?.number < 3) {
+      navigate("https://kadinle.com/");
+    }
   }, []);
   return (
     <>
-      {user ? (
+      {!user ? (
         <Routes>
           {publicRoutes.map((route, index) => (
             <Route

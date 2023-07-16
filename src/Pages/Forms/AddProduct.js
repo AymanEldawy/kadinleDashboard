@@ -121,7 +121,7 @@ const AddProduct = ({ layout }) => {
   const onSubmit = async (data) => {
     const response = await addItem("product", data);
     if (response) {
-      setProductId(response?.data?.[0].id);
+      setProductId(response?.data?.[0]?.id);
     }
   };
 

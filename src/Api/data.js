@@ -459,10 +459,13 @@ export const getUserSubTable = async (table) => {
   //   *,
   //   user(*)
   //   `);
+  try {
+    const response = await supabase.from(table).select("*");
 
-  const response = await supabase.from(table).select("*");
-
-  return response;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getUserDataById = async (userId) => {

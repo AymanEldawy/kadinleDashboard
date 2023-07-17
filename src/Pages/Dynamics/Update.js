@@ -2,18 +2,18 @@ import React, { useContext, useEffect } from "react";
 import { useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
-import BlockPaper from "../../Components/BlockPaper/BlockPaper";
-import SuperForm from "../../Components/CustomForm/SuperForm";
-import DB_API from "../../Helpers/Forms/databaseApi";
-import { useFetch } from "../../hooks/useFetch";
-import { useUpdate } from "../../hooks/useUpdate";
 import {
   handleUploadCategoryImages,
   handleUploadColorImage,
   handleUploadOfferImage,
   handleUploadReviewerImage,
 } from "../../Api/DynamicUploadHandler";
+import BlockPaper from "../../Components/BlockPaper/BlockPaper";
+import SuperForm from "../../Components/CustomForm/SuperForm";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
+import DB_API from "../../Helpers/Forms/databaseApi";
+import { useFetch } from "../../hooks/useFetch";
+import { useUpdate } from "../../hooks/useUpdate";
 
 const Update = () => {
   const params = useParams();
@@ -58,17 +58,18 @@ const Update = () => {
   const onSubmitContent = async (data, index) => {
     if (!data?.id) return;
     let list = data;
-    for (const item of list) {
-      if (tableName === "category") {
-        await handleUploadCategoryImages(item, item?.id, CACHE_LANGUAGES);
-      }
-      if (tableName === "offer") {
-        await handleUploadOfferImage(item, item?.id, CACHE_LANGUAGES);
-      }
-      if (tableName === "collection") {
-        await handleUploadOfferImage(item, item?.id, CACHE_LANGUAGES);
-      }
+    console.log(data);
+    // for (const item of list) {
+    if (tableName === "category") {
+      await handleUploadCategoryImages(data, data?.id, CACHE_LANGUAGES);
     }
+    if (tableName === "offer") {
+      await handleUploadOfferImage(data, data?.id, CACHE_LANGUAGES);
+    }
+    if (tableName === "collection") {
+      await handleUploadOfferImage(data, data?.id, CACHE_LANGUAGES);
+    }
+    // }
     await updateItem(`${tableName}_content`, data);
   };
   return (

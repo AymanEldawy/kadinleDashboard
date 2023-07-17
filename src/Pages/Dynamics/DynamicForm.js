@@ -14,6 +14,8 @@ import SuperForm from "../../Components/CustomForm/SuperForm";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 import DB_API from "../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../hooks/useAdd";
+import { signup } from "../../Api/auth";
+import { toast } from "react-toastify";
 
 const MEDIA_NAMES = ["web_image", "mobile_image", "media", "image"];
 
@@ -32,6 +34,12 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   const onSubmit = async (data) => {
     if (SUPABASE_TABLE_NAME === "home_reviews") {
       await handleUploadReviewerImage(data);
+    } else if (SUPABASE_TABLE_NAME === "user") {
+      const response = await signup(data);
+      if (response?.data) {
+        setResetForm(true);
+        toast.success("Successfully add new user");
+      }
     } else {
       const response = await addItem(SUPABASE_TABLE_NAME, data);
       if (response) {

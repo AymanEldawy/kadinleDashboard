@@ -12,6 +12,7 @@ import { useFetch } from "../../hooks/useFetch";
 import DynamicLayout from "../Dynamics/DynamicLayout";
 import EditIcon from "./../../Helpers/Icons/EditIcon";
 import { useUpdate } from "../../hooks/useUpdate";
+import { getTableContentDataById } from "../../Api/globalActions";
 
 const productFeatures = [
   "fabric",
@@ -41,7 +42,7 @@ const ProductFeatures = () => {
   const [layout, setLayout] = useState("");
 
   const fetchData = async (tableName) => {
-    const data = await getData(tableName);
+    const data = await getTableContentDataById(tableName);
     CACHE_DATA[tableName] = data;
   };
   useEffect(() => {
@@ -124,14 +125,14 @@ const ProductFeatures = () => {
         </div>
         <div key={activeStage}>
           <DynamicLayout
-            SUPABASE_TABLE_NAME={activeStage}
+            SUPABASE_TABLE_NAME={`${activeStage}_content`}
             columns={
               CACHE_COLUMNS[activeStage] ||
               DB_API?.[productFeatures[0]]?.map((col) => col?.name) ||
               []
             }
             title={activeStage?.replace("_", " ")}
-            oldValue={CACHE_DATA[activeStage]}
+            // oldValue={CACHE_DATA[activeStage]}
             onAddClick={onClickAddNew}
             renderTableAction={(data) => {
               return (

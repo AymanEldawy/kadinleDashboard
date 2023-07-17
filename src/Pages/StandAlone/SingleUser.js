@@ -33,6 +33,7 @@ const SingleUser = () => {
     });
   };
   const getUserInfo = async (table) => {
+    console.log(`user_${table}`, "us");
     const response = await getUserData(`user_${table}`, params?.id);
     console.log(response);
     setUserData((prev) => {

@@ -8,6 +8,28 @@ import { TableBar } from "../../Components/TableBar/TableBar";
 import { useDelete } from "../../hooks/useDelete";
 import { useFetch } from "../../hooks/useFetch";
 
+const tablesWithContent = [
+  "category",
+  "chart",
+  "collar",
+  "collection",
+  "color",
+  "fabric",
+  "feature",
+  "lining",
+  "material",
+  "offer",
+  "order",
+  "order_status",
+  "pattern",
+  "payment_status",
+  "point",
+  "product",
+  "return_status",
+  "season",
+  "size",
+  "sleeve",
+];
 const DynamicList = ({
   tableName,
   columns,
@@ -33,7 +55,28 @@ const DynamicList = ({
   const [itemOffset, setItemOffset] = useState(1);
 
   const handleDeleteItem = async (selectedList) => {
-    await deleteItem(tableName, selectedList);
+    if (tableName === "product") {
+      await deleteItem(tableName, selectedList);
+      await deleteItem(`product_content`, selectedList);
+      await deleteItem(`product_image`, selectedList);
+      await deleteItem(`product_variant`, selectedList);
+    } else if (tablesWithContent?.include(tableName)) {
+      await deleteItem(`${tableName}_content`, selectedList);
+      await deleteItem(tableName, selectedList);
+    } else if (tableName === "user") {
+      await deleteItem("user_address", selectedList);
+      await deleteItem("user_cart", selectedList);
+      await deleteItem("user_invite", selectedList);
+      await deleteItem("user_like", selectedList);
+      await deleteItem("user_point", selectedList);
+      await deleteItem("user_suggestion", selectedList);
+      await deleteItem("user_ticket", selectedList);
+      await deleteItem("user_wallet", selectedList);
+      await deleteItem("user_type", selectedList);
+      await deleteItem("user", selectedList);
+    } else {
+      await deleteItem(tableName, selectedList);
+    }
     setRefresh((p) => !p);
   };
 

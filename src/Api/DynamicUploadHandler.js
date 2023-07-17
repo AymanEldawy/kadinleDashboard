@@ -22,7 +22,7 @@ export const handleUploadCategoryImages = async (
           type: "web",
         })
       : item?.web_image;
-  if (webPath?.url) item.web_image = webPath?.url;
+  if (webPath?.url) item.web_image = `https://` + webPath?.url;
   const mobilePath =
     typeof theFileWebContent === "object"
       ? await uploadCategoryImage({
@@ -32,14 +32,14 @@ export const handleUploadCategoryImages = async (
           type: "mobile",
         })
       : item?.mobile_image;
-  if (mobilePath?.url) item.mobile_image = mobilePath?.url;
+  if (mobilePath?.url) item.mobile_image = `https://` + mobilePath?.url;
   if (operation === "add")
     await addNewItem(`category_content`, {
       ...item,
       category_id: itemId,
     });
   else
-    await addNewItem(`category_content`, {
+    await updateItem(`category_content`, {
       ...item,
       category_id: itemId,
     });

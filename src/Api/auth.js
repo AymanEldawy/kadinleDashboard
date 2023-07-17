@@ -1,15 +1,20 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
 
 export const getUser = async () => {
-  const response = await supabase.auth.getUser();
-  const userType = await supabase
-    .from("user_type")
-    .select("*")
-    .eq("user_id", response?.data?.user?.id);
-  return {
-    ...response?.data?.user,
-    role: userType?.data?.[0],
-  };
+  try {
+    const response = await supabase.auth.getUser();
+    console.log(response, "----");
+    const userType = await supabase
+      .from("user_type")
+      .select("*")
+      .eq("id", response?.data?.user?.user_type_id);
+    return {
+      ...response?.data?.user,
+      role: userType?.data?.[0],
+    };
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // Log in function
@@ -31,20 +36,21 @@ export const logout = async () => {
 };
 
 // Sign up function
-export const signup = async (email, password, firstName, lastName) => {
+export const signup = async (values) => {
   const auth = await supabase.auth.signUp({
-    email,
-    password,
+    email: values?.email,
+    password: values?.password,
     options: {
-      data: { first_name: firstName, last_name: lastName },
+      data: { first_name: values?.first_name, last_name: values?.last_name },
     },
   });
-  const { data, error } = await supabase.from("user").insert({
+  let newValues = values;
+  delete newValues["password"];
+  const response = await supabase.from("user").insert({
     id: auth?.data?.user?.id,
-    email: email,
-    first_name: firstName,
-    last_name: lastName,
+    ...newValues,
   });
+  return response;
 };
 
 export const forgotPassword = async (email) => {

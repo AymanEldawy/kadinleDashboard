@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import { FullImage } from "../Global/FullImage/FullImage";
 import { FolderPlusIcon } from "../../Helpers/Icons";
+import { FullImage } from "../Global/FullImage/FullImage";
 
 const UploadFile = ({
   label,
@@ -18,7 +18,7 @@ const UploadFile = ({
     if (src && typeof src === "object") {
       setPreview(URL.createObjectURL(src));
     } else {
-      setPreview("");
+      setPreview(src);
     }
   }, [src]);
   return (

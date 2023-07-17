@@ -44,6 +44,7 @@ export const GlobalOptionsProvider = ({ children }) => {
       setLanguageId(data);
       setDefaultLanguage(data);
     }
+    window.location.reload();
   };
 
   useEffect(() => {

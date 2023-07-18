@@ -9,16 +9,19 @@ import { authProtectedRoutes, publicRoutes } from "./routes";
 const Index = () => {
   const navigate = useNavigate();
   const { user } = useGlobalOptions();
-  // useEffect(() => {
-  //   if (!user) {
-  //     navigate("/login");
-  //   } else if (user?.role?.number < 2) {
-  //     navigate("https://kadinle.com/");
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!user?.id) {
+      navigate("/login");
+    } else if (user?.role?.number < 2) {
+      navigate("https://kadinle.com/");
+    } else {
+      navigate("/");
+    }
+  }, [user]);
+  console.log(user);
   return (
     <>
-      {user?.id ? (
+      {!user?.id ? (
         <Routes>
           {publicRoutes.map((route, index) => (
             <Route

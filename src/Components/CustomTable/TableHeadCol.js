@@ -9,6 +9,7 @@ const TableHeadCol = ({
   contentClassName,
   sort,
   sortBy,
+  ...props
 }) => {
   return (
     <th
@@ -19,6 +20,7 @@ const TableHeadCol = ({
           : ""
       }`}
       onClick={() => (!!sort ? sortBy(children) : undefined)}
+      {...props}
     >
       <div
         className={`flex gap-2 items-center justify-center ${contentClassName}`}

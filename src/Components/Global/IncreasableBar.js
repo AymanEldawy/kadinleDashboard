@@ -12,15 +12,21 @@ export const IncreasableBar = ({
   values,
   activeTab,
   setActiveTab,
+  onDecrease,
+  onIncrease,
 }) => {
   const { CACHE_LANGUAGES } = useGlobalOptions();
   const increase = () => {
-    if (maxCount && list?.length < maxCount) return;
+    if (maxCount && list?.length >= maxCount) return;
     let lastElement = uuidv4();
     setList((prev) => [...prev, lastElement]);
     setActiveTab(lastElement);
+    if (!!onIncrease) onIncrease(list, lastElement);
   };
   const decrease = (item, index) => {
+    if (!!onDecrease) {
+      onDecrease(item, index);
+    }
     if (activeTab === item) {
       if (index === 0) {
         setActiveTab(list[index + 1]);
@@ -45,7 +51,7 @@ export const IncreasableBar = ({
             onClick={() => setActiveTab(item)}
           >
             {title
-              ? title
+              ? `${title} ${index + 1}`
               : values && values?.[item]?.language_id
               ? CACHE_LANGUAGES[values?.[item]?.language_id]
               : "choose language"}

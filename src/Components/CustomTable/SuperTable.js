@@ -293,11 +293,15 @@ const SuperTable = ({
                             {col?.indexOf("image") !== -1 ||
                             col?.indexOf("img") !== -1 ? (
                               <FullImage
-                                src={row?.[col]}
+                                src={
+                                  row?.[col] ||
+                                  row?.collection_content?.[0]?.image ||
+                                  row?.category_content?.[0]?.[col]
+                                }
                                 alt="image description"
                                 height={50}
                                 width={70}
-                                className="block mx-auto cursor-pointer"
+                                className="block mx-auto cursor-pointer w-20 h-16 object-contain"
                               />
                             ) : (
                               <span
@@ -441,25 +445,39 @@ const SuperTable = ({
 
                       if (row?.[tableNameContent]?.[0]?.hasOwnProperty(col)) {
                         let content = row?.[tableNameContent]?.[0];
+                        console.log(
+                          "🚀 ~ file: SuperTable.js:447 ~ {columns?.map ~ content:",
+                          content[col]
+                        );
                         // ?.find(
                         //   (c) => c?.language_id === uuidLanguageEn
                         // );
                         if (typeof content?.[col] !== "object") {
-                          let quantity =
-                            col === "quantity"
-                              ? row?.[tableNameContent]?.reduce(
-                                  (accumulator, currentItem) => {
-                                    return accumulator + currentItem.quantity;
-                                  },
-                                  0
-                                )
-                              : null;
-                          value = {
-                            name: quantity || content?.[col],
-                            path: tableName,
-                            id: content?.[`${tableName}_id`],
-                            link: col === "name",
-                          };
+                          if (content?.[col]?.indexOf("kadinle.com") !== -1) {
+                            console.log("called here");
+                            value = {
+                              path: col,
+                              image: content?.[col],
+                              id: content?.[col]?.id,
+                              name: content?.[col]?.name,
+                            };
+                          } else {
+                            let quantity =
+                              col === "quantity"
+                                ? row?.[tableNameContent]?.reduce(
+                                    (accumulator, currentItem) => {
+                                      return accumulator + currentItem.quantity;
+                                    },
+                                    0
+                                  )
+                                : null;
+                            value = {
+                              name: quantity || content?.[col],
+                              path: tableName,
+                              id: content?.[`${tableName}_id`],
+                              link: col === "name",
+                            };
+                          }
                         } else {
                           value = {
                             name: content?.[col]?.name,
@@ -475,7 +493,9 @@ const SuperTable = ({
                             classes={`!py-4 border ${classes?.colBody}`}
                             key={index}
                           >
-                            {col === "url" || col === "media" ? (
+                            {col === "url" ||
+                            col === "media" ||
+                            value?.image ? (
                               <FullImage
                                 src={value?.name}
                                 alt="image description"

@@ -9,13 +9,13 @@ import { authProtectedRoutes, publicRoutes } from "./routes";
 const Index = () => {
   const navigate = useNavigate();
   const { user } = useGlobalOptions();
-  useEffect(() => {
-    // if (!user) {
-    //   navigate("/login");
-    // } else if (user?.role?.number < 2) {
-    //   navigate("https://kadinle.com/");
-    // }
-  }, []);
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate("/login");
+  //   } else if (user?.role?.number < 2) {
+  //     navigate("https://kadinle.com/");
+  //   }
+  // }, []);
   return (
     <>
       {user?.id ? (

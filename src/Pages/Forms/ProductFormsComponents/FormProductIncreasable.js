@@ -18,19 +18,21 @@ export const FormProductIncreasable = ({
   initialFields,
   onSubmit,
   increasableTitle,
+  maxCount,
   onChangeValues,
   resetForm,
   getCachedList,
   values,
   setValues,
-  maxCount,
+  listCount,
+  setListCount,
+  activeTab,
+  setActiveTab,
+  errors,
+  setErrors,
 }) => {
-  const { CACHE_LANGUAGES } = useGlobalOptions();
-  const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
-  const [listCount, setListCount] = useState([uuidv4()]);
   const [selectedTab, setSelectedTab] = useState([]);
-  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     if (resetForm) setValues({});
@@ -96,26 +98,14 @@ export const FormProductIncreasable = ({
     });
   };
 
-  const submit = (e) => {
-    e.preventDefault();
-    if (!values) {
-      toast.error("Please Fill the required Fields");
-      return;
-    }
-    if (!errors.length) {
-      onSubmit(values);
-    }
-  };
-
   return (
     <div className="">
       <div className="flex flex-wrap gap-2 items-start">
         <IncreasableBar
-          title={increasableTitle}
-          TitleValue={values}
+          values={values}
           list={listCount}
           setList={setListCount}
-          // maxCount={maxCount || 3}
+          maxCount={maxCount}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
         />
@@ -292,13 +282,6 @@ export const FormProductIncreasable = ({
           </div>
         </form>
       ))}
-      {/* <TabsContent activeTabName={activeTab || listCount[0]}>
-        
-      </TabsContent> */}
-
-      <div className="flex justify-between gap-4 items-center">
-        <Button type="submit" title="Submit" onClick={submit} />
-      </div>
     </div>
   );
 };

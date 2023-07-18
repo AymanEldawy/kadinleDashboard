@@ -8,13 +8,26 @@ import TableForm from "../../../Components/Forms/TableForm/TableForm";
 import { chart_data } from "../../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../../hooks/useAdd";
 import { useFetch } from "../../../hooks/useFetch";
+import { FormProductIncreasable } from "./FormProductIncreasable";
+import { IncreasableBar } from "../../../Components/Global/IncreasableBar";
 
 const CACHE_SIZE_CHART_CONTENT = {};
-const AddSizeChart = ({ getCachedList, productId }) => {
+const AddSizeChart = ({
+  getCachedList,
+  productId,
+  listChart,
+  setListChart,
+  activeTabChart,
+  setActiveTabChart,
+  values,
+  setValues,
+  chartIds,
+  setChartIds,
+  chartRowsLength,
+  setChartRowsLength,
+}) => {
   const { addItem } = useAdd();
   const { getData } = useFetch();
-  const [rowLength, setRowLength] = useState(5);
-  const [chartId, setChartId] = useState(null);
   const [selectedChart, setSelectedChart] = useState({});
 
   const getChartContent = async (id) => {
@@ -23,55 +36,100 @@ const AddSizeChart = ({ getCachedList, productId }) => {
       CACHE_SIZE_CHART_CONTENT[chart?.chart_id] = chart;
     }
   };
+
   useEffect(() => {
     getChartContent();
   }, []);
 
   useEffect(() => {
-    setSelectedChart(CACHE_SIZE_CHART_CONTENT[chartId]);
-  }, [chartId]);
+    console.log(selectedChart, "select");
+  }, [selectedChart]);
 
-  const onSubmitChartData = async (data) => {
-    if (chartId) {
-      toast.error("You must to add chart content before create chart data");
-      return;
-    }
-    const list = Object.values(data);
-    for (const item of list) {
-      if (item?.size_id && chartId && productId) {
-        await addItem("chart_data", {
-          ...item,
-          product_id: productId,
-          chart_id: chartId,
-        });
-      }
-    }
+  const changeChartLength = (row, count) => {
+    setChartRowsLength((prev) => {
+      return {
+        ...prev,
+        [row]: count,
+      };
+    });
+  };
+
+  const onSelectChart = (row, value) => {
+    changeChartLength(row, 5);
+    setSelectedChart((prev) => {
+      return {
+        ...prev,
+        [row]: CACHE_SIZE_CHART_CONTENT[value],
+      };
+    });
+    setChartIds((prev) => {
+      return {
+        ...prev,
+        [row]: value,
+      };
+    });
+  };
+
+  const onDecrease = (row, index) => {
+    let selected = selectedChart;
+    delete selected[row];
+    setSelectedChart(selected);
+    let ids = chartIds;
+    delete ids[row];
+    setChartIds(ids);
+    let rows = chartRowsLength;
+    delete rows[row];
+    setChartRowsLength(rows);
+    let newValues = values;
+    delete newValues[row];
+    setValues(newValues);
   };
   return (
     <>
-      <SelectField
-        className="mb-4"
-        values={chartId}
-        label="Choose Chart"
-        name="chart_id"
-        list={!!getCachedList ? getCachedList("chart") : []}
-        keyValue={"id"}
-        keyLabel="name"
-        required
-        onChange={(e) => setChartId(e.target.value)}
+      <IncreasableBar
+        title={"Chart"}
+        list={listChart}
+        setList={setListChart}
+        activeTab={activeTabChart}
+        setActiveTab={setActiveTabChart}
+        onDecrease={onDecrease}
       />
-      {!!selectedChart ? (
-        <BlockPaper>
-          <TableForm
-            selectedChart={selectedChart}
-            getCachedList={getCachedList}
-            initialFields={chart_data}
-            rowLength={rowLength}
-            setRowLength={setRowLength}
-            onSubmit={onSubmitChartData}
-          />
-        </BlockPaper>
-      ) : null}
+      {listChart?.map((item, index) => {
+        return (
+          <div
+            className={`relative z-10 ${
+              activeTabChart !== item ? "hidden" : ""
+            } `}
+            kye={`${index}-chart`}
+          >
+            <SelectField
+              className="mb-4"
+              value={CACHE_SIZE_CHART_CONTENT?.[chartIds?.[item]]?.[0]?.name}
+              label="Choose Chart"
+              name="chart_id"
+              list={!!getCachedList ? getCachedList("chart") : []}
+              keyValue={"id"}
+              keyLabel="number"
+              required
+              onChange={(e) => onSelectChart(item, e.target.value)}
+            />
+            {!!selectedChart?.[item] ? (
+              <BlockPaper>
+                <TableForm
+                  selectedChart={selectedChart?.[item]}
+                  getCachedList={getCachedList}
+                  initialFields={chart_data}
+                  rowLength={chartRowsLength?.[item]}
+                  changeChartLength={changeChartLength}
+                  grid={values}
+                  setGrid={setValues}
+                  tabKey={item}
+                />
+              </BlockPaper>
+            ) : null}
+          </div>
+        );
+      })}
     </>
   );
 };

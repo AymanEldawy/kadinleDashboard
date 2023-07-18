@@ -18,10 +18,16 @@ const AddProductVariantsIncreasable = ({
   itemKey,
   allValues,
   setAllValues,
+  listSizes,
+  setListSizes,
+  activeTabSizes,
+  setActiveTabSizes,
+  listStocks,
+  setListStocks,
+  activeTabStocks,
+  setActiveTabStocks,
 }) => {
-  const [listSize, setListSize] = useState([0]);
-  const [activeTabSize, setActiveTabSize] = useState(listSize[0]);
-
+  console.log(itemKey, "itemKey");
   const handelChangeTopField = (name, value, row) => {
     setAllValues((prev) => {
       return {
@@ -52,13 +58,20 @@ const AddProductVariantsIncreasable = ({
   };
   const handleFiles = (files) => handelChangeTopField("files", files, itemKey);
 
+  const onDecrease = (row, index) => {
+    console.log(row, "row");
+    let sizes = allValues;
+    delete sizes?.[itemKey]?.sizes?.[row];
+    setAllValues(sizes);
+  };
+
   return (
     <div className="mb-8" key={key}>
       <div>
         <BlockPaper containerClassName="!overflow-visible relative">
-          <div className="grid grid-cols-2 gap-4 items-center pt-4 w-full">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 items-center pt-4 w-full">
             <SelectField
-              values={allValues?.[itemKey]?.color_id}
+              value={allValues?.[itemKey]?.color_id}
               label="Product Color"
               name="color_id"
               list={!!getCachedList ? getCachedList("color_content") : []}
@@ -70,7 +83,7 @@ const AddProductVariantsIncreasable = ({
               }
             />
             <SelectField
-              values={setAllValues?.[itemKey]?.size_id}
+              value={allValues?.[itemKey]?.model_size}
               label="Model size"
               name="model_size"
               list={!!getCachedList ? getCachedList("size_content") : []}
@@ -79,6 +92,14 @@ const AddProductVariantsIncreasable = ({
               className="flex-1 w-full"
               onChange={(e) =>
                 handelChangeTopField("model_size", e.target.value, itemKey)
+              }
+            />
+            <InputField
+              label={"Pattern sku"}
+              name="pattern_sku"
+              value={allValues?.[itemKey]?.pattern_sku}
+              onChange={(e) =>
+                handelChangeTopField("pattern_sku", e.target.value, itemKey)
               }
             />
           </div>
@@ -123,12 +144,15 @@ const AddProductVariantsIncreasable = ({
           </div>
           <IncreasableBar
             title={"Size"}
-            list={listSize}
-            setList={setListSize}
-            activeTab={activeTabSize}
-            setActiveTab={setActiveTabSize}
+            list={listSizes}
+            setList={setListSizes}
+            activeTab={activeTabSizes}
+            setActiveTab={setActiveTabSizes}
+            onDecrease={onDecrease}
           />
-          {listSize?.map((item, index) => {
+          {listSizes?.map((item, index) => {
+            console.log(allValues?.[itemKey]?.sizes?.[item], "{}");
+
             let skuValue = `${productSku || ""} ${
               CACHED_TABLES_SKU?.["size"]?.[
                 allValues?.[itemKey]?.sizes?.[item]?.size_id
@@ -136,23 +160,23 @@ const AddProductVariantsIncreasable = ({
             } ${
               CACHED_TABLES_SKU?.["color"]?.[allValues?.[itemKey]?.color_id] ||
               ""
-            } ${allValues?.[itemKey]?.sizes?.[item]?.pattern || ""} `;
+            } ${allValues?.[itemKey]?.pattern_sku || ""} `;
             return (
               <div
                 className={`relative z-10 ${
-                  activeTabSize !== item ? "hidden" : ""
+                  activeTabSizes !== item ? "hidden" : ""
                 } `}
                 kye={`${index}-size`}
               >
-                <div className="flex gap-4 flex-wrap mb-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 flex-wrap mb-4">
                   <InputField
                     label={"Sku"}
                     name="sku"
                     value={skuValue}
                     readOnly
                   />
-                  <InputField
-                    values={setAllValues?.[itemKey]?.pattern}
+                  {/* <InputField
+                    value={allValues?.[itemKey]?.sizes?.[item]?.pattern}
                     label={"pattern"}
                     name="pattern"
                     onChange={(e) =>
@@ -163,9 +187,9 @@ const AddProductVariantsIncreasable = ({
                         item
                       )
                     }
-                  />
+                  /> */}
                   <InputField
-                    values={setAllValues?.[itemKey]?.weight}
+                    value={allValues?.[itemKey]?.sizes?.[item]?.weight}
                     label={"weight"}
                     name="weight"
                     onChange={(e) =>
@@ -178,7 +202,7 @@ const AddProductVariantsIncreasable = ({
                     }
                   />
                   <SelectField
-                    values={setAllValues?.[itemKey]?.size_id}
+                    value={allValues?.[itemKey]?.sizes?.[item]?.size_id}
                     label="Choose size"
                     name="size_id"
                     list={!!getCachedList ? getCachedList("size_content") : []}
@@ -200,6 +224,10 @@ const AddProductVariantsIncreasable = ({
                   subItemKey={item}
                   allValues={allValues}
                   setAllValues={setAllValues}
+                  listStocks={listStocks}
+                  setListStocks={setListStocks}
+                  activeTabStocks={activeTabStocks}
+                  setActiveTabStocks={setActiveTabStocks}
                 />
               </div>
             );

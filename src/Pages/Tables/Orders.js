@@ -12,7 +12,7 @@ const Orders = () => {
       SUPABASE_TABLE_NAME="order"
       columns={columns}
       title="Orders"
-      onAddClick={() => navigate(`/add-order`)}
+      // onAddClick={() => navigate(`/add-order`)}
     />
   );
 };

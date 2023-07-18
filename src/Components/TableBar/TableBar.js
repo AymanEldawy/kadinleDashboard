@@ -26,6 +26,7 @@ export const TableBar = ({
   searchKey,
   setSearchKey,
   selectedList,
+  hideDelete,
 }) => {
   return (
     <div className="flex justify-between gap-2 mb-4">
@@ -56,13 +57,15 @@ export const TableBar = ({
             add new
           </button>
         ) : null}
-        <button
-          className="bg-red-500 text-sm text-white rounded px-2 py-1 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300 disabled:bg-red-200"
-          onClick={onDeleteClick}
-          disabled={!Object.keys(selectedList)?.length}
-        >
-          <TrashIcon />{" "}
-        </button>
+        {hideDelete ? null : (
+          <button
+            className="bg-red-500 text-sm text-white rounded px-2 py-1 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300 disabled:bg-red-200"
+            onClick={onDeleteClick}
+            disabled={!Object.keys(selectedList)?.length}
+          >
+            <TrashIcon />{" "}
+          </button>
+        )}
         {/* <button
           className="bg-green-500 text-sm text-white rounded px-2 py-1 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300"
           onClick={onFilterClick}

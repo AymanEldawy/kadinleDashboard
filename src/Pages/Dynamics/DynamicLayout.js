@@ -18,6 +18,7 @@ const DynamicLayout = ({
   hideBar,
   hideAction,
   hideSelect,
+  hideDelete,
 }) => {
   const [selectedList, setSelectedList] = useState({});
   useEffect(() => {
@@ -51,6 +52,7 @@ const DynamicLayout = ({
         hideBar={hideBar}
         hideAction={hideAction}
         hideSelect={hideSelect}
+        hideDelete={hideDelete}
       />
     </BlockPaper>
   );

@@ -41,6 +41,7 @@ const DynamicList = ({
   hideBar,
   hideAction,
   hideSelect,
+  hideDelete,
   hidePagination,
 }) => {
   const { loading, getDataWithPagination } = useFetch();
@@ -52,56 +53,54 @@ const DynamicList = ({
   const [pageCount, setPageCount] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
   const [totalCount, setTotalCount] = useState(0);
-  const [itemOffset, setItemOffset] = useState(1);
+  const [itemOffset, setItemOffset] = useState(0);
 
   const handleDeleteItem = async (selectedList) => {
-    if (tableName === "product") {
-      await deleteItem(tableName, selectedList);
-      await deleteItem(`product_content`, selectedList);
-      await deleteItem(`product_image`, selectedList);
-      await deleteItem(`product_variant`, selectedList);
-    } else if (tablesWithContent?.include(tableName)) {
-      await deleteItem(`${tableName}_content`, selectedList);
-      await deleteItem(tableName, selectedList);
-    } else if (tableName === "user") {
-      await deleteItem("user_address", selectedList);
-      await deleteItem("user_cart", selectedList);
-      await deleteItem("user_invite", selectedList);
-      await deleteItem("user_like", selectedList);
-      await deleteItem("user_point", selectedList);
-      await deleteItem("user_suggestion", selectedList);
-      await deleteItem("user_ticket", selectedList);
-      await deleteItem("user_wallet", selectedList);
-      await deleteItem("user_type", selectedList);
-      await deleteItem("user", selectedList);
-    } else {
-      await deleteItem(tableName, selectedList);
-    }
+    console.log("call", selectedList, tableName);
+    // if (tableName === "product") {
+    //   await deleteItem(tableName, Object.values(selectedList));
+    //   await deleteItem(`product_content`, Object.values(selectedList));
+    //   await deleteItem(`product_image`, Object.values(selectedList));
+    //   await deleteItem(`product_variant`, Object.values(selectedList));
+    // } else if (tablesWithContent?.includes(tableName)) {
+    //   await deleteItem(`${tableName}_content`, Object.values(selectedList));
+    //   await deleteItem(tableName, Object.values(selectedList));
+    // } else if (tableName === "user") {
+    //   await deleteItem("user_address", Object.values(selectedList));
+    //   await deleteItem("user_cart", Object.values(selectedList));
+    //   await deleteItem("user_invite", Object.values(selectedList));
+    //   await deleteItem("user_like", Object.values(selectedList));
+    //   await deleteItem("user_point", Object.values(selectedList));
+    //   await deleteItem("user_suggestion", Object.values(selectedList));
+    //   await deleteItem("user_ticket", Object.values(selectedList));
+    //   await deleteItem("user_wallet", Object.values(selectedList));
+    //   await deleteItem("user_type", Object.values(selectedList));
+    //   await deleteItem("user", Object.values(selectedList));
+    // } else {
+    // }
+    await deleteItem(tableName, Object.values(selectedList));
     setRefresh((p) => !p);
   };
 
   const fetchData = async () => {
     const response = await getDataWithPagination(
       tableName,
-      itemOffset,
+      itemOffset + 1,
       itemsPerPage
     );
     setData(response?.data);
     setTotalCount(response?.count);
-    setRefresh((p) => !p);
     setPageCount(Math.ceil(totalCount / parseInt(itemsPerPage)));
   };
-  useEffect(() => {}, [refresh, itemOffset]);
-
   useEffect(() => {
     fetchData();
-    setRefresh((p) => !p);
-  }, [pageCount, itemsPerPage, itemOffset]);
+  }, [pageCount, itemsPerPage, itemOffset, refresh]);
 
   const handlePageClick = (index) => {
     // const newOffset = (event.selected * itemsPerPage) % filterList?.length;
     setItemOffset(index);
   };
+  console.log(itemOffset, pageCount);
   return (
     <>
       <ConfirmModal
@@ -122,6 +121,7 @@ const DynamicList = ({
             onSelectChange={setItemsPerPage}
             itemsPerPage={itemsPerPage}
             selectedList={selectedList}
+            hideDelete={hideDelete}
           />
         )}
         <SuperTable
@@ -133,7 +133,7 @@ const DynamicList = ({
           handlePageClick={handlePageClick}
           columns={columns}
           data={data}
-          allowSelect={hideSelect ? false : true}
+          allowSelect={hideSelect || hideDelete ? false : true}
           searchValue={searchValue}
           selectedList={selectedList}
           setSelectedList={setSelectedList}

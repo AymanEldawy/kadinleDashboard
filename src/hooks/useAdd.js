@@ -9,6 +9,14 @@ export const useAdd = () => {
   const addItem = async (table, data) => {
     let loading = toast.loading("Please wait...");
     const response = await addNewItem(table, data);
+    const itemId = response?.data?.[0]?.id;
+    if (itemId) {
+      await addNewItem("logs", {
+        description: `Added new ${table}`,
+        row_id: itemId,
+        table_name: table,
+      });
+    }
     if (response.error) {
       toast.update(loading, {
         render: "Oops! failed to added new",

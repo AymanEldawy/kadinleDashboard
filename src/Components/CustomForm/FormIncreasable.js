@@ -16,37 +16,44 @@ import InputField from "./InputField";
 import RadioField from "./RadioField";
 import SelectField from "./SelectField";
 import UploadFile from "./UploadFile";
+import { IncreasableBar } from "../Global/IncreasableBar";
 
 let CACHED_TABLE = {};
 
 export const FormIncreasable = ({
   initialFields,
-  onSubmit,
   increasableTitle,
   onChangeValues,
-  resetForm,
   maxCount,
+  values,
+  setValues,
+  errors,
+  setErrors,
+  oldList,
 }) => {
   const { getData } = useFetch();
   const location = useLocation();
-  const { CACHE_LANGUAGES } = useGlobalOptions();
+  const { CACHE_LANGUAGES, languages } = useGlobalOptions();
   const [selectedTab, setSelectedTab] = useState([]);
-  const [values, setValues] = useState({});
-  const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
-  const [listCount, setListCount] = useState([`00 ${uuidv4()}`]);
-  const [activeTab, setActiveTab] = useState(0);
+  const [listCount, setListCount] = useState([`00${uuidv4()}`]);
+  const [activeTab, setActiveTab] = useState(listCount[0]);
+  console.log(listCount, activeTab);
 
-  useEffect(() => {
-    if (resetForm) setValues({});
-  }, [resetForm]);
   useEffect(() => {
     checkRefTable(initialFields);
   }, [initialFields]);
   useEffect(() => {
     if (!!onChangeValues) onChangeValues(values);
   }, [values]);
+  useEffect(() => {
+    if (!!values && !!oldList) {
+      console.log("called");
+      setListCount(Object.keys(values));
+    }
+  }, [oldList]);
 
+  console.log(listCount, activeTab);
   async function checkRefTable(fields) {
     if (!fields?.length) return;
     for (const field of fields) {
@@ -60,36 +67,43 @@ export const FormIncreasable = ({
     return CACHED_TABLE?.[tableName];
   };
 
-  const insertIntoErrors = (name, value) => {
+  const insertIntoErrors = (name, value, row) => {
     if (value === "") {
       setErrors((prev) => {
         return {
           ...prev,
-          [name]: "Field is required",
+          [row]: {
+            ...prev?.[row],
+            [name]: "Field is required",
+          },
         };
       });
     } else {
       let newErrors = errors;
-      delete newErrors[name];
+      delete newErrors?.[row]?.[name];
       setErrors(newErrors);
     }
   };
-  const onTouched = (name) => {
+  const onTouched = (name, row) => {
     if (touched[name]) return;
     setTouched((prev) => {
       return {
         ...prev,
-        [name]: true,
+        [row]: {
+          ...prev[row],
+          [name]: true,
+        },
       };
     });
   };
   const handelChangeField = (name, value, required, row) => {
+    console.log(name, value);
     if (name === "language_id") {
       if (selectedTab?.includes(value)) return;
       setSelectedTab((prev) => [...prev, value]);
     }
     if (required) {
-      insertIntoErrors(name, value);
+      insertIntoErrors(name, value, row);
     }
     setValues((prev) => {
       return {
@@ -117,15 +131,12 @@ export const FormIncreasable = ({
     });
   };
 
-  const submit = (e) => {
-    e.preventDefault();
-    if (!errors.length) {
-      onSubmit(values);
-    }
-  };
   const increaseLanguages = () => {
-    if (maxCount && listCount?.length < maxCount) return;
-    setListCount((prev) => [...prev, uuidv4()]);
+    console.log(maxCount);
+    if (maxCount && listCount?.length >= maxCount) return;
+    let lastElement = uuidv4();
+    setListCount((prev) => [...prev, lastElement]);
+    setActiveTab(listCount?.length);
   };
   const resetItemData = (item) => {
     let list = values;
@@ -134,57 +145,33 @@ export const FormIncreasable = ({
   };
   const decreaseLanguages = (index) => {
     resetItemData(listCount[index]);
+    setListCount((prev) => prev?.filter((item, i) => i !== index));
     if (index === activeTab) {
-      if (index !== 0) {
-        setActiveTab((prev, i) => i - 1);
+      if (index === 0) {
+        setActiveTab(1);
       } else {
-        setActiveTab((prev, i) => i + 1);
+        setActiveTab(index - 1);
       }
       // setActiveTab(() =);
     }
-    setListCount((prev) => prev?.filter((item, i) => i !== index));
   };
   useEffect(() => {}, [activeTab]);
 
   return (
     <div className="">
       <div className="flex flex-wrap gap-2 items-start">
-        <div className="mb-4 border-b flex flex-wrap w-full">
-          {listCount?.map((item, index) => (
-            <button
-              key={`item-${item}`}
-              className={`text-gray-500 pb-2 text-xs border-b-2 -mb-[2px] !gap-1 !px-1 p-2 capitalize flex items-center ${
-                index === activeTab
-                  ? "border-primary-blue text-primary-blue font-medium"
-                  : ""
-              }`}
-              onClick={() => setActiveTab(index)}
-            >
-              {increasableTitle
-                ? increasableTitle
-                : values?.[item]?.language_id
-                ? CACHE_LANGUAGES[values?.[item]?.language_id]
-                : "choose language"}
-              {listCount.length === 1 ? null : (
-                <CloseIcon
-                  className="!text-red-500 w-4 h-4"
-                  onClick={() => decreaseLanguages(index)}
-                />
-              )}
-            </button>
-          ))}
-          <button
-            disabled={listCount?.length === maxCount}
-            onClick={() => increaseLanguages()}
-            className="bg-primary-blue rounded-full disabled:bg-gray-400 cursor-not-allowed text-white mx-1 w-6 h-6 flex items-center justify-center mt-1 text-xs"
-          >
-            <PlusIcon className="w-4 h-4" />
-          </button>
-        </div>
+        <IncreasableBar
+          list={listCount}
+          setList={setListCount}
+          values={values}
+          setActiveTab={setActiveTab}
+          activeTab={activeTab}
+          maxCount={languages?.length}
+        />
       </div>
       {listCount?.map((item, index) => (
         <form
-          className={`mb-8 ${activeTab === index ? "" : "hidden"}`}
+          className={`mb-8 ${activeTab === item ? "" : "hidden"}`}
           tabName={item}
           key={item}
         >
@@ -201,11 +188,12 @@ export const FormIncreasable = ({
                         type={field?.type}
                         name={field?.name}
                         label={field?.name}
-                        onFocus={() => onTouched(field?.name)}
+                        onFocus={() => onTouched(field?.name, item)}
                         required={field?.required}
                         error={
-                          touched[field?.name] && errors[field?.name]
-                            ? errors[field?.name]
+                          touched?.[item]?.[field?.name] &&
+                          errors?.[item]?.[field?.name]
+                            ? errors?.[item]?.[field?.name]
                             : null
                         }
                         onChange={(e) =>
@@ -215,7 +203,7 @@ export const FormIncreasable = ({
                               ? +e.target.value
                               : e.target.value,
                             field?.required,
-                            `${item}--${index}`
+                            item
                           )
                         }
                       />
@@ -251,10 +239,11 @@ export const FormIncreasable = ({
                         label={field?.label}
                         name={field?.name}
                         required={field?.required}
-                        onFocus={() => onTouched(field?.name)}
+                        onFocus={() => onTouched(field?.name, item)}
                         error={
-                          touched[field?.name] && errors[field?.name]
-                            ? errors[field?.name]
+                          touched?.[item]?.[field?.name] &&
+                          errors?.[item]?.[field?.name]
+                            ? errors?.[item]?.[field?.name]
                             : null
                         }
                         list={field?.list}
@@ -276,10 +265,11 @@ export const FormIncreasable = ({
                         label={field?.name}
                         name={field?.name}
                         required={field?.required}
-                        onFocus={() => onTouched(field?.name)}
+                        onFocus={() => onTouched(field?.name, item)}
                         error={
-                          touched[field?.name] && errors[field?.name]
-                            ? errors[field?.name]
+                          touched?.[item]?.[field?.name] &&
+                          errors?.[item]?.[field?.name]
+                            ? errors?.[item]?.[field?.name]
                             : null
                         }
                         list={field?.list}
@@ -300,11 +290,12 @@ export const FormIncreasable = ({
                         index={i}
                         name={field?.name}
                         label={field?.name}
-                        onFocus={() => onTouched(field?.name)}
+                        onFocus={() => onTouched(field?.name, item)}
                         required={field?.required}
                         error={
-                          touched[field?.name] && errors[field?.name]
-                            ? errors[field?.name]
+                          touched?.[item]?.[field?.name] &&
+                          errors?.[item]?.[field?.name]
+                            ? errors?.[item]?.[field?.name]
                             : null
                         }
                         onChange={(e) =>
@@ -325,11 +316,12 @@ export const FormIncreasable = ({
                         name={field?.name}
                         type={field?.type}
                         label={field?.name}
-                        onFocus={() => onTouched(field?.name)}
+                        onFocus={() => onTouched(field?.name, item)}
                         required={field?.required}
                         error={
-                          touched[field?.name] && errors[field?.name]
-                            ? errors[field?.name]
+                          touched?.[item]?.[field?.name] &&
+                          errors?.[item]?.[field?.name]
+                            ? errors?.[item]?.[field?.name]
                             : null
                         }
                         onChange={(e) =>
@@ -350,15 +342,6 @@ export const FormIncreasable = ({
           </div>
         </form>
       ))}
-      {/* <TabsContent activeTabName={activeTab || listCount[0]}>
-        
-      </TabsContent> */}
-
-      <div className="flex justify-between gap-4 items-center">
-        <Button type="submit" title="Submit" onClick={submit} />
-      </div>
     </div>
   );
 };
-
-//

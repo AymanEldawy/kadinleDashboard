@@ -3,6 +3,7 @@ import {
   uploadCategoryImage,
   uploadCollectionImage,
   uploadColorImage,
+  uploadOfferImage,
   uploadReviewerImage,
 } from "./upload";
 
@@ -13,6 +14,8 @@ export const handleUploadCategoryImages = async (
   operation = "add"
 ) => {
   let theFileWebContent = item?.web_image;
+  let theFileMobileContent = item?.mobile_image;
+
   const webPath =
     typeof theFileWebContent === "object"
       ? await uploadCategoryImage({
@@ -23,15 +26,17 @@ export const handleUploadCategoryImages = async (
         })
       : item?.web_image;
   if (webPath?.url) item.web_image = `https://` + webPath?.url;
+
   const mobilePath =
-    typeof theFileWebContent === "object"
+    typeof theFileMobileContent === "object"
       ? await uploadCategoryImage({
-          id: itemId,
+          categoryId: itemId,
           langName: CACHE_LANGUAGES[item?.language_id],
-          file: theFileWebContent,
+          file: theFileMobileContent,
           type: "mobile",
         })
       : item?.mobile_image;
+
   if (mobilePath?.url) item.mobile_image = `https://` + mobilePath?.url;
   if (operation === "add")
     await addNewItem(`category_content`, {
@@ -41,7 +46,7 @@ export const handleUploadCategoryImages = async (
   else
     await updateItem(`category_content`, {
       ...item,
-      category_id: itemId,
+      // category_id: itemId,
     });
 };
 
@@ -54,13 +59,13 @@ export const handleUploadOfferImage = async (
   let theFileWebContent = item?.media;
   const media =
     typeof theFileWebContent === "object"
-      ? await uploadCategoryImage({
-          id: itemId,
+      ? await uploadOfferImage({
+          offerId: itemId,
           langName: CACHE_LANGUAGES[item?.language_id],
           file: theFileWebContent,
         })
       : item?.media;
-  if (media?.url) item.media = media?.url;
+  if (media?.url) item.media = `https://` + media?.url;
   if (operation === "add")
     await addNewItem(`offer_content`, {
       ...item,
@@ -69,7 +74,7 @@ export const handleUploadOfferImage = async (
   else
     await updateItem(`offer_content`, {
       ...item,
-      offer_id: itemId,
+      // offer_id: itemId,
     });
 };
 
@@ -79,16 +84,17 @@ export const handleUploadCollectionImage = async (
   CACHE_LANGUAGES,
   operation = "add"
 ) => {
+  console.log(item, itemId, CACHE_LANGUAGES, operation);
   let theFileWebContent = item?.image;
   const image =
     typeof theFileWebContent === "object"
       ? await uploadCollectionImage({
-          id: itemId,
+          collectionId: itemId,
           langName: CACHE_LANGUAGES[item?.language_id],
           file: theFileWebContent,
         })
       : item?.image;
-  if (image?.url) item.image = image?.url;
+  if (image?.url) item.image = `https://` + image?.url;
   if (operation === "add")
     await addNewItem(`collection_content`, {
       ...item,
@@ -97,7 +103,7 @@ export const handleUploadCollectionImage = async (
   else
     await updateItem(`collection_content`, {
       ...item,
-      collection_id: itemId,
+      // collection_id: itemId,
     });
 };
 export const handleUploadColorImage = async (item) => {
@@ -105,12 +111,12 @@ export const handleUploadColorImage = async (item) => {
   const image =
     typeof theFileWebContent === "object"
       ? await uploadColorImage({
-          id: item?.id,
+          colorId: item?.id,
           file: theFileWebContent,
         })
       : item?.image;
   if (image?.url) {
-    item.image = image?.url;
+    item.image = `https://` + image?.url;
     await updateItem(`color`, item);
   }
 };
@@ -124,7 +130,7 @@ export const handleUploadReviewerImage = async (item, operation = "add") => {
         })
       : item?.image;
   if (image?.url) {
-    item.image = image?.url;
+    item.image = `https://` + image?.url;
     if (operation === "add") {
       await addNewItem(`home_reviews`, item);
     } else {

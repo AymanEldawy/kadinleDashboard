@@ -19,10 +19,10 @@ const AddProductForm = ({
   setValues,
   allMultiple,
   getImagesValueOnChange,
+  errors,
+  setErrors,
 }) => {
-  const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
-
   const insertIntoErrors = (name, value) => {
     if (value === "") {
       setErrors((prev) => {
@@ -74,14 +74,14 @@ const AddProductForm = ({
     }
   };
 
-  const submit = (e) => {
-    e.preventDefault();
-    if (!errors.length) {
-      onSubmit(values);
-    }
-  };
+  // const submit = (e) => {
+  //   e.preventDefault();
+  //   if (!errors.length) {
+  //     onSubmit(values);
+  //   }
+  // };
   return (
-    <form onSubmit={submit} className="mb-8">
+    <form className="mb-8">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
         {!!initialFields
           ? initialFields?.map((field, i) => {
@@ -237,12 +237,12 @@ const AddProductForm = ({
             })
           : null}
       </div>
-      <div className="flex justify-between gap-4 items-center">
+      {/* <div className="flex justify-between gap-4 items-center">
         <Button
           type="submit"
           title={layout === "update" ? "Update" : "Submit"}
         />
-      </div>
+      </div> */}
     </form>
   );
 };

@@ -1,4 +1,5 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
+
 const LANGUAGE = {
   name: "",
   id: "c53d7987-f51a-4b47-9ee0-3215becdce17",
@@ -59,7 +60,7 @@ export const getCategories = async (page, pageSize) => {
     .select(
       `
     *,
-     category_content(title, description , language_id,
+     category_content(*,
       language(id, name )
       )
     
@@ -192,7 +193,7 @@ export const getCountries = async (page, pageSize) => {
     .select(
       `
       *,
-      currency (id, name,code, rate, exchange_percent),
+      currency (id, currency:name,code, rate, exchange_percent),
       region (id, name)
    `,
       { count: "exact" }
@@ -223,7 +224,7 @@ export const getCollections = async (page, pageSize) => {
     .select(
       `
     *,
-    collection_content(id, name, language_id,
+    collection_content(id, name,image, language_id,
       language (id, name )
       )
      `,
@@ -256,7 +257,7 @@ export const getColors = async (page, pageSize) => {
     .select(
       `
     *,
-     color_content(id, name, language_id,
+     color_content(*,
       language (id, name )
       )
      `,
@@ -273,8 +274,8 @@ export const getSizes = async (page, pageSize) => {
     .select(
       `
     *,
-      category (category_content(id, category_id, title, language_id)),
-      size_content(size_id, name, region(id, name))
+      category (category_content(*)),
+      size_content(id, size_id, name, region(id, name))
       `,
       { count: "exact" }
     )

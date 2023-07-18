@@ -1,39 +1,58 @@
-import React, { useContext, useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
+import { signup } from "../../Api/auth";
 import {
   handleUploadCategoryImages,
+  handleUploadCollectionImage,
   handleUploadColorImage,
   handleUploadOfferImage,
   handleUploadReviewerImage,
 } from "../../Api/DynamicUploadHandler";
+import { uploadCategoryImage } from "../../Api/upload";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
+import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
 import SuperForm from "../../Components/CustomForm/SuperForm";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 import DB_API from "../../Helpers/Forms/databaseApi";
-import { useFetch } from "../../hooks/useFetch";
+import { useAdd } from "../../hooks/useAdd";
+import { Button } from "../../Components/Global/Button";
 import { useUpdate } from "../../hooks/useUpdate";
+import { useFetch } from "../../hooks/useFetch";
 
-const Update = () => {
+const MEDIA_NAMES = ["web_image", "mobile_image", "media", "image"];
+
+const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   const params = useParams();
-  const { CACHE_LANGUAGES } = useGlobalOptions();
-  const { getData } = useFetch();
+  const { CACHE_LANGUAGES, languages } = useGlobalOptions();
   const { updateItem } = useUpdate();
+  const { getData } = useFetch();
+  const location = useLocation();
   const { name: tableName, id } = params;
 
-  const [tableData, setTableData] = useState(false);
-  const [tableContentData, setTableContentData] = useState(false);
-  // Handel Submit
+  const [values, setValues] = useState();
+  const [contentValues, setContentValues] = useState();
+  const [errors, setErrors] = useState();
+  const [contentErrors, setContentErrors] = useState();
+  const [oldList, setOldList] = useState(false);
+
   const fields = DB_API?.[tableName];
-  const fields_content = DB_API?.[`${tableName}_content`];
+  const fields_content = DB_API?.[tableName + "_content"];
+  // Handel Submit
   const fetchData = async () => {
     const response = await getData(tableName, id);
-    setTableData(response?.[0]);
+    setValues(response?.[0]);
   };
   const fetchDataContent = async () => {
     const response = await getData(tableName, id, "content");
-    setTableContentData(response);
+    let contentsObject = {};
+    for (const item of response) {
+      contentsObject[CACHE_LANGUAGES?.[item?.language_id]] = item;
+    }
+    console.log(contentsObject);
+    setContentValues(contentsObject);
+    setOldList((p) => !p);
   };
   useEffect(() => {
     fetchData();
@@ -42,64 +61,74 @@ const Update = () => {
   useEffect(() => {
     if (DB_API?.[`${tableName}_content`]) fetchDataContent();
   }, [fields_content?.length, id, tableName]);
-  useEffect(() => {}, [tableContentData]);
 
-  const onSubmit = async (data) => {
-    const response = await updateItem(tableName, data);
+  const onSubmit = async () => {
+    const response = await updateItem(tableName, values);
     if (tableName === "home_reviews") {
-      await handleUploadReviewerImage(data, "update");
+      await handleUploadReviewerImage(values, "update");
     } else {
-      const response = await updateItem(tableName, data);
+      const response = await updateItem(tableName, values);
       if (response) {
-        if (tableName === "color") await handleUploadColorImage(data);
+        if (tableName === "color") await handleUploadColorImage(values);
+
+        const list = Object.values(contentValues);
+        for (const item of list) {
+          if (tableName === "category") {
+            await handleUploadCategoryImages(
+              item,
+              item?.category_id || id,
+              CACHE_LANGUAGES,
+              "update"
+            );
+          } else if (tableName === "offer") {
+            await handleUploadOfferImage(
+              item,
+              item?.offer_id || id,
+              CACHE_LANGUAGES,
+              "update"
+            );
+          } else if (tableName === "collection") {
+            await handleUploadCollectionImage(
+              item,
+              item?.collection_id || id,
+              CACHE_LANGUAGES,
+              "update"
+            );
+          } else {
+            await updateItem(`${tableName}_content`, item);
+          }
+        }
       }
     }
-  };
-  const onSubmitContent = async (data, index) => {
-    if (!data?.id) return;
-    let list = data;
-    console.log(data);
-    // for (const item of list) {
-    if (tableName === "category") {
-      await handleUploadCategoryImages(data, data?.id, CACHE_LANGUAGES);
-    }
-    if (tableName === "offer") {
-      await handleUploadOfferImage(data, data?.id, CACHE_LANGUAGES);
-    }
-    if (tableName === "collection") {
-      await handleUploadOfferImage(data, data?.id, CACHE_LANGUAGES);
-    }
-    // }
-    await updateItem(`${tableName}_content`, data);
   };
   return (
     <>
       <BlockPaper title={tableName}>
         <SuperForm
-          oldValues={tableData}
           initialFields={fields}
-          onSubmit={onSubmit}
+          values={values}
+          setValues={setValues}
+          errors={errors}
+          setErrors={setErrors}
         />
       </BlockPaper>
-      {tableContentData?.length ? (
-        <div>
-          {tableContentData?.map((item, index) => {
-            return (
-              <div key={item?.id}>
-                <BlockPaper>
-                  <SuperForm
-                    oldValues={item}
-                    initialFields={fields_content}
-                    onSubmit={(data) => onSubmitContent(data, index)}
-                  />
-                </BlockPaper>
-              </div>
-            );
-          })}
-        </div>
+      {fields_content?.length ? (
+        <BlockPaper title={tableName + " Content"}>
+          <FormIncreasable
+            initialFields={fields_content}
+            maxCount={languages?.length}
+            values={contentValues}
+            setValues={setContentValues}
+            errors={contentErrors}
+            setErrors={setContentErrors}
+            layout={"update"}
+            oldList={oldList}
+          />
+        </BlockPaper>
       ) : null}
+      <Button title="Submit" onClick={onSubmit} />
     </>
   );
 };
 
-export default Update;
+export default DynamicForm;

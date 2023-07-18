@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 import {
+  getRowsById,
   getTableContentDataById,
   getTableData,
   getTableDataById,
@@ -44,6 +45,9 @@ export const useFetch = () => {
 
     return response?.data;
   };
+
+  // const getRowsDataById = async (table, col, itemId) =>
+  // await getRowsById(table, col, itemId);
 
   return { loading, getData, getDataWithPagination };
 };

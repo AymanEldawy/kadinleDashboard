@@ -101,8 +101,6 @@ const combine_country = [
   "alph-2",
   "alph-3",
   "currency",
-  // "region",
-  // "code",
   "rate",
   "exchange_percent",
 ];
@@ -134,7 +132,7 @@ const combine_logs = [
   "table_name",
 ];
 
-const combine_news = ["id", "created_at", "content"];
+const combine_news = ["id", "created_at", "link", "language", "content"];
 const combine_newsletter = ["id", "created_at", "subject", "content"];
 const combine_newsletter_subscription = ["email"];
 const combine_offer = [
@@ -200,29 +198,29 @@ const combine_product = [
   "name",
   "description",
   "category",
-  "created_at",
+  // "created_at",
   "price",
   "barcode",
-  "tax_percent",
-  "display",
-  "discount",
-  "featured",
-  "views",
-  "fabric",
-  "material",
-  "lining",
-  "collar",
-  "sleeve",
-  "season",
-  "feature",
+  // "tax_percent",
+  // "display",
+  // "discount",
+  // "featured",
+  // "views",
+  // "fabric",
+  // "material",
+  // "lining",
+  // "collar",
+  // "sleeve",
+  // "season",
+  // "feature",
   "brand",
   // "origin",
-  "pattern",
+  // "pattern",
   // "product",
-  "language",
-  "seo_title",
-  "seo_description",
-  "image_alt",
+  // "language",
+  // "seo_title",
+  // "seo_description",
+  // "image_alt",
 ];
 
 const combine_product_image = [

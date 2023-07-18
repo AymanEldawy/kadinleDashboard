@@ -431,9 +431,16 @@ const material_content = [
 ];
 const news = [
   { name: "id", type: "uuid" },
-  { name: "created_at", type: "date" },
-  { name: "content", type: "text", required: true },
+  // { name: "created_at", type: "date" },
+  { name: "link", type: "text", required: true },
 ];
+export const news_content = [
+  { name: "id", type: "uuid" },
+  { name: "news_id", type: "uuid", hide_in_add_form: true },
+  { name: "language_id", type: "uuid", tableName: "language", key: "ref" },
+  { name: "content", type: "text" },
+];
+
 const newsletter = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date" },
@@ -864,6 +871,7 @@ export const product_variant = [
   },
   { name: "weight", type: "number" },
   { name: "sku", type: "text", required: true, readonly: true },
+  { name: "pattern_sku", type: "number" },
 ];
 const stock = [
   { name: "id", type: "uuid" },
@@ -1296,6 +1304,7 @@ const DB_API = {
   material,
   material_content,
   news,
+  news_content,
   newsletter,
   newsletter_subscription,
   offer,

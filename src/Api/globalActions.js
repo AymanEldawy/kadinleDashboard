@@ -92,6 +92,11 @@ export const getTableData = async (table) => {
       : await normalFetch(table);
   return response;
 };
+
+export const getRowsById = async (table, col, itemId) => {
+  const response = await supabase.from(table).select("*").eq(col, itemId);
+  return response;
+};
 export const getTableDataById = async (table, itemId) => {
   const response = await supabase.from(table).select("*").eq("id", itemId);
   return response;
@@ -113,19 +118,57 @@ export const addNewItem = async (table, item) => {
 // delete items
 export const deleteItems = async (table, ids) => {
   const response = await supabase.from(table).delete().in("id", ids);
+  if (!response?.error) {
+    for (const id of ids) {
+      await addNewItem("logs", {
+        description: `Deleted item from ${table}`,
+        row_id: id,
+        table_name: table,
+      });
+    }
+  } else {
+    await addNewItem("logs", {
+      description: `Failed to Delete item from ${table}`,
+      row_id: ids?.[0],
+      table_name: table,
+    });
+  }
   return response;
 };
 export const deleteItem = async (table, id) => {
   const response = await supabase.from(table).delete().eq("id", id);
+  if (!response?.error) {
+    await addNewItem("logs", {
+      description: `Deleted item from ${table}`,
+      row_id: id,
+      table_name: table,
+    });
+  } else {
+    await addNewItem("logs", {
+      description: `Failed to Delete item from ${table}`,
+      row_id: id,
+      table_name: table,
+    });
+  }
   return response;
 };
 
 // update items
 export const updateItem = async (table, item) => {
-  const response = await supabase
-    .from(table)
-    .update(item)
-    .eq("id", item?.id)
-    .single();
+  const response = await supabase.from(table).update(item).eq("id", item?.id);
+  if (!response?.error) {
+    await addNewItem("logs", {
+      description: `Update item from ${table}`,
+      row_id: item?.id,
+      table_name: table,
+    });
+  } else {
+    await addNewItem("logs", {
+      description: `Error Failed to Update item from ${table}`,
+      row_id: item?.id,
+      table_name: table,
+    });
+  }
+  // .single();
   return response;
 };

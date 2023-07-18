@@ -10,13 +10,11 @@ export const AddStockIncreasable = ({
   allValues,
   setAllValues,
   subItemKey,
+  listStocks,
+  setListStocks,
+  activeTabStocks,
+  setActiveTabStocks,
 }) => {
-  const [listWarehouse, setListWarehouse] = useState([0]);
-
-  const [activeTabWarehouse, setActiveTabWarehouse] = useState(
-    listWarehouse[0]
-  );
-
   const handelChangeWarehouseField = (name, value, row, subRow) => {
     setAllValues((prev) => {
       return {
@@ -25,35 +23,46 @@ export const AddStockIncreasable = ({
           ...prev?.[row],
           stocks: {
             ...prev?.[row]?.stocks,
+            // [subRow]: {
+            //   ...prev?.[row]?.stocks?.[subRow],
             [subRow]: {
               ...prev?.[row]?.stocks?.[subRow],
               [name]: value,
+              // },
             },
           },
         },
       };
     });
   };
+  const onDecrease = (row, index) => {
+    console.log(row, "row");
+    let stocks = allValues;
+    delete stocks?.[itemKey]?.stocks?.[row];
+    setAllValues(stocks);
+  };
+
   return (
     <div>
       <IncreasableBar
         title={"Choose Warehouse"}
-        list={listWarehouse}
-        setList={setListWarehouse}
-        activeTab={activeTabWarehouse}
-        setActiveTab={setActiveTabWarehouse}
+        list={listStocks}
+        setList={setListStocks}
+        activeTab={activeTabStocks}
+        setActiveTab={setActiveTabStocks}
+        onDecrease={onDecrease}
       />
-      {listWarehouse?.map((item, index) => {
+      {listStocks?.map((item, index) => {
         return (
           <div
             className={`relative z-10 ${
-              activeTabWarehouse !== item ? "hidden" : ""
+              activeTabStocks !== item ? "hidden" : ""
             } `}
             kye={`${index}-warehouse`}
           >
-            <div className="flex gap-4 flex-wrap mb-4">
+            <div className="md:grid-cols-3 grid gap-4 flex-wrap mb-4">
               <SelectField
-                values={allValues?.[itemKey]?.[item]?.warehouse_id}
+                value={allValues?.[itemKey]?.[item]?.warehouse_id}
                 label="Product warehouse"
                 name="warehouse_id"
                 list={!!getCachedList ? getCachedList("warehouse") : []}
@@ -64,13 +73,12 @@ export const AddStockIncreasable = ({
                     "warehouse_id",
                     e.target.value,
                     itemKey,
-                    subItemKey,
                     item
                   )
                 }
               />
               <InputField
-                values={allValues?.[itemKey]?.[item]?.stock}
+                value={allValues?.[itemKey]?.[item]?.stock}
                 label={"stock"}
                 name="stock"
                 type="number"
@@ -79,7 +87,6 @@ export const AddStockIncreasable = ({
                     "stock",
                     +e.target.value,
                     itemKey,
-                    subItemKey,
                     item
                   )
                 }

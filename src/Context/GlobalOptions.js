@@ -23,6 +23,7 @@ export const GlobalOptionsProvider = ({ children }) => {
   const [defaultRegion, setDefaultRegion] = useState();
   const [user, setUser] = useState();
   const [refresh, serRefresh] = useState(false);
+  const [refreshLayout, serRefreshLayout] = useState(false);
   // const [languageId, setLanguageId] = useLocalStorage('name', '');
   const getAndCacheData = async (table, setData, setCache) => {
     const response = await getData(table);
@@ -44,7 +45,7 @@ export const GlobalOptionsProvider = ({ children }) => {
       setLanguageId(data);
       setDefaultLanguage(data);
     }
-    window.location.reload();
+    serRefreshLayout((p) => !p);
   };
 
   useEffect(() => {
@@ -70,6 +71,8 @@ export const GlobalOptionsProvider = ({ children }) => {
       setUser(res);
     });
   }, [refresh]);
+
+  useEffect(() => {}, [refreshLayout]);
 
   const values = {
     languages,

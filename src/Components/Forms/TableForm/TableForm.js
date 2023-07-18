@@ -16,18 +16,17 @@ import { Button } from "../../Global/Button";
 const TableForm = ({
   hideIncreasable,
   rowLength,
-  setRowLength,
   initialFields,
   oldValues,
-  onSubmit,
   getCachedList,
   getValuesWithoutSubmit,
   setGetIndexOfRowUpdated,
   selectedChart,
+  grid,
+  setGrid,
+  tabKey,
+  changeChartLength,
 }) => {
-  const [grid, setGrid] = useState([]);
-  useEffect(() => {}, [initialFields]);
-
   useEffect(() => {
     setGrid((prev) => {
       return {
@@ -48,7 +47,10 @@ const TableForm = ({
       setGrid((prev) => {
         return {
           ...prev,
-          [index]: { ...prev?.[index], [name]: value },
+          [tabKey]: {
+            ...prev?.[tabKey],
+            [index]: { ...prev?.[tabKey]?.[index], [name]: value },
+          },
         };
       });
       if (!!setGetIndexOfRowUpdated) {
@@ -57,9 +59,6 @@ const TableForm = ({
     },
     [grid]
   );
-  const submit = () => {
-    onSubmit(grid);
-  };
 
   return (
     <>
@@ -78,7 +77,7 @@ const TableForm = ({
                   classes="border border-gray-300 !w-[90px] dark:border-borderdark !py-3"
                   key={col?.name}
                 >
-                  {selectedChart[col?.name] || col?.name}
+                  {selectedChart?.[col?.name] || col?.name}
                 </TableHeadCol>
               );
             }
@@ -107,10 +106,11 @@ const TableForm = ({
                               ? getCachedList(field?.tableName)
                               : []
                           }
-                          value={grid?.[index + 1]?.[field?.name]}
+                          value={grid?.[tabKey]?.[index + 1]?.[field?.name]}
                           className={`!border-0 !rounded-none !bg-transparent`}
                           name={field?.name}
                           required={field?.required}
+                          keyValue={field?.refId}
                           onChange={(e) => {
                             handelChangeField(
                               index + 1,
@@ -128,7 +128,7 @@ const TableForm = ({
                         key={field?.name}
                       >
                         <InputField
-                          value={grid?.[index + 1]?.[field?.name]}
+                          value={grid?.[tabKey]?.[index + 1]?.[field?.name]}
                           className={`!border-0 !rounded-none !bg-transparent `}
                           name={field?.name}
                           type={field?.type}
@@ -151,28 +151,20 @@ const TableForm = ({
       {hideIncreasable ? null : (
         <div className="flex gap-4 items-center justify-between mt-1">
           <button
-            onClick={() => setRowLength((prev) => prev + 1)}
+            onClick={() => changeChartLength(tabKey, rowLength + 1)}
             className="dark:bg-[#5c5c5c] bg-gray-200 text-black dark:hover:bg-[#444] dark:text-white p-2 rounded-full h-7 w-7 flex items-center justify-center"
           >
             <PlusIcon className="w-4 h-4" />
           </button>
           <button
             disabled={rowLength === 1}
-            onClick={() => setRowLength((prev) => (prev > 1 ? prev - 1 : prev))}
+            onClick={() => changeChartLength(tabKey, rowLength - 1)}
             className="dark:bg-[#5c5c5c] disabled:opacity-50 disabled:pointer-events-none bg-gray-200 text-black dark:hover:bg-[#444] dark:text-white p-2 rounded-full h-7 w-7 flex items-center justify-center"
           >
             <MinusIcon className="w-4 h-4" />
           </button>
         </div>
       )}
-      <div className="flex justify-between gap-4 items-center mt-4">
-        <Button
-          title="Submit"
-          onClick={submit}
-          type="button"
-          classes="w-[140px] hover:bg-primary-blue"
-        />
-      </div>
     </>
   );
 };

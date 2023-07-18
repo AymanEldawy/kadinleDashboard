@@ -15,16 +15,16 @@ import UploadFile from "./UploadFile";
 let CACHED_TABLE = {};
 
 const SuperForm = ({
-  onSubmit,
   initialFields,
   oldValues,
   resetForm,
   layout,
+  values,
+  setValues,
+  errors,
+  setErrors,
 }) => {
   const { getData } = useFetch();
-
-  const [values, setValues] = useState({});
-  const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -118,19 +118,12 @@ const SuperForm = ({
       };
     });
   };
-
-  const submit = (e) => {
-    e.preventDefault();
-    if (!errors.length) {
-      onSubmit(values);
-    }
-  };
   return (
     <>
       {loading ? (
         <div className="fixed top-0 left-0 w-full h-full z-[100] bg-[#0003]" />
       ) : null}
-      <form onSubmit={submit} className="mb-2">
+      <form className="mb-2">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
           {!!initialFields
             ? initialFields?.map((field, i) => {
@@ -281,12 +274,6 @@ const SuperForm = ({
                 }
               })
             : null}
-        </div>
-        <div className="flex justify-between gap-4 items-center">
-          <Button
-            type="submit"
-            title={layout === "update" ? "Update" : "Submit"}
-          />
         </div>
       </form>
     </>

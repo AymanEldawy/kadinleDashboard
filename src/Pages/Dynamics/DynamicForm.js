@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
+import { signup } from "../../Api/auth";
 import {
   handleUploadCategoryImages,
+  handleUploadCollectionImage,
   handleUploadColorImage,
   handleUploadOfferImage,
   handleUploadReviewerImage,
@@ -14,65 +17,64 @@ import SuperForm from "../../Components/CustomForm/SuperForm";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 import DB_API from "../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../hooks/useAdd";
-import { signup } from "../../Api/auth";
-import { toast } from "react-toastify";
-
-const MEDIA_NAMES = ["web_image", "mobile_image", "media", "image"];
+import { Button } from "../../Components/Global/Button";
 
 const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   const { CACHE_LANGUAGES, languages } = useGlobalOptions();
-  const location = useLocation();
-  const { addItem, status } = useAdd();
+  const { addItem } = useAdd();
 
+  console.log(languages?.length);
   const [resetForm, setResetForm] = useState(false);
-  const [resetContentForm, setResetContentForm] = useState(false);
-  const [itemId, setItemId] = useState();
+  const [values, setValues] = useState({});
+  const [contentValues, setContentValues] = useState({});
+  const [errors, setErrors] = useState();
+  const [contentErrors, setContentErrors] = useState();
 
   const fields = DB_API?.[SUPABASE_TABLE_NAME];
   const fields_content = DB_API?.[SUPABASE_TABLE_NAME + "_content"];
 
-  const onSubmit = async (data) => {
+  const onSubmit = async () => {
     if (SUPABASE_TABLE_NAME === "home_reviews") {
-      await handleUploadReviewerImage(data);
+      await handleUploadReviewerImage(values);
     } else if (SUPABASE_TABLE_NAME === "user") {
-      const response = await signup(data);
-      if (response?.data) {
+      const response = await signup(values);
+      if (response?.values) {
         setResetForm(true);
         toast.success("Successfully add new user");
       }
     } else {
-      const response = await addItem(SUPABASE_TABLE_NAME, data);
-      if (response) {
-        setItemId(response?.data?.[0]?.id);
+      const response = await addItem(SUPABASE_TABLE_NAME, values);
+      if (!response?.error) {
+        const itemId = response?.data?.[0]?.id;
         if (SUPABASE_TABLE_NAME === "color")
           await handleUploadColorImage({
-            ...data,
-            id: response?.data?.[0]?.id,
+            ...values,
+            id: itemId,
           });
-
-        setResetForm(true);
+        console.log(contentValues);
+        const list = Object.values(contentValues);
+        if (list?.length) {
+          for (const item of list) {
+            console.log(item, "item");
+            if (SUPABASE_TABLE_NAME === "category") {
+              await handleUploadCategoryImages(item, itemId, CACHE_LANGUAGES);
+            } else if (SUPABASE_TABLE_NAME === "offer") {
+              await handleUploadOfferImage(item, itemId, CACHE_LANGUAGES);
+            } else if (SUPABASE_TABLE_NAME === "collection") {
+              await handleUploadCollectionImage(item, itemId, CACHE_LANGUAGES);
+            } else {
+              await addItem(`${SUPABASE_TABLE_NAME}_content`, {
+                ...item,
+                [`${SUPABASE_TABLE_NAME}_id`]: itemId,
+              });
+            }
+          }
+        }
+        setValues({});
+        setContentValues({});
       }
     }
   };
-  const onSubmitContent = async (data) => {
-    if (!itemId && !data?.[`${SUPABASE_TABLE_NAME}_id`]) return;
-    const list = Object.values(data);
-    if (list?.length) {
-      for (const item of list) {
-        if (SUPABASE_TABLE_NAME === "category") {
-          await handleUploadCategoryImages(item, itemId, CACHE_LANGUAGES);
-        }
-        if (SUPABASE_TABLE_NAME === "offer") {
-          await handleUploadOfferImage(item, itemId, CACHE_LANGUAGES);
-        }
-        if (SUPABASE_TABLE_NAME === "collection") {
-          await handleUploadOfferImage(item, itemId, CACHE_LANGUAGES);
-        }
-      }
-    }
-    setResetContentForm({});
-  };
-
   return (
     <>
       <BlockPaper title={title}>
@@ -80,18 +82,25 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
           initialFields={fields}
           onSubmit={onSubmit}
           resetForm={resetForm}
+          values={values}
+          setValues={setValues}
+          errors={errors}
+          setErrors={setErrors}
         />
       </BlockPaper>
       {fields_content?.length ? (
         <BlockPaper title={title + " Content"}>
           <FormIncreasable
-            onSubmit={onSubmitContent}
             initialFields={fields_content}
-            resetForm={resetContentForm}
             maxCount={languages?.length}
+            values={contentValues}
+            setValues={setContentValues}
+            errors={contentErrors}
+            setErrors={setContentErrors}
           />
         </BlockPaper>
       ) : null}
+      <Button title="Submit" onClick={onSubmit} />
     </>
   );
 };

@@ -1,9 +1,9 @@
+import DynamicLayout from "../Dynamics/DynamicLayout";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import DB_API from "../../Helpers/Forms/databaseApi";
-import DynamicLayout from "../Dynamics/DynamicLayout";
 
 const Addresses = () => {
   const navigate = useNavigate();
@@ -14,6 +14,7 @@ const Addresses = () => {
       SUPABASE_TABLE_NAME="address"
       columns={columns}
       title="Addresses"
+      hideDelete
       // onAddClick={() => navigate("/add-address")}
     />
   );

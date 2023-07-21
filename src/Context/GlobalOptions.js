@@ -49,6 +49,12 @@ export const GlobalOptionsProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    getUser().then((res) => {
+      setUser(res);
+    });
+  }, [refresh]);
+
+  useEffect(() => {
     getAndCacheData("language", setLanguages, setCACHE_LANGUAGES).then(
       (res) => {
         if (languageId) {
@@ -66,13 +72,6 @@ export const GlobalOptionsProvider = ({ children }) => {
       }
     });
   }, []);
-  useEffect(() => {
-    getUser().then((res) => {
-      setUser(res);
-    });
-  }, [refresh]);
-
-  useEffect(() => {}, [refreshLayout]);
 
   const values = {
     languages,

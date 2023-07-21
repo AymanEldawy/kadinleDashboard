@@ -56,28 +56,6 @@ const DynamicList = ({
   const [itemOffset, setItemOffset] = useState(0);
 
   const handleDeleteItem = async (selectedList) => {
-    console.log("call", selectedList, tableName);
-    // if (tableName === "product") {
-    //   await deleteItem(tableName, Object.values(selectedList));
-    //   await deleteItem(`product_content`, Object.values(selectedList));
-    //   await deleteItem(`product_image`, Object.values(selectedList));
-    //   await deleteItem(`product_variant`, Object.values(selectedList));
-    // } else if (tablesWithContent?.includes(tableName)) {
-    //   await deleteItem(`${tableName}_content`, Object.values(selectedList));
-    //   await deleteItem(tableName, Object.values(selectedList));
-    // } else if (tableName === "user") {
-    //   await deleteItem("user_address", Object.values(selectedList));
-    //   await deleteItem("user_cart", Object.values(selectedList));
-    //   await deleteItem("user_invite", Object.values(selectedList));
-    //   await deleteItem("user_like", Object.values(selectedList));
-    //   await deleteItem("user_point", Object.values(selectedList));
-    //   await deleteItem("user_suggestion", Object.values(selectedList));
-    //   await deleteItem("user_ticket", Object.values(selectedList));
-    //   await deleteItem("user_wallet", Object.values(selectedList));
-    //   await deleteItem("user_type", Object.values(selectedList));
-    //   await deleteItem("user", Object.values(selectedList));
-    // } else {
-    // }
     await deleteItem(tableName, Object.values(selectedList));
     setRefresh((p) => !p);
   };
@@ -100,7 +78,6 @@ const DynamicList = ({
     // const newOffset = (event.selected * itemsPerPage) % filterList?.length;
     setItemOffset(index);
   };
-  console.log(itemOffset, pageCount);
   return (
     <>
       <ConfirmModal

@@ -12,6 +12,7 @@ import TableHead from "../../CustomTable/TableHead";
 import TableHeadCol from "../../CustomTable/TableHeadCol";
 import TableRow from "../../CustomTable/TableRow";
 import { Button } from "../../Global/Button";
+import { useDelete } from "../../../hooks/useDelete";
 
 const TableForm = ({
   hideIncreasable,
@@ -26,7 +27,10 @@ const TableForm = ({
   setGrid,
   tabKey,
   changeChartLength,
+  layout,
 }) => {
+  const { deleteItem } = useDelete();
+
   useEffect(() => {
     setGrid((prev) => {
       return {
@@ -158,7 +162,13 @@ const TableForm = ({
           </button>
           <button
             disabled={rowLength === 1}
-            onClick={() => changeChartLength(tabKey, rowLength - 1)}
+            onClick={async () => {
+              if (layout === "update") {
+                let id = grid?.[tabKey]?.[rowLength]?.id;
+                if (id) await deleteItem("chart_data", id);
+              }
+              changeChartLength(tabKey, rowLength - 1);
+            }}
             className="dark:bg-[#5c5c5c] disabled:opacity-50 disabled:pointer-events-none bg-gray-200 text-black dark:hover:bg-[#444] dark:text-white p-2 rounded-full h-7 w-7 flex items-center justify-center"
           >
             <MinusIcon className="w-4 h-4" />

@@ -3,7 +3,6 @@ import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
 export const getUser = async () => {
   try {
     const response = await supabase.auth.getUser();
-    console.log(response, "----");
     if (!response?.data?.user?.id) return;
     const userType = await supabase
       .from("user_type")
@@ -13,9 +12,7 @@ export const getUser = async () => {
       ...response?.data?.user,
       role: userType?.data?.[0],
     };
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 // Log in function

@@ -445,16 +445,8 @@ const SuperTable = ({
 
                       if (row?.[tableNameContent]?.[0]?.hasOwnProperty(col)) {
                         let content = row?.[tableNameContent]?.[0];
-                        console.log(
-                          "🚀 ~ file: SuperTable.js:447 ~ {columns?.map ~ content:",
-                          content[col]
-                        );
-                        // ?.find(
-                        //   (c) => c?.language_id === uuidLanguageEn
-                        // );
                         if (typeof content?.[col] !== "object") {
                           if (content?.[col]?.indexOf("kadinle.com") !== -1) {
-                            console.log("called here");
                             value = {
                               path: col,
                               image: content?.[col],

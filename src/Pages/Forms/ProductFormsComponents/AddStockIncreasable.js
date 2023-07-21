@@ -2,19 +2,24 @@ import React, { useState } from "react";
 
 import InputField from "../../../Components/CustomForm/InputField";
 import SelectField from "../../../Components/CustomForm/SelectField";
-import { IncreasableBar } from "../../../Components/Global/IncreasableBar";
+import { MultipleIncreasableBar } from "../../../Components/Global/MultipleIncreasableBar";
+import { useDelete } from "../../../hooks/useDelete";
 
 export const AddStockIncreasable = ({
   getCachedList,
+  layout,
   itemKey,
   allValues,
   setAllValues,
   subItemKey,
-  listStocks,
-  setListStocks,
   activeTabStocks,
   setActiveTabStocks,
+  listCountGlobalVariant,
+  setListCountGlobalVariant,
 }) => {
+  const { deleteItem } = useDelete();
+  const [refresh, setRefresh] = useState(false);
+
   const handelChangeWarehouseField = (name, value, row, subRow) => {
     setAllValues((prev) => {
       return {
@@ -35,34 +40,82 @@ export const AddStockIncreasable = ({
       };
     });
   };
-  const onDecrease = (row, index) => {
-    console.log(row, "row");
-    let stocks = allValues;
-    delete stocks?.[itemKey]?.stocks?.[row];
-    setAllValues(stocks);
+
+  const increaseStock = () => {
+    console.log(listCountGlobalVariant, subItemKey);
+    console.log(listCountGlobalVariant?.[itemKey]?.sizes?.stocks);
+    let key = Object.keys(
+      listCountGlobalVariant?.[itemKey]?.sizes?.[subItemKey]?.stocks
+    ).length;
+    console.log(key, "le");
+    setListCountGlobalVariant((prev) => {
+      return {
+        ...prev,
+        [itemKey]: {
+          ...prev?.[itemKey],
+          sizes: {
+            ...prev?.[itemKey]?.sizes,
+            [subItemKey]: {
+              ...prev?.[itemKey]?.sizes?.[subItemKey],
+              stocks: {
+                ...prev?.[itemKey]?.sizes?.[subItemKey]?.stocks,
+                [key]: key,
+              },
+            },
+          },
+        },
+      };
+    });
+    setRefresh((p) => !p);
+  };
+  const decreaseStock = async (item, index) => {
+    let newValues = allValues;
+    let id = newValues?.[itemKey].stocks[item];
+    if (id && layout === "update") {
+      // delete item
+      await deleteItem("stock", id);
+    }
+    delete newValues?.[itemKey].stocks[item];
+    setAllValues(newValues);
+
+    let newList = listCountGlobalVariant;
+    delete newList?.[itemKey]?.sizes?.[subItemKey]?.stocks?.[item];
+    setListCountGlobalVariant(newList);
+    setRefresh((p) => !p);
   };
 
   return (
     <div>
-      <IncreasableBar
+      {layout === "update" ? (
+        <p className="text-yellow-500 text-xs bg-yellow-100 p-1 mt-8 rounded-md my-1">
+          <strong className="text-yellow-400 font-medium">Warning: </strong>
+          by Removing the Warehouse tab will remove the whole data in the tab
+        </p>
+      ) : null}
+
+      <MultipleIncreasableBar
         title={"Choose Warehouse"}
-        list={listStocks}
-        setList={setListStocks}
+        list={Object.keys(
+          listCountGlobalVariant?.[itemKey]?.sizes?.[subItemKey]?.stocks
+        )}
         activeTab={activeTabStocks}
         setActiveTab={setActiveTabStocks}
-        onDecrease={onDecrease}
+        increase={increaseStock}
+        decrease={(item, index) => decreaseStock(item, index)}
       />
-      {listStocks?.map((item, index) => {
+      {Object.keys(
+        listCountGlobalVariant?.[itemKey]?.sizes?.[subItemKey]?.stocks
+      )?.map((item, index) => {
         return (
           <div
             className={`relative z-10 ${
-              activeTabStocks !== item ? "hidden" : ""
+              +activeTabStocks !== +index ? "hidden" : ""
             } `}
             kye={`${index}-warehouse`}
           >
             <div className="md:grid-cols-3 grid gap-4 flex-wrap mb-4">
               <SelectField
-                value={allValues?.[itemKey]?.[item]?.warehouse_id}
+                value={allValues?.[itemKey]?.stocks?.[item]?.warehouse_id}
                 label="Product warehouse"
                 name="warehouse_id"
                 list={!!getCachedList ? getCachedList("warehouse") : []}
@@ -78,7 +131,7 @@ export const AddStockIncreasable = ({
                 }
               />
               <InputField
-                value={allValues?.[itemKey]?.[item]?.stock}
+                value={allValues?.[itemKey]?.stocks?.[item]?.stock}
                 label={"stock"}
                 name="stock"
                 type="number"

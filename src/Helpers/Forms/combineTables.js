@@ -268,6 +268,7 @@ const combine_user = [
   "first_name",
   "last_name",
   "email",
+  "title",
   "phone",
   "profile_img",
   "wallet",

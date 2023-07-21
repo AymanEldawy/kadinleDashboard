@@ -24,6 +24,7 @@ import {
   getUserAddresses,
   getUserInvite,
   getUserLike,
+  getUsers,
   getUsersCart,
   getUserSubTable,
   getWarehouseAvailability,
@@ -71,6 +72,7 @@ const fetches = {
   order_status: getOrderStatus,
   return_status: getReturnStatus,
   news: getNews,
+  user: getUsers,
   recent_user: getRecentUser(),
 };
 
@@ -93,6 +95,10 @@ export const getTableData = async (table) => {
   return response;
 };
 
+export const getRowsByIds = async (table, col, itemIds) => {
+  const response = await supabase.from(table).select("*").in(col, itemIds);
+  return response;
+};
 export const getRowsById = async (table, col, itemId) => {
   const response = await supabase.from(table).select("*").eq(col, itemId);
   return response;

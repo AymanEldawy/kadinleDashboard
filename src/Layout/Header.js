@@ -3,7 +3,9 @@ import { useContext } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
+import { logout } from "../Api/auth";
 import LanguageBar from "../Components/LanguageBar/LanguageBar";
+import RegionBar from "../Components/LanguageBar/RegionBar";
 import NotificationBar from "../Components/NotificationBar/NotificationBar";
 import ToggleThemeBar from "../Components/ToggleThemeBar/ToggleThemeBar";
 import { ThemeContext } from "../Context/ThemeContext";
@@ -11,8 +13,7 @@ import { exitFullscreen, openFullscreen } from "../Helpers/functions";
 import { FullScreenIcon, LogoutIcon } from "../Helpers/Icons";
 import BallIcon from "../Helpers/Icons/BallIcon";
 import BarsIcon from "../Helpers/Icons/BarsIcon";
-import RegionBar from "../Components/LanguageBar/RegionBar";
-import { logout } from "../Api/auth";
+import UserBar from "./../Components/UserBar/UserBar";
 
 function Header({ open, setOpen, mode, setMode }) {
   const { changeTheme, theme } = useContext(ThemeContext);
@@ -58,14 +59,8 @@ function Header({ open, setOpen, mode, setMode }) {
             </button>
             <ToggleThemeBar theme={theme} changeTheme={changeTheme} />
             <NotificationBar />
-            <button
-              className="p-2 rounded-full hover:bg-[#0002]"
-              onClick={async () => logout()}
-            >
-              <LogoutIcon />
-            </button>
           </div>
-          {/* <UserBar /> */}
+          <UserBar />
         </div>
       </div>
     </header>

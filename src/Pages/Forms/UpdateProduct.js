@@ -92,13 +92,13 @@ const AddProduct = ({ layout }) => {
     0: listStructure,
   });
 
-  const [activeTabVariant, setActiveTabVariant] = useState("0");
-  const [activeTabSizes, setActiveTabSizes] = useState("0");
-  const [activeTabStocks, setActiveTabStocks] = useState("0");
+  const [activeTabVariant, setActiveTabVariant] = useState(0);
+  const [activeTabSizes, setActiveTabSizes] = useState(0);
+  const [activeTabStocks, setActiveTabStocks] = useState(0);
   const [productVariantValues, setProductVariantValues] = useState({});
   const [variantErrors, setVariantErrors] = useState({});
 
-  const [listChart, setListChart] = useState(["0"]);
+  const [listChart, setListChart] = useState([0]);
   const [activeTabChart, setActiveTabChart] = useState("0");
   const [productChartValues, setProductChartValues] = useState({});
   const [chartErrors, setChartErrors] = useState({});
@@ -453,7 +453,7 @@ const AddProduct = ({ layout }) => {
         title={
           layout === "update"
             ? `Update product/ ${productValues?.product_sku || ""}`
-            : "Add new Product"
+            : '"Add Product"'
         }
       >
         <div className="mb-4 border-b dark:border-[#333] flex flex-wrap w-full">

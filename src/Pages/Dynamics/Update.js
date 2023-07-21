@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 
 import { signup } from "../../Api/auth";
 import {
+  handleUploadAvatarImage,
   handleUploadCategoryImages,
   handleUploadCollectionImage,
   handleUploadColorImage,
@@ -14,12 +15,12 @@ import { uploadCategoryImage } from "../../Api/upload";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
 import SuperForm from "../../Components/CustomForm/SuperForm";
+import { Button } from "../../Components/Global/Button";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 import DB_API from "../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../hooks/useAdd";
-import { Button } from "../../Components/Global/Button";
-import { useUpdate } from "../../hooks/useUpdate";
 import { useFetch } from "../../hooks/useFetch";
+import { useUpdate } from "../../hooks/useUpdate";
 
 const MEDIA_NAMES = ["web_image", "mobile_image", "media", "image"];
 
@@ -50,7 +51,6 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
     for (const item of response) {
       contentsObject[CACHE_LANGUAGES?.[item?.language_id]] = item;
     }
-    console.log(contentsObject);
     setContentValues(contentsObject);
     setOldList((p) => !p);
   };
@@ -63,8 +63,9 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   }, [fields_content?.length, id, tableName]);
 
   const onSubmit = async () => {
-    const response = await updateItem(tableName, values);
-    if (tableName === "home_reviews") {
+    if (tableName === "user") {
+      await handleUploadAvatarImage(values, "update");
+    } else if (tableName === "home_reviews") {
       await handleUploadReviewerImage(values, "update");
     } else {
       const response = await updateItem(tableName, values);

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import DynamicLayout from "../Dynamics/DynamicLayout";
 
@@ -13,6 +14,16 @@ const Product = () => {
       columns={columns}
       title="Product"
       onAddClick={() => navigate(`/add-product`)}
+      renderTableAction={(data) => {
+        return (
+          <Link
+            className="text-primary-blue hover:underline"
+            to={`/products/update/product/${data?.id}`}
+          >
+            Edit
+          </Link>
+        );
+      }}
     />
   );
 };

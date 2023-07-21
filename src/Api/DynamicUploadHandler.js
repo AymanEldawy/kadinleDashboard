@@ -1,5 +1,6 @@
 import { addNewItem, updateItem } from "./globalActions";
 import {
+  uploadAvatarImage,
   uploadCategoryImage,
   uploadCollectionImage,
   uploadColorImage,
@@ -15,7 +16,6 @@ export const handleUploadCategoryImages = async (
 ) => {
   let theFileWebContent = item?.web_image;
   let theFileMobileContent = item?.mobile_image;
-
   const webPath =
     typeof theFileWebContent === "object"
       ? await uploadCategoryImage({
@@ -84,7 +84,6 @@ export const handleUploadCollectionImage = async (
   CACHE_LANGUAGES,
   operation = "add"
 ) => {
-  console.log(item, itemId, CACHE_LANGUAGES, operation);
   let theFileWebContent = item?.image;
   const image =
     typeof theFileWebContent === "object"
@@ -136,5 +135,19 @@ export const handleUploadReviewerImage = async (item, operation = "add") => {
     } else {
       await updateItem(`home_reviews`, item);
     }
+  }
+};
+export const handleUploadAvatarImage = async (item) => {
+  let theFileWebContent = item?.profile_img;
+  const image =
+    typeof theFileWebContent === "object"
+      ? await uploadAvatarImage({
+          userId: item?.id,
+          file: theFileWebContent,
+        })
+      : item?.image;
+  if (image?.url) {
+    item.image = `https://` + image?.url;
+    await updateItem(`user`, item);
   }
 };

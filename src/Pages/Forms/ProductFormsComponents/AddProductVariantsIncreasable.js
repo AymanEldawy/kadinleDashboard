@@ -7,26 +7,33 @@ import BlockPaper from "../../../Components/BlockPaper/BlockPaper";
 import InputField from "../../../Components/CustomForm/InputField";
 import SelectField from "../../../Components/CustomForm/SelectField";
 import { IncreasableBar } from "../../../Components/Global/IncreasableBar";
-import { UploadIcon } from "../../../Helpers/Icons";
+import { CloseIcon, UploadIcon } from "../../../Helpers/Icons";
 import { AddStockIncreasable } from "./AddStockIncreasable";
+import { MultipleIncreasableBar } from "../../../Components/Global/MultipleIncreasableBar";
+import { FullImage } from "../../../Components/Global/FullImage/FullImage";
+import { useDelete } from "./../../../hooks/useDelete";
 
 const AddProductVariantsIncreasable = ({
   getCachedList,
   key,
+  layout,
+  dropzoneRef,
   CACHED_TABLES_SKU,
   productSku,
   itemKey,
   allValues,
   setAllValues,
-  listSizes,
-  setListSizes,
   activeTabSizes,
   setActiveTabSizes,
   listStocks,
   setListStocks,
   activeTabStocks,
   setActiveTabStocks,
+  setListCountGlobalVariant,
+  listCountGlobalVariant,
 }) => {
+  const { deleteItem } = useDelete();
+  const [refresh, setRefresh] = useState();
   console.log(itemKey, "itemKey");
   const handelChangeTopField = (name, value, row) => {
     setAllValues((prev) => {
@@ -57,12 +64,50 @@ const AddProductVariantsIncreasable = ({
     });
   };
   const handleFiles = (files) => handelChangeTopField("files", files, itemKey);
+  const handleDeleteImage = async (row, imageId) => {
+    setAllValues((prev) => {
+      return {
+        ...prev,
+        [row]: {
+          ...prev?.[row],
+          oldMedia: prev?.[row]?.oldMedia?.filter(
+            (item) => item?.id !== imageId
+          ),
+        },
+      };
+    });
+    await deleteItem("product_image", [imageId]);
+  };
+  const increaseSize = () => {
+    setListCountGlobalVariant((prev) => {
+      return {
+        ...prev,
+        [itemKey]: {
+          ...prev?.[itemKey],
+          sizes: {
+            ...prev?.[itemKey]?.sizes,
+            [Object.keys(prev?.[itemKey]?.sizes).length]: {
+              stocks: {
+                0: 1,
+              },
+            },
+          },
+        },
+      };
+    });
+    setRefresh((p) => !p);
 
-  const onDecrease = (row, index) => {
-    console.log(row, "row");
-    let sizes = allValues;
-    delete sizes?.[itemKey]?.sizes?.[row];
-    setAllValues(sizes);
+    console.log(listCountGlobalVariant);
+  };
+  const decreaseSize = (item, index) => {
+    console.log(index, item, "----", listCountGlobalVariant, allValues);
+    let newValues = allValues;
+    delete newValues?.[itemKey]?.sizes?.[item];
+    setAllValues(newValues);
+    let newList = listCountGlobalVariant;
+    delete newList?.[itemKey]?.sizes?.[item];
+    setListCountGlobalVariant(newList);
+    setRefresh((p) => !p);
   };
 
   return (
@@ -83,15 +128,15 @@ const AddProductVariantsIncreasable = ({
               }
             />
             <SelectField
-              value={allValues?.[itemKey]?.model_size}
+              value={allValues?.[itemKey]?.size_id}
               label="Model size"
-              name="model_size"
+              name="size_id"
               list={!!getCachedList ? getCachedList("size_content") : []}
               keyValue={"size_id"}
               required
               className="flex-1 w-full"
               onChange={(e) =>
-                handelChangeTopField("model_size", e.target.value, itemKey)
+                handelChangeTopField("size_id", e.target.value, itemKey)
               }
             />
             <InputField
@@ -105,7 +150,10 @@ const AddProductVariantsIncreasable = ({
           </div>
           <div className="my-8">
             <Dropzone
+              disableRipple={true}
+              ref={dropzoneRef}
               onChange={handleFiles}
+              multiple={true}
               // value={allValues?.[itemKey]?.files}
               className="hover:bg-gray-100 !border-solid rounded-md"
             >
@@ -141,41 +189,77 @@ const AddProductVariantsIncreasable = ({
                 />
               ))}
             </div>
+            {layout === "update" ? (
+              <div className="my-8 border-y pt-2 pb-4">
+                <h4 className="text-gray-800 font-semibold text-lg">
+                  Old Images
+                </h4>
+                <p className="text-yellow-500 text-xs bg-yellow-100 p-1 rounded-md my-1">
+                  <strong className="text-yellow-400 font-medium">
+                    Warning:{" "}
+                  </strong>
+                  by Removing the image will remove the old data storage for
+                  this image
+                </p>
+                <div className="flex gap-4">
+                  {allValues?.[itemKey]?.oldMedia?.map((img) => (
+                    <div className="border p-[2px] bg-white rounded-sm shadow relative">
+                      <button
+                        onClick={() => handleDeleteImage(img?.id)}
+                        className="bg-gray-600 text-white h-4 w-4 absolute top-2 left-2 z-10 rounded-full flex items-center justify-center"
+                      >
+                        <CloseIcon className="h-3 w-3" />
+                      </button>
+                      <FullImage
+                        src={img?.image}
+                        alt="old media"
+                        className="w-[140px] object-contain"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
-          <IncreasableBar
+          <MultipleIncreasableBar
             title={"Size"}
-            list={listSizes}
-            setList={setListSizes}
+            list={
+              listCountGlobalVariant?.[itemKey]?.sizes &&
+              Object.keys(listCountGlobalVariant?.[itemKey]?.sizes)
+            }
             activeTab={activeTabSizes}
             setActiveTab={setActiveTabSizes}
-            onDecrease={onDecrease}
+            increase={increaseSize}
+            decrease={(item, index) => decreaseSize(item, index)}
           />
-          {listSizes?.map((item, index) => {
-            console.log(allValues?.[itemKey]?.sizes?.[item], "{}");
+          {Object.keys(listCountGlobalVariant?.[itemKey]?.sizes)?.map(
+            (item, index) => {
+              console.log(allValues?.[itemKey]?.sizes?.[item], "{}");
 
-            let skuValue = `${productSku || ""} ${
-              CACHED_TABLES_SKU?.["size"]?.[
-                allValues?.[itemKey]?.sizes?.[item]?.size_id
-              ] || ""
-            } ${
-              CACHED_TABLES_SKU?.["color"]?.[allValues?.[itemKey]?.color_id] ||
-              ""
-            } ${allValues?.[itemKey]?.pattern_sku || ""} `;
-            return (
-              <div
-                className={`relative z-10 ${
-                  activeTabSizes !== item ? "hidden" : ""
-                } `}
-                kye={`${index}-size`}
-              >
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 flex-wrap mb-4">
-                  <InputField
-                    label={"Sku"}
-                    name="sku"
-                    value={skuValue}
-                    readOnly
-                  />
-                  {/* <InputField
+              let skuValue = `${productSku || ""} ${
+                CACHED_TABLES_SKU?.["size"]?.[
+                  allValues?.[itemKey]?.sizes?.[item]?.size_id
+                ] || ""
+              } ${
+                CACHED_TABLES_SKU?.["color"]?.[
+                  allValues?.[itemKey]?.color_id
+                ] || ""
+              } ${allValues?.[itemKey]?.pattern_sku || ""} `;
+              return (
+                <div
+                  className={`relative z-10 ${
+                    +activeTabSizes !== +index ? "hidden" : ""
+                  } `}
+                  kye={`${index}-size`}
+                >
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 flex-wrap mb-4">
+                    <InputField
+                      label={"Sku"}
+                      name="sku"
+                      value={skuValue}
+                      readOnly
+                    />
+                    {/* <InputField
                     value={allValues?.[itemKey]?.sizes?.[item]?.pattern}
                     label={"pattern"}
                     name="pattern"
@@ -188,50 +272,56 @@ const AddProductVariantsIncreasable = ({
                       )
                     }
                   /> */}
-                  <InputField
-                    value={allValues?.[itemKey]?.sizes?.[item]?.weight}
-                    label={"weight"}
-                    name="weight"
-                    onChange={(e) =>
-                      handelChangeSubField(
-                        "weight",
-                        e.target.value,
-                        itemKey,
-                        item
-                      )
-                    }
-                  />
-                  <SelectField
-                    value={allValues?.[itemKey]?.sizes?.[item]?.size_id}
-                    label="Choose size"
-                    name="size_id"
-                    list={!!getCachedList ? getCachedList("size_content") : []}
-                    keyValue={"size_id"}
-                    required
-                    onChange={(e) =>
-                      handelChangeSubField(
-                        "size_id",
-                        e.target.value,
-                        itemKey,
-                        item
-                      )
-                    }
+                    <InputField
+                      value={allValues?.[itemKey]?.sizes?.[item]?.weight}
+                      label={"weight"}
+                      name="weight"
+                      onChange={(e) =>
+                        handelChangeSubField(
+                          "weight",
+                          e.target.value,
+                          itemKey,
+                          item
+                        )
+                      }
+                    />
+                    <SelectField
+                      value={allValues?.[itemKey]?.sizes?.[item]?.size_id}
+                      label="Choose size"
+                      name="size_id"
+                      list={
+                        !!getCachedList ? getCachedList("size_content") : []
+                      }
+                      keyValue={"size_id"}
+                      required
+                      onChange={(e) =>
+                        handelChangeSubField(
+                          "size_id",
+                          e.target.value,
+                          itemKey,
+                          item
+                        )
+                      }
+                    />
+                  </div>
+                  <AddStockIncreasable
+                    layout={layout}
+                    getCachedList={getCachedList}
+                    itemKey={itemKey}
+                    subItemKey={item}
+                    allValues={allValues}
+                    setAllValues={setAllValues}
+                    listStocks={listStocks}
+                    setListStocks={setListStocks}
+                    activeTabStocks={activeTabStocks}
+                    setActiveTabStocks={setActiveTabStocks}
+                    listCountGlobalVariant={listCountGlobalVariant}
+                    setListCountGlobalVariant={setListCountGlobalVariant}
                   />
                 </div>
-                <AddStockIncreasable
-                  getCachedList={getCachedList}
-                  itemKey={itemKey}
-                  subItemKey={item}
-                  allValues={allValues}
-                  setAllValues={setAllValues}
-                  listStocks={listStocks}
-                  setListStocks={setListStocks}
-                  activeTabStocks={activeTabStocks}
-                  setActiveTabStocks={setActiveTabStocks}
-                />
-              </div>
-            );
-          })}
+              );
+            }
+          )}
         </BlockPaper>
       </div>
     </div>

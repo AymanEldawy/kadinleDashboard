@@ -14,10 +14,10 @@ const SelectField = ({
   name,
   required,
   onChange,
+  firstOptionText,
   containerClassName,
   ...field
 }) => {
-  console.log(keyValue);
   return (
     <div
       className={`flex flex-col ${containerClassName}`}
@@ -43,7 +43,9 @@ const SelectField = ({
         required={required}
         // {...field}
       >
-        {!hideText ? <option>Choose...</option> : null}
+        {!hideText ? (
+          <option>{firstOptionText ? firstOptionText : "Choose..."}</option>
+        ) : null}
         {list?.map((item, index) => {
           return (
             <option

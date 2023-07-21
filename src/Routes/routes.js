@@ -1,12 +1,19 @@
 import React from "react";
 import { redirect } from "react-router-dom";
 
+import Login from "../Components/Auth/Login";
+import NotAllowed from "../Components/Auth/NotAllowed";
+import PageNotFound from "../Components/Auth/PageNotFound";
 import { menuData } from "../Helpers/menu";
+import SelectProduct from "../Pages/ActionsFeatures/SelectProducts";
+import UploadSheet from "../Pages/ActionsFeatures/UploadSheet";
 import DynamicForm from "../Pages/Dynamics/DynamicForm";
 import Update from "../Pages/Dynamics/Update";
 import NotFoundPage from "../Pages/NotFoundPage/NotFoundPage";
+import Home from "../Pages/StandAlone/Home";
+import HomeSections from "../Pages/StandAlone/HomeSections";
+import SingleUser from "../Pages/StandAlone/SingleUser";
 import {
-  AddHomeReviewer,
   AddAddress,
   AddBrand,
   AddBulkAlert,
@@ -22,6 +29,7 @@ import {
   AddCountry,
   AddCoupon,
   AddCurrency,
+  AddHomeReviewer,
   AddLanguage,
   AddNews,
   AddNewsletter,
@@ -36,11 +44,10 @@ import {
   AddSale,
   AddSize,
   AddSizeContent,
-  InsertOne,
   AddUser,
+  InsertOne,
+  UpdateProduct,
 } from "./../Pages/Forms";
-import Home from "../Pages/StandAlone/Home";
-import SingleUser from "../Pages/StandAlone/SingleUser";
 import {
   Addresses,
   Brands,
@@ -67,8 +74,8 @@ import {
   NewsletterSubscription,
   Offers,
   OrderReturnRequests,
-  OrderStatus,
   Orders,
+  OrderStatus,
   Points,
   ProductFeatures,
   Products,
@@ -83,11 +90,6 @@ import {
   WarehouseAvailability,
   Warehouses,
 } from "./../Pages/Tables";
-import SelectProduct from "../Pages/ActionsFeatures/SelectProducts";
-import UploadSheet from "../Pages/ActionsFeatures/UploadSheet";
-import Login from "../Components/Auth/Login";
-import PageNotFound from "../Components/Auth/PageNotFound";
-import NotAllowed from "../Components/Auth/NotAllowed";
 
 const authProtectedRoutes = [
   // add paths
@@ -158,6 +160,10 @@ const authProtectedRoutes = [
   // update
   // { path: "/update/:name/:id", component: <DynamicForm layout="update" /> },
   { path: "/update/:name/:id", component: <Update /> },
+  {
+    path: "/products/update/product/:id",
+    component: <AddProduct layout="update" />,
+  },
 
   // list or table paths
   { path: "/product", component: <Products /> },
@@ -179,6 +185,7 @@ const authProtectedRoutes = [
   { path: "/collection", component: <Collections /> },
   { path: "/collection-content", component: <CollectionsContent /> },
   { path: "/bulk-alert", component: <BulkAlert /> },
+  { path: "/home-sections", component: <HomeSections /> },
   { path: "/logs", component: <Logs /> },
   { path: "/news", component: <News /> },
   { path: "/newsletter", component: <Newsletter /> },

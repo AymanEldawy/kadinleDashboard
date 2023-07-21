@@ -21,7 +21,7 @@ export const FullImage = ({ src, alt, height, width, ...imgProps }) => {
         open={open}
         onClose={() => setOpen(false)}
         modalClassName="!p-2"
-        containerClassName="max-w-[575px] z-[100]"
+        containerClassName="max-w-[575px] z-50"
       >
         <img
           src={src}

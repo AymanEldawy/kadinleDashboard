@@ -1,15 +1,16 @@
 import axios from "axios";
 import React from "react";
 import { useState } from "react";
-
-import { Button } from "../../Components/Global/Button";
-import InputField from "../CustomForm/InputField";
-import logoIcon from "../../Assets/Images/logo-icon.png";
-import { login } from "../../Api/auth";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import { useGlobalOptions } from "../../Context/GlobalOptions";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import { getUser, login } from "../../Api/auth";
+import logoIcon from "../../Assets/Images/logo-icon.png";
+import { Button } from "../../Components/Global/Button";
+import { useGlobalOptions } from "../../Context/GlobalOptions";
+import InputField from "../CustomForm/InputField";
+
 // import logo from "../../Assets/Images/logo.svg";
 const Login = () => {
   const { serRefresh, user } = useGlobalOptions();
@@ -17,9 +18,11 @@ const Login = () => {
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
+
   useEffect(() => {
     if (user?.id) navigate("/");
-  }, []);
+  }, [user]);
+
   const insertIntoErrors = (name, value) => {
     if (value === "") {
       setErrors((prev) => {
@@ -56,9 +59,13 @@ const Login = () => {
     if (!Object.keys(errors)?.length) {
       const response = await login(values?.email, values?.password);
       if (response?.error) {
-        toast.error(`Invalid login credentials`);
+        toast.error(response?.error?.message);
       } else {
         toast.success(`Login Successfully`);
+        localStorage.setItem(
+          "supabaseSession",
+          JSON.stringify(response?.session)
+        );
         serRefresh((p) => !p);
         setTimeout(() => {
           navigate("/");

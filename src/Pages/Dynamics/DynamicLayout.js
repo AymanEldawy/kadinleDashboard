@@ -22,7 +22,6 @@ const DynamicLayout = ({
 }) => {
   const [selectedList, setSelectedList] = useState({});
   useEffect(() => {
-    console.log(Object.keys(selectedList)?.length);
     if (!!getSelectedList) getSelectedList(setSelectedList);
   }, [selectedList]);
 

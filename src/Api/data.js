@@ -432,11 +432,23 @@ export const getNews = async () => {
       { count: "exact" }
     )
     .eq("news_content.language_id", DEFAULT_LANGUAGE?.id);
-
-  // users(*)
-  // user(first_name, last_name, profile_img),
   return response;
 };
+
+export const getUsers = async (page, pageSize) => {
+  const response = await supabase
+    .from("user")
+    .select(
+      `
+  *,
+  title:user_type(*, name:title)
+  `,
+      { count: "exact" }
+    )
+    .range((page - 1) * pageSize, page * pageSize - 1);
+  return response;
+};
+
 export const getUsersCart = async () => {
   const response = await supabase
     .from("user_cart")
@@ -475,5 +487,12 @@ export const getUserDataById = async (userId) => {
 };
 export const getUserData = async (table, userId) => {
   const response = await supabase.from(table).select("*").eq("user_id", userId);
+  return response;
+};
+export const getUserTypeData = async (userTypeId) => {
+  const response = await supabase
+    .from("user_type")
+    .select("*")
+    .eq("id", userTypeId);
   return response;
 };

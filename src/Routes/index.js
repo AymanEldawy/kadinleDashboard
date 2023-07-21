@@ -2,51 +2,29 @@ import React from "react";
 import { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 
+import Login from "../Components/Auth/Login";
 import { useGlobalOptions } from "../Context/GlobalOptions";
 import Layout from "../Layout";
+import ProtectedRoutes from "./ProtectedRoutes";
 import { authProtectedRoutes, publicRoutes } from "./routes";
 
 const Index = () => {
   const navigate = useNavigate();
   const { user } = useGlobalOptions();
-  useEffect(() => {
-    if (!user?.id) {
-      navigate("/login");
-    } else if (user?.role?.number < 2) {
-      navigate("https://kadinle.com/");
-    } else {
-      navigate("/");
-    }
-  }, [user]);
-  console.log(user);
   return (
-    <>
-      {!user?.id ? (
-        <Routes>
-          {publicRoutes.map((route, index) => (
-            <Route
-              path={route.path}
-              element={route.component}
-              key={index}
-              exact={true}
-            />
-          ))}
-        </Routes>
-      ) : (
-        <Layout>
-          <Routes>
-            {authProtectedRoutes.map((route, index) => (
-              <Route
-                path={route.path}
-                element={route.component}
-                key={index}
-                exact={true}
-              />
-            ))}
-          </Routes>
-        </Layout>
-      )}
-    </>
+    <Routes>
+      <Route element={<ProtectedRoutes isAuthenticated={user} />}>
+        {authProtectedRoutes.map((route, index) => (
+          <Route
+            path={route.path}
+            element={route.component}
+            key={index}
+            exact={true}
+          />
+        ))}
+      </Route>
+      <Route path="/login" element={<Login user={user} />} />
+    </Routes>
   );
 };
 

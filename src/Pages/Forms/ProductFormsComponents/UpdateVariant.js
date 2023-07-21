@@ -9,9 +9,8 @@ import { CloseIcon, PlusIcon } from "../../../Helpers/Icons";
 import { useAdd } from "../../../hooks/useAdd";
 import { IncreasableBar } from "./../../../Components/Global/IncreasableBar";
 import AddProductVariantsIncreasable from "./AddProductVariantsIncreasable";
-import { MultipleIncreasableBar } from "../../../Components/Global/MultipleIncreasableBar";
 
-const AddProductVariants = ({
+const UpdateVariant = ({
   getCachedList,
   productId,
   CACHED_TABLES_SKU,
@@ -20,6 +19,8 @@ const AddProductVariants = ({
   allValues,
   variantErrors,
   setVariantErrors,
+  listVariant,
+  setListVariant,
   activeTabVariant,
   setActiveTabVariant,
   listSizes,
@@ -31,56 +32,32 @@ const AddProductVariants = ({
   activeTabStocks,
   setActiveTabStocks,
   dropzoneRef,
-  layout,
-  listCountGlobalVariant,
-  setListCountGlobalVariant,
 }) => {
-  const [refresh, setRefresh] = useState(false);
+  const { addItem } = useAdd();
   const [files, setFiles] = React.useState([]);
 
-  const increaseVariant = () => {
-    setListCountGlobalVariant((prev) => {
-      return {
-        ...prev,
-        [Object.keys(prev).length]: {
-          sizes: {
-            0: {
-              stocks: {
-                0: 0,
-              },
-            },
-          },
-        },
-      };
-    });
-    setRefresh((p) => !p);
-  };
-  const decreaseVariant = (item, index) => {
-    console.log(index, item, "----", listCountGlobalVariant, allValues);
+  const onDecrease = (row, index) => {
+    console.log(row, "row");
     let newValues = allValues;
-    delete newValues[item];
+    delete newValues?.[row];
     setAllValues(newValues);
-    let newList = listCountGlobalVariant;
-    delete newList[index];
-    setListCountGlobalVariant(newList);
-    setRefresh((p) => !p);
   };
 
   return (
     <div className="mb-8">
-      <MultipleIncreasableBar
+      <IncreasableBar
         title={"Color"}
-        list={Object.keys(listCountGlobalVariant)}
+        list={listVariant}
+        setList={setListVariant}
         activeTab={activeTabVariant}
         setActiveTab={setActiveTabVariant}
-        increase={increaseVariant}
-        decrease={(item, index) => decreaseVariant(item, index)}
+        onDecrease={onDecrease}
       />
-      {Object.keys(listCountGlobalVariant)?.map((item, index) => {
+      {listVariant?.map((item, index) => {
         return (
           <div
             className={`relative z-10 ${
-              +activeTabVariant !== +index ? "hidden" : ""
+              activeTabVariant !== item ? "hidden" : ""
             } `}
             kye={`${index}-index`}
           >
@@ -105,9 +82,6 @@ const AddProductVariants = ({
               activeTabStocks={activeTabStocks}
               setActiveTabStocks={setActiveTabStocks}
               dropzoneRef={dropzoneRef}
-              setListCountGlobalVariant={setListCountGlobalVariant}
-              listCountGlobalVariant={listCountGlobalVariant}
-              layout={layout}
             />
           </div>
         );
@@ -116,4 +90,4 @@ const AddProductVariants = ({
   );
 };
 
-export default AddProductVariants;
+export default UpdateVariant;

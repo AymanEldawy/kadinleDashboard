@@ -13,11 +13,11 @@ import { Button } from "../../../Components/Global/Button";
 import { useGlobalOptions } from "../../../Context/GlobalOptions";
 import { CloseIcon, PlusIcon } from "../../../Helpers/Icons";
 import { IncreasableBar } from "../../../Components/Global/IncreasableBar";
+import { useDelete } from "../../../hooks/useDelete";
 
 export const FormProductIncreasable = ({
   initialFields,
-  onSubmit,
-  increasableTitle,
+  layout,
   maxCount,
   onChangeValues,
   resetForm,
@@ -31,6 +31,7 @@ export const FormProductIncreasable = ({
   errors,
   setErrors,
 }) => {
+  const { deleteItem } = useDelete();
   const [touched, setTouched] = useState({});
   const [selectedTab, setSelectedTab] = useState([]);
 
@@ -98,8 +99,19 @@ export const FormProductIncreasable = ({
     });
   };
 
+  const deleteContent = async (item, index) => {
+    if (layout !== "update") return;
+    await deleteItem("product_content", values?.[item]?.id);
+  };
   return (
     <div className="">
+      {layout === "update" ? (
+        <p className="text-yellow-500 text-xs bg-yellow-100 p-1 rounded-md my-1">
+          <strong className="text-yellow-400 font-medium">Warning: </strong>
+          by Removing the language will remove the content for this language
+        </p>
+      ) : null}
+
       <div className="flex flex-wrap gap-2 items-start">
         <IncreasableBar
           values={values}
@@ -108,6 +120,7 @@ export const FormProductIncreasable = ({
           maxCount={maxCount}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
+          onDecrease={(item, index) => deleteContent(item, index)}
         />
       </div>
       {listCount?.map((item, index) => (

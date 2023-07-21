@@ -56,3 +56,4 @@ export { default as BoxReturn } from "./BoxReturn";
 export { default as StoreIcon } from "./StoreIcon";
 export { default as EyeIcon } from "./EyeIcon";
 export { default as LogoutIcon } from "./LogoutIcon";
+export { default as HomeIcon } from "./HomeIcon";

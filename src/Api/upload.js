@@ -74,4 +74,10 @@ export const uploadReviewerImage = async ({ name, file }) => {
   formData.append("file", file);
   return await uploadFile(formData, "uploadReviewer");
 };
+export const uploadAvatarImage = async ({ userId, file }) => {
+  const formData = new FormData();
+  formData.append("user_id", userId);
+  formData.append("file", file);
+  return await uploadFile(formData, "uploadAvatar");
+};
 // export const uploadInfluencer = async () => {}; // product_id / user_id

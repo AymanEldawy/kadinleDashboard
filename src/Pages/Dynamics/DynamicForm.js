@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 
 import { signup } from "../../Api/auth";
 import {
+  handleUploadAvatarImage,
   handleUploadCategoryImages,
   handleUploadCollectionImage,
   handleUploadColorImage,
@@ -14,16 +15,15 @@ import { uploadCategoryImage } from "../../Api/upload";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
 import SuperForm from "../../Components/CustomForm/SuperForm";
+import { Button } from "../../Components/Global/Button";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 import DB_API from "../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../hooks/useAdd";
-import { Button } from "../../Components/Global/Button";
 
 const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   const { CACHE_LANGUAGES, languages } = useGlobalOptions();
   const { addItem } = useAdd();
 
-  console.log(languages?.length);
   const [resetForm, setResetForm] = useState(false);
   const [values, setValues] = useState({});
   const [contentValues, setContentValues] = useState({});
@@ -38,7 +38,10 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
       await handleUploadReviewerImage(values);
     } else if (SUPABASE_TABLE_NAME === "user") {
       const response = await signup(values);
-      if (response?.values) {
+      if (!response?.error) {
+        if (values?.profile_img) {
+          await handleUploadAvatarImage(values, "update");
+        }
         setResetForm(true);
         toast.success("Successfully add new user");
       }
@@ -51,11 +54,9 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
             ...values,
             id: itemId,
           });
-        console.log(contentValues);
         const list = Object.values(contentValues);
         if (list?.length) {
           for (const item of list) {
-            console.log(item, "item");
             if (SUPABASE_TABLE_NAME === "category") {
               await handleUploadCategoryImages(item, itemId, CACHE_LANGUAGES);
             } else if (SUPABASE_TABLE_NAME === "offer") {

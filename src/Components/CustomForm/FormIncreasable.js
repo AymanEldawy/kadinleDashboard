@@ -10,13 +10,13 @@ import { useGlobalOptions } from "../../Context/GlobalOptions";
 import { CloseIcon, PlusIcon } from "../../Helpers/Icons";
 import { useFetch } from "../../hooks/useFetch";
 import { Button } from "../Global/Button";
+import { IncreasableBar } from "../Global/IncreasableBar";
 import TabsContent from "./../../Components/Tabs/TabsContent";
 import CheckboxField from "./CheckboxField";
 import InputField from "./InputField";
 import RadioField from "./RadioField";
 import SelectField from "./SelectField";
 import UploadFile from "./UploadFile";
-import { IncreasableBar } from "../Global/IncreasableBar";
 
 let CACHED_TABLE = {};
 
@@ -38,7 +38,6 @@ export const FormIncreasable = ({
   const [touched, setTouched] = useState({});
   const [listCount, setListCount] = useState([`00${uuidv4()}`]);
   const [activeTab, setActiveTab] = useState(listCount[0]);
-  console.log(listCount, activeTab);
 
   useEffect(() => {
     checkRefTable(initialFields);
@@ -48,12 +47,12 @@ export const FormIncreasable = ({
   }, [values]);
   useEffect(() => {
     if (!!values && !!oldList) {
-      console.log("called");
-      setListCount(Object.keys(values));
+      const list = Object.keys(values);
+      setListCount(list);
+      setActiveTab(list[0]);
     }
   }, [oldList]);
 
-  console.log(listCount, activeTab);
   async function checkRefTable(fields) {
     if (!fields?.length) return;
     for (const field of fields) {
@@ -97,7 +96,6 @@ export const FormIncreasable = ({
     });
   };
   const handelChangeField = (name, value, required, row) => {
-    console.log(name, value);
     if (name === "language_id") {
       if (selectedTab?.includes(value)) return;
       setSelectedTab((prev) => [...prev, value]);
@@ -132,7 +130,6 @@ export const FormIncreasable = ({
   };
 
   const increaseLanguages = () => {
-    console.log(maxCount);
     if (maxCount && listCount?.length >= maxCount) return;
     let lastElement = uuidv4();
     setListCount((prev) => [...prev, lastElement]);

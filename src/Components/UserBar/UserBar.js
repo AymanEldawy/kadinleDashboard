@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { logout } from "../../Api/auth";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
@@ -7,7 +7,13 @@ import { useGlobalOptions } from "../../Context/GlobalOptions";
 const UserBar = () => {
   const { user } = useGlobalOptions();
   const [open, setOpen] = useState(false);
-  console.log(user);
+
+  const handleLogout = async () => {
+    await logout().then((res) => {
+      window.location.pathname = "/login";
+    });
+  };
+
   const fullName =
     user?.user_metadata?.first_name + " " + user?.user_metadata?.last_name;
   return (
@@ -61,15 +67,15 @@ const UserBar = () => {
               <li>
                 <Link
                   to={`/update/user/${user?.id}`}
-                  className="block px-4 whitespace-nowrap py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  className="block px-4  whitespace-nowrap py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                 >
                   Update profile
                 </Link>
               </li>
               <li>
                 <button
-                  onClick={async () => logout()}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  onClick={handleLogout}
+                  className="px-4 w-full flex  py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                 >
                   Sign out
                 </button>

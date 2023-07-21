@@ -15,20 +15,15 @@ import Layout from "../Layout";
 function ProtectedRoutes() {
   const [isAuth, setIsAuth] = useState(false);
   const { user } = useGlobalOptions();
-  useEffect(() => {
-    if (user) setIsAuth(true);
-  }, [user]);
-  // const { user } = useGlobalOptions;
-  console.log(
-    "🚀 ~ file: ProtectedRoutes.js:14 ~ ProtectedRoutes ~ user:",
-    isAuth
+  useEffect(() => {}, [user]);
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+  return (
+    <Layout>
+      <Outlet />
+    </Layout>
   );
-  // return (
-  //   <Layout>
-  //     <Outlet />
-  //   </Layout>
-  // );
-  return <Layout>{isAuth ? <Outlet /> : <Navigate to="/login" />}</Layout>;
 }
 
 export default ProtectedRoutes;

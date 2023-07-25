@@ -139,8 +139,9 @@ export const getReturnRequests = async (page, pageSize) => {
     .range((page - 1) * pageSize, page * pageSize - 1);
   return response;
 };
-export const getProducts = async (page, pageSize) => {
-  const response = await supabase
+export const getProducts = async (page, pageSize, filter) => {
+  console.log("🚀 ~ file: data.js:143 ~ getProducts ~ filter:", filter);
+  const query = supabase
     .from("product")
     .select(
       `
@@ -160,16 +161,22 @@ export const getProducts = async (page, pageSize) => {
    `,
       { count: "exact" }
     )
-    .eq("fabric.fabric_content.language_id", DEFAULT_LANGUAGE?.id)
-    .eq("material.material_content.language_id", DEFAULT_LANGUAGE?.id)
-    .eq("lining.lining_content.language_id", DEFAULT_LANGUAGE?.id)
-    .eq("collar.collar_content.language_id", DEFAULT_LANGUAGE?.id)
-    .eq("sleeve.sleeve_content.language_id", DEFAULT_LANGUAGE?.id)
-    .eq("season.season_content.language_id", DEFAULT_LANGUAGE?.id)
-    .eq("feature.feature_content.language_id", DEFAULT_LANGUAGE?.id)
-    .eq("pattern.pattern_content.language_id", DEFAULT_LANGUAGE?.id)
-    .eq("product_content.language_id", DEFAULT_LANGUAGE?.id)
-    .range((page - 1) * pageSize, page * pageSize - 1);
+    // .eq("fabric.fabric_content.language_id", DEFAULT_LANGUAGE?.id)
+    // .eq("material.material_content.language_id", DEFAULT_LANGUAGE?.id)
+    // .eq("lining.lining_content.language_id", DEFAULT_LANGUAGE?.id)
+    // .eq("collar.collar_content.language_id", DEFAULT_LANGUAGE?.id)
+    // .eq("sleeve.sleeve_content.language_id", DEFAULT_LANGUAGE?.id)
+    // .eq("season.season_content.language_id", DEFAULT_LANGUAGE?.id)
+    // .eq("feature.feature_content.language_id", DEFAULT_LANGUAGE?.id)
+    // .eq("pattern.pattern_content.language_id", DEFAULT_LANGUAGE?.id)
+    .eq("product_content.language_id", DEFAULT_LANGUAGE?.id);
+  if (filter) {
+    query.eq("category_id", filter);
+    console.log("called", filter);
+  }
+  query.range((page - 1) * pageSize, page * pageSize - 1);
+
+  const response = await query;
   return response;
 };
 export const getProductFeatures = async (table, page, pageSize) => {

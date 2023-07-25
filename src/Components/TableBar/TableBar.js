@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 
 import { ChevronIcon, TrashIcon } from "../../Helpers/Icons";
+import { useFetch } from "../../hooks/useFetch";
 import Backdrop from "../Backdrop/Backdrop";
 import SelectField from "../CustomForm/SelectField";
 import SearchBar from "../SearchBar/SearchBar";
@@ -27,7 +28,21 @@ export const TableBar = ({
   setSearchKey,
   selectedList,
   hideDelete,
+  allowFilter,
+  filterCategory,
+  setFilterCategory,
 }) => {
+  const { getData } = useFetch();
+  const [categories, setCategories] = useState();
+
+  useEffect(() => {
+    if (allowFilter) {
+      getData("category_content").then((res) => {
+        setCategories(res);
+      });
+    }
+  }, [allowFilter]);
+
   return (
     <div className="flex justify-between gap-2 mb-4">
       <div className="flex gap-2 items-center">
@@ -40,6 +55,18 @@ export const TableBar = ({
             setSearchKey={setSearchKey}
           />
         </div>
+
+        {allowFilter ? (
+          <SelectField
+            name="category"
+            list={categories}
+            keyValue="category_id"
+            keyLabel="title"
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
+            className="p-2 rounded-md"
+          />
+        ) : null}
         <SelectField
           hideText
           value={itemsPerPage}

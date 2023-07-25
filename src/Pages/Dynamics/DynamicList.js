@@ -8,33 +8,34 @@ import { TableBar } from "../../Components/TableBar/TableBar";
 import { useDelete } from "../../hooks/useDelete";
 import { useFetch } from "../../hooks/useFetch";
 
-const tablesWithContent = [
-  "category",
-  "chart",
-  "collar",
-  "collection",
-  "color",
-  "fabric",
-  "feature",
-  "lining",
-  "material",
-  "offer",
-  "order",
-  "order_status",
-  "pattern",
-  "payment_status",
-  "point",
-  "product",
-  "return_status",
-  "season",
-  "size",
-  "sleeve",
-];
+// const tablesWithContent = [
+//   "category",
+//   "chart",
+//   "collar",
+//   "collection",
+//   "color",
+//   "fabric",
+//   "feature",
+//   "lining",
+//   "material",
+//   "offer",
+//   "order",
+//   "order_status",
+//   "pattern",
+//   "payment_status",
+//   "point",
+//   "product",
+//   "return_status",
+//   "season",
+//   "size",
+//   "sleeve",
+// ];
 const DynamicList = ({
   tableName,
   columns,
   onAddClick,
   oldData,
+  allowFilter,
   renderTableAction,
   setSelectedList,
   selectedList,
@@ -54,6 +55,7 @@ const DynamicList = ({
   const [itemsPerPage, setItemsPerPage] = useState(50);
   const [totalCount, setTotalCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
+  const [filterCategory, setFilterCategory] = useState();
 
   const handleDeleteItem = async (selectedList) => {
     await deleteItem(tableName, Object.values(selectedList));
@@ -61,10 +63,20 @@ const DynamicList = ({
   };
 
   const fetchData = async () => {
+    let filter = filterCategory?.indexOf("Choose") !== -1 ? "" : filterCategory;
+    console.log(
+      "🚀 ~ file: DynamicList.js:67 ~ fetchData ~ filterCategory:",
+      filterCategory
+    );
     const response = await getDataWithPagination(
       tableName,
       itemOffset + 1,
-      itemsPerPage
+      itemsPerPage,
+      filter
+    );
+    console.log(
+      "🚀 ~ file: DynamicList.js:71 ~ fetchData ~ filterCategory:",
+      filterCategory
     );
     setData(response?.data);
     setTotalCount(response?.count);
@@ -72,7 +84,15 @@ const DynamicList = ({
   };
   useEffect(() => {
     fetchData();
-  }, [pageCount, itemsPerPage, itemOffset, refresh]);
+    // if (tableName === "product" && filterCategory) {
+    console.log(
+      "🚀 ~ file: DynamicList.js:71 ~ fetchData ~ filterCategory:",
+      filterCategory
+    );
+    //   fetchData()
+    // } else {
+    // }
+  }, [pageCount, itemsPerPage, itemOffset, refresh, filterCategory]);
 
   const handlePageClick = (index) => {
     // const newOffset = (event.selected * itemsPerPage) % filterList?.length;
@@ -99,6 +119,9 @@ const DynamicList = ({
             itemsPerPage={itemsPerPage}
             selectedList={selectedList}
             hideDelete={hideDelete}
+            allowFilter={allowFilter}
+            filterCategory={filterCategory}
+            setFilterCategory={setFilterCategory}
           />
         )}
         <SuperTable

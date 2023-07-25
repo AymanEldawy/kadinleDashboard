@@ -11,8 +11,13 @@ import {
 
 export const useFetch = () => {
   const [loading, setLoading] = useState();
-  const getDataWithPagination = async (table, page, pagSize) => {
-    const response = await getTableDataWithPagination(table, page, pagSize);
+  const getDataWithPagination = async (table, page, pagSize, filter) => {
+    const response = await getTableDataWithPagination(
+      table,
+      page,
+      pagSize,
+      filter
+    );
     return response;
   };
   const getData = async (table, id, operation = "") => {

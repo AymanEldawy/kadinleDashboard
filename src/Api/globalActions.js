@@ -1,37 +1,5 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
-import {
-  contentFilterFetch,
-  getAddresses,
-  getCategories,
-  getChartContent,
-  getChartData,
-  getCollections,
-  getColors,
-  getComments,
-  getCountries,
-  getNews,
-  getOffers,
-  getOrders,
-  getOrderStatus,
-  getPoints,
-  getProductFeatures,
-  getProducts,
-  getReturnRequests,
-  getReturnStatus,
-  getShowreels,
-  getSizes,
-  getStocks,
-  getUserAddresses,
-  getUserInvite,
-  getUserLike,
-  getUsers,
-  getUsersCart,
-  getUserSubTable,
-  getWarehouseAvailability,
-  getWarehouses,
-  normalFetch,
-  normalFetchWithPagination,
-} from "./data";
+import { contentFilterFetch, getAddresses, getCategories, getChartContent, getChartData, getCollections, getColors, getComments, getCountries, getNews, getOffers, getOrders, getOrderStatus, getPoints, getProductFeatures, getProducts, getReturnRequests, getReturnStatus, getShowreels, getSizes, getStocks, getUserAddresses, getUserInvite, getUserLike, getUsers, getUsersCart, getUserSubTable, getWarehouseAvailability, getWarehouses, normalFetch, normalFetchWithPagination } from "./data";
 import { getRecentUser } from "./statictes";
 
 const fetches = {
@@ -76,10 +44,19 @@ const fetches = {
   recent_user: getRecentUser(),
 };
 
-export const getTableDataWithPagination = async (table, page, pageSize) => {
+export const getTableDataWithPagination = async (
+  table,
+  page,
+  pageSize,
+  filter
+) => {
+  console.log(
+    "🚀 ~ file: globalActions.js:80 ~ getTableDataWithPagination ~ filter:",
+    filter
+  );
   if (table && fetches.hasOwnProperty(table)) {
     const fetchData = fetches[table];
-    const response = await fetchData(page, pageSize);
+    const response = await fetchData(page, pageSize, filter);
     return response;
   } else {
     const response = normalFetchWithPagination(table, page, pageSize);

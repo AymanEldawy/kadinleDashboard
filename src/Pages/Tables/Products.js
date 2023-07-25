@@ -13,6 +13,7 @@ const Product = () => {
       SUPABASE_TABLE_NAME="product"
       columns={columns}
       title="Product"
+      allowFilter
       onAddClick={() => navigate(`/add-product`)}
       renderTableAction={(data) => {
         return (

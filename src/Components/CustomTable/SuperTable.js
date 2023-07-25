@@ -445,7 +445,10 @@ const SuperTable = ({
 
                       if (row?.[tableNameContent]?.[0]?.hasOwnProperty(col)) {
                         let content = row?.[tableNameContent]?.[0];
-                        if (typeof content?.[col] !== "object") {
+                        if (
+                          typeof content?.[col] !== "object" &&
+                          typeof content?.[col] === "string"
+                        ) {
                           if (content?.[col]?.indexOf("kadinle.com") !== -1) {
                             value = {
                               path: col,

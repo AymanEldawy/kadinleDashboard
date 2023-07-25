@@ -11,6 +11,7 @@ const DynamicLayout = ({
   columns,
   title,
   onAddClick,
+  allowFilter,
   renderTableAction,
   oldValue,
   getSelectedList,
@@ -52,6 +53,7 @@ const DynamicLayout = ({
         hideAction={hideAction}
         hideSelect={hideSelect}
         hideDelete={hideDelete}
+        allowFilter={allowFilter}
       />
     </BlockPaper>
   );

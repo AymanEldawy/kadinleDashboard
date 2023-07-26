@@ -104,14 +104,14 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
           render: "Great! Content has been updated successfully",
           type: "success",
           isLoading: false,
-          autoClose: 4000,
+          autoClose: 2000,
         });
       } else {
         toast.update(loading, {
           render: "Oops! failed to update the content",
           type: "error",
           isLoading: false,
-          autoClose: 4000,
+          autoClose: 2000,
         });
       }
     }

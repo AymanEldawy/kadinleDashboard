@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { signup } from "../../Api/auth";
-import { handleUploadAvatarImage, handleUploadCategoryImages, handleUploadCollectionImage, handleUploadColorImage, handleUploadOfferImage, handleUploadReviewerImage } from "../../Api/DynamicUploadHandler";
+import {
+  handleUploadAvatarImage,
+  handleUploadCategoryImages,
+  handleUploadCollectionImage,
+  handleUploadColorImage,
+  handleUploadOfferImage,
+  handleUploadReviewerImage,
+} from "../../Api/DynamicUploadHandler";
 import { uploadCategoryImage } from "../../Api/upload";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
@@ -14,9 +21,9 @@ import DB_API from "../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../hooks/useAdd";
 
 const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
+  const navigate = useNavigate();
   const { CACHE_LANGUAGES, languages } = useGlobalOptions();
   const { addItem } = useAdd();
-
   const [resetForm, setResetForm] = useState(false);
   const [values, setValues] = useState({});
   const [contentValues, setContentValues] = useState({});
@@ -71,14 +78,15 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
           render: "Great! successfully added",
           type: "success",
           isLoading: false,
-          autoClose: 4000,
+          autoClose: 2000,
         });
+        navigate(-1);
       } else {
         toast.update(loading, {
           render: "Oops! failed to added new",
           type: "error",
           isLoading: false,
-          autoClose: 4000,
+          autoClose: 2000,
         });
       }
     }

@@ -22,7 +22,7 @@ export const useAdd = () => {
       //   render: "Oops! failed to added new",
       //   type: "error",
       //   isLoading: false,
-      //   autoClose: 4000,
+      //   autoClose: 2000,
       // });
       setStatus("error");
     } else {
@@ -30,7 +30,7 @@ export const useAdd = () => {
       //   render: "Great! successfully added",
       //   type: "success",
       //   isLoading: false,
-      //   autoClose: 4000,
+      //   autoClose: 2000,
       // });
       setStatus("success");
       return response;

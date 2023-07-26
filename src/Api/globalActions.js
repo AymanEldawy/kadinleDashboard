@@ -1,5 +1,5 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
-import { contentFilterFetch, getAddresses, getCategories, getChartContent, getChartData, getCollections, getColors, getComments, getCountries, getNews, getOffers, getOrders, getOrderStatus, getPoints, getProductFeatures, getProducts, getReturnRequests, getReturnStatus, getShowreels, getSizes, getStocks, getUserAddresses, getUserInvite, getUserLike, getUsers, getUsersCart, getUserSubTable, getWarehouseAvailability, getWarehouses, normalFetch, normalFetchWithPagination } from "./data";
+import { contentFilterFetch, getAddresses, getCategories, getChartContent, getChartData, getCollections, getColors, getComments, getCountries, getNews, getOffers, getOrders, getOrderStatus, getPoints, getProductFeatures, getProducts, getReturnRequests, getReturnStatus, getShowreels, getSizes, getStocks, getUserAddresses, getUsers, getUsersCart, getUserSubTable, getWarehouseAvailability, getWarehouses, normalFetch, normalFetchWithPagination } from "./data";
 import { getRecentUser } from "./statictes";
 
 const fetches = {
@@ -35,28 +35,33 @@ const fetches = {
   stock: getStocks,
   warehouse: getWarehouses,
   warehouse_availability: getWarehouseAvailability,
-  // showreel: getShowreels,
   order_return_request: getReturnRequests,
   order_status: getOrderStatus,
   return_status: getReturnStatus,
   news: getNews,
   user: getUsers,
-  recent_user: getRecentUser(),
+  recent_user: getRecentUser,
 };
 
 export const getTableDataWithPagination = async (
   table,
   page,
   pageSize,
-  filter
+  additionalData
 ) => {
-  console.log(
-    "🚀 ~ file: globalActions.js:80 ~ getTableDataWithPagination ~ filter:",
-    filter
-  );
   if (table && fetches.hasOwnProperty(table)) {
     const fetchData = fetches[table];
-    const response = await fetchData(page, pageSize, filter);
+    // const response = await fetchData({
+    //   table,
+    //   page,
+    //   pageSize,
+    //   languageId,
+    //   regionId,
+    //   filter,
+    // });
+    // const response = await fetchData(page, pageSize, filter);
+    const response = await fetchData(page, pageSize, additionalData);
+
     return response;
   } else {
     const response = normalFetchWithPagination(table, page, pageSize);
@@ -64,11 +69,15 @@ export const getTableDataWithPagination = async (
   }
 };
 
-export const getTableData = async (table) => {
+export const getTableData = async (table, additionalData) => {
+  console.log(
+    "🚀 ~ file: globalActions.js:103 ~ getTableData ~ additionalData:",
+    additionalData
+  );
   const response =
     table?.indexOf("_content") !== -1
-      ? await contentFilterFetch(table)
-      : await normalFetch(table);
+      ? await contentFilterFetch(table, additionalData)
+      : await normalFetch(table, additionalData);
   return response;
 };
 

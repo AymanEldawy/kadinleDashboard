@@ -139,6 +139,10 @@ export const handleUploadReviewerImage = async (item, operation = "add") => {
 };
 export const handleUploadAvatarImage = async (item) => {
   let theFileWebContent = item?.profile_img;
+  console.log(
+    "🚀 ~ file: DynamicUploadHandler.js:142 ~ handleUploadAvatarImage ~ item:",
+    item
+  );
   const image =
     typeof theFileWebContent === "object"
       ? await uploadAvatarImage({

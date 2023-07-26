@@ -6,7 +6,11 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
-import { getRowsById, getRowsByIds } from "../../Api/globalActions";
+import {
+  getRowsById,
+  getRowsByIds,
+  getTableData,
+} from "../../Api/globalActions";
 import { uploadProductImage } from "../../Api/upload";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
@@ -21,9 +25,9 @@ import { useAdd } from "../../hooks/useAdd";
 import { useFetch } from "../../hooks/useFetch";
 import { useUpdate } from "../../hooks/useUpdate";
 import AddProductForm from "./ProductFormsComponents/AddProductForm";
+import AddProductVariants from "./ProductFormsComponents/AddProductVariants";
 import AddSizeChart from "./ProductFormsComponents/AddSizeChart";
 import { FormProductIncreasable } from "./ProductFormsComponents/FormProductIncreasable";
-import AddProductVariants from "./ProductFormsComponents/AddProductVariants";
 
 const CACHED_TABLE = [];
 const CACHED_TABLES_SKU = [];
@@ -46,7 +50,7 @@ const checkSkuTable = async (tableName, getData) => {
   }
   CACHED_TABLES_SKU[tableName] = cache;
 };
-const checkRefTable = async (fields, getData) => {
+const checkRefTable = async (fields, additionalData) => {
   if (!fields?.length) return;
   for (const field of fields) {
     let tableName = field?.tableName;
@@ -55,8 +59,8 @@ const checkRefTable = async (fields, getData) => {
       !CACHED_TABLE[tableName] &&
       !field?.hide_in_add_form_add
     ) {
-      const data = await getData(tableName);
-      CACHED_TABLE[tableName] = data;
+      const res = await getTableData(tableName, additionalData);
+      CACHED_TABLE[tableName] = res?.data;
     }
   }
 };
@@ -71,7 +75,8 @@ const AddProduct = ({ layout }) => {
   const { addItem, status } = useAdd();
   const { getData } = useFetch();
   const { updateItem } = useUpdate();
-  const { CACHE_LANGUAGES } = useGlobalOptions();
+  const { CACHE_LANGUAGES, defaultLanguage, defaultRegion } =
+    useGlobalOptions();
   const dropzoneRef = useRef();
 
   const [loading, setLoading] = useState(false);
@@ -267,11 +272,26 @@ const AddProduct = ({ layout }) => {
   useEffect(() => {
     let loadingToast = toast.loading("Loading ...");
     setLoading(true);
-    checkRefTable(fields_content, getData);
-    checkRefTable(fields_variant, getData);
-    checkRefTable(fields_image, getData);
-    checkRefTable(stock_fields, getData);
-    checkRefTable(fields, getData).then((res) => {
+    checkRefTable(fields_content, {
+      languageId: defaultLanguage?.id,
+      regionId: defaultRegion?.id,
+    });
+    checkRefTable(fields_variant, {
+      languageId: defaultLanguage?.id,
+      regionId: defaultRegion?.id,
+    });
+    checkRefTable(fields_image, {
+      languageId: defaultLanguage?.id,
+      regionId: defaultRegion?.id,
+    });
+    checkRefTable(stock_fields, {
+      languageId: defaultLanguage?.id,
+      regionId: defaultRegion?.id,
+    });
+    checkRefTable(fields, {
+      languageId: defaultLanguage?.id,
+      regionId: defaultRegion?.id,
+    }).then((res) => {
       toast.update(loadingToast, {
         type: "success",
         isLoading: false,

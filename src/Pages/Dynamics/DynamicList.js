@@ -7,6 +7,7 @@ import SuperTable from "../../Components/CustomTable/SuperTable";
 import { TableBar } from "../../Components/TableBar/TableBar";
 import { useDelete } from "../../hooks/useDelete";
 import { useFetch } from "../../hooks/useFetch";
+import { useGlobalOptions } from "./../../Context/GlobalOptions";
 
 // const tablesWithContent = [
 //   "category",
@@ -45,6 +46,7 @@ const DynamicList = ({
   hideDelete,
   hidePagination,
 }) => {
+  const { defaultLanguage, defaultRegion } = useGlobalOptions();
   const { loading, getDataWithPagination } = useFetch();
   const { deleteItem } = useDelete();
   const [data, setData] = useState([]);
@@ -64,35 +66,31 @@ const DynamicList = ({
 
   const fetchData = async () => {
     let filter = filterCategory?.indexOf("Choose") !== -1 ? "" : filterCategory;
-    console.log(
-      "🚀 ~ file: DynamicList.js:67 ~ fetchData ~ filterCategory:",
-      filterCategory
-    );
     const response = await getDataWithPagination(
       tableName,
       itemOffset + 1,
       itemsPerPage,
-      filter
-    );
-    console.log(
-      "🚀 ~ file: DynamicList.js:71 ~ fetchData ~ filterCategory:",
-      filterCategory
+      {
+        languageId: defaultLanguage?.id,
+        regionId: defaultRegion?.id,
+        filter,
+      }
     );
     setData(response?.data);
     setTotalCount(response?.count);
     setPageCount(Math.ceil(totalCount / parseInt(itemsPerPage)));
   };
   useEffect(() => {
-    fetchData();
-    // if (tableName === "product" && filterCategory) {
-    console.log(
-      "🚀 ~ file: DynamicList.js:71 ~ fetchData ~ filterCategory:",
-      filterCategory
-    );
-    //   fetchData()
-    // } else {
-    // }
-  }, [pageCount, itemsPerPage, itemOffset, refresh, filterCategory]);
+    if (defaultLanguage?.id && defaultRegion?.id) fetchData();
+  }, [
+    pageCount,
+    itemsPerPage,
+    itemOffset,
+    refresh,
+    filterCategory,
+    defaultLanguage?.id,
+    defaultRegion?.id,
+  ]);
 
   const handlePageClick = (index) => {
     // const newOffset = (event.selected * itemsPerPage) % filterList?.length;

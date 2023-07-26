@@ -3,14 +3,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { signup } from "../../Api/auth";
-import {
-  handleUploadAvatarImage,
-  handleUploadCategoryImages,
-  handleUploadCollectionImage,
-  handleUploadColorImage,
-  handleUploadOfferImage,
-  handleUploadReviewerImage,
-} from "../../Api/DynamicUploadHandler";
+import { handleUploadAvatarImage, handleUploadCategoryImages, handleUploadCollectionImage, handleUploadColorImage, handleUploadOfferImage, handleUploadReviewerImage } from "../../Api/DynamicUploadHandler";
 import { uploadCategoryImage } from "../../Api/upload";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
@@ -34,6 +27,7 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   const fields_content = DB_API?.[SUPABASE_TABLE_NAME + "_content"];
 
   const onSubmit = async () => {
+    let loading = toast.loading("Please wait...");
     if (SUPABASE_TABLE_NAME === "home_reviews") {
       await handleUploadReviewerImage(values);
     } else if (SUPABASE_TABLE_NAME === "user") {
@@ -73,6 +67,19 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
         }
         setValues({});
         setContentValues({});
+        toast.update(loading, {
+          render: "Great! successfully added",
+          type: "success",
+          isLoading: false,
+          autoClose: 4000,
+        });
+      } else {
+        toast.update(loading, {
+          render: "Oops! failed to added new",
+          type: "error",
+          isLoading: false,
+          autoClose: 4000,
+        });
       }
     }
   };

@@ -11,12 +11,17 @@ import {
 
 export const useFetch = () => {
   const [loading, setLoading] = useState();
-  const getDataWithPagination = async (table, page, pagSize, filter) => {
+  const getDataWithPagination = async (
+    table,
+    page,
+    pageSize,
+    additionalData
+  ) => {
     const response = await getTableDataWithPagination(
       table,
       page,
-      pagSize,
-      filter
+      pageSize,
+      additionalData
     );
     return response;
   };
@@ -50,9 +55,6 @@ export const useFetch = () => {
 
     return response?.data;
   };
-
-  // const getRowsDataById = async (table, col, itemId) =>
-  // await getRowsById(table, col, itemId);
 
   return { loading, getData, getDataWithPagination };
 };

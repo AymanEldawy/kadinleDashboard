@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 
+import { getTableData } from "../../Api/globalActions";
+import { useGlobalOptions } from "../../Context/GlobalOptions";
 import { ChevronIcon, TrashIcon } from "../../Helpers/Icons";
 import { useFetch } from "../../hooks/useFetch";
 import Backdrop from "../Backdrop/Backdrop";
@@ -32,16 +34,20 @@ export const TableBar = ({
   filterCategory,
   setFilterCategory,
 }) => {
+  const { defaultLanguage } = useGlobalOptions();
   const { getData } = useFetch();
   const [categories, setCategories] = useState();
 
   useEffect(() => {
-    if (allowFilter) {
-      getData("category_content").then((res) => {
-        setCategories(res);
+    if (allowFilter && defaultLanguage?.id) {
+      getTableData("category_content", {
+        languageId: defaultLanguage?.id,
+      }).then((res) => {
+        console.log("🚀 ~ file: TableBar.js:41 ~ getData ~ res:", res);
+        setCategories(res?.data);
       });
     }
-  }, [allowFilter]);
+  }, [allowFilter, defaultLanguage?.id]);
 
   return (
     <div className="flex justify-between gap-2 mb-4">

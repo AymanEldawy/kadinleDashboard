@@ -1,36 +1,37 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
 
-const LANGUAGE = {
-  name: "",
-  id: "c53d7987-f51a-4b47-9ee0-3215becdce17",
-};
-const REGION = {
-  name: "EN",
-  id: "83f4acbc-d93b-4b3d-9c78-11d1b353517a",
-};
+// const LANGUAGE = {
+//   name: "",
+//   id: "c53d7987-f51a-4b47-9ee0-3215becdce17",
+// };
+// const REGION = {
+//   name: "EN",
+//   id: "83f4acbc-d93b-4b3d-9c78-11d1b353517a",
+// };
 
-function fetchFromStorage(key, initialValue) {
-  try {
-    const item = window.localStorage.getItem(key);
-    return item ? JSON.parse(item) : initialValue;
-  } catch (error) {
-    return initialValue;
-  }
-}
+// function fetchFromStorage(key, initialValue) {
+//   try {
+//     const item = window.localStorage.getItem(key);
+//     return item ? JSON.parse(item) : initialValue;
+//   } catch (error) {
+//     return initialValue;
+//   }
+// }
 
-export const DEFAULT_LANGUAGE = fetchFromStorage(
-  "KADINLE_DEFAULT_LANGUAGE",
-  LANGUAGE
-);
-export const DEFAULT_REGION = fetchFromStorage(
-  "KADINLE_DEFAULT_REGION",
-  REGION
-);
+// export const DEFAULT_LANGUAGE = fetchFromStorage(
+//   "KADINLE_DEFAULT_LANGUAGE",
+//   LANGUAGE
+// );
+// export const DEFAULT_REGION = fetchFromStorage(
+//   "KADINLE_DEFAULT_REGION",
+//   REGION
+// );
 
 export const normalFetch = async (table) => {
   const response = await supabase.from(table).select();
   return response;
 };
+
 export const normalFetchWithPagination = async (table, page, pageSize) => {
   const response = await supabase
     .from(table)
@@ -38,23 +39,28 @@ export const normalFetchWithPagination = async (table, page, pageSize) => {
     .range((page - 1) * pageSize, page * pageSize - 1);
   return response;
 };
-export const contentFilterFetch = async (table) => {
+
+export const contentFilterFetch = async (table, additionalData) => {
+  console.log(
+    "🚀 ~ file: data.js:44 ~ contentFilterFetch ~ additionalData:",
+    additionalData
+  );
   if (table === "size_content") {
     const response = await supabase
       .from(table)
       .select()
-      .eq("region_id", DEFAULT_REGION?.id);
+      .eq("region_id", additionalData?.regionId);
     return response;
   } else {
     const response = await supabase
       .from(table)
       .select()
-      .eq("language_id", DEFAULT_LANGUAGE?.id);
+      .eq("language_id", additionalData?.languageId);
     return response;
   }
 };
 
-export const getCategories = async (page, pageSize) => {
+export const getCategories = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("category")
     .select(
@@ -67,12 +73,12 @@ export const getCategories = async (page, pageSize) => {
      `,
       { count: "exact" }
     )
-    .eq("category_content.language_id", DEFAULT_LANGUAGE?.id)
+    .eq("category_content.language_id", additionalData?.languageId)
     .range((page - 1) * pageSize, page * pageSize - 1);
   return response;
 };
 
-export const getOrders = async (page, pageSize) => {
+export const getOrders = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("order")
     .select(
@@ -87,11 +93,12 @@ export const getOrders = async (page, pageSize) => {
    `,
       { count: "exact" }
     )
-    .eq("order_status.status_content.language_id", DEFAULT_LANGUAGE?.id)
+    .eq("order_status.status_content.language_id", additionalData?.languageId)
     .range((page - 1) * pageSize, page * pageSize - 1);
   return response;
 };
-export const getReturnStatus = async (page, pageSize) => {
+
+export const getReturnStatus = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("return_status")
     .select(
@@ -101,11 +108,12 @@ export const getReturnStatus = async (page, pageSize) => {
    `,
       { count: "exact" }
     )
-    .eq("return_status_content.language_id", DEFAULT_LANGUAGE?.id)
+    .eq("return_status_content.language_id", additionalData?.languageId)
     .range((page - 1) * pageSize, page * pageSize - 1);
   return response;
 };
-export const getOrderStatus = async (page, pageSize) => {
+
+export const getOrderStatus = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("order_status")
     .select(
@@ -116,11 +124,12 @@ export const getOrderStatus = async (page, pageSize) => {
    `,
       { count: "exact" }
     )
-    .eq("order_status_content.language_id", DEFAULT_LANGUAGE?.id)
+    .eq("order_status_content.language_id", additionalData?.languageId)
     .range((page - 1) * pageSize, page * pageSize - 1);
   return response;
 };
-export const getReturnRequests = async (page, pageSize) => {
+
+export const getReturnRequests = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("order_return_request")
     .select(
@@ -134,13 +143,17 @@ export const getReturnRequests = async (page, pageSize) => {
     )
     .eq(
       "product_variant.product.product_content.language_id",
-      DEFAULT_LANGUAGE?.id
+      additionalData?.languageId
     )
     .range((page - 1) * pageSize, page * pageSize - 1);
   return response;
 };
-export const getProducts = async (page, pageSize, filter) => {
-  console.log("🚀 ~ file: data.js:143 ~ getProducts ~ filter:", filter);
+
+export const getProducts = async (page, pageSize, additionalData) => {
+  console.log(
+    "🚀 ~ file: data.js:153 ~ getProducts ~ additionalData:",
+    additionalData
+  );
   const query = supabase
     .from("product")
     .select(
@@ -161,24 +174,24 @@ export const getProducts = async (page, pageSize, filter) => {
    `,
       { count: "exact" }
     )
-    // .eq("fabric.fabric_content.language_id", DEFAULT_LANGUAGE?.id)
-    // .eq("material.material_content.language_id", DEFAULT_LANGUAGE?.id)
-    // .eq("lining.lining_content.language_id", DEFAULT_LANGUAGE?.id)
-    // .eq("collar.collar_content.language_id", DEFAULT_LANGUAGE?.id)
-    // .eq("sleeve.sleeve_content.language_id", DEFAULT_LANGUAGE?.id)
-    // .eq("season.season_content.language_id", DEFAULT_LANGUAGE?.id)
-    // .eq("feature.feature_content.language_id", DEFAULT_LANGUAGE?.id)
-    // .eq("pattern.pattern_content.language_id", DEFAULT_LANGUAGE?.id)
-    .eq("product_content.language_id", DEFAULT_LANGUAGE?.id);
-  if (filter) {
-    query.eq("category_id", filter);
-    console.log("called", filter);
+    // .eq("fabric.fabric_content.language_id", additionalData?.languageId)
+    // .eq("material.material_content.language_id", additionalData?.languageId)
+    // .eq("lining.lining_content.language_id", additionalData?.languageId)
+    // .eq("collar.collar_content.language_id", additionalData?.languageId)
+    // .eq("sleeve.sleeve_content.language_id", additionalData?.languageId)
+    // .eq("season.season_content.language_id", additionalData?.languageId)
+    // .eq("feature.feature_content.language_id", additionalData?.languageId)
+    // .eq("pattern.pattern_content.language_id", additionalData?.languageId)
+    .eq("category.category_content.language_id", additionalData?.languageId)
+    .eq("product_content.language_id", additionalData?.languageId);
+  if (additionalData?.filter) {
+    query.eq("category_id", additionalData?.filter);
   }
   query.range((page - 1) * pageSize, page * pageSize - 1);
-
   const response = await query;
   return response;
 };
+
 export const getProductFeatures = async (table, page, pageSize) => {
   const response = await supabase
     .from(table)
@@ -209,7 +222,7 @@ export const getCountries = async (page, pageSize) => {
   return response;
 };
 
-export const getOffers = async (page, pageSize) => {
+export const getOffers = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("offer")
     .select(
@@ -221,11 +234,12 @@ export const getOffers = async (page, pageSize) => {
      `,
       { count: "exact" }
     )
-    .eq("offer_content.language_id", DEFAULT_LANGUAGE?.id)
+    .eq("offer_content.language_id", additionalData?.languageId)
     .range((page - 1) * pageSize, page * pageSize - 1);
   return response;
 };
-export const getCollections = async (page, pageSize) => {
+
+export const getCollections = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("collection")
     .select(
@@ -237,11 +251,12 @@ export const getCollections = async (page, pageSize) => {
      `,
       { count: "exact" }
     )
-    .eq("collection_content.language_id", DEFAULT_LANGUAGE?.id)
+    .eq("collection_content.language_id", additionalData?.languageId)
     .range((page - 1) * pageSize, page * pageSize - 1);
   return response;
 };
-export const getComments = async (page, pageSize) => {
+
+export const getComments = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("comment")
     .select(
@@ -253,12 +268,12 @@ export const getComments = async (page, pageSize) => {
      `,
       { count: "exact" }
     )
-    .eq("product.product_content.language_id", DEFAULT_LANGUAGE?.id)
+    .eq("product.product_content.language_id", additionalData?.languageId)
     .range((page - 1) * pageSize, page * pageSize - 1);
   return response;
 };
 
-export const getColors = async (page, pageSize) => {
+export const getColors = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("color")
     .select(
@@ -270,12 +285,13 @@ export const getColors = async (page, pageSize) => {
      `,
       { count: "exact" }
     )
-    .eq("color_content.language_id", DEFAULT_LANGUAGE?.id)
+    .eq("color_content.language_id", additionalData?.languageId)
     .range((page - 1) * pageSize, page * pageSize - 1);
 
   return response;
 };
-export const getSizes = async (page, pageSize) => {
+
+export const getSizes = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("size")
     .select(
@@ -286,12 +302,13 @@ export const getSizes = async (page, pageSize) => {
       `,
       { count: "exact" }
     )
-    .eq("category.category_content.language_id", DEFAULT_LANGUAGE?.id)
-    .eq("size_content.region_id", DEFAULT_REGION?.id)
+    .eq("category.category_content.language_id", additionalData?.languageId)
+    .eq("size_content.region_id", additionalData?.regionId)
     .range((page - 1) * pageSize, page * pageSize - 1);
 
   return response;
 };
+
 export const getChartContent = async (page, pageSize) => {
   const response = await supabase
     .from("chart_content")
@@ -307,7 +324,8 @@ export const getChartContent = async (page, pageSize) => {
     .range((page - 1) * pageSize, page * pageSize - 1);
   return response;
 };
-export const getChartData = async (page, pageSize) => {
+
+export const getChartData = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("chart_data")
     .select(
@@ -320,9 +338,9 @@ export const getChartData = async (page, pageSize) => {
      `,
       { count: "exact" }
     )
-    .eq("size.size_content.region_id", DEFAULT_REGION?.id)
-    .eq("chart.chart_content.language_id", DEFAULT_LANGUAGE?.id)
-    .eq("product.product_content.language_id", DEFAULT_LANGUAGE?.id)
+    .eq("size.size_content.region_id", additionalData?.regionId)
+    .eq("chart.chart_content.language_id", additionalData?.languageId)
+    .eq("product.product_content.language_id", additionalData?.languageId)
     .range((page - 1) * pageSize, page * pageSize - 1);
   return response;
 };
@@ -342,7 +360,7 @@ export const getAddresses = async (page, pageSize) => {
   return response;
 };
 
-export const getPoints = async (page, pageSize) => {
+export const getPoints = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("point")
     .select(
@@ -352,12 +370,13 @@ export const getPoints = async (page, pageSize) => {
   `,
       { count: "exact" }
     )
-    .eq("point_content.language_id", DEFAULT_LANGUAGE?.id)
+    .eq("point_content.language_id", additionalData?.languageId)
     .range((page - 1) * pageSize, page * pageSize - 1);
 
   return response;
 };
-export const getStocks = async (page, pageSize) => {
+
+export const getStocks = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("stock")
     .select(
@@ -370,12 +389,13 @@ export const getStocks = async (page, pageSize) => {
     )
     .eq(
       "product_variant.product.product_content.language_id",
-      DEFAULT_LANGUAGE?.id
+      additionalData?.languageId
     )
     .range((page - 1) * pageSize, page * pageSize - 1);
 
   return response;
 };
+
 export const getWarehouses = async (page, pageSize) => {
   const response = await supabase
     .from("warehouse")
@@ -390,6 +410,7 @@ export const getWarehouses = async (page, pageSize) => {
 
   return response;
 };
+
 export const getWarehouseAvailability = async (page, pageSize) => {
   const response = await supabase
     .from("warehouse_availability")
@@ -405,40 +426,28 @@ export const getWarehouseAvailability = async (page, pageSize) => {
 
   return response;
 };
-// export const getShowreels = async () => {
-//   const response = await supabase.from("showreel").select(
-//     `
-//     *,
-//     user(*),
-//     product(id,product_content(*))
-//   `
-//   );
-//   // .eq("product.product_content.language_id", DEFAULT_LANGUAGE?.id);
 
-//   return response;
-// };
-// user
 export const getUserAddresses = async () => {
   const response = await supabase.from("user_address").select(`
     *,
     address(*, name:line_one)
     `);
 
-  // users(*)
-  // user(first_name, last_name, profile_img),
   return response;
 };
-export const getNews = async () => {
+
+export const getNews = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("news")
     .select(
       `
     *,
-    news_content(*)
+    news_content(*, language(name))
     `,
       { count: "exact" }
     )
-    .eq("news_content.language_id", DEFAULT_LANGUAGE?.id);
+    .eq("news_content.language_id", additionalData?.languageId)
+    .range((page - 1) * pageSize, page * pageSize - 1);
   return response;
 };
 
@@ -456,7 +465,7 @@ export const getUsers = async (page, pageSize) => {
   return response;
 };
 
-export const getUsersCart = async () => {
+export const getUsersCart = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("user_cart")
     .select(
@@ -468,34 +477,30 @@ export const getUsersCart = async () => {
     )
     .eq(
       "product_variant.product.product_content.language_id",
-      DEFAULT_LANGUAGE?.id
-    );
-
+      additionalData?.languageId
+    )
+    .range((page - 1) * pageSize, page * pageSize - 1);
   return response;
-  // user(first_name, last_name, profile_img),
 };
+
 export const getUserSubTable = async (table) => {
-  // const response = await supabase.from(table).select(`
-  //   *,
-  //   user(*)
-  //   `);
   try {
     const response = await supabase.from(table).select("*");
 
     return response;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 export const getUserDataById = async (userId) => {
   const response = await supabase.from("user").select("*").eq("id", userId);
   return response;
 };
+
 export const getUserData = async (table, userId) => {
   const response = await supabase.from(table).select("*").eq("user_id", userId);
   return response;
 };
+
 export const getUserTypeData = async (userTypeId) => {
   const response = await supabase
     .from("user_type")

@@ -63,6 +63,8 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   }, [fields_content?.length, id, tableName]);
 
   const onSubmit = async () => {
+    let loading = toast.loading("Loading ...");
+
     if (tableName === "user") {
       await handleUploadAvatarImage(values, "update");
     } else if (tableName === "home_reviews") {
@@ -71,7 +73,6 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
       const response = await updateItem(tableName, values);
       if (response) {
         if (tableName === "color") await handleUploadColorImage(values);
-
         const list = Object.values(contentValues);
         for (const item of list) {
           if (tableName === "category") {
@@ -99,6 +100,19 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
             await updateItem(`${tableName}_content`, item);
           }
         }
+        toast.update(loading, {
+          render: "Great! Content has been updated successfully",
+          type: "success",
+          isLoading: false,
+          autoClose: 4000,
+        });
+      } else {
+        toast.update(loading, {
+          render: "Oops! failed to update the content",
+          type: "error",
+          isLoading: false,
+          autoClose: 4000,
+        });
       }
     }
   };

@@ -6,6 +6,7 @@ import { useGlobalOptions } from "../../Context/GlobalOptions";
 
 const UserBar = () => {
   const { user } = useGlobalOptions();
+  console.log("🚀 ~ file: UserBar.js:9 ~ UserBar ~ user:", user);
   const [open, setOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -14,8 +15,7 @@ const UserBar = () => {
     });
   };
 
-  const fullName =
-    user?.user_metadata?.first_name + " " + user?.user_metadata?.last_name;
+  const fullName = user?.first_name + " " + user?.last_name;
   return (
     <div className="relative">
       <button

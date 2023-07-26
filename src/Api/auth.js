@@ -2,18 +2,24 @@ import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
 
 export const getUser = async () => {
   try {
-    const response = await supabase.auth.getUser();
-    if (!response?.data?.user?.id) return;
-    const userType = await supabase
-      .from("user_type")
-      .select("*")
-      .eq("id", response?.data?.user?.user_type_id);
-    return {
-      ...response?.data?.user,
-      role: userType?.data?.[0],
-    };
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const response = await supabase
+      .from("user")
+      .select(
+        `
+    *,
+    role:user_type(*)
+  `
+      )
+      .eq("id", user?.id);
+    console.log("🚀 ~ file: auth.js:18 ~ getUser ~ response:", response);
+    return response?.data?.[0];
   } catch (error) {}
 };
+
+export const getUserRole = async () => {};
 
 // Log in function
 export const login = async (email, password) => {

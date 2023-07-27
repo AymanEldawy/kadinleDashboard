@@ -30,11 +30,19 @@ const SuperForm = ({
 
   // Clean up component
   const location = useLocation();
+
   useEffect(() => {
-    checkRefTable(initialFields);
-  }, [initialFields]);
-  async function checkRefTable(fields) {
     let loading = toast.loading("Loading ...");
+    checkRefTable(initialFields).then((res) => {
+      toast.update(loading, {
+        type: "success",
+        isLoading: false,
+        autoClose: 1000,
+      });
+    });
+  }, [initialFields]);
+
+  async function checkRefTable(fields) {
     setLoading(true);
     if (!fields?.length) return;
     for (const field of fields) {
@@ -43,11 +51,6 @@ const SuperForm = ({
         CACHED_TABLE[field?.tableName] = data;
       }
     }
-    toast.update(loading, {
-      type: "success",
-      isLoading: false,
-      autoClose: 1000,
-    });
     setLoading(false);
   }
 
@@ -58,6 +61,7 @@ const SuperForm = ({
       setTouched({});
     }
   }, [resetForm]);
+
   useEffect(() => {
     setErrors({});
     setTouched({});

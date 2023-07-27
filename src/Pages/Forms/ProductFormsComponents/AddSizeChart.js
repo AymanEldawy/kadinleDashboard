@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 
+import { getTableData } from "../../../Api/globalActions";
 import BlockPaper from "../../../Components/BlockPaper/BlockPaper";
 import SelectField from "../../../Components/CustomForm/SelectField";
 import TableForm from "../../../Components/Forms/TableForm/TableForm";
 import { IncreasableBar } from "../../../Components/Global/IncreasableBar";
+import { useGlobalOptions } from "../../../Context/GlobalOptions";
 import { chart_data } from "../../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../../hooks/useAdd";
-import { useFetch } from "../../../hooks/useFetch";
 import { useDelete } from "../../../hooks/useDelete";
+import { useFetch } from "../../../hooks/useFetch";
 
-const CACHE_SIZE_CHART_CONTENT = {};
 const AddSizeChart = ({
   getCachedList,
   productId,
@@ -28,20 +29,9 @@ const AddSizeChart = ({
   selectedChart,
   setSelectedChart,
   layout,
+  CACHE_SIZE_CHART_CONTENT,
 }) => {
   const { deleteItem } = useDelete();
-  const { getData } = useFetch();
-
-  const getChartContent = async (id) => {
-    const response = await getData("chart_content");
-    for (const chart of response) {
-      CACHE_SIZE_CHART_CONTENT[chart?.chart_id] = chart;
-    }
-  };
-
-  useEffect(() => {
-    getChartContent();
-  }, []);
 
   useEffect(() => {
     console.log(selectedChart, "select");
@@ -95,11 +85,10 @@ const AddSizeChart = ({
           await deleteItem("chart_data", subRow?.id);
       }
     }
-    console.log(newValues[row]);
     delete newValues[row];
     setValues(newValues);
   };
-  console.log(CACHE_SIZE_CHART_CONTENT?.[chartIds?.[listChart[0]]]);
+
   return (
     <>
       {layout === "update" ? (
@@ -119,10 +108,6 @@ const AddSizeChart = ({
       />
       {listChart?.map((item, index) => {
         let name = CACHE_SIZE_CHART_CONTENT?.[chartIds?.[item]]?.name;
-        console.log(
-          "🚀 ~ file: AddSizeChart.js:101 ~ {listChart?.map ~ name:",
-          name
-        );
         return (
           <div
             className={`relative z-10 ${

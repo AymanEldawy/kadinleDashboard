@@ -1,3 +1,8 @@
+import { getUser, login } from "../../Api/auth";
+import logoIcon from "../../Assets/Images/logo-icon.png";
+import { Button } from "../../Components/Global/Button";
+import { useGlobalOptions } from "../../Context/GlobalOptions";
+import InputField from "../CustomForm/InputField";
 import axios from "axios";
 import React from "react";
 import { useState } from "react";
@@ -5,24 +10,18 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { getUser, login } from "../../Api/auth";
-import logoIcon from "../../Assets/Images/logo-icon.png";
-import { Button } from "../../Components/Global/Button";
-import { useGlobalOptions } from "../../Context/GlobalOptions";
-import InputField from "../CustomForm/InputField";
-
 // import logo from "../../Assets/Images/logo.svg";
 const Login = () => {
-  const { serRefresh, user } = useGlobalOptions();
+  const { serRefresh } = useGlobalOptions();
   const navigate = useNavigate();
-  const location = useLocation();
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
 
-  console.log(location, navigate);
+  const user = localStorage.getItem("KADINLE_ADMIN_USER");
+
   useEffect(() => {
-    if (user?.id) navigate(-1);
+    if (JSON.parse(user)) navigate(-1);
   }, [user]);
 
   const insertIntoErrors = (name, value) => {
@@ -65,8 +64,8 @@ const Login = () => {
       } else {
         toast.success(`Login Successfully`);
         localStorage.setItem(
-          "supabaseSession",
-          JSON.stringify(response?.session)
+          "KADINLE_ADMIN_USER",
+          JSON.stringify(response?.user)
         );
         serRefresh((p) => !p);
         setTimeout(() => {

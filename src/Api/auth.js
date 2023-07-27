@@ -36,7 +36,9 @@ export const login = async (email, password) => {
 // Log out function
 export const logout = async () => {
   const response = await supabase.auth.signOut();
-  console.log(response);
+  if (response?.error) return;
+  localStorage.removeItem("KADINLE_ADMIN_USER");
+
   return response;
 };
 

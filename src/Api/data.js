@@ -41,10 +41,6 @@ export const normalFetchWithPagination = async (table, page, pageSize) => {
 };
 
 export const contentFilterFetch = async (table, additionalData) => {
-  console.log(
-    "🚀 ~ file: data.js:44 ~ contentFilterFetch ~ additionalData:",
-    additionalData
-  );
   if (table === "size_content") {
     const response = await supabase
       .from(table)
@@ -150,10 +146,6 @@ export const getReturnRequests = async (page, pageSize, additionalData) => {
 };
 
 export const getProducts = async (page, pageSize, additionalData) => {
-  console.log(
-    "🚀 ~ file: data.js:153 ~ getProducts ~ additionalData:",
-    additionalData
-  );
   const query = supabase
     .from("product")
     .select(

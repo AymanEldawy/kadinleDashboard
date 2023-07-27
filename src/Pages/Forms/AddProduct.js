@@ -29,6 +29,8 @@ import AddProductVariants from "./ProductFormsComponents/AddProductVariants";
 import AddSizeChart from "./ProductFormsComponents/AddSizeChart";
 import { FormProductIncreasable } from "./ProductFormsComponents/FormProductIncreasable";
 
+const CACHE_SIZE_CHART_CONTENT = {};
+const CACHED_DATA_UPDATED = {};
 const CACHED_TABLE = [];
 const CACHED_TABLES_SKU = [];
 const STAGES = ["details", "variant", "size_chart"];
@@ -42,10 +44,17 @@ const listStructure = {
   },
 };
 
-const checkSkuTable = async (tableName, getData) => {
-  const data = await getData(tableName);
+const IsUpdated = {
+  PRODUCT: {},
+  CONTENT: {},
+  VARIANT: {},
+  CHART: {},
+};
+
+const checkSkuTable = async (tableName, additionalData) => {
+  const res = await getTableData(tableName, additionalData);
   let cache = {};
-  for (const item of data) {
+  for (const item of res?.data) {
     cache[item?.id] = tableName === "size" ? item?.size_sku : item?.color_sku;
   }
   CACHED_TABLES_SKU[tableName] = cache;
@@ -77,6 +86,10 @@ const AddProduct = ({ layout }) => {
   const { updateItem } = useUpdate();
   const { CACHE_LANGUAGES, defaultLanguage, defaultRegion } =
     useGlobalOptions();
+  console.log(
+    "🚀 ~ file: AddProduct.js:87 ~ AddProduct ~ defaultRegion:",
+    defaultRegion
+  );
   const dropzoneRef = useRef();
 
   const [loading, setLoading] = useState(false);
@@ -116,17 +129,19 @@ const AddProduct = ({ layout }) => {
   const fetchProductData = async () => {
     const response = await getData("product", id);
     setProductValues(response?.[0]);
+    IsUpdated.PRODUCT = response?.[0];
   };
   const fetchProductContentData = async () => {
     const response = await getData("product", id, "content");
-    let contentsObject = {};
+    let contentObject = {};
     for (const item of response) {
-      contentsObject[CACHE_LANGUAGES?.[item?.language_id]] = item;
+      contentObject[CACHE_LANGUAGES?.[item?.language_id]] = item;
     }
-    const contentObjectKeys = Object.keys(contentsObject);
-    setProductContentValues(contentsObject);
+    const contentObjectKeys = Object.keys(contentObject);
+    setProductContentValues(contentObject);
     setListContent(contentObjectKeys);
     setActiveTabContent(contentObjectKeys?.[0]);
+    IsUpdated.CONTENT = contentObject;
   };
 
   const fetchProductVariant = async () => {
@@ -141,7 +156,6 @@ const AddProduct = ({ layout }) => {
       "product_id",
       params?.id
     );
-    // console.log(responseImages, "responseImages");
 
     let variantList = [];
     let filesList = [];
@@ -186,18 +200,16 @@ const AddProduct = ({ layout }) => {
 
       variantList.push(i);
     }
-    // setListVariant(variantList);
     setActiveTabVariant(0);
     setActiveTabVariant(0);
     setActiveTabStocks(0);
+    IsUpdated.VARIANT = productVariantValues;
   };
 
   const getStocksData = async (variantId, index) => {
     getRowsById("stock", "variant_id", variantId).then((res) => {
       const stocks = res?.data;
-      // console.log(stocks, "response stock");
       for (let i = 0; i < stocks?.length; i++) {
-        // console.log(stocks[i], "stock i");
         setProductVariantValues((prev) => {
           return {
             ...prev,
@@ -257,7 +269,15 @@ const AddProduct = ({ layout }) => {
         };
       });
     }
-    console.log(productChartValues, "chart values");
+    IsUpdated.CHART = productChartValues;
+  };
+  const getChartContent = async (id) => {
+    const response = await getTableData("chart_content", {
+      languageId: defaultLanguage?.id,
+    });
+    for (const chart of response?.data) {
+      CACHE_SIZE_CHART_CONTENT[chart?.chart_id] = chart;
+    }
   };
 
   useEffect(() => {
@@ -267,27 +287,34 @@ const AddProduct = ({ layout }) => {
       fetchProductVariant();
       fetchProductChart();
     }
-  }, []);
+  }, [layout, params?.id]);
 
   useEffect(() => {
+    if (!defaultLanguage?.id && !defaultRegion?.id) return;
+
     let loadingToast = toast.loading("Loading ...");
     setLoading(true);
+
     checkRefTable(fields_content, {
       languageId: defaultLanguage?.id,
       regionId: defaultRegion?.id,
     });
+
     checkRefTable(fields_variant, {
       languageId: defaultLanguage?.id,
       regionId: defaultRegion?.id,
     });
+
     checkRefTable(fields_image, {
       languageId: defaultLanguage?.id,
       regionId: defaultRegion?.id,
     });
+
     checkRefTable(stock_fields, {
       languageId: defaultLanguage?.id,
       regionId: defaultRegion?.id,
     });
+
     checkRefTable(fields, {
       languageId: defaultLanguage?.id,
       regionId: defaultRegion?.id,
@@ -298,7 +325,8 @@ const AddProduct = ({ layout }) => {
         autoClose: 1000,
       });
       setLoading(false);
-    }, []);
+    });
+
     checkRefTable(
       [
         {
@@ -309,11 +337,18 @@ const AddProduct = ({ layout }) => {
           refName: "number",
         },
       ],
-      getData
+      { languageId: defaultLanguage?.id, regionId: defaultRegion?.id }
     );
-    checkSkuTable("color", getData);
-    checkSkuTable("size", getData);
-  }, []);
+    checkSkuTable("color", {
+      languageId: defaultLanguage?.id,
+      regionId: defaultRegion?.id,
+    });
+    checkSkuTable("size", {
+      languageId: defaultLanguage?.id,
+      regionId: defaultRegion?.id,
+    });
+    getChartContent();
+  }, [defaultLanguage?.id, defaultRegion?.id]);
 
   useEffect(() => {
     if (productValues?.sku !== productSku) {
@@ -324,17 +359,27 @@ const AddProduct = ({ layout }) => {
   const onSubmit = async () => {
     if (!productValues) return;
     const response =
-      layout === "update"
+      layout !== "update"
+        ? await addItem("product", productValues)
+        : JSON.stringify(IsUpdated?.PRODUCT) !== JSON.stringify(productValues)
         ? await updateItem("product", productValues)
-        : await addItem("product", productValues);
+        : null;
     if (response) {
-      const id = response?.data?.[0]?.id;
-      setProductId(response?.data?.[0]?.id);
+      const id = response?.data?.[0]?.id || params?.id;
+      setProductId(id);
       await onSubmitContent(id);
       await onSubmitProductVariants(id);
-      await onSubmitChart(response?.data?.[0]?.id);
+      await onSubmitChart(id);
     } else {
-      toast.error("Opps, Failed to update the data please try again later");
+      if (
+        JSON.stringify(IsUpdated?.PRODUCT) !== JSON.stringify(productValues)
+      ) {
+        toast.error("Opps, Failed to update the data please try again later");
+      } else {
+        toast.warning(
+          "You didn't change the values, please update the product than press Submit"
+        );
+      }
     }
   };
 
@@ -345,7 +390,11 @@ const AddProduct = ({ layout }) => {
     if (list?.length && productId) {
       for (const item of list) {
         if (item?.id) {
-          await updateItem(`product_content`, item);
+          if (
+            JSON.stringify(IsUpdated?.CONTENT) !==
+            JSON.stringify(productContentValues)
+          )
+            await updateItem(`product_content`, item);
         } else {
           await addItem(`product_content`, {
             ...item,
@@ -417,8 +466,13 @@ const AddProduct = ({ layout }) => {
             sku,
           };
           if (values?.id) {
-            await updateItem("product_variant", { ...item, id: values?.id });
-            variantId = values?.id;
+            if (
+              JSON.stringify(IsUpdated?.VARIANT) !==
+              JSON.stringify(productVariantValues)
+            ) {
+              await updateItem("product_variant", { ...item, id: values?.id });
+              variantId = values?.id;
+            }
           } else {
             const responseVariant = await addItem("product_variant");
             variantId = responseVariant?.data?.[0]?.id;
@@ -449,7 +503,11 @@ const AddProduct = ({ layout }) => {
       const chartId = chartIds?.[listHash[i]];
       for (const row of Object.values(list?.[i])) {
         if (row?.id) {
-          await updateItem("chart_data", row);
+          if (
+            JSON.stringify(IsUpdated?.CHART) !==
+            JSON.stringify(productChartValues)
+          )
+            await updateItem("chart_data", row);
         } else {
           if (row?.size_id && chartId && productId) {
             await addItem("chart_data", {
@@ -462,8 +520,6 @@ const AddProduct = ({ layout }) => {
       }
     }
   };
-  console.log(productValues);
-
   return (
     <div>
       {loading ? (
@@ -501,6 +557,30 @@ const AddProduct = ({ layout }) => {
           />
         ) : null}
       </BlockPaper>
+      {fields_content?.length && STAGES[0] === activeStage ? (
+        <BlockPaper
+          title={
+            layout === "update"
+              ? "Update product Content"
+              : "Add Product Content"
+          }
+        >
+          <FormProductIncreasable
+            values={productContentValues}
+            setValues={setProductContentValues}
+            initialFields={fields_content}
+            getCachedList={getCachedList}
+            listCount={listContent}
+            setListCount={setListContent}
+            activeTab={activeTabContent}
+            setActiveTab={setActiveTabContent}
+            maxCount={CACHED_TABLE?.language?.length}
+            errors={contentErrors}
+            setErrors={setContentErrors}
+            layout={layout}
+          />
+        </BlockPaper>
+      ) : null}
       {activeStage === STAGES[1] ? (
         <AddProductVariants
           getCachedList={getCachedList}
@@ -544,32 +624,10 @@ const AddProduct = ({ layout }) => {
           selectedChart={selectedChart}
           setSelectedChart={setSelectedChart}
           layout={layout}
+          CACHE_SIZE_CHART_CONTENT={CACHE_SIZE_CHART_CONTENT}
         />
       ) : null}
-      {fields_content?.length && STAGES[0] === activeStage ? (
-        <BlockPaper
-          title={
-            layout === "update"
-              ? "Update product Content"
-              : "Add Product Content"
-          }
-        >
-          <FormProductIncreasable
-            values={productContentValues}
-            setValues={setProductContentValues}
-            initialFields={fields_content}
-            getCachedList={getCachedList}
-            listCount={listContent}
-            setListCount={setListContent}
-            activeTab={activeTabContent}
-            setActiveTab={setActiveTabContent}
-            maxCount={CACHED_TABLE?.language?.length}
-            errors={contentErrors}
-            setErrors={setContentErrors}
-            layout={layout}
-          />
-        </BlockPaper>
-      ) : null}
+
       <div className="flex mt-12 gap-5 items-center justify-between">
         <button
           disabled={activeStage === STAGES[0]}

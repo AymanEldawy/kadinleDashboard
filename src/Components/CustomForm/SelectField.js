@@ -46,19 +46,21 @@ const SelectField = ({
         {!hideText ? (
           <option>{firstOptionText ? firstOptionText : "Choose..."}</option>
         ) : null}
-        {list?.map((item, index) => {
-          return (
-            <option
-              key={`${item[keyValue]}-${name}`}
-              className="p-1"
-              value={item[keyValue]}
-            >
-              {keyLabel === "full_name"
-                ? item?.first_name + " " + item?.last_name
-                : item[keyLabel] || item?.id}
-            </option>
-          );
-        })}
+        {list?.length
+          ? list?.map((item, index) => {
+              return (
+                <option
+                  key={`${item[keyValue]}-${name}`}
+                  className="p-1"
+                  value={item[keyValue]}
+                >
+                  {keyLabel === "full_name"
+                    ? item?.first_name + " " + item?.last_name
+                    : item[keyLabel] || item?.id}
+                </option>
+              );
+            })
+          : null}
       </select>
       {error ? (
         <p className="bg-red-200 mt-2 rounded text-sm text-red-500 px-2 py-1">

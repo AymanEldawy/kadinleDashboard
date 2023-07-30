@@ -42,12 +42,9 @@ export const AddStockIncreasable = ({
   };
 
   const increaseStock = () => {
-    console.log(listCountGlobalVariant, subItemKey);
-    console.log(listCountGlobalVariant?.[itemKey]?.sizes?.stocks);
     let key = Object.keys(
       listCountGlobalVariant?.[itemKey]?.sizes?.[subItemKey]?.stocks
     ).length;
-    console.log(key, "le");
     setListCountGlobalVariant((prev) => {
       return {
         ...prev,

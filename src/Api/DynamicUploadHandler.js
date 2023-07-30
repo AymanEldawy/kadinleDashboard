@@ -139,10 +139,7 @@ export const handleUploadReviewerImage = async (item, operation = "add") => {
 };
 export const handleUploadAvatarImage = async (item) => {
   let theFileWebContent = item?.profile_img;
-  console.log(
-    "🚀 ~ file: DynamicUploadHandler.js:142 ~ handleUploadAvatarImage ~ item:",
-    item
-  );
+
   const image =
     typeof theFileWebContent === "object"
       ? await uploadAvatarImage({
@@ -151,7 +148,7 @@ export const handleUploadAvatarImage = async (item) => {
         })
       : item?.image;
   if (image?.url) {
-    item.image = `https://` + image?.url;
+    item.profile_img = `https://` + image?.url;
     await updateItem(`user`, item);
   }
 };

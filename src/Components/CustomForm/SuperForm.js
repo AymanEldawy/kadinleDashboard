@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import { getTableData } from "../../Api/globalActions";
+import { useGlobalOptions } from "../../Context/GlobalOptions";
 import { useFetch } from "../../hooks/useFetch";
 import { Button } from "../Global/Button";
 import CheckboxField from "./CheckboxField";
@@ -25,6 +27,7 @@ const SuperForm = ({
   setErrors,
 }) => {
   const { getData } = useFetch();
+  const { defaultLanguage, defaultRegion } = useGlobalOptions();
   const [touched, setTouched] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -47,8 +50,11 @@ const SuperForm = ({
     if (!fields?.length) return;
     for (const field of fields) {
       if (field.key === "ref") {
-        const data = await getData(field?.tableName);
-        CACHED_TABLE[field?.tableName] = data;
+        const response = await getTableData(field?.tableName, {
+          languageId: defaultLanguage?.id,
+          regionId: defaultRegion?.id,
+        });
+        CACHED_TABLE[field?.tableName] = response?.data;
       }
     }
     setLoading(false);
@@ -131,152 +137,153 @@ const SuperForm = ({
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
           {!!initialFields
             ? initialFields?.map((field, i) => {
-                if (field?.name === "id" || field?.hide_in_add_form)
-                  return null;
-                if (field?.key === "input") {
-                  return (
-                    <InputField
-                      value={values?.[field?.name]}
-                      index={i}
-                      type={field?.type}
-                      name={field?.name}
-                      label={field?.name}
-                      onFocus={() => onTouched(field?.name)}
-                      required={field?.required}
-                      error={
-                        touched[field?.name] && errors[field?.name]
-                          ? errors[field?.name]
-                          : null
-                      }
-                      onChange={(e) =>
-                        handelChangeField(
-                          field?.name,
-                          field?.type === "number"
-                            ? +e.target.value
-                            : e.target.value,
-                          field?.required
-                        )
-                      }
-                    />
-                  );
-                } else if (field?.key === "ref") {
-                  return (
-                    <SelectField
-                      index={i}
-                      value={values?.[field?.name]}
-                      // defaultValue={values?.[field?.name]}
-                      label={field?.name}
-                      list={
-                        !!getCachedList ? getCachedList(field?.tableName) : []
-                      }
-                      keyLabel={field?.refName || "name"}
-                      keyValue={field?.refId || "id"}
-                      name={field?.name}
-                      required={field?.required}
-                      onChange={(e) =>
-                        handelChangeField(
-                          field?.name,
-                          e.target.value,
-                          field?.required
-                        )
-                      }
-                    />
-                  );
-                } else if (field?.key === "radio") {
-                  return (
-                    <RadioField
-                      defaultChecked={values?.[field?.name]}
-                      index={i}
-                      label={field?.label}
-                      name={field?.name}
-                      required={field?.required}
-                      onFocus={() => onTouched(field?.name)}
-                      error={
-                        touched[field?.name] && errors[field?.name]
-                          ? errors[field?.name]
-                          : null
-                      }
-                      list={field?.list}
-                      onChange={(e) =>
-                        handelChangeField(
-                          field?.name,
-                          e.target.value,
-                          field?.required
-                        )
-                      }
-                    />
-                  );
-                } else if (field?.key === "checkbox") {
-                  return (
-                    <CheckboxField
-                      defaultChecked={values?.[field?.name]}
-                      index={i}
-                      label={field?.name}
-                      name={field?.name}
-                      required={field?.required}
-                      onFocus={() => onTouched(field?.name)}
-                      error={
-                        touched[field?.name] && errors[field?.name]
-                          ? errors[field?.name]
-                          : null
-                      }
-                      list={field?.list}
-                      onChange={(e) => {
-                        handelChangeField(
-                          field?.name,
-                          e.target.checked,
-                          field?.required
-                        );
-                      }}
-                    />
-                  );
-                } else if (field?.key === "image") {
-                  return (
-                    <UploadFile
-                      src={values?.[field?.name]}
-                      index={i}
-                      name={field?.name}
-                      label={field?.name}
-                      onFocus={() => onTouched(field?.name)}
-                      required={field?.required}
-                      error={
-                        touched[field?.name] && errors[field?.name]
-                          ? errors[field?.name]
-                          : null
-                      }
-                      onChange={(e) =>
-                        handelFieldUpload(field?.name, e, field?.required)
-                      }
-                    />
-                  );
-                } else {
-                  return (
-                    <InputField
-                      value={values?.[field?.name]}
-                      index={i}
-                      name={field?.name}
-                      type={field?.type}
-                      label={field?.name}
-                      onFocus={() => onTouched(field?.name)}
-                      required={field?.required}
-                      error={
-                        touched[field?.name] && errors[field?.name]
-                          ? errors[field?.name]
-                          : null
-                      }
-                      onChange={(e) =>
-                        handelChangeField(
-                          field?.name,
-                          field?.type === "number"
-                            ? +e.target.value
-                            : e.target.value,
-                          field?.required
-                        )
-                      }
-                    />
-                  );
-                }
-              })
+              if (field?.name === "id" || field?.hide_in_add_form)
+                return null;
+              if (field?.key === "input") {
+                return (
+                  <InputField
+                    value={values?.[field?.name]}
+                    index={i}
+                    type={field?.type}
+                    name={field?.name}
+                    label={field?.name}
+                    onFocus={() => onTouched(field?.name)}
+                    required={field?.required}
+                    error={
+                      touched[field?.name] && errors[field?.name]
+                        ? errors[field?.name]
+                        : null
+                    }
+                    onChange={(e) =>
+                      handelChangeField(
+                        field?.name,
+                        field?.type === "number"
+                          ? +e.target.value
+                          : e.target.value,
+                        field?.required
+                      )
+                    }
+                  />
+                );
+              } else if (field?.key === "ref") {
+                return (
+                  <SelectField
+                    index={i}
+                    value={values?.[field?.name]}
+                    // defaultValue={values?.[field?.name]}
+                    label={field?.name}
+                    list={
+                      !!getCachedList ? getCachedList(field?.tableName) : []
+                    }
+                    keyLabel={field?.refName || "name"}
+                    keyValue={field?.refId || "id"}
+                    name={field?.name}
+                    required={field?.required}
+                    onChange={(e) =>
+                      handelChangeField(
+                        field?.name,
+                        e.target.value,
+                        field?.required
+                      )
+                    }
+                  />
+                );
+              } else if (field?.key === "radio") {
+                return (
+                  <RadioField
+                    defaultChecked={values?.[field?.name]}
+                    index={i}
+                    label={field?.label}
+                    name={field?.name}
+                    required={field?.required}
+                    onFocus={() => onTouched(field?.name)}
+                    error={
+                      touched[field?.name] && errors[field?.name]
+                        ? errors[field?.name]
+                        : null
+                    }
+                    list={field?.list}
+                    onChange={(e) =>
+                      handelChangeField(
+                        field?.name,
+                        e.target.value,
+                        field?.required
+                      )
+                    }
+                  />
+                );
+              } else if (field?.key === "checkbox") {
+                return (
+                  <CheckboxField
+                    defaultChecked={values?.[field?.name]}
+                    index={i}
+                    label={field?.name}
+                    name={field?.name}
+                    required={field?.required}
+                    onFocus={() => onTouched(field?.name)}
+                    error={
+                      touched[field?.name] && errors[field?.name]
+                        ? errors[field?.name]
+                        : null
+                    }
+                    list={field?.list}
+                    onChange={(e) => {
+                      handelChangeField(
+                        field?.name,
+                        e.target.checked,
+                        field?.required
+                      );
+                    }}
+                  />
+                );
+              } else if (field?.key === "image") {
+
+                return (
+                  <UploadFile
+                    src={values?.[field?.name]}
+                    index={i}
+                    name={field?.name}
+                    label={field?.name}
+                    onFocus={() => onTouched(field?.name)}
+                    required={field?.required}
+                    error={
+                      touched[field?.name] && errors[field?.name]
+                        ? errors[field?.name]
+                        : null
+                    }
+                    onChange={(e) =>
+                      handelFieldUpload(field?.name, e, field?.required)
+                    }
+                  />
+                );
+              } else {
+                return (
+                  <InputField
+                    value={values?.[field?.name]}
+                    index={i}
+                    name={field?.name}
+                    type={field?.type}
+                    label={field?.name}
+                    onFocus={() => onTouched(field?.name)}
+                    required={field?.required}
+                    error={
+                      touched[field?.name] && errors[field?.name]
+                        ? errors[field?.name]
+                        : null
+                    }
+                    onChange={(e) =>
+                      handelChangeField(
+                        field?.name,
+                        field?.type === "number"
+                          ? +e.target.value
+                          : e.target.value,
+                        field?.required
+                      )
+                    }
+                  />
+                );
+              }
+            })
             : null}
         </div>
       </form>

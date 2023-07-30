@@ -12,7 +12,7 @@ const WarehouseAvailability = () => {
       SUPABASE_TABLE_NAME="warehouse_availability"
       columns={columns}
       title="Warehouse Availability"
-      onAddClick={() => navigate(`/add-warehouse`)}
+      onAddClick={() => navigate(`/add-warehouse-availability`)}
     />
   );
 };

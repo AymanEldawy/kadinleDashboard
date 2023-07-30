@@ -76,21 +76,10 @@ const Home = () => {
   });
 
   const getUsers = async () => {
-    console.log("called", "us");
     const response = await getRecentUser();
-    console.log(response, "us");
     setRecentUsers(response?.data);
   };
-  const getStocks = async () => {
-    console.log("called", "us");
-    const response = await getCount("stock");
-    console.log(response, "us");
-    setRecentUsers(response?.data);
-  };
-  // const getBestSelling = async () => {
-  //   const response = await getUser();
-  //   setBestSelling(response);
-  // };
+
   const getOrders = async () => {
     const response = await getRecentOrders();
     setOrders(response);
@@ -132,7 +121,6 @@ const Home = () => {
   const getStockHandler = async () => {
     try {
       const { warehouse_count } = await getCount("warehouse");
-      console.log(warehouse_count, "warehouse");
       setStatistics((prev) => {
         const totalWarehouses = prev.warehouses;
         totalWarehouses.statistics = warehouse_count;

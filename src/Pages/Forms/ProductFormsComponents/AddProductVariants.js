@@ -56,7 +56,6 @@ const AddProductVariants = ({
     setRefresh((p) => !p);
   };
   const decreaseVariant = (item, index) => {
-    console.log(index, item, "----", listCountGlobalVariant, allValues);
     let newValues = allValues;
     delete newValues[item];
     setAllValues(newValues);

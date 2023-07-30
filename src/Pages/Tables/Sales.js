@@ -11,8 +11,8 @@ const Sales = () => {
     <DynamicLayout
       SUPABASE_TABLE_NAME="sale"
       columns={columns}
-      title="Sales"
-      onAddClick={() => navigate(`/add-sale`)}
+      title="Sale"
+      onAddClick={() => navigate(`/select-products`)}
     />
   );
 };

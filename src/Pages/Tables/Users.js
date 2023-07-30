@@ -24,7 +24,7 @@ const Stocks = () => {
               <EditIcon className="w-4 h-4" />
               Edit
             </Link>
-            <Link className="text-primary-blue" to={`/users/${data?.id}`}>
+            <Link className="text-primary-blue" state={data} to={`/users/${data?.id}`}>
               <EyeIcon />
             </Link>
           </div>

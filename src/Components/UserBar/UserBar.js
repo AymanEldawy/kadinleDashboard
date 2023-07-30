@@ -6,7 +6,6 @@ import { useGlobalOptions } from "../../Context/GlobalOptions";
 
 const UserBar = () => {
   const { user } = useGlobalOptions();
-  console.log("🚀 ~ file: UserBar.js:9 ~ UserBar ~ user:", user);
   const [open, setOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -31,8 +30,9 @@ const UserBar = () => {
         <img
           className="w-8 h-8 rounded-full"
           src={
-            user?.profile_img ||
-            "https://flowbite.com/docs/images/people/profile-picture-3.jpg"
+            user?.profile_img
+              ? user?.profile_img
+              : "https://flowbite.com/docs/images/people/profile-picture-3.jpg"
           }
           alt="user Avatar"
         />

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import DynamicLayout from "../Dynamics/DynamicLayout";
+import { ADMIN } from "../../Api/globalActions";
 
 const Warehouses = () => {
   const navigate = useNavigate();
@@ -12,7 +13,11 @@ const Warehouses = () => {
       SUPABASE_TABLE_NAME="warehouse"
       columns={columns}
       title="Warehouses"
-      onAddClick={() => navigate(`/add-warehouse`)}
+      onAddClick={
+        ADMIN?.role?.title === "admin"
+          ? () => navigate(`/add-warehouse`)
+          : undefined
+      }
     />
   );
 };

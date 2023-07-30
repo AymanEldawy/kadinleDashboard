@@ -33,9 +33,7 @@ const AddSizeChart = ({
 }) => {
   const { deleteItem } = useDelete();
 
-  useEffect(() => {
-    console.log(selectedChart, "select");
-  }, [selectedChart]);
+  useEffect(() => {}, [selectedChart]);
 
   const changeChartLength = (row, count) => {
     let checkRow = chartRowsLength?.[row];

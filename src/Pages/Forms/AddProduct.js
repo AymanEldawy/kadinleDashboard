@@ -86,10 +86,7 @@ const AddProduct = ({ layout }) => {
   const { updateItem } = useUpdate();
   const { CACHE_LANGUAGES, defaultLanguage, defaultRegion } =
     useGlobalOptions();
-  console.log(
-    "🚀 ~ file: AddProduct.js:87 ~ AddProduct ~ defaultRegion:",
-    defaultRegion
-  );
+
   const dropzoneRef = useRef();
 
   const [loading, setLoading] = useState(false);

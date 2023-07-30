@@ -5,6 +5,9 @@ async function uploadFile(formData, action) {
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICAgInJvbGUiOiAic2VydmljZV9yb2xlIiwKICAgICJpc3MiOiAic3VwYWJhc2UiLAogICAgImlhdCI6IDE2ODgyNDUyMDAsCiAgICAiZXhwIjogMTg0NjA5ODAwMAp9.Zbwwgxvz9VZm0zUmI-PN-xn71S_LGJYOnow-CKqoPgI"
   );
 
+  if (action === "uploadAvatar") {
+    headers.append("user_id", formData.get("user_id"));
+  }
   const requestOptions = {
     method: "POST",
     headers: headers,

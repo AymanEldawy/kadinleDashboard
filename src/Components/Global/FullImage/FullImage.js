@@ -1,21 +1,48 @@
 import React, { useState } from "react";
 
 import Modal from "../../Modal/Modal";
+import { useEffect } from "react";
+import { useRef } from "react";
 
 export const FullImage = ({ src, alt, height, width, ...imgProps }) => {
   const [open, setOpen] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
+  const imageRef = useRef();
+
+  const handleLoad = () => {
+    setLoaded(true);
+  };
+
+  const handleError = () => {
+    setError(true);
+  };
+  useEffect(() => {
+    if (!src) return;
+
+    setError(false);
+    setLoaded(false);
+    imageRef?.current?.addEventListener("load", handleLoad);
+    imageRef?.current?.addEventListener("error", handleError);
+  }, [src]);
+
   return (
     <>
-      {!!src ? (
+      {!error ? (
         <img
+          ref={imageRef}
           src={src}
           alt={alt}
           onClick={() => setOpen(true)}
-          className="cursor-pointer  !w-20 !h-16 object-contain"
+          className="cursor-pointer !w-20 !h-16 object-contain"
           {...imgProps}
         />
       ) : (
-        "No image"
+        <span
+          className={`bg-primary-blue text-white rounded-full flex items-center justify-center !w-10 !h-10 text-xs object-contain ${imgProps?.className}`}
+        >
+          UnK
+        </span>
       )}
       <Modal
         open={open}

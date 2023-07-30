@@ -9,10 +9,10 @@ const ChartContent = () => {
 
   return (
     <DynamicLayout
-      SUPABASE_TABLE_NAME="chart_content"
+      SUPABASE_TABLE_NAME="chart"
       columns={columns}
       title="Chart Content"
-      onAddClick={() => navigate(`/add-chart-content`)}
+      onAddClick={() => navigate(`/add-chart`)}
     />
   );
 };

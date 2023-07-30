@@ -14,7 +14,6 @@ export const getUser = async () => {
   `
       )
       .eq("id", user?.id);
-    console.log("🚀 ~ file: auth.js:18 ~ getUser ~ response:", response);
     return response?.data?.[0];
   } catch (error) {}
 };

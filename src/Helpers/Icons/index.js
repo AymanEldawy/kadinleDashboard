@@ -36,6 +36,7 @@ export { default as TagsIcon } from "./TagsIcon";
 export { default as RulerIcon } from "./RulerIcon";
 export { default as WorldIcon } from "./WorldIcon";
 export { default as ChartIcon } from "./ChartIcon";
+export { default as ChartContentIcon } from "./ChartContentIcon";
 export { default as BulkIcon } from "./BulkIcon";
 export { default as CollectionIcon } from "./CollectionIcon";
 export { default as BrandIcon } from "./BrandIcon";

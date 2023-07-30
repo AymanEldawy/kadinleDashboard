@@ -3,14 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { signup } from "../../Api/auth";
-import {
-  handleUploadAvatarImage,
-  handleUploadCategoryImages,
-  handleUploadCollectionImage,
-  handleUploadColorImage,
-  handleUploadOfferImage,
-  handleUploadReviewerImage,
-} from "../../Api/DynamicUploadHandler";
+import { handleUploadAvatarImage, handleUploadCategoryImages, handleUploadCollectionImage, handleUploadColorImage, handleUploadOfferImage, handleUploadReviewerImage } from "../../Api/DynamicUploadHandler";
 import { uploadCategoryImage } from "../../Api/upload";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
@@ -105,7 +98,13 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
         />
       </BlockPaper>
       {fields_content?.length ? (
-        <BlockPaper title={title + " Content"}>
+        <BlockPaper
+          title={
+            SUPABASE_TABLE_NAME === "size"
+              ? "Choose Region"
+              : title + " Content"
+          }
+        >
           <FormIncreasable
             initialFields={fields_content}
             maxCount={languages?.length}
@@ -113,6 +112,7 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
             setValues={setContentValues}
             errors={contentErrors}
             setErrors={setContentErrors}
+            SUPABASE_TABLE_NAME={SUPABASE_TABLE_NAME}
           />
         </BlockPaper>
       ) : null}

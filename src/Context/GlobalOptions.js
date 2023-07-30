@@ -3,6 +3,7 @@ import { createContext, useState, useEffect, useContext } from "react";
 import { useFetch } from "../hooks/useFetch";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { getUser } from "../Api/auth";
+import { ADMIN } from "../Api/globalActions";
 
 export const GlobalOptions = createContext();
 
@@ -49,9 +50,14 @@ export const GlobalOptionsProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    getUser().then((res) => {
-      setUser(res);
-    });
+    if (ADMIN?.id) {
+      setUser(ADMIN);
+    } else {
+      getUser().then((res) => {
+        setUser(res);
+        localStorage.setItem("KADINLE_ADMIN_USER", JSON.stringify(res));
+      });
+    }
   }, [refresh]);
 
   useEffect(() => {
@@ -65,13 +71,13 @@ export const GlobalOptionsProvider = ({ children }) => {
       }
     );
     getAndCacheData("region", setRegions, setCACHE_REGIONS).then((res) => {
-      if (languageId) {
+      if (regionId) {
         setDefaultSettings("region", regionId);
       } else {
         setDefaultSettings("region", regions[0]);
       }
     });
-  }, []);
+  }, [languageId, regionId]);
 
   const values = {
     languages,

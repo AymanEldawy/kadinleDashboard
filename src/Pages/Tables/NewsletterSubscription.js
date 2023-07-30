@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import DynamicLayout from "../Dynamics/DynamicLayout";
 
@@ -19,12 +20,18 @@ const NewsletterSubscription = () => {
       title="Newsletter Subscription"
       setSelectedList={setSelectedList}
       selectedList={selectedList}
+      customBarButtons={
+        <button className="bg-primary-blue p-2 rounded-md text-white">
+          Send to newsletter
+        </button>
+      }
+      // onAddClick={() => navigate("/send-newsletter")}
       renderTableAction={(data) => {
         return (
           <div className="gap-2 flex items-center text-xs">
-            <button className="bg-primary-blue p-2 rounded-md text-white">
+            {/* <button className="bg-primary-blue p-2 rounded-md text-white">
               Send
-            </button>
+            </button> */}
             {/* <button>edit</button> */}
             <button className="bg-primary-red p-2 rounded-md text-white">
               remove

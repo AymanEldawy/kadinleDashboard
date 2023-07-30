@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { ADMIN } from "../../Api/globalActions";
 
 // import logo from "../../Assets/Images/logo.svg";
 const Login = () => {
@@ -18,11 +19,11 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
 
-  const user = localStorage.getItem("KADINLE_ADMIN_USER");
+  // const user = JSON.parse(localStorage.getItem("KADINLE_ADMIN_USER"));
 
   useEffect(() => {
-    if (JSON.parse(user)) navigate(-1);
-  }, [user]);
+    if (ADMIN) navigate(-1);
+  }, [ADMIN]);
 
   const insertIntoErrors = (name, value) => {
     if (value === "") {
@@ -63,10 +64,6 @@ const Login = () => {
         toast.error(response?.error?.message);
       } else {
         toast.success(`Login Successfully`);
-        localStorage.setItem(
-          "KADINLE_ADMIN_USER",
-          JSON.stringify(response?.user)
-        );
         serRefresh((p) => !p);
         setTimeout(() => {
           navigate("/");

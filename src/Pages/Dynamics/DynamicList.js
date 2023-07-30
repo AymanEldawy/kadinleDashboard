@@ -9,28 +9,6 @@ import { useDelete } from "../../hooks/useDelete";
 import { useFetch } from "../../hooks/useFetch";
 import { useGlobalOptions } from "./../../Context/GlobalOptions";
 
-// const tablesWithContent = [
-//   "category",
-//   "chart",
-//   "collar",
-//   "collection",
-//   "color",
-//   "fabric",
-//   "feature",
-//   "lining",
-//   "material",
-//   "offer",
-//   "order",
-//   "order_status",
-//   "pattern",
-//   "payment_status",
-//   "point",
-//   "product",
-//   "return_status",
-//   "season",
-//   "size",
-//   "sleeve",
-// ];
 const DynamicList = ({
   tableName,
   columns,
@@ -45,6 +23,8 @@ const DynamicList = ({
   hideSelect,
   hideDelete,
   hidePagination,
+  customBarButtons,
+  additionalData
 }) => {
   const { defaultLanguage, defaultRegion } = useGlobalOptions();
   const { loading, getDataWithPagination } = useFetch();
@@ -74,6 +54,7 @@ const DynamicList = ({
         languageId: defaultLanguage?.id,
         regionId: defaultRegion?.id,
         filter,
+        ...additionalData
       }
     );
     setData(response?.data);
@@ -90,6 +71,7 @@ const DynamicList = ({
     filterCategory,
     defaultLanguage?.id,
     defaultRegion?.id,
+    additionalData
   ]);
 
   const handlePageClick = (index) => {
@@ -120,6 +102,7 @@ const DynamicList = ({
             allowFilter={allowFilter}
             filterCategory={filterCategory}
             setFilterCategory={setFilterCategory}
+            customBarButtons={customBarButtons}
           />
         )}
         <SuperTable

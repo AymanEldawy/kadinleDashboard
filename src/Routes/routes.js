@@ -18,14 +18,11 @@ import {
   AddBrand,
   AddBulkAlert,
   AddCategory,
-  AddCategoryContent,
   AddChart,
   AddChartContent,
   AddChartData,
   AddCollection,
-  AddCollectionContent,
   AddColor,
-  AddColorContent,
   AddCountry,
   AddCoupon,
   AddCurrency,
@@ -37,35 +34,29 @@ import {
   AddOrderStatus,
   AddPoint,
   AddProduct,
-  AddProductImages,
-  AddProductVariants,
   AddRegion,
   AddReturnStatus,
   AddSale,
   AddSize,
-  AddSizeContent,
   AddUser,
+  AddWarehouse,
+  AddWarehouseAvailability,
   InsertOne,
-  UpdateProduct,
 } from "./../Pages/Forms";
 import {
   Addresses,
   Brands,
   BulkAlert,
   Categories,
-  CategoriesContent,
   Chart,
   ChartContent,
   ChartData,
   Collections,
-  CollectionsContent,
   Colors,
-  ColorsContent,
   Comments,
   Countries,
   Coupons,
   Currency,
-  GlobalList,
   HomeReviews,
   Languages,
   Logs,
@@ -82,184 +73,174 @@ import {
   Regions,
   ReturnStatus,
   Sales,
-  Showreels,
   Sizes,
-  SizesContent,
   Stocks,
   Users,
   WarehouseAvailability,
   Warehouses,
 } from "./../Pages/Tables";
+import { SingleUserTable } from "../Components/User/SingleUserTable";
 
 const authProtectedRoutes = [
-  // add paths
-  // { path: "/add-address", component: <AddAddress /> },
-  // { path: "/add-language", component: <AddLanguage /> },
-  { path: "/add-category", component: <AddCategory /> },
-  { path: "/add-category-content", component: <AddCategoryContent /> },
-  { path: "/add-color", component: <AddColor /> },
-  { path: "/add-color-content", component: <AddColorContent /> },
+
+  // **** Group Locations add paths ****
   { path: "/add-country", component: <AddCountry /> },
-  { path: "/add-collection-content", component: <AddCollectionContent /> },
-  { path: "/add-collection", component: <AddCollection /> },
-  { path: "/add-chart", component: <AddChart /> },
-  { path: "/add-chart-content", component: <AddChartContent /> },
-  { path: "/add-chart-data", component: <AddChartData /> },
-  { path: "/add-bulk-alert", component: <AddBulkAlert /> },
+  { path: "/add-currency", component: <AddCurrency /> },
+  { path: "/add-language", component: <AddLanguage /> },
   { path: "/add-region", component: <AddRegion /> },
-  { path: "/add-news", component: <AddNews /> },
-  { path: "/add-newsletter", component: <AddNewsletter /> },
+
+  // **** Group Locations paths ****
+  { path: "/address", component: <Addresses /> },
+  { path: "/country", component: <Countries /> },
+  { path: "/region", component: <Regions /> },
+  { path: "/currency", component: <Currency /> },
+
+  // **** Group Content add paths ****
   { path: "/add-brand", component: <AddBrand /> },
-  { path: "/add-review", component: <AddHomeReviewer /> },
+  { path: "/add-product", component: <AddProduct /> },
+
+
+  // **** Group Content paths ****
+  { path: "/products", component: <Products /> },
+  { path: "/brand", component: <Brands /> },
+  { path: "/stocks", component: <Stocks /> },
+
+  // **** Group Feature add paths ****
+  { path: "/add-category", component: <AddCategory /> },
+  { path: "/add-color", component: <AddColor /> },
+  { path: "/add-size", component: <AddSize /> },
   {
     path: "/add-collar",
-    component: <InsertOne layout="collar" title="add collar" />,
+    component: <InsertOne layout="collar" />,
   },
-  { path: "/add-coupon", component: <AddCoupon /> },
-  { path: "/add-currency", component: <AddCurrency /> },
+
   {
     path: "/add-fabric",
-    component: <InsertOne layout="fabric" title="add fabric" />,
+    component: <InsertOne layout="fabric" />,
   },
   {
     path: "/add-feature",
-    component: <InsertOne layout="feature" title="add feature" />,
+    component: <InsertOne layout="feature" />,
   },
   {
     path: "/add-lining",
-    component: <InsertOne layout="lining" title="add lining" />,
+    component: <InsertOne layout="lining" />,
   },
   {
     path: "/add-material",
-    component: <InsertOne layout="material" title="add material" />,
+    component: <InsertOne layout="material" />,
   },
   {
     path: "/add-pattern",
-    component: <InsertOne layout="pattern" title="add pattern" />,
+    component: <InsertOne layout="pattern" />,
   },
   {
     path: "/add-season",
-    component: <InsertOne layout="season" title="add season" />,
+    component: <InsertOne layout="season" />,
   },
   {
     path: "/add-sleeve",
-    component: <InsertOne layout="sleeve" title="add sleeve" />,
+    component: <InsertOne layout="sleeve" />,
   },
+
+
+  // **** Group Feature paths ****
+  { path: "/color", component: <Colors /> },
+  { path: "/category", component: <Categories /> },
+  { path: "/size", component: <Sizes /> },
+  { path: "/product-features", component: <ProductFeatures /> },
+
+  // **** Group Seasons add paths ****
   { path: "/add-sale", component: <AddSale /> },
-  { path: "/add-size", component: <AddSize /> },
-  { path: "/add-size-content", component: <AddSizeContent /> },
-  { path: "/add-product", component: <AddProduct /> },
-  { path: "/add-product-variants", component: <AddProductVariants /> },
-  { path: "/add-product-images", component: <AddProductImages /> },
   { path: "/add-offer", component: <AddOffer /> },
-  { path: "/add-point", component: <AddPoint /> },
+  { path: "/add-collection", component: <AddCollection /> },
+
+  // **** Group Seasons paths ****
+  { path: "/collection", component: <Collections /> },
+  { path: "/offers", component: <Offers /> },
+  { path: "/sale", component: <Sales /> },
+
+
+
+  // **** Group Chart add paths ****
+  { path: "/add-chart", component: <AddChart /> },
+  { path: "/add-chart-content", component: <AddChartContent /> },
+  { path: "/add-chart-data", component: <AddChartData /> },
+
+  // **** Group Chart paths ****
+  { path: "/chart", component: <Chart /> },
+  { path: "/chart-content", component: <ChartContent /> },
+  { path: "/chart-data", component: <ChartData /> },
+
+
+  // **** Group News add paths ****
+  { path: "/add-bulk-alert", component: <AddBulkAlert /> },
+  { path: "/add-news", component: <AddNews /> },
+  { path: "/add-newsletter", component: <AddNewsletter /> },
+
+  // **** Group News paths ****
+  { path: "/bulk-alert", component: <BulkAlert /> },
+  { path: "/news", component: <News /> },
+  { path: "/newsletter", component: <Newsletter /> },
+  { path: "/newsletter-subscription", component: <NewsletterSubscription /> },
+
+
+  // **** Group Orders add paths ****
   { path: "/add-order-status", component: <AddOrderStatus /> },
   { path: "/add-return-status", component: <AddReturnStatus /> },
-  { path: "/add-user", component: <AddUser /> },
+  { path: "/add-warehouse", component: <AddWarehouse /> },
+  { path: "/add-warehouse-availability", component: <AddWarehouseAvailability /> },
 
-  // update
-  // { path: "/update/:name/:id", component: <DynamicForm layout="update" /> },
+  // **** Group Orders paths ****
+  { path: "/orders", component: <Orders /> },
+  { path: "/order-return-requests", component: <OrderReturnRequests /> },
+  { path: "/order-status", component: <OrderStatus /> },
+  { path: "/return-status", component: <ReturnStatus /> },
+  { path: "/warehouses", component: <Warehouses /> },
+  { path: "/warehouse-availability", component: <WarehouseAvailability /> },
+
+  // **** Group Award add paths ****
+  { path: "/add-point", component: <AddPoint /> },
+  { path: "/add-coupon", component: <AddCoupon /> },
+
+  // **** Group Award paths ****
+  { path: "/coupons", component: <Coupons /> },
+  { path: "/points", component: <Points /> },
+
+  // **** Group Interactive paths ****
+  { path: "/home-reviews", component: <HomeReviews /> },
+  { path: "/add-review", component: <AddHomeReviewer /> },
+  { path: "/comments", component: <Comments /> },
+
+
+  // **** Group User paths ****
+  { path: "/users", component: <Users /> },
+  { path: "/add-user", component: <AddUser /> },
+  { path: "/users/:id", component: <SingleUser /> },
+  { path: "/users/:id/:name", component: <SingleUserTable /> },
+
+  // **** Group Update paths ****
   { path: "/update/:name/:id", component: <Update /> },
   {
     path: "/products/update/product/:id",
     component: <AddProduct layout="update" />,
   },
 
-  // list or table paths
-  { path: "/product", component: <Products /> },
-  { path: "/color", component: <Colors /> },
-  { path: "/colors-content", component: <ColorsContent /> },
-  { path: "/category", component: <Categories /> },
-  { path: "/categories-content", component: <CategoriesContent /> },
-  // { path: "/language", component: <Languages /> },
-  { path: "/size", component: <Sizes /> },
-  { path: "/sizes-content", component: <SizesContent /> },
-  { path: "/address", component: <Addresses /> },
-  { path: "/country", component: <Countries /> },
-  { path: "/region", component: <Regions /> },
-  { path: "/orders", component: <Orders /> },
-  { path: "/users", component: <Users /> },
-  { path: "/chart", component: <Chart /> },
-  { path: "/chart-content", component: <ChartContent /> },
-  { path: "/chart-data", component: <ChartData /> },
-  { path: "/collection", component: <Collections /> },
-  { path: "/collection-content", component: <CollectionsContent /> },
-  { path: "/bulk-alert", component: <BulkAlert /> },
-  { path: "/home-sections", component: <HomeSections /> },
+  // **** Group Useful actions paths ****
   { path: "/logs", component: <Logs /> },
-  { path: "/news", component: <News /> },
-  { path: "/newsletter", component: <Newsletter /> },
-  { path: "/newsletter-subscription", component: <NewsletterSubscription /> },
-  { path: "/comments", component: <Comments /> },
-  { path: "/brand", component: <Brands /> },
-  { path: "/product-features", component: <ProductFeatures /> },
-  { path: "/coupons", component: <Coupons /> },
-  { path: "/currency", component: <Currency /> },
-  { path: "/offers", component: <Offers /> },
-  { path: "/points", component: <Points /> },
-  {
-    path: "/fabric",
-    component: (
-      <GlobalList table="fabric" title="fabric" addHref="add-fabric" />
-    ),
-  },
-  {
-    path: "/feature",
-    component: (
-      <GlobalList table="feature" title="feature" addHref="add-feature" />
-    ),
-  },
-  {
-    path: "/lining",
-    component: (
-      <GlobalList table="lining" title="lining" addHref="add-lining" />
-    ),
-  },
-  {
-    path: "/material",
-    component: (
-      <GlobalList table="material" title="material" addHref="add-material" />
-    ),
-  },
-  {
-    path: "/pattern",
-    component: (
-      <GlobalList table="pattern" title="pattern" addHref="add-pattern" />
-    ),
-  },
-  {
-    path: "/season",
-    component: (
-      <GlobalList table="season" title="season" addHref="add-season" />
-    ),
-  },
-  {
-    path: "/sleeve",
-    component: (
-      <GlobalList table="sleeve" title="sleeve" addHref="add-sleeve" />
-    ),
-  },
-  { path: "/sale", component: <Sales /> },
-  { path: "/home-reviews", component: <HomeReviews /> },
-  { path: "/order-return-requests", component: <OrderReturnRequests /> },
-  { path: "/order-return-requests", component: <OrderReturnRequests /> },
-  { path: "/stocks", component: <Stocks /> },
-  { path: "/warehouse-availability", component: <WarehouseAvailability /> },
-  { path: "/showreels", component: <Showreels /> },
-  { path: "/warehouses", component: <Warehouses /> },
-  { path: "/order-status", component: <OrderStatus /> },
-  { path: "/return-status", component: <ReturnStatus /> },
-
-  //
-  { path: "/users/:id", component: <SingleUser /> },
-  // actions
-  { path: "/return-status", component: <ReturnStatus /> },
   { path: "/select-products", component: <SelectProduct /> },
   { path: "/upload-sheet", component: <UploadSheet /> },
   { path: "/send-email", component: "" },
+  { path: "/home-sections", component: <HomeSections /> },
+
+
+
+  // **** Group public paths ****
   { path: "/", component: <Home /> },
   { path: "*", component: <NotAllowed /> },
   { path: "/not-found", component: <PageNotFound /> },
+
+
 ];
 
 const publicRoutes = [{ path: "/login", component: <Login /> }];

@@ -1,7 +1,12 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
-import { contentFilterFetch, getAddresses, getCategories, getChartContent, getChartData, getCollections, getColors, getComments, getCountries, getNews, getOffers, getOrders, getOrderStatus, getPoints, getProductFeatures, getProducts, getReturnRequests, getReturnStatus, getShowreels, getSizes, getStocks, getUserAddresses, getUsers, getUsersCart, getUserSubTable, getWarehouseAvailability, getWarehouses, normalFetch, normalFetchWithPagination } from "./data";
+import { contentFilterFetch, getAddresses, getCategories, getChartContent, getChartData, getCollections, getColors, getComments, getCountries, getNews, getOffers, getOrders, getOrderStatus, getPoints, getProductFeatures, getProducts, getReturnRequests, getReturnStatus, getShowreels, getSizes, getStocks, getUserAddresses, getUserLikes, getUsers, getUsersCart, getUserSubTable, getWarehouseAvailability, getWarehouses, normalFetch, normalFetchWithPagination } from "./data";
 import { getRecentUser } from "./statictes";
 
+export const getAdmin = () => {
+  const STORAGE_ADMIN = localStorage.getItem("KADINLE_ADMIN_USER");
+  return STORAGE_ADMIN !== "undefined" ? JSON.parse(STORAGE_ADMIN) : null;
+};
+export const ADMIN = getAdmin();
 const fetches = {
   address: getAddresses,
   category: getCategories,
@@ -25,13 +30,13 @@ const fetches = {
   order: getOrders,
   point: getPoints,
   user_address: getUserAddresses,
+  user_like: getUserLikes,
   user_cart: getUsersCart,
-  user_invite: getUserSubTable("user_invite"),
-  user_like: getUserSubTable("user_like"),
-  user_suggestion: getUserSubTable("user_suggestion"),
-  user_ticket: getUserSubTable("user_ticket"),
-  user_wallet: getUserSubTable("user_wallet"),
-  user_point: getUserSubTable("user_point"),
+  user_invite: (page, pageSize, additionalData) => getUserSubTable("user_invite", page, pageSize, additionalData),
+  user_suggestion: (page, pageSize, additionalData) => getUserSubTable("user_suggestion", page, pageSize, additionalData),
+  user_ticket: (page, pageSize, additionalData) => getUserSubTable("user_ticket", page, pageSize, additionalData),
+  user_wallet: (page, pageSize, additionalData) => getUserSubTable("user_wallet", page, pageSize, additionalData),
+  user_point: (page, pageSize, additionalData) => getUserSubTable("user_point", page, pageSize, additionalData),
   stock: getStocks,
   warehouse: getWarehouses,
   warehouse_availability: getWarehouseAvailability,
@@ -49,19 +54,11 @@ export const getTableDataWithPagination = async (
   pageSize,
   additionalData
 ) => {
+  console.log(table, page, pageSize, additionalData);
   if (table && fetches.hasOwnProperty(table)) {
+    console.log('caled');
     const fetchData = fetches[table];
-    // const response = await fetchData({
-    //   table,
-    //   page,
-    //   pageSize,
-    //   languageId,
-    //   regionId,
-    //   filter,
-    // });
-    // const response = await fetchData(page, pageSize, filter);
     const response = await fetchData(page, pageSize, additionalData);
-
     return response;
   } else {
     const response = normalFetchWithPagination(table, page, pageSize);
@@ -70,10 +67,6 @@ export const getTableDataWithPagination = async (
 };
 
 export const getTableData = async (table, additionalData) => {
-  console.log(
-    "🚀 ~ file: globalActions.js:103 ~ getTableData ~ additionalData:",
-    additionalData
-  );
   const response =
     table?.indexOf("_content") !== -1
       ? await contentFilterFetch(table, additionalData)
@@ -106,6 +99,11 @@ export const addNewItem = async (table, item) => {
   const response = await supabase.from(table).insert(item).select("id");
   return response;
 };
+// add many item
+export const addManyItem = async (table, items) => {
+  const response = await supabase.from(table).insert(items);
+  return response;
+};
 
 // delete items
 export const deleteItems = async (table, ids) => {
@@ -116,6 +114,7 @@ export const deleteItems = async (table, ids) => {
         description: `Deleted item from ${table}`,
         row_id: id,
         table_name: table,
+        admin_id: ADMIN?.id,
       });
     }
   } else {
@@ -123,6 +122,7 @@ export const deleteItems = async (table, ids) => {
       description: `Failed to Delete item from ${table}`,
       row_id: ids?.[0],
       table_name: table,
+      admin_id: ADMIN?.id,
     });
   }
   return response;
@@ -134,12 +134,14 @@ export const deleteItem = async (table, id) => {
       description: `Deleted item from ${table}`,
       row_id: id,
       table_name: table,
+      admin_id: ADMIN?.id,
     });
   } else {
     await addNewItem("logs", {
       description: `Failed to Delete item from ${table}`,
       row_id: id,
       table_name: table,
+      admin_id: ADMIN?.id,
     });
   }
   return response;
@@ -153,12 +155,14 @@ export const updateItem = async (table, item) => {
       description: `Update item from ${table}`,
       row_id: item?.id,
       table_name: table,
+      admin_id: ADMIN?.id,
     });
   } else {
     await addNewItem("logs", {
       description: `Error Failed to Update item from ${table}`,
       row_id: item?.id,
       table_name: table,
+      admin_id: ADMIN?.id,
     });
   }
   // .single();

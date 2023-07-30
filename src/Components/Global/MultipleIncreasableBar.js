@@ -15,7 +15,6 @@ export const MultipleIncreasableBar = ({
   increase,
   decrease,
 }) => {
-  console.log(activeTab, list);
   const { CACHE_LANGUAGES } = useGlobalOptions();
   useEffect(() => {}, [list?.length]);
   return (

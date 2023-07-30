@@ -1,32 +1,5 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
 
-// const LANGUAGE = {
-//   name: "",
-//   id: "c53d7987-f51a-4b47-9ee0-3215becdce17",
-// };
-// const REGION = {
-//   name: "EN",
-//   id: "83f4acbc-d93b-4b3d-9c78-11d1b353517a",
-// };
-
-// function fetchFromStorage(key, initialValue) {
-//   try {
-//     const item = window.localStorage.getItem(key);
-//     return item ? JSON.parse(item) : initialValue;
-//   } catch (error) {
-//     return initialValue;
-//   }
-// }
-
-// export const DEFAULT_LANGUAGE = fetchFromStorage(
-//   "KADINLE_DEFAULT_LANGUAGE",
-//   LANGUAGE
-// );
-// export const DEFAULT_REGION = fetchFromStorage(
-//   "KADINLE_DEFAULT_REGION",
-//   REGION
-// );
-
 export const normalFetch = async (table) => {
   const response = await supabase.from(table).select();
   return response;
@@ -419,14 +392,7 @@ export const getWarehouseAvailability = async (page, pageSize) => {
   return response;
 };
 
-export const getUserAddresses = async () => {
-  const response = await supabase.from("user_address").select(`
-    *,
-    address(*, name:line_one)
-    `);
 
-  return response;
-};
 
 export const getNews = async (page, pageSize, additionalData) => {
   const response = await supabase
@@ -457,6 +423,7 @@ export const getUsers = async (page, pageSize) => {
   return response;
 };
 
+
 export const getUsersCart = async (page, pageSize, additionalData) => {
   const response = await supabase
     .from("user_cart")
@@ -470,26 +437,37 @@ export const getUsersCart = async (page, pageSize, additionalData) => {
     .eq(
       "product_variant.product.product_content.language_id",
       additionalData?.languageId
-    )
+    ).eq('user_id', additionalData?.userId)
     .range((page - 1) * pageSize, page * pageSize - 1);
   return response;
 };
 
-export const getUserSubTable = async (table) => {
-  try {
-    const response = await supabase.from(table).select("*");
 
-    return response;
-  } catch (error) {}
+export const getUserAddresses = async (page, pageSize, additionalData) => {
+  const response = await supabase.from("user_address").select(`
+    *,
+    address(*, name:line_one)
+    `).eq('user_id', additionalData?.userId).range((page - 1) * pageSize, page * pageSize - 1);;
+  return response;
 };
-
-export const getUserDataById = async (userId) => {
-  const response = await supabase.from("user").select("*").eq("id", userId);
+export const getUserLikes = async (page, pageSize, additionalData) => {
+  const response = await supabase.from("user_like").select(`
+    *,
+    product(product_content(*))
+    `).eq('user_id', additionalData?.userId).range((page - 1) * pageSize, page * pageSize - 1);;
   return response;
 };
 
-export const getUserData = async (table, userId) => {
-  const response = await supabase.from(table).select("*").eq("user_id", userId);
+export const getUserSubTable = async (table, page, pageSize, additionalData) => {
+  console.log(table, page, pageSize, additionalData, 'called')
+  try {
+    const response = await supabase.from(table).select("*").eq('user_id', additionalData?.userId).range((page - 1) * pageSize, page * pageSize - 1);
+    return response;
+  } catch (error) { }
+};
+
+export const getUserData = async (table, col, userId) => {
+  const response = await supabase.from(table).select("*").eq(col, userId);
   return response;
 };
 

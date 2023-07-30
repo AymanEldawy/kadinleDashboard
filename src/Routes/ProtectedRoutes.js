@@ -5,6 +5,7 @@ import {
   Outlet,
   Redirect,
   Route,
+  useLocation,
   useNavigate,
 } from "react-router-dom";
 
@@ -13,10 +14,14 @@ import { useGlobalOptions } from "../Context/GlobalOptions";
 import Layout from "../Layout";
 
 function ProtectedRoutes() {
+  const location = useLocation();
+
   const user = localStorage.getItem("KADINLE_ADMIN_USER");
   if (!user) {
     return <Navigate to="/login" />;
   }
+
+  // if(PERMISSIONS_ROUTE?.include())
 
   return (
     <Layout>

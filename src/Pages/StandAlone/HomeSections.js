@@ -30,7 +30,6 @@ const HomeSections = () => {
 
   const handleSectionDarg = (e, section) => {
     e.dataTransfer.setData("section", JSON.stringify(section));
-    console.log(e.dataTransfer.getData("widgetType"));
   };
   const handleOneDrop = (e) => {
     const currentSection = JSON.parse(e.dataTransfer.getData("section"));
@@ -42,7 +41,6 @@ const HomeSections = () => {
 
   const handleDargEnd = (e) => {
     e.preventDefault();
-    console.log("darg over");
   };
 
   const deleteSection = (item) => {
@@ -51,45 +49,71 @@ const HomeSections = () => {
     );
     setSections((prev) => [...prev, item]);
   };
-  console.log(sortedSections);
+
+  const onResetOrders = () => {
+    setSortedSection([]);
+    setSections(SECTIONS);
+  };
+
   return (
-    <section className="flex gap-8 ">
-      <div className="flex-1">
-        <ul className="grid items-start min-h-[250px] grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 bg-gray-50 p-2 rounded-md shadow">
-          {sections?.map((section) => (
-            <li
-              draggable
-              onDragStart={(e) => handleSectionDarg(e, section)}
-              className="border-dashed border-2 border-gray-300 text-white bg-[#00C9A7] p-3 grid place-items-center cursor-move active:translate-x-2 active:-rotate-2 "
-            >
-              {section?.name}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="flex-1 ">
-        <div
-          onDrop={handleOneDrop}
-          className="bg-[#C4FCEF] shadow h-full min-h-[250px]"
-          onDragOver={handleDargEnd}
-        >
-          <ul className="grid grid-cols-2 gap-4 p-2">
-            {sortedSections?.map((section, index) => (
-              <li className="bg-white relative group-section  overflow-hidden border-gray-500 flex items-center shadow">
-                <span className="bg-[#00C9A7] w-12 text-center text-white py-2 px-4">
-                  {index + 1}
-                </span>
-                <span className="mx-auto">{section?.name}</span>
-                <button
-                  className="text-red-500 px-3"
-                  onClick={() => deleteSection(section)}
+    <section className="">
+      <div className="flex gap-8 flex-wrap md:flex-nowrap">
+        {sections?.length ? (
+          <div className="flex-1 min-w-[250px]">
+            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 bg-gray-50 p-2 rounded-md shadow">
+              {sections?.map((section) => (
+                <li
+                  draggable
+                  onDragStart={(e) => handleSectionDarg(e, section)}
+                  className="border-dashed whitespace-nowrap border-2 border-gray-300 text-white bg-[#00C9A7] p-3 grid place-items-center cursor-move active:translate-x-2 active:-rotate-2 "
                 >
-                  <CloseIcon className="w-4" />
-                </button>
-              </li>
-            ))}
-          </ul>
+                  {section?.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+        <div className="flex-1 min-w-[250px] ">
+          <div
+            onDrop={handleOneDrop}
+            className="bg-[#C4FCEF] shadow h-full min-h-[250px]"
+            onDragOver={handleDargEnd}
+          >
+            <ul
+              className={`grid grid-cols-1 sm:grid-cols-2 ${
+                sections?.length ? "" : "md:grid-cols-4"
+              } gap-4 p-2`}
+            >
+              {sortedSections?.map((section, index) => (
+                <li className="bg-white relative group-section  overflow-hidden border-gray-500 flex items-center shadow">
+                  <span className="bg-[#00C9A7] w-12 text-center text-white py-2 px-4">
+                    {index + 1}
+                  </span>
+                  <span className="mx-auto whitespace-nowrap">
+                    {section?.name}
+                  </span>
+                  <button
+                    className="text-red-500 px-3"
+                    onClick={() => deleteSection(section)}
+                  >
+                    <CloseIcon className="w-4" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
+      </div>
+      <div className="flex gap-4 items-center mt-8">
+        <button
+          onClick={onResetOrders}
+          className="border border-primary-blue text-primary-blue p-2 px-8 rounded-md"
+        >
+          Reset Orders
+        </button>
+        <button className="bg-primary-blue text-white  p-2 px-8 rounded-md">
+          Save Orders
+        </button>
       </div>
     </section>
   );

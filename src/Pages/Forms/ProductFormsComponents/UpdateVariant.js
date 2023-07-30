@@ -37,7 +37,6 @@ const UpdateVariant = ({
   const [files, setFiles] = React.useState([]);
 
   const onDecrease = (row, index) => {
-    console.log(row, "row");
     let newValues = allValues;
     delete newValues?.[row];
     setAllValues(newValues);

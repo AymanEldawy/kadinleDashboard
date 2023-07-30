@@ -20,10 +20,12 @@ const DynamicLayout = ({
   hideAction,
   hideSelect,
   hideDelete,
+  customBarButtons,
+  additionalData
 }) => {
   const [selectedList, setSelectedList] = useState({});
   useEffect(() => {
-    if (!!getSelectedList) getSelectedList(setSelectedList);
+    if (!!getSelectedList) getSelectedList(selectedList);
   }, [selectedList]);
 
   return (
@@ -54,6 +56,8 @@ const DynamicLayout = ({
         hideSelect={hideSelect}
         hideDelete={hideDelete}
         allowFilter={allowFilter}
+        customBarButtons={customBarButtons}
+        additionalData={additionalData}
       />
     </BlockPaper>
   );

@@ -18,18 +18,14 @@ import SuperForm from "../../Components/CustomForm/SuperForm";
 import { Button } from "../../Components/Global/Button";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 import DB_API from "../../Helpers/Forms/databaseApi";
-import { useAdd } from "../../hooks/useAdd";
 import { useFetch } from "../../hooks/useFetch";
 import { useUpdate } from "../../hooks/useUpdate";
 
-const MEDIA_NAMES = ["web_image", "mobile_image", "media", "image"];
-
-const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
+const Update = () => {
   const params = useParams();
   const { CACHE_LANGUAGES, languages } = useGlobalOptions();
   const { updateItem } = useUpdate();
   const { getData } = useFetch();
-  const location = useLocation();
   const { name: tableName, id } = params;
 
   const [values, setValues] = useState();
@@ -54,6 +50,9 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
     setContentValues(contentsObject);
     setOldList((p) => !p);
   };
+  // useEffect(()=>{
+  //   if()
+  // },[])
   useEffect(() => {
     fetchData();
   }, [id, tableName]);
@@ -146,4 +145,4 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   );
 };
 
-export default DynamicForm;
+export default Update;

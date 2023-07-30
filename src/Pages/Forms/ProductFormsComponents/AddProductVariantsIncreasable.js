@@ -34,7 +34,6 @@ const AddProductVariantsIncreasable = ({
 }) => {
   const { deleteItem } = useDelete();
   const [refresh, setRefresh] = useState();
-  console.log(itemKey, "itemKey");
   const handelChangeTopField = (name, value, row) => {
     setAllValues((prev) => {
       return {
@@ -96,11 +95,8 @@ const AddProductVariantsIncreasable = ({
       };
     });
     setRefresh((p) => !p);
-
-    console.log(listCountGlobalVariant);
   };
   const decreaseSize = (item, index) => {
-    console.log(index, item, "----", listCountGlobalVariant, allValues);
     let newValues = allValues;
     delete newValues?.[itemKey]?.sizes?.[item];
     setAllValues(newValues);
@@ -234,8 +230,6 @@ const AddProductVariantsIncreasable = ({
           />
           {Object.keys(listCountGlobalVariant?.[itemKey]?.sizes)?.map(
             (item, index) => {
-              console.log(allValues?.[itemKey]?.sizes?.[item], "{}");
-
               let skuValue = `${productSku || ""} ${
                 CACHED_TABLES_SKU?.["size"]?.[
                   allValues?.[itemKey]?.sizes?.[item]?.size_id

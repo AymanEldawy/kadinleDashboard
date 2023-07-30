@@ -33,6 +33,7 @@ export const TableBar = ({
   allowFilter,
   filterCategory,
   setFilterCategory,
+  customBarButtons,
 }) => {
   const { defaultLanguage } = useGlobalOptions();
   const { getData } = useFetch();
@@ -43,7 +44,6 @@ export const TableBar = ({
       getTableData("category_content", {
         languageId: defaultLanguage?.id,
       }).then((res) => {
-        console.log("🚀 ~ file: TableBar.js:41 ~ getData ~ res:", res);
         setCategories(res?.data);
       });
     }
@@ -82,6 +82,7 @@ export const TableBar = ({
         />
       </div>
       <div className="flex gap-2">
+        {customBarButtons ? customBarButtons : null}
         {onAddClick ? (
           <button
             className="bg-blue-500 whitespace-nowrap text-sm text-white rounded px-2 py-1 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300"

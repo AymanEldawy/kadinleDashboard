@@ -32,7 +32,7 @@ function Header({ open, setOpen, mode, setMode }) {
   };
   return (
     // <div className="bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 ">
-    <header className="bg-[#144479] text-white py-2">
+    <header className="bg-[#144479] text-white py-2 dark:!bg-bgmaindark">
       <div className="flex py-2 px-4">
         <div className="flex items-center gap-4">
           <button

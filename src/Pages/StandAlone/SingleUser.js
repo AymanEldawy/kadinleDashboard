@@ -4,12 +4,14 @@ import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { getUserData, getUserDataById, getUserTypeData } from "../../Api/data";
+import { getUserData, getUserTypeData } from "../../Api/data";
 import ConfirmModal from "../../Components/ConfirmModal/ConfirmModal";
 import InputField from "../../Components/CustomForm/InputField";
 import SelectField from "../../Components/CustomForm/SelectField";
 import { Button } from "../../Components/Global/Button";
+import { FullImage } from "../../Components/Global/FullImage/FullImage";
 import Modal from "../../Components/Modal/Modal";
+import { UserStatices } from "../../Components/User/UserStatictes";
 import { MapIcon } from "../../Helpers/Icons";
 import { useDelete } from "../../hooks/useDelete";
 import { useFetch } from "../../hooks/useFetch";
@@ -26,6 +28,9 @@ const userOptions = [
   "wallet",
   // "type",
 ];
+
+
+
 const SingleUser = () => {
   const params = useParams();
   const navigate = useNavigate();
@@ -33,6 +38,7 @@ const SingleUser = () => {
   const { getData } = useFetch();
   const { updateItem } = useUpdate();
   const [userData, setUserData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [types, setTypes] = useState([]);
   const [openModal, setOpenModal] = useState(false);
@@ -40,12 +46,11 @@ const SingleUser = () => {
 
   const getTypes = async () => {
     const response = await getData("user_type");
-    console.log(response);
     setTypes(response);
   };
 
   const getUser = async () => {
-    const response = await getUserDataById(params?.id);
+    const response = await getUserData('user', 'id', params?.id);
     const userType = await getUserTypeData(response?.data?.[0]?.user_type_id);
     setUserData((prev) => {
       return {
@@ -56,15 +61,17 @@ const SingleUser = () => {
     });
   };
   const getUserInfo = async (table) => {
-    console.log(`user_${table}`, "us");
-    const response = await getUserData(`user_${table}`, params?.id);
-    console.log(response, "user", table);
+    setIsLoading(true)
+
+    const response = await getUserData(`user_${table}`, 'user_id', params?.id);
     setUserData((prev) => {
       return {
         ...prev,
         [table]: response?.data,
       };
     });
+    setIsLoading(false)
+
   };
 
   useEffect(() => {
@@ -77,9 +84,6 @@ const SingleUser = () => {
 
   const { user } = userData;
   const type = userData?.type;
-  const cartLength = userData?.cart?.reduce((result, cur) => {
-    return result + cur?.quantity;
-  }, 0);
 
   const handleDeleteItem = async () => {
     const response = await deleteItem(user, params?.id);
@@ -110,7 +114,6 @@ const SingleUser = () => {
     setOpenModal(false);
   };
 
-  console.log(userData);
   return (
     <>
       <ConfirmModal
@@ -144,12 +147,14 @@ const SingleUser = () => {
         </form>
       </Modal>
       <div className="-mx-4 -mt-8">
-        <div className=" h-56 bg-gray-100 flex items-center justify-center shadow mb-6">
+        <div className=" h-56 dark:bg-[#303030] bg-gray-100 flex items-center justify-center shadow mb-6">
           <div>
             {user?.profile_img ? (
-              <img
-                src=""
-                className="h-20 w-20 mx-auto block rounded-full p-[2px] shadow"
+              <FullImage
+                width={80}
+                height={80}
+                src={user?.profile_img}
+                className="!h-20 !w-20 min-w-[80px] mx-auto block rounded-full p-[2px] shadow"
                 alt="user avatar"
               />
             ) : (
@@ -161,32 +166,27 @@ const SingleUser = () => {
               </span>
             )}
             <div className="mt-3 flex flex-col items-center justify-center">
-              <h3 className="font-medium text-black text-lg capitalize">
+              <h3 className="font-medium text-black text-lg capitalize dark:text-white">
                 {user?.first_name} {user?.last_name}
               </h3>
               <p className="text-xs text-gray-500 items-center flex gap-1">
                 Role:
                 <span
-                  className={`${
-                    type?.number === 0 &&
+                  className={`${type?.number === 0 &&
                     "text-black px-2 p-1 rounded-md text-xs bg-primary-yellow"
-                  } 
-                ${
-                  type?.number === 1 &&
-                  "text-white px-2 p-1 rounded-md text-xs bg-indigo-500"
-                }
-                 ${
-                   type?.number === 2 &&
-                   "text-white px-2 p-1 rounded-md text-xs bg-primary-red"
-                 } 
-                 ${
-                   type?.number === 3 &&
-                   "text-white px-2 p-1 rounded-md text-xs bg-primary-blue"
-                 } 
-                 ${
-                   type?.number === 4 &&
-                   "text-white px-2 p-1 rounded-md text-xs bg-emerald-700"
-                 }`}
+                    } 
+                ${type?.number === 1 &&
+                    "text-white px-2 p-1 rounded-md text-xs bg-indigo-500"
+                    }
+                 ${type?.number === 2 &&
+                    "text-white px-2 p-1 rounded-md text-xs bg-primary-red"
+                    } 
+                 ${type?.number === 3 &&
+                    "text-white px-2 p-1 rounded-md text-xs bg-primary-blue"
+                    } 
+                 ${type?.number === 4 &&
+                    "text-white px-2 p-1 rounded-md text-xs bg-emerald-700"
+                    }`}
                 >
                   {type?.title}
                 </span>
@@ -216,88 +216,7 @@ const SingleUser = () => {
             </Link>
           </div>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4">
-          <div className="shadow p-2 rounded-md bg-white">
-            <h4 className=" mb-2 capitalize text-primary-blue font-medium">
-              address
-            </h4>
-            {userData?.address?.length ? (
-              <ul className="flex flex-col gap-2 text-gray-600">
-                {userData?.address?.map((address) => (
-                  <li className="">
-                    <MapIcon /> {address?.title}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-red-400 text-xs">
-                User doesn't have any address
-              </p>
-            )}
-          </div>
-          <div className="shadow p-2 rounded-md bg-white">
-            <h4 className=" mb-2 capitalize text-primary-blue font-medium">
-              cart
-            </h4>
-            <p className="text-gray-500 text-xs">
-              {cartLength > 1
-                ? "Items"
-                : cartLength < 1
-                ? "User doesn't have items is his cart"
-                : "item"}
-            </p>
-          </div>
-          <div className="shadow p-2 rounded-md bg-white">
-            <h4 className=" mb-2 capitalize text-primary-blue font-medium">
-              invite
-            </h4>
-            <p className="text-gray-500 text-xs">
-              {userData?.invite?.length > 1
-                ? `${userData?.invite?.length} Friends Invited`
-                : "User doesn't Invite any friend"}
-            </p>
-          </div>
-          <div className="shadow p-2 rounded-md bg-white">
-            <h4 className=" mb-2 capitalize text-primary-blue font-medium">
-              like
-            </h4>
-            {userData?.like?.length > 1
-              ? `${userData?.like?.length} Products liked`
-              : "There is no like"}
-          </div>
-          <div className="shadow p-2 rounded-md bg-white">
-            <h4 className=" mb-2 capitalize text-primary-blue font-medium">
-              point
-            </h4>
-            {userData?.point?.point > 0
-              ? `${userData?.point?.point} Points`
-              : "0 Points"}
-          </div>
-          <div className="shadow p-2 rounded-md bg-white">
-            <h4 className=" mb-2 capitalize text-primary-blue font-medium">
-              suggestion
-            </h4>
-            {userData?.suggestion?.length > 1
-              ? `User has sent ${userData?.suggestion?.length} suggestions`
-              : "There is no suggestion"}
-          </div>
-          <div className="shadow p-2 rounded-md bg-white">
-            <h4 className=" mb-2 capitalize text-primary-blue font-medium">
-              ticket
-            </h4>
-            {userData?.ticket?.length > 1
-              ? `User has sent ${userData?.ticket?.length} suggestions`
-              : "There is no suggestion"}
-          </div>
-          <div className="shadow p-2 rounded-md bg-white">
-            <h4 className=" mb-2 capitalize text-primary-blue font-medium">
-              wallet
-            </h4>
-            {userData?.wallet?.amount > 0
-              ? `${userData?.wallet?.amount} amount`
-              : "0 Amount"}
-          </div>
-        </div>
+        <UserStatices userData={userData} isLoading={isLoading} />
       </div>
     </>
   );

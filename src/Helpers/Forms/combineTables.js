@@ -25,10 +25,10 @@ const combine_category = [
   "language",
 ];
 
-const combine_chart = [
+const combine_chart = ["id", "number"];
+const combine_chart_content = [
   "id",
   "number",
-  "language",
   "name",
   "column1",
   "column2",
@@ -274,21 +274,21 @@ const combine_user = [
   "wallet",
   "points",
 ];
-const combine_user_address = ["id", "title", "user", "address", "created_at"];
+const combine_user_address = ["id", "created_at", "title", "address",]; //  "user", 
 const combine_user_alert = [
   "id",
   "created_at",
-  "user",
+  // "user",
   "content",
   "status",
   "url",
 ];
-const combine_user_cart = ["id", "created_at", "user", "variant", "quantity"];
-const combine_user_invite = ["id", "created_at", "user", "email", "status"];
-const combine_user_like = ["id", "created_at", "user", "product"];
+const combine_user_cart = ["id", "created_at", "variant", "quantity"]; //"user",
+const combine_user_invite = ["id", "created_at", "email", "status"]; //"user",
+const combine_user_like = ["id", "created_at", "product"]; //"user",
 const combine_user_point = [
   "id",
-  "user",
+  // "user",
   "point",
   "created_at",
   "status",
@@ -297,12 +297,12 @@ const combine_user_point = [
 const combine_user_suggestion = [
   "id",
   "created_at",
-  "user",
+  // "user",
   "suggestion",
   "status",
 ];
-const combine_user_ticket = ["id", "created_at", "user", "ticket", "status"];
-const combine_user_wallet = ["id", "user", "amount", "created_at"];
+const combine_user_ticket = ["id", "created_at", "ticket", "status"]; //  "user", 
+const combine_user_wallet = ["id", "amount", "created_at"]; //  "user", 
 const combine_warehouse_availability = [
   "id",
   "warehouse",
@@ -337,6 +337,7 @@ const COMBINE_DB_API = {
   combine_category,
   combine_chart,
   combine_chart_data,
+  combine_chart_content,
   // combine_content,
   combine_collection,
   combine_collection_product,

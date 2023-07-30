@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
+import { getTableData } from "../../Api/globalActions";
 import TabsList from "../../Components/Tabs/TabsList";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 import { CloseIcon, PlusIcon } from "../../Helpers/Icons";
@@ -30,10 +31,12 @@ export const FormIncreasable = ({
   errors,
   setErrors,
   oldList,
+  SUPABASE_TABLE_NAME,
 }) => {
   const { getData } = useFetch();
   const location = useLocation();
-  const { CACHE_LANGUAGES, languages } = useGlobalOptions();
+  const { CACHE_LANGUAGES, languages, defaultLanguage, defaultRegion } =
+    useGlobalOptions();
   const [selectedTab, setSelectedTab] = useState([]);
   const [touched, setTouched] = useState({});
   const [listCount, setListCount] = useState([`00${uuidv4()}`]);
@@ -57,8 +60,17 @@ export const FormIncreasable = ({
     if (!fields?.length) return;
     for (const field of fields) {
       if (field.key === "ref") {
-        const data = await getData(field?.tableName);
-        CACHED_TABLE[field?.tableName] = data;
+        if (field?.name !== "region_id" || field?.name !== "language_id") {
+          const response = await getTableData(field?.tableName, {
+            languageId: defaultLanguage?.id,
+            regionId: defaultRegion?.id,
+          });
+          CACHED_TABLE[field?.tableName] = response?.data;
+        } else {
+          const data = await getData(field?.tableName);
+
+          CACHED_TABLE[field?.tableName] = data;
+        }
       }
     }
   }
@@ -129,29 +141,6 @@ export const FormIncreasable = ({
     });
   };
 
-  const increaseLanguages = () => {
-    if (maxCount && listCount?.length >= maxCount) return;
-    let lastElement = uuidv4();
-    setListCount((prev) => [...prev, lastElement]);
-    setActiveTab(listCount?.length);
-  };
-  const resetItemData = (item) => {
-    let list = values;
-    delete list[item];
-    setValues(list);
-  };
-  const decreaseLanguages = (index) => {
-    resetItemData(listCount[index]);
-    setListCount((prev) => prev?.filter((item, i) => i !== index));
-    if (index === activeTab) {
-      if (index === 0) {
-        setActiveTab(1);
-      } else {
-        setActiveTab(index - 1);
-      }
-      // setActiveTab(() =);
-    }
-  };
   useEffect(() => {}, [activeTab]);
 
   return (
@@ -164,6 +153,7 @@ export const FormIncreasable = ({
           setActiveTab={setActiveTab}
           activeTab={activeTab}
           maxCount={languages?.length}
+          title={SUPABASE_TABLE_NAME === "size" ? "choose region" : null}
         />
       </div>
       {listCount?.map((item, index) => (

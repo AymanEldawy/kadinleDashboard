@@ -679,11 +679,11 @@ const point_content = [
     hide_in_add_form: true,
   },
   { name: "cause", type: "text", required: true },
-  { name: "point_count", type: "number", required: true },
 ];
 const point = [
   { name: "id", type: "uuid" },
   { name: "numeric", type: "number" },
+  { name: "point_count", type: "number", required: true },
 ];
 export const product = [
   { name: "id", type: "uuid" },
@@ -932,6 +932,7 @@ const sale = [
     required: true,
     tableName: "product_content",
     refId: "product_id",
+    hide_in_add_form: true
   },
   { name: "end_date", type: "date", required: true },
 ];
@@ -1249,7 +1250,7 @@ const warehouse_availability = [
     type: "uuid",
     key: "ref",
     required: true,
-    tableName: "address",
+    tableName: "warehouse",
   },
   {
     name: "country_id",

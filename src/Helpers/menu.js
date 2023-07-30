@@ -9,6 +9,7 @@ import {
   BuildingIcon,
   BulkIcon,
   CardIcon,
+  ChartContentIcon,
   ChartIcon,
   CollectionIcon,
   CurrencyIcon,
@@ -88,7 +89,7 @@ export const menuData = [
         key: "products",
         name: "Products",
         icon: <ProductIcon />,
-        path: "/product",
+        path: "/products",
       },
       {
         key: "Brands",
@@ -142,6 +143,11 @@ export const menuData = [
     groupTitle: "chart",
     groupList: [
       { path: "/chart", icon: <ChartSolidIcon />, name: "Chart" },
+      {
+        path: "/chart-content",
+        icon: <ChartContentIcon />,
+        name: "Chart Content",
+      },
       { path: "/chart-data", icon: <ChartIcon />, name: " Chart data" },
     ],
   },

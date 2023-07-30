@@ -47,12 +47,12 @@ const SuperTable = ({
   const [refresh, setRefresh] = useState(false);
   let defaultPrimaryStyle = primaryStyles
     ? {
-        table: "!border-none !rounded-none",
-        headRow: "border-b !border-primary",
-        colHead: "border-b !border-primary !py-4",
-        colBody:
-          "ltr:first:border-l-0  rtl:first:border-r-0 ltr:last:border-r-0 rtl:last:border-l-0",
-      }
+      table: "!border-none !rounded-none",
+      headRow: "border-b !border-primary",
+      colHead: "border-b !border-primary !py-4",
+      colBody:
+        "ltr:first:border-l-0  rtl:first:border-r-0 ltr:last:border-r-0 rtl:last:border-l-0",
+    }
     : {};
   let classes = {
     colHead: "!py-3",
@@ -61,7 +61,7 @@ const SuperTable = ({
     containerClassName: "!rounded-none",
   };
 
-  useEffect(() => {}, [refresh]);
+  useEffect(() => { }, [refresh]);
   useEffect(() => {
     if (searchValue) {
       let newList = [];
@@ -194,7 +194,7 @@ const SuperTable = ({
     setRefresh((prev) => !prev);
     sorting[col] = newSortOrder;
   };
-  useEffect(() => {}, [CACHED_TABLE]);
+  useEffect(() => { }, [CACHED_TABLE]);
 
   return (
     <div key={itemOffset}>
@@ -221,11 +221,10 @@ const SuperTable = ({
               else
                 return (
                   <TableHeadCol
-                    contentClassName={`${classes?.colHeadContentClassName} ${
-                      col === "description" || col === "name"
+                    contentClassName={`${classes?.colHeadContentClassName} ${col === "description" || col === "name"
                         ? "min-w-[160px]"
                         : ""
-                    }`}
+                      }`}
                     classes={classes?.colHead}
                     key={`${col}-${index}`}
                     sort
@@ -260,11 +259,10 @@ const SuperTable = ({
                 return (
                   <TableRow
                     key={`${row?.Name}-${index}`}
-                    classes={`border-b dark:border-borderdark ${
-                      !!selectedList?.[row?.id]
+                    classes={`border-b dark:border-borderdark ${!!selectedList?.[row?.id]
                         ? "bg-gray-100 dark:bg-[#1115]"
                         : ""
-                    } ${classes?.row}`}
+                      } ${classes?.row}`}
                   >
                     {allowSelect ? (
                       <TableCol classes={`!py-4 border ${classes?.colBody}`}>
@@ -291,7 +289,7 @@ const SuperTable = ({
                             classes={`!py-4 border ${classes?.colBody}`}
                           >
                             {col?.indexOf("image") !== -1 ||
-                            col?.indexOf("img") !== -1 ? (
+                              col?.indexOf("img") !== -1 ? (
                               <FullImage
                                 src={
                                   row?.[col] ||
@@ -329,9 +327,8 @@ const SuperTable = ({
                           >
                             <Link
                               className="text-blue-600"
-                              to={`/update/${col?.replace("_id", "")}/${
-                                row?.[col]
-                              }`}
+                              to={`/update/${col?.replace("_id", "")}/${row?.[col]
+                                }`}
                             >
                               {CACHED_TABLE[row?.[col]] || row?.[col]}
                             </Link>
@@ -339,7 +336,7 @@ const SuperTable = ({
                         );
                       } else if (typeof row?.[col] === "boolean")
                         return <TableCol>{row?.[col] ? "Yes" : "No"}</TableCol>;
-                      else if (col?.toLowerCase() === "created_at")
+                      else if (col?.toLowerCase() === "created_at" || col?.toLowerCase() === "end_date")
                         return (
                           <TableCol
                             classes={`!py-4 border ${classes?.colBody}`}
@@ -385,7 +382,7 @@ const SuperTable = ({
                         )
                           ? row?.product_variant?.product?.product_content
                           : row?.order_content?.[0]?.product_variant?.product
-                              ?.product_content;
+                            ?.product_content;
                         content = product_content?.[0];
                         // ?.find(
                         //   (c) => c?.language_id === uuidLanguageEn
@@ -460,11 +457,11 @@ const SuperTable = ({
                             let quantity =
                               col === "quantity"
                                 ? row?.[tableNameContent]?.reduce(
-                                    (accumulator, currentItem) => {
-                                      return accumulator + currentItem.quantity;
-                                    },
-                                    0
-                                  )
+                                  (accumulator, currentItem) => {
+                                    return accumulator + currentItem.quantity;
+                                  },
+                                  0
+                                )
                                 : null;
                             value = {
                               name: quantity || content?.[col],
@@ -489,8 +486,8 @@ const SuperTable = ({
                             key={index}
                           >
                             {col === "url" ||
-                            col === "media" ||
-                            value?.image ? (
+                              col === "media" ||
+                              value?.image ? (
                               <FullImage
                                 src={value?.name}
                                 alt="image description"

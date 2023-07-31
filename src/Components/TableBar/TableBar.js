@@ -50,7 +50,7 @@ export const TableBar = ({
   }, [allowFilter, defaultLanguage?.id]);
 
   return (
-    <div className="flex justify-between gap-2 mb-4 flex-wrap items-start">
+    <div className="flex justify-between gap-2 mb-4 flex-wrap max-[500px]:items-start ">
       <div className="flex gap-2 items-center">
         <div className="relative">
           <SearchBar
@@ -85,7 +85,7 @@ export const TableBar = ({
         {customBarButtons ? customBarButtons : null}
         {onAddClick ? (
           <button
-            className="bg-blue-500 whitespace-nowrap text-sm text-white rounded px-2 py-1 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300"
+            className="bg-blue-500 whitespace-nowrap text-sm text-white rounded p-2 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300"
             onClick={onAddClick}
           >
             add new
@@ -93,7 +93,7 @@ export const TableBar = ({
         ) : null}
         {hideDelete ? null : (
           <button
-            className="bg-red-500 text-sm text-white rounded px-2 py-1 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300 disabled:bg-red-200"
+            className="bg-red-500 text-sm text-white rounded p-2 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300 disabled:bg-red-200"
             onClick={onDeleteClick}
             disabled={!Object.keys(selectedList)?.length}
           >

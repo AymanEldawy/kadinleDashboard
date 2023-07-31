@@ -20,20 +20,24 @@ export const AddStockIncreasable = ({
   const { deleteItem } = useDelete();
   const [refresh, setRefresh] = useState(false);
 
-  const handelChangeWarehouseField = (name, value, row, subRow) => {
+  const handelChangeWarehouseField = (name, value, row, subRow, subSubRow) => {
+    console.log(row, subRow, subSubRow)
     setAllValues((prev) => {
       return {
         ...prev,
         [row]: {
           ...prev?.[row],
-          stocks: {
-            ...prev?.[row]?.stocks,
-            // [subRow]: {
-            //   ...prev?.[row]?.stocks?.[subRow],
+          sizes: {
+            ...prev?.[row]?.sizes,
             [subRow]: {
-              ...prev?.[row]?.stocks?.[subRow],
-              [name]: value,
-              // },
+              ...prev?.[row]?.sizes?.[subRow],
+              stocks: {
+                ...prev?.[row]?.sizes?.[subRow]?.stocks,
+                [subSubRow]: {
+                  ...prev?.[row]?.sizes?.[subRow]?.stocks?.[subSubRow],
+                  [name]: value,
+                }
+              },
             },
           },
         },
@@ -67,14 +71,13 @@ export const AddStockIncreasable = ({
   };
   const decreaseStock = async (item, index) => {
     let newValues = allValues;
-    let id = newValues?.[itemKey].stocks[item];
+    let id = newValues?.[itemKey]?.sizes?.[subItemKey]?.stocks?.[item];
     if (id && layout === "update") {
       // delete item
       await deleteItem("stock", id);
     }
-    delete newValues?.[itemKey].stocks[item];
+    delete newValues?.[itemKey]?.sizes?.[subItemKey]?.stocks?.[item];
     setAllValues(newValues);
-
     let newList = listCountGlobalVariant;
     delete newList?.[itemKey]?.sizes?.[subItemKey]?.stocks?.[item];
     setListCountGlobalVariant(newList);
@@ -103,16 +106,16 @@ export const AddStockIncreasable = ({
       {Object.keys(
         listCountGlobalVariant?.[itemKey]?.sizes?.[subItemKey]?.stocks
       )?.map((item, index) => {
+        let value = allValues?.[itemKey]?.sizes?.[subItemKey]?.stocks?.[item]
         return (
           <div
-            className={`relative z-10 ${
-              +activeTabStocks !== +index ? "hidden" : ""
-            } `}
+            className={`relative z-10 ${+activeTabStocks !== +index ? "hidden" : ""
+              } `}
             kye={`${index}-warehouse`}
           >
             <div className="md:grid-cols-3 grid gap-4 flex-wrap mb-4">
               <SelectField
-                value={allValues?.[itemKey]?.stocks?.[item]?.warehouse_id}
+                value={value?.warehouse_id}
                 label="Product warehouse"
                 name="warehouse_id"
                 list={!!getCachedList ? getCachedList("warehouse") : []}
@@ -123,12 +126,13 @@ export const AddStockIncreasable = ({
                     "warehouse_id",
                     e.target.value,
                     itemKey,
+                    subItemKey,
                     item
                   )
                 }
               />
               <InputField
-                value={allValues?.[itemKey]?.stocks?.[item]?.stock}
+                value={value?.stock}
                 label={"stock"}
                 name="stock"
                 type="number"
@@ -137,6 +141,7 @@ export const AddStockIncreasable = ({
                     "stock",
                     +e.target.value,
                     itemKey,
+                    subItemKey,
                     item
                   )
                 }

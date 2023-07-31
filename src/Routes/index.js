@@ -9,22 +9,28 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import { authProtectedRoutes, publicRoutes } from "./routes";
 
 const Index = () => {
-  const navigate = useNavigate();
-  const { user } = useGlobalOptions();
   return (
-    <Routes>
-      <Route element={<ProtectedRoutes isAuthenticated={user} />}>
-        {authProtectedRoutes.map((route, index) => (
-          <Route
-            path={route.path}
-            element={route.component}
-            key={index}
-            exact={true}
-          />
-        ))}
-      </Route>
-      <Route path="/login" element={<Login user={user} />} />
-    </Routes>
+    <>
+      <Layout>
+        <Routes>
+          {Object.values(authProtectedRoutes).map((route, index) => (
+            <Route element={<ProtectedRoutes path={route?.path} roles={route?.allowedRoles} key={route?.path} />}>
+              <Route
+                path={route.path}
+                element={route.component}
+                key={index}
+                exact={true}
+
+              />
+            </Route>
+          ))}
+        </Routes>
+      </Layout>
+      <Routes>
+
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </>
   );
 };
 

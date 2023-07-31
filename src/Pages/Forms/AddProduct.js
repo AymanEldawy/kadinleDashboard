@@ -6,21 +6,11 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
-import {
-  getRowsById,
-  getRowsByIds,
-  getTableData,
-} from "../../Api/globalActions";
+import { getRowsById, getRowsByIds, getTableData } from "../../Api/globalActions";
 import { uploadProductImage } from "../../Api/upload";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
-import {
-  product as fields,
-  product_content as fields_content,
-  product_image as fields_image,
-  product_variant as fields_variant,
-  stock_fields,
-} from "../../Helpers/Forms/databaseApi";
+import { product as fields, product_content as fields_content, product_image as fields_image, product_variant as fields_variant, stock_fields } from "../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../hooks/useAdd";
 import { useFetch } from "../../hooks/useFetch";
 import { useUpdate } from "../../hooks/useUpdate";
@@ -212,10 +202,16 @@ const AddProduct = ({ layout }) => {
             ...prev,
             [index]: {
               ...prev?.[index],
-              stocks: {
-                ...prev?.[index]?.stocks,
-                [i]: stocks?.[i],
-              },
+              sizes: {
+                ...prev?.[index]?.sizes,
+                0: {
+                  ...prev?.[index]?.sizes?.['0'],
+                  stocks: {
+                    ...prev?.[index]?.sizes?.stocks,
+                    [i]: stocks?.[i],
+                  }
+                },
+              }
             },
           };
         });
@@ -355,18 +351,37 @@ const AddProduct = ({ layout }) => {
 
   const onSubmit = async () => {
     if (!productValues) return;
+
+    let loading = toast.loading("Loading ...");
+
     const response =
       layout !== "update"
         ? await addItem("product", productValues)
         : JSON.stringify(IsUpdated?.PRODUCT) !== JSON.stringify(productValues)
-        ? await updateItem("product", productValues)
-        : null;
+          ? await updateItem("product", productValues)
+          : null;
+
     if (response) {
       const id = response?.data?.[0]?.id || params?.id;
       setProductId(id);
       await onSubmitContent(id);
       await onSubmitProductVariants(id);
       await onSubmitChart(id);
+      if (layout === 'update') {
+        toast.update(loading, {
+          render: "Great! Content has been updated successfully",
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+        });
+      } else {
+        toast.update(loading, {
+          render: "Great! successfully added",
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+        });
+      }
     } else {
       if (
         JSON.stringify(IsUpdated?.PRODUCT) !== JSON.stringify(productValues)
@@ -382,9 +397,10 @@ const AddProduct = ({ layout }) => {
 
   // On Submit product content
   const onSubmitContent = async (productId) => {
-    if (!productId) return;
+    if (!productId && layout !== "update") return;
+
     const list = Object.values(productContentValues);
-    if (list?.length && productId) {
+    if (list?.length) {
       for (const item of list) {
         if (item?.id) {
           if (
@@ -420,7 +436,44 @@ const AddProduct = ({ layout }) => {
       if (values?.color_id && mainSizeId) {
         const files = values?.files;
         const sizes = values?.sizes;
-        const stocks = values?.stocks;
+        let variantId = null;
+        for (const size of Object.values(sizes)) {
+          const sku = `${productSku} ${CACHED_TABLES_SKU?.size?.[size?.id]} ${CACHED_TABLES_SKU?.color?.[color_id]
+            } ${pattern_sku}`;
+          let item = {
+            product_id: layout === "update" ? params?.id : productId,
+            size_id: size?.size_id,
+            pattern_sku,
+            color_id,
+            weight: size?.weight,
+            sku,
+          };
+          if (values?.id) {
+            if (
+              JSON.stringify(IsUpdated?.VARIANT) !==
+              JSON.stringify(productVariantValues)
+            ) {
+              await updateItem("product_variant", { ...item, id: values?.id });
+            }
+            variantId = values?.id;
+          } else {
+            const responseVariant = await addItem("product_variant", item);
+            variantId = responseVariant?.data?.[0]?.id;
+          }
+          if (variantId) {
+            for (const stock of Object.values(size?.stocks)) {
+              if (stock?.id) {
+                await updateItem("stock", stock);
+              } else {
+                await addItem("stock", {
+                  ...stock,
+                  variant_id: variantId,
+                });
+              }
+            }
+          }
+        }
+
         if (values?.files) {
           for (const file of files) {
             // upload files
@@ -448,51 +501,13 @@ const AddProduct = ({ layout }) => {
             return;
           }
         }
-        let variantId = null;
-
-        for (const size of Object.values(sizes)) {
-          const sku = `${productSku} ${CACHED_TABLES_SKU?.size?.[size?.id]} ${
-            CACHED_TABLES_SKU?.color?.[color_id]
-          } ${pattern_sku}`;
-          let item = {
-            product_id: layout === "update" ? params?.id : productId,
-            size_id: size?.size_id,
-            pattern_sku,
-            color_id,
-            weight: size?.weight,
-            sku,
-          };
-          if (values?.id) {
-            if (
-              JSON.stringify(IsUpdated?.VARIANT) !==
-              JSON.stringify(productVariantValues)
-            ) {
-              await updateItem("product_variant", { ...item, id: values?.id });
-              variantId = values?.id;
-            }
-          } else {
-            const responseVariant = await addItem("product_variant");
-            variantId = responseVariant?.data?.[0]?.id;
-          }
-          if (variantId) {
-            for (const stock of Object.values(stocks)) {
-              if (stock?.id) {
-                await updateItem("stock", stock);
-              } else {
-                await addItem("stock", {
-                  ...stock,
-                  variant_id: variantId,
-                });
-              }
-            }
-          }
-        }
       }
     }
   };
 
   const onSubmitChart = async (productId) => {
     if (!productId && layout !== "update") return;
+
     const list = Object.values(productChartValues);
     const listHash = Object.keys(productChartValues);
     let length = list?.length;
@@ -517,6 +532,7 @@ const AddProduct = ({ layout }) => {
       }
     }
   };
+
   return (
     <div>
       {loading ? (
@@ -532,11 +548,10 @@ const AddProduct = ({ layout }) => {
         <div className="mb-4 border-b dark:border-[#333] flex flex-wrap w-full">
           {STAGES?.map((stage, index) => (
             <button
-              className={`text-gray-500 px-4 text-sm border-b-2 dark:border-[#333] -mb-[2px] !gap-1 p-2 capitalize flex items-center ${
-                stage === activeStage
-                  ? "!border-primary-red text-primary-red font-medium"
-                  : ""
-              }`}
+              className={`text-gray-500 px-4 text-sm border-b-2 dark:border-[#333] -mb-[2px] !gap-1 p-2 capitalize flex items-center ${stage === activeStage
+                ? "!border-primary-red text-primary-red font-medium"
+                : ""
+                }`}
               onClick={() => setActiveStage(stage)}
             >
               {stage}

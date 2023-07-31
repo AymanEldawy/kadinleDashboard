@@ -50,7 +50,7 @@ export const TableBar = ({
   }, [allowFilter, defaultLanguage?.id]);
 
   return (
-    <div className="flex justify-between gap-2 mb-4">
+    <div className="flex justify-between gap-2 mb-4 flex-wrap items-start">
       <div className="flex gap-2 items-center">
         <div className="relative">
           <SearchBar

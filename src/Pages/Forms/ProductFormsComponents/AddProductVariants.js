@@ -1,15 +1,8 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { toast } from "react-toastify";
-import { v4 as uuidv4 } from "uuid";
 
-import { uploadProductImage } from "../../../Api/upload";
-import { Button } from "../../../Components/Global/Button";
-import { CloseIcon, PlusIcon } from "../../../Helpers/Icons";
-import { useAdd } from "../../../hooks/useAdd";
-import { IncreasableBar } from "./../../../Components/Global/IncreasableBar";
-import AddProductVariantsIncreasable from "./AddProductVariantsIncreasable";
 import { MultipleIncreasableBar } from "../../../Components/Global/MultipleIncreasableBar";
+import AddProductVariantsIncreasable from "./AddProductVariantsIncreasable";
 
 const AddProductVariants = ({
   getCachedList,

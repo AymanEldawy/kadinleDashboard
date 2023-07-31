@@ -6,12 +6,11 @@ import { toast } from "react-toastify";
 import BlockPaper from "../../../Components/BlockPaper/BlockPaper";
 import InputField from "../../../Components/CustomForm/InputField";
 import SelectField from "../../../Components/CustomForm/SelectField";
-import { IncreasableBar } from "../../../Components/Global/IncreasableBar";
-import { CloseIcon, UploadIcon } from "../../../Helpers/Icons";
-import { AddStockIncreasable } from "./AddStockIncreasable";
-import { MultipleIncreasableBar } from "../../../Components/Global/MultipleIncreasableBar";
 import { FullImage } from "../../../Components/Global/FullImage/FullImage";
+import { MultipleIncreasableBar } from "../../../Components/Global/MultipleIncreasableBar";
+import { CloseIcon, UploadIcon } from "../../../Helpers/Icons";
 import { useDelete } from "./../../../hooks/useDelete";
+import { AddStockIncreasable } from "./AddStockIncreasable";
 
 const AddProductVariantsIncreasable = ({
   getCachedList,
@@ -46,6 +45,7 @@ const AddProductVariantsIncreasable = ({
     });
   };
   const handelChangeSubField = (name, value, row, subRow) => {
+    console.log("🚀 ~ file: AddProductVariantsIncreasable.js:49 ~ handelChangeSubField ~ subRow:", subRow)
     setAllValues((prev) => {
       return {
         ...prev,
@@ -230,20 +230,17 @@ const AddProductVariantsIncreasable = ({
           />
           {Object.keys(listCountGlobalVariant?.[itemKey]?.sizes)?.map(
             (item, index) => {
-              let skuValue = `${productSku || ""} ${
-                CACHED_TABLES_SKU?.["size"]?.[
-                  allValues?.[itemKey]?.sizes?.[item]?.size_id
+              let skuValue = `${productSku || ""} ${CACHED_TABLES_SKU?.["size"]?.[
+                allValues?.[itemKey]?.sizes?.[item]?.size_id
                 ] || ""
-              } ${
-                CACHED_TABLES_SKU?.["color"]?.[
-                  allValues?.[itemKey]?.color_id
+                } ${CACHED_TABLES_SKU?.["color"]?.[
+                allValues?.[itemKey]?.color_id
                 ] || ""
-              } ${allValues?.[itemKey]?.pattern_sku || ""} `;
+                } ${allValues?.[itemKey]?.pattern_sku || ""} `;
               return (
                 <div
-                  className={`relative z-10 ${
-                    +activeTabSizes !== +index ? "hidden" : ""
-                  } `}
+                  className={`relative z-10 ${+activeTabSizes !== +index ? "hidden" : ""
+                    } `}
                   kye={`${index}-size`}
                 >
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4 flex-wrap mb-4">

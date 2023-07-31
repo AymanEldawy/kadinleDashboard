@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
-import { ChevronIcon, SearchIcon, FilterIcon } from "../../Helpers/Icons";
+
+import { ChevronIcon, FilterIcon, SearchIcon } from "../../Helpers/Icons";
 import Backdrop from "../Backdrop/Backdrop";
 
 const SearchBar = ({
@@ -12,7 +13,7 @@ const SearchBar = ({
 }) => {
   const [open, setOpen] = useState(false);
   return (
-    <div className="relative hidden md:block ">
+    <div className="relative">
       <div className="absolute inset-y-0 left-0 flex items-center pl-2 overflow-hidden">
         {!!setSearchKey ? (
           <button

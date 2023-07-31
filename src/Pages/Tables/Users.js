@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
-import DynamicLayout from "../Dynamics/DynamicLayout";
-import { EditIcon, EyeIcon } from "../../Helpers/Icons";
 
-const Stocks = () => {
+import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
+import { EditIcon, EyeIcon } from "../../Helpers/Icons";
+import DynamicLayout from "../Dynamics/DynamicLayout";
+
+const Users = (props) => {
+  console.log("🚀 ~ file: Users.js:8 ~ Stocks ~ user:", props)
   const navigate = useNavigate();
   const columns = COMBINE_DB_API.combine_user || [];
 
@@ -34,4 +36,4 @@ const Stocks = () => {
   );
 };
 
-export default Stocks;
+export default Users;

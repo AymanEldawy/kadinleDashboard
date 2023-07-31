@@ -4,6 +4,7 @@ import { redirect } from "react-router-dom";
 import Login from "../Components/Auth/Login";
 import NotAllowed from "../Components/Auth/NotAllowed";
 import PageNotFound from "../Components/Auth/PageNotFound";
+import { SingleUserTable } from "../Components/User/SingleUserTable";
 import { menuData } from "../Helpers/menu";
 import SelectProduct from "../Pages/ActionsFeatures/SelectProducts";
 import UploadSheet from "../Pages/ActionsFeatures/UploadSheet";
@@ -13,232 +14,177 @@ import NotFoundPage from "../Pages/NotFoundPage/NotFoundPage";
 import Home from "../Pages/StandAlone/Home";
 import HomeSections from "../Pages/StandAlone/HomeSections";
 import SingleUser from "../Pages/StandAlone/SingleUser";
-import {
-  AddAddress,
-  AddBrand,
-  AddBulkAlert,
-  AddCategory,
-  AddChart,
-  AddChartContent,
-  AddChartData,
-  AddCollection,
-  AddColor,
-  AddCountry,
-  AddCoupon,
-  AddCurrency,
-  AddHomeReviewer,
-  AddLanguage,
-  AddNews,
-  AddNewsletter,
-  AddOffer,
-  AddOrderStatus,
-  AddPoint,
-  AddProduct,
-  AddRegion,
-  AddReturnStatus,
-  AddSale,
-  AddSize,
-  AddUser,
-  AddWarehouse,
-  AddWarehouseAvailability,
-  InsertOne,
-} from "./../Pages/Forms";
-import {
-  Addresses,
-  Brands,
-  BulkAlert,
-  Categories,
-  Chart,
-  ChartContent,
-  ChartData,
-  Collections,
-  Colors,
-  Comments,
-  Countries,
-  Coupons,
-  Currency,
-  HomeReviews,
-  Languages,
-  Logs,
-  News,
-  Newsletter,
-  NewsletterSubscription,
-  Offers,
-  OrderReturnRequests,
-  Orders,
-  OrderStatus,
-  Points,
-  ProductFeatures,
-  Products,
-  Regions,
-  ReturnStatus,
-  Sales,
-  Sizes,
-  Stocks,
-  Users,
-  WarehouseAvailability,
-  Warehouses,
-} from "./../Pages/Tables";
-import { SingleUserTable } from "../Components/User/SingleUserTable";
+import { AddAddress, AddBrand, AddBulkAlert, AddCategory, AddChart, AddChartContent, AddChartData, AddCollection, AddColor, AddCountry, AddCoupon, AddCurrency, AddHomeReviewer, AddLanguage, AddNews, AddNewsletter, AddOffer, AddOrderStatus, AddPoint, AddProduct, AddRegion, AddReturnStatus, AddSale, AddSize, AddUser, AddWarehouse, AddWarehouseAvailability, InsertOne } from "./../Pages/Forms";
+import { Addresses, Brands, BulkAlert, Categories, Chart, ChartContent, ChartData, Collections, Colors, Comments, Countries, Coupons, Currency, HomeReviews, Languages, Logs, News, Newsletter, NewsletterSubscription, Offers, OrderReturnRequests, Orders, OrderStatus, Points, ProductFeatures, Products, Regions, ReturnStatus, Sales, Sizes, Stocks, Users, WarehouseAvailability, Warehouses } from "./../Pages/Tables";
 
 const authProtectedRoutes = [
 
   // **** Group Locations add paths ****
-  { path: "/add-country", component: <AddCountry /> },
-  { path: "/add-currency", component: <AddCurrency /> },
-  { path: "/add-language", component: <AddLanguage /> },
-  { path: "/add-region", component: <AddRegion /> },
+  { path: "/add-country", component: <AddCountry />, allowedRoles: ["superadmin"] },
+  { path: "/add-currency", component: <AddCurrency />, allowedRoles: ["superadmin"] },
+  { path: "/add-language", component: <AddLanguage />, allowedRoles: ["superadmin"] },
+  { path: "/add-region", component: <AddRegion />, allowedRoles: ["superadmin"] },
 
   // **** Group Locations paths ****
-  { path: "/address", component: <Addresses /> },
-  { path: "/country", component: <Countries /> },
-  { path: "/region", component: <Regions /> },
-  { path: "/currency", component: <Currency /> },
+  { path: "/address", component: <Addresses />, allowedRoles: ["superadmin"] },
+  { path: "/country", component: <Countries />, allowedRoles: ["superadmin"] },
+  { path: "/region", component: <Regions />, allowedRoles: ["superadmin"] },
+  { path: "/currency", component: <Currency />, allowedRoles: ["superadmin"] },
+  { path: "/language", component: <Languages />, allowedRoles: ["superadmin"] },
 
   // **** Group Content add paths ****
-  { path: "/add-brand", component: <AddBrand /> },
-  { path: "/add-product", component: <AddProduct /> },
+  { path: "/add-brand", component: <AddBrand />, allowedRoles: ["*"] },
+  { path: "/add-product", component: <AddProduct />, allowedRoles: ["*"] },
 
 
   // **** Group Content paths ****
-  { path: "/products", component: <Products /> },
-  { path: "/brand", component: <Brands /> },
-  { path: "/stocks", component: <Stocks /> },
+  { path: "/products", component: <Products />, allowedRoles: ["*"] },
+  { path: "/brand", component: <Brands />, allowedRoles: ["*"] },
+  { path: "/stocks", component: <Stocks />, allowedRoles: ["*"] },
 
   // **** Group Feature add paths ****
-  { path: "/add-category", component: <AddCategory /> },
-  { path: "/add-color", component: <AddColor /> },
-  { path: "/add-size", component: <AddSize /> },
+  { path: "/add-category", component: <AddCategory />, allowedRoles: ["*"] },
+  { path: "/add-color", component: <AddColor />, allowedRoles: ["*"] },
+  { path: "/add-size", component: <AddSize />, allowedRoles: ["*"] },
   {
     path: "/add-collar",
     component: <InsertOne layout="collar" />,
+    allowedRoles: ["*"]
   },
 
   {
     path: "/add-fabric",
     component: <InsertOne layout="fabric" />,
+    allowedRoles: ["*"]
   },
   {
     path: "/add-feature",
     component: <InsertOne layout="feature" />,
+    allowedRoles: ["*"]
   },
   {
     path: "/add-lining",
     component: <InsertOne layout="lining" />,
+    allowedRoles: ["*"]
   },
   {
     path: "/add-material",
     component: <InsertOne layout="material" />,
+    allowedRoles: ["*"]
   },
   {
     path: "/add-pattern",
     component: <InsertOne layout="pattern" />,
+    allowedRoles: ["*"]
   },
   {
     path: "/add-season",
     component: <InsertOne layout="season" />,
+    allowedRoles: ["*"]
   },
   {
     path: "/add-sleeve",
     component: <InsertOne layout="sleeve" />,
+    allowedRoles: ["*"]
   },
 
 
   // **** Group Feature paths ****
-  { path: "/color", component: <Colors /> },
-  { path: "/category", component: <Categories /> },
-  { path: "/size", component: <Sizes /> },
-  { path: "/product-features", component: <ProductFeatures /> },
+  { path: "/color", component: <Colors />, allowedRoles: ["*"] },
+  { path: "/category", component: <Categories />, allowedRoles: ["*"] },
+  { path: "/size", component: <Sizes />, allowedRoles: ["*"] },
+  { path: "/product-features", component: <ProductFeatures />, allowedRoles: ["*"] },
 
   // **** Group Seasons add paths ****
-  { path: "/add-sale", component: <AddSale /> },
-  { path: "/add-offer", component: <AddOffer /> },
-  { path: "/add-collection", component: <AddCollection /> },
+  { path: "/add-sale", component: <AddSale />, allowedRoles: ["*"] },
+  { path: "/add-offer", component: <AddOffer />, allowedRoles: ["*"] },
+  { path: "/add-collection", component: <AddCollection />, allowedRoles: ["*"] },
 
   // **** Group Seasons paths ****
-  { path: "/collection", component: <Collections /> },
-  { path: "/offers", component: <Offers /> },
-  { path: "/sale", component: <Sales /> },
+  { path: "/collection", component: <Collections />, allowedRoles: ["*"] },
+  { path: "/offers", component: <Offers />, allowedRoles: ["*"] },
+  { path: "/sale", component: <Sales />, allowedRoles: ["*"] },
 
 
 
   // **** Group Chart add paths ****
-  { path: "/add-chart", component: <AddChart /> },
-  { path: "/add-chart-content", component: <AddChartContent /> },
-  { path: "/add-chart-data", component: <AddChartData /> },
+  { path: "/add-chart", component: <AddChart />, allowedRoles: ["*"] },
+  { path: "/add-chart-content", component: <AddChartContent />, allowedRoles: ["*"] },
+  { path: "/add-chart-data", component: <AddChartData />, allowedRoles: ["*"] },
 
   // **** Group Chart paths ****
-  { path: "/chart", component: <Chart /> },
-  { path: "/chart-content", component: <ChartContent /> },
-  { path: "/chart-data", component: <ChartData /> },
+  { path: "/chart", component: <Chart />, allowedRoles: ["*"] },
+  { path: "/chart-content", component: <ChartContent />, allowedRoles: ["*"] },
+  { path: "/chart-data", component: <ChartData />, allowedRoles: ["*"] },
 
 
   // **** Group News add paths ****
-  { path: "/add-bulk-alert", component: <AddBulkAlert /> },
-  { path: "/add-news", component: <AddNews /> },
-  { path: "/add-newsletter", component: <AddNewsletter /> },
+  { path: "/add-bulk-alert", component: <AddBulkAlert />, allowedRoles: ["*"] },
+  { path: "/add-news", component: <AddNews />, allowedRoles: ["*"] },
+  { path: "/add-newsletter", component: <AddNewsletter />, allowedRoles: ["*"] },
 
   // **** Group News paths ****
-  { path: "/bulk-alert", component: <BulkAlert /> },
-  { path: "/news", component: <News /> },
-  { path: "/newsletter", component: <Newsletter /> },
-  { path: "/newsletter-subscription", component: <NewsletterSubscription /> },
+  { path: "/bulk-alert", component: <BulkAlert />, allowedRoles: ["*"] },
+  { path: "/news", component: <News />, allowedRoles: ["*"] },
+  { path: "/newsletter", component: <Newsletter />, allowedRoles: ["*"] },
+  { path: "/newsletter-subscription", component: <NewsletterSubscription />, allowedRoles: ["*"] },
 
 
   // **** Group Orders add paths ****
-  { path: "/add-order-status", component: <AddOrderStatus /> },
-  { path: "/add-return-status", component: <AddReturnStatus /> },
-  { path: "/add-warehouse", component: <AddWarehouse /> },
-  { path: "/add-warehouse-availability", component: <AddWarehouseAvailability /> },
+  { path: "/add-order-status", component: <AddOrderStatus />, allowedRoles: ["superadmin"] },
+  { path: "/add-return-status", component: <AddReturnStatus />, allowedRoles: ["superadmin"] },
+  { path: "/add-warehouse", component: <AddWarehouse />, allowedRoles: ["*"] },
+  { path: "/add-warehouse-availability", component: <AddWarehouseAvailability />, allowedRoles: ["*"] },
 
   // **** Group Orders paths ****
-  { path: "/orders", component: <Orders /> },
-  { path: "/order-return-requests", component: <OrderReturnRequests /> },
-  { path: "/order-status", component: <OrderStatus /> },
-  { path: "/return-status", component: <ReturnStatus /> },
-  { path: "/warehouses", component: <Warehouses /> },
-  { path: "/warehouse-availability", component: <WarehouseAvailability /> },
+  { path: "/orders", component: <Orders />, allowedRoles: ["*"] },
+  { path: "/order-return-requests", component: <OrderReturnRequests />, allowedRoles: ["*"] },
+  { path: "/order-status", component: <OrderStatus />, allowedRoles: ["*"] },
+  { path: "/return-status", component: <ReturnStatus />, allowedRoles: ["*"] },
+  { path: "/warehouses", component: <Warehouses />, allowedRoles: ["*"] },
+  { path: "/warehouse-availability", component: <WarehouseAvailability />, allowedRoles: ["*"] },
 
   // **** Group Award add paths ****
-  { path: "/add-point", component: <AddPoint /> },
-  { path: "/add-coupon", component: <AddCoupon /> },
+  { path: "/add-point", component: <AddPoint />, allowedRoles: ["*"] },
+  { path: "/add-coupon", component: <AddCoupon />, allowedRoles: ["*"] },
 
   // **** Group Award paths ****
-  { path: "/coupons", component: <Coupons /> },
-  { path: "/points", component: <Points /> },
+  { path: "/coupons", component: <Coupons />, allowedRoles: ["*"] },
+  { path: "/points", component: <Points />, allowedRoles: ["*"] },
 
   // **** Group Interactive paths ****
-  { path: "/home-reviews", component: <HomeReviews /> },
-  { path: "/add-review", component: <AddHomeReviewer /> },
-  { path: "/comments", component: <Comments /> },
+  { path: "/home-reviews", component: <HomeReviews />, allowedRoles: ["*"] },
+  { path: "/add-review", component: <AddHomeReviewer />, allowedRoles: ["*"] },
+  { path: "/comments", component: <Comments />, allowedRoles: ["*"] },
 
 
   // **** Group User paths ****
-  { path: "/users", component: <Users /> },
-  { path: "/add-user", component: <AddUser /> },
-  { path: "/users/:id", component: <SingleUser /> },
-  { path: "/users/:id/:name", component: <SingleUserTable /> },
+  { path: "/users", component: <Users />, allowedRoles: ["*"] },
+  { path: "/add-user", component: <AddUser />, allowedRoles: ["*"] },
+  { path: "/users/:id", component: <SingleUser />, allowedRoles: ["*"] },
+  { path: "/users/:id/:name", component: <SingleUserTable />, allowedRoles: ["*"] },
 
   // **** Group Update paths ****
-  { path: "/update/:name/:id", component: <Update /> },
+  { path: "/update/:name/:id", component: <Update />, allowedRoles: ["*"] },
   {
     path: "/products/update/product/:id",
     component: <AddProduct layout="update" />,
+    allowedRoles: ["*"]
   },
 
   // **** Group Useful actions paths ****
-  { path: "/logs", component: <Logs /> },
-  { path: "/select-products", component: <SelectProduct /> },
-  { path: "/upload-sheet", component: <UploadSheet /> },
+  { path: "/logs", component: <Logs />, allowedRoles: ["*"] },
+  { path: "/select-products", component: <SelectProduct />, allowedRoles: ["*"] },
+  { path: "/upload-sheet", component: <UploadSheet />, allowedRoles: ["*"] },
   { path: "/send-email", component: "" },
-  { path: "/home-sections", component: <HomeSections /> },
+  { path: "/home-sections", component: <HomeSections />, allowedRoles: ["*"] },
 
 
 
   // **** Group public paths ****
-  { path: "/", component: <Home /> },
-  { path: "*", component: <NotAllowed /> },
-  { path: "/not-found", component: <PageNotFound /> },
+  { path: "/", component: <Home />, allowedRoles: ["*"] },
+  { path: "*", component: <NotAllowed />, allowedRoles: ["*"] },
+  { path: "/not-found", component: <PageNotFound />, allowedRoles: ["*"] },
 
 
 ];
@@ -246,5 +192,3 @@ const authProtectedRoutes = [
 const publicRoutes = [{ path: "/login", component: <Login /> }];
 export { authProtectedRoutes, publicRoutes };
 
-// const AuthorizedDashboard = withAuthorization(Dashboard, ['admin', 'manager']);
-// const AuthorizedProfile = withAuthorization(Profile, ['admin', 'user']);

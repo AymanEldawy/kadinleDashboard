@@ -54,9 +54,7 @@ export const getTableDataWithPagination = async (
   pageSize,
   additionalData
 ) => {
-  console.log(table, page, pageSize, additionalData);
   if (table && fetches.hasOwnProperty(table)) {
-    console.log('caled');
     const fetchData = fetches[table];
     const response = await fetchData(page, pageSize, additionalData);
     return response;

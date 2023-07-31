@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { toast } from "react-toastify";
 
 import { addManyItem, addNewItem, getAdmin } from "../Api/globalActions";
 

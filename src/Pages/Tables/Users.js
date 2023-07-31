@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import { useGlobalOptions } from "../../Context/GlobalOptions";
 import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import { EditIcon, EyeIcon } from "../../Helpers/Icons";
 import DynamicLayout from "../Dynamics/DynamicLayout";
-import { useGlobalOptions } from "../../Context/GlobalOptions";
-
 
 const Users = (props) => {
   const { user: ADMIN } = useGlobalOptions()
@@ -18,7 +17,9 @@ const Users = (props) => {
       SUPABASE_TABLE_NAME="user"
       columns={columns}
       title="users"
-      onAddClick={() => navigate(`/add-user`)}
+      onAddClick={ADMIN?.role?.number === 4 ? () => navigate(`/add-user`) : null}
+      hideDelete={ADMIN?.role?.number !== 4}
+      hideAction={ADMIN?.role?.number !== 4}
       renderTableAction={(data) => {
         return (
           <div className="flex gap-4 items-center">

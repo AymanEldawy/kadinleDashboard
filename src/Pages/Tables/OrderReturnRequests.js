@@ -13,8 +13,8 @@ const OrderReturnRequests = () => {
       SUPABASE_TABLE_NAME="order_return_request"
       columns={columns}
       title="Order Return Requests"
-      hideDelete={ADMIN?.role?.number === 3}
-      hideAction={ADMIN?.role?.number === 3}
+      hideDelete={ADMIN?.role?.number !== 4}
+      hideAction={ADMIN?.role?.number !== 4}
     />
   );
 };

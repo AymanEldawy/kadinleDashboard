@@ -17,9 +17,9 @@ const Regions = () => {
       SUPABASE_TABLE_NAME="region"
       columns={columns}
       title="Regions"
-      onAddClick={ADMIN?.role?.number === 3 ? () => navigate(`/add-region`) : null}
-      hideDelete={ADMIN?.role?.number === 3}
-      hideAction={ADMIN?.role?.number === 3}
+      onAddClick={ADMIN?.role?.number === 4 ? () => navigate(`/add-region`) : null}
+      hideDelete={ADMIN?.role?.number !== 4}
+      hideAction={ADMIN?.role?.number !== 4}
     />
   );
 };

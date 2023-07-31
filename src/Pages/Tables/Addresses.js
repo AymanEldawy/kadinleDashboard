@@ -15,11 +15,13 @@ const Addresses = () => {
       SUPABASE_TABLE_NAME="address"
       columns={columns}
       title="Addresses"
-      onAddClick={
-        ADMIN?.role?.title === "admin"
-          ? () => navigate(`/add-warehouse`)
-          : undefined
-      }
+      hideDelete={ADMIN?.role?.number !== 4}
+      hideAction={ADMIN?.role?.number !== 4}
+    // onAddClick={
+    //   ADMIN?.role?.title === "admin"
+    //     ? () => navigate(`/add-warehouse`)
+    //     : undefined
+    // }
     />
   );
 };

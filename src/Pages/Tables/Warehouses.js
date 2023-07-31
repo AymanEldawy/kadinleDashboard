@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useGlobalOptions } from "../../Context/GlobalOptions";
 import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import DynamicLayout from "../Dynamics/DynamicLayout";
-import { useGlobalOptions } from "../../Context/GlobalOptions";
-
 
 const Warehouses = () => {
   const { user: ADMIN } = useGlobalOptions()
@@ -16,11 +15,9 @@ const Warehouses = () => {
       SUPABASE_TABLE_NAME="warehouse"
       columns={columns}
       title="Warehouses"
-      onAddClick={
-        ADMIN?.role?.title === "admin"
-          ? () => navigate(`/add-warehouse`)
-          : undefined
-      }
+      onAddClick={ADMIN?.role?.number === 4 ? () => navigate(`/add-warehouse`) : null}
+      hideDelete={ADMIN?.role?.number !== 4}
+      hideAction={ADMIN?.role?.number !== 4}
     />
   );
 };

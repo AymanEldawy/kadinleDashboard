@@ -16,9 +16,9 @@ const Languages = () => {
       SUPABASE_TABLE_NAME="language"
       columns={columns}
       title="Languages"
-      onAddClick={ADMIN?.role?.number === 3 ? () => navigate(`/add-language`) : null}
-      hideDelete={ADMIN?.role?.number === 3}
-      hideAction={ADMIN?.role?.number === 3}
+      onAddClick={ADMIN?.role?.number === 4 ? () => navigate(`/add-language`) : null}
+      hideDelete={ADMIN?.role?.number !== 4}
+      hideAction={ADMIN?.role?.number !== 4}
     />
   );
 };

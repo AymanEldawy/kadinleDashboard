@@ -13,9 +13,9 @@ const Orders = () => {
       SUPABASE_TABLE_NAME="order"
       columns={columns}
       title="Orders"
-      hideDelete={ADMIN.role?.number !== 3}
-      hideAction={ADMIN.role?.number !== 3}
-      // onAddClick={() => navigate(`/add-order`)}
+      hideDelete={ADMIN?.role?.number !== 3}
+      hideAction={ADMIN?.role?.number !== 3}
+    // onAddClick={() => navigate(`/add-order`)}
     />
   );
 };

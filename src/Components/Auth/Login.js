@@ -6,13 +6,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { getUser, login } from "../../Api/auth";
-import { ADMIN } from "../../Api/globalActions";
+import { getAdmin } from "../../Api/globalActions";
 import logoIcon from "../../Assets/Images/logo-icon.png";
 import { Button } from "../../Components/Global/Button";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 import InputField from "../CustomForm/InputField";
 
 // import logo from "../../Assets/Images/logo.svg";
+const ADMIN = getAdmin();
+
 const Login = () => {
   const { serRefresh } = useGlobalOptions();
   const navigate = useNavigate();
@@ -76,7 +78,7 @@ const Login = () => {
   return (
     <div
       className="h-screen flex items-center backdrop-blur-sm bg-pink-50 bg-gradient-to-tr from-pink-300 to-pink-400"
-      // style={{ backgroundImage: `url(${wallpaper})` }}
+    // style={{ backgroundImage: `url(${wallpaper})` }}
     >
       <div className="w-full h-full flex items-center relative z-20">
         <div className="container">

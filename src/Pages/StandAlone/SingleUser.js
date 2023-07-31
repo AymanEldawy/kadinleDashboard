@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import { logout } from "../../Api/auth";
 import { getUserData, getUserTypeData } from "../../Api/data";
 import ConfirmModal from "../../Components/ConfirmModal/ConfirmModal";
 import InputField from "../../Components/CustomForm/InputField";
@@ -12,6 +13,7 @@ import { Button } from "../../Components/Global/Button";
 import { FullImage } from "../../Components/Global/FullImage/FullImage";
 import Modal from "../../Components/Modal/Modal";
 import { UserStatices } from "../../Components/User/UserStatictes";
+import { useGlobalOptions } from "../../Context/GlobalOptions";
 import { MapIcon } from "../../Helpers/Icons";
 import { useDelete } from "../../hooks/useDelete";
 import { useFetch } from "../../hooks/useFetch";
@@ -26,10 +28,7 @@ const userOptions = [
   "suggestion",
   "ticket",
   "wallet",
-  // "type",
 ];
-
-
 
 const SingleUser = () => {
   const params = useParams();
@@ -37,6 +36,7 @@ const SingleUser = () => {
   const { deleteItem } = useDelete();
   const { getData } = useFetch();
   const { updateItem } = useUpdate();
+  const { user: ADMIN } = useGlobalOptions()
   const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState("");
@@ -82,8 +82,7 @@ const SingleUser = () => {
     getTypes();
   }, [params?.id]);
 
-  const { user } = userData;
-  const type = userData?.type;
+
 
   const handleDeleteItem = async () => {
     const response = await deleteItem(user, params?.id);
@@ -110,10 +109,17 @@ const SingleUser = () => {
     }
 
     toast.success("Successfully updated user role");
-    await getUserInfo();
+    await getUser();
+
+    if (userData?.user?.id === ADMIN?.id) {
+      logout()
+    }
     setOpenModal(false);
   };
-
+  console.log("🚀 ~ file: SingleUser.js:116 ~ updateRole ~ ADMIN:", ADMIN)
+  console.log("🚀 ~ file: SingleUser.js:116 ~ updateRole ~ user:", userData?.user)
+  const { user } = userData;
+  const type = userData?.type;
   return (
     <>
       <ConfirmModal
@@ -194,28 +200,32 @@ const SingleUser = () => {
             </div>
           </div>
         </div>
-        <div className="my-4 px-4 flex gap-4 justify-between items-center">
-          <div className="gap-4 flex items-center">
-            <button
-              className="text-white p-2 rounded-md text-xs font-medium bg-primary-red"
-              onClick={() => setOpenConfirmation(true)}
-            >
-              Delete
-            </button>
-            <button
-              onClick={() => setOpenModal(true)}
-              className="text-white p-2 rounded-md text-xs font-medium bg-primary-green"
-            >
-              Change role
-            </button>
-            <Link
-              to={`/update/user/${user?.id}`}
-              className="text-white p-2 rounded-md text-xs font-medium bg-primary-blue"
-            >
-              Edit
-            </Link>
-          </div>
-        </div>
+        {
+          ADMIN?.role?.title === 'superadmin' ? (
+            <div className="my-4 px-4 flex gap-4 justify-between items-center">
+              <div className="gap-4 flex items-center">
+                <button
+                  className="text-white p-2 rounded-md text-xs font-medium bg-primary-red"
+                  onClick={() => setOpenConfirmation(true)}
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={() => setOpenModal(true)}
+                  className="text-white p-2 rounded-md text-xs font-medium bg-primary-green"
+                >
+                  Change role
+                </button>
+                <Link
+                  to={`/update/user/${user?.id}`}
+                  className="text-white p-2 rounded-md text-xs font-medium bg-primary-blue"
+                >
+                  Edit
+                </Link>
+              </div>
+            </div>
+          ) : null
+        }
         <UserStatices userData={userData} isLoading={isLoading} />
       </div>
     </>

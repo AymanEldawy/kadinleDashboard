@@ -41,6 +41,7 @@ const DynamicList = ({
 
   const handleDeleteItem = async (selectedList) => {
     await deleteItem(tableName, Object.values(selectedList));
+    setSelectedList({})
     setRefresh((p) => !p);
   };
 

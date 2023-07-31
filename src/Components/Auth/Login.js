@@ -1,15 +1,16 @@
-import { getUser, login } from "../../Api/auth";
-import logoIcon from "../../Assets/Images/logo-icon.png";
-import { Button } from "../../Components/Global/Button";
-import { useGlobalOptions } from "../../Context/GlobalOptions";
-import InputField from "../CustomForm/InputField";
 import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
+import { getUser, login } from "../../Api/auth";
 import { ADMIN } from "../../Api/globalActions";
+import logoIcon from "../../Assets/Images/logo-icon.png";
+import { Button } from "../../Components/Global/Button";
+import { useGlobalOptions } from "../../Context/GlobalOptions";
+import InputField from "../CustomForm/InputField";
 
 // import logo from "../../Assets/Images/logo.svg";
 const Login = () => {
@@ -23,6 +24,7 @@ const Login = () => {
 
   useEffect(() => {
     if (ADMIN) navigate(-1);
+    console.log("🚀 ~ file: Login.js:26 ~ useEffect ~ ADMIN:", ADMIN)
   }, [ADMIN]);
 
   const insertIntoErrors = (name, value) => {

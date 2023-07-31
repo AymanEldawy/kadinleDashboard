@@ -24,12 +24,9 @@ const Index = () => {
               />
             </Route>
           ))}
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Layout>
-      <Routes>
-
-        <Route path="/login" element={<Login />} />
-      </Routes>
     </>
   );
 };

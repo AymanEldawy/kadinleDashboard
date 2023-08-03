@@ -53,6 +53,7 @@ export const globalGetData = async ({
   let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
+
   if (page > 1 && CURRENT_SEARCH_DATA?.searchValue === searchValue && CURRENT_SEARCH_DATA?.searchKey === searchKey) {
     console.log('called');
     return {
@@ -68,7 +69,7 @@ export const globalGetData = async ({
   const response = await query;
 
   if (ignoredFilterColumns?.includes(searchKey)) {
-    let filterData = response?.data?.filter(filterFn)
+    let filterData = !!filterFn ? response?.data?.filter(filterFn) : response?.data
     CURRENT_SEARCH_DATA = {
       searchKey,
       searchValue,
@@ -298,29 +299,17 @@ export const getReturnRequests = async (page, pageSize, additionalData) => {
   return globalGetData({
     page, pageSize, additionalData, query, ignoredFilterColumns: ['order', 'variant', 'name'],
     filterFn: (f) => {
-
       return f?.return_status.name === searchValue ||
         f?.order.order_number === searchValue ||
         f?.product_variant.sku === searchValue
-
     }
   })
 };
 
 
 export const getProducts = async (page, pageSize, additionalData) => {
-  const ignoredFilterColumns = ['name', 'category', 'description']
-
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
-  if (page > 1 && CURRENT_SEARCH_DATA?.searchValue === searchValue && CURRENT_SEARCH_DATA?.searchKey === searchKey) {
-    return {
-      data: CURRENT_SEARCH_DATA?.data?.slice(start, end),
-      count: CURRENT_SEARCH_DATA?.data?.length
-    }
-  }
 
   const query = supabase
     .from("product")
@@ -369,12 +358,10 @@ export const getProducts = async (page, pageSize, additionalData) => {
 };
 
 export const getProductFeatures = async (table, page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from(table)
     .select(
       `
@@ -384,17 +371,28 @@ export const getProductFeatures = async (table, page, pageSize, additionalData) 
    `,
       { count: "exact" }
     )
-    .range(start, end);
-  return response;
+
+  if (searchValue) {
+    switch (searchKey) {
+      case 'language':
+        query
+          .ilike('language.name', `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['language']
+  })
 };
 
 export const getCountries = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("country")
     .select(
       `
@@ -404,17 +402,39 @@ export const getCountries = async (page, pageSize, additionalData) => {
    `,
       { count: "exact" }
     )
-    .range(start, end);
-  return response;
+
+  if (searchValue) {
+    switch (searchKey) {
+      case 'rate':
+      case 'code':
+      case 'currency':
+      case 'exchange_percent':
+        query
+          .ilike(`currency.${searchKey}`, `%${searchValue}%`)
+        break;
+      case 'region':
+        query
+          .ilike('region.name', `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['region', 'rate',
+      'code',
+      'currency',
+      'exchange_percent'],
+    filterFn: f => f?.currency?.name === searchValue || f?.currency?.currency === searchValue || f?.currency?.code === searchValue || f?.currency?.currency === searchValue || f?.currency?.exchange_percent === searchValue || f?.region?.name === searchValue
+  })
 };
 
 export const getOffers = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("offer")
     .select(
       `
@@ -426,17 +446,31 @@ export const getOffers = async (page, pageSize, additionalData) => {
       { count: "exact" }
     )
     .eq("offer_content.language_id", additionalData?.languageId)
-    .range(start, end);
-  return response;
+
+  if (searchValue) {
+    switch (searchKey) {
+      case 'name':
+      case 'description':
+        query
+          .ilike(`offer_content.${searchKey}`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['name', 'description'],
+    filterFn: f => f?.offer_content?.name === searchValue || f?.offer_content?.description === searchValue
+  })
+
 };
 
 export const getCollections = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("collection")
     .select(
       `
@@ -448,39 +482,69 @@ export const getCollections = async (page, pageSize, additionalData) => {
       { count: "exact" }
     )
     .eq("collection_content.language_id", additionalData?.languageId)
-    .range(start, end);
-  return response;
+
+  if (searchValue) {
+    switch (searchKey) {
+      case 'name':
+        query
+          .ilike(`collection_content.name`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['name'],
+    filterFn: f => f?.collection_content?.name === searchValue
+  })
+
 };
 
 export const getComments = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("comment")
     .select(
       `
     *,
     comment_media(*),
     user(id, first_name, last_name, profile_img),
-    product(id, product_content(*))
+    product(id, product_content(id, name))
      `,
       { count: "exact" }
     )
     .eq("product.product_content.language_id", additionalData?.languageId)
-    .range(start, end);
-  return response;
+
+  if (searchValue) {
+    switch (searchKey) {
+      case 'product':
+        query
+          .ilike(`product.product_content.name`, `%${searchValue}%`)
+        break;
+      case 'user':
+        query
+          .ilike(`user.first_name`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['user', 'product'],
+    filterFn: f => f?.product?.product_content?.name === searchValue || f?.user?.first_name === searchValue
+  })
+
 };
 
 export const getColors = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("color")
     .select(
       `
@@ -492,41 +556,71 @@ export const getColors = async (page, pageSize, additionalData) => {
       { count: "exact" }
     )
     .eq("color_content.language_id", additionalData?.languageId)
-    .range(start, end);
 
-  return response;
+  if (searchValue) {
+    switch (searchKey) {
+      case 'name':
+        query
+          .ilike(`color_content.name`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['name'],
+    filterFn: f => f?.color_content?.name === searchValue
+  })
 };
 
 export const getSizes = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("size")
     .select(
       `
     *,
-      category (category_content(*)),
+      category (category_content(id, title)),
       size_content(id, size_id, name, region(id, name))
       `,
       { count: "exact" }
     )
     .eq("category.category_content.language_id", additionalData?.languageId)
     .eq("size_content.region_id", additionalData?.regionId)
-    .range(start, end);
 
-  return response;
+  if (searchValue) {
+    switch (searchKey) {
+      case 'category':
+        query
+          .ilike(`category.category_content.name`, `%${searchValue}%`)
+        break;
+      case 'name':
+        query
+          .ilike(`size_content.name`, `%${searchValue}%`)
+        break;
+      case 'region':
+        query
+          .ilike(`size_content.region.name`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['category', 'name', 'region'],
+    filterFn: f => f?.size_content?.name === searchValue || f?.category?.category_content?.name === searchValue || f?.size_content.region.name === searchValue
+  })
 };
 
 export const getChartContent = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("chart_content")
     .select(
       `
@@ -537,17 +631,29 @@ export const getChartContent = async (page, pageSize, additionalData) => {
      `,
       { count: "exact" }
     )
-    .range(start, end);
-  return response;
+
+  if (searchValue) {
+    switch (searchKey) {
+      case 'number':
+        query
+          .eq(`chart.number`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['number'],
+    filterFn: f => f?.chart?.number === searchValue
+  })
 };
 
 export const getChartData = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("chart_data")
     .select(
       `
@@ -562,17 +668,42 @@ export const getChartData = async (page, pageSize, additionalData) => {
     .eq("size.size_content.region_id", additionalData?.regionId)
     .eq("chart.chart_content.language_id", additionalData?.languageId)
     .eq("product.product_content.language_id", additionalData?.languageId)
-    .range(start, end);
-  return response;
+
+  if (searchValue) {
+    switch (searchKey) {
+      case 'chart':
+        query
+          .ilike(`chart.chart_content.name`, `%${searchValue}%`)
+        break;
+      case 'product':
+        query
+          .ilike(`product.product_content.name`, `%${searchValue}%`)
+        break;
+      case 'size':
+        query
+          .ilike(`size.size_content.name`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['chart', 'product', 'size'],
+    filterFn: f => {
+      return f?.chart?.chart_content?.name === searchValue ||
+        f?.product?.product_content?.name === searchValue ||
+        f?.size?.size_content?.name === searchValue
+    }
+  })
+
 };
 
 export const getAddresses = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("address")
     .select(
       `
@@ -581,18 +712,30 @@ export const getAddresses = async (page, pageSize, additionalData) => {
   `,
       { count: "exact" }
     )
-    .range(start, end);
 
-  return response;
+  if (searchValue) {
+    switch (searchKey) {
+      case 'country':
+        query
+          .ilike(`country.name`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['country'],
+    filterFn: f => f?.country?.name === searchValue
+  })
+
 };
 
 export const getPoints = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("point")
     .select(
       `
@@ -602,24 +745,35 @@ export const getPoints = async (page, pageSize, additionalData) => {
       { count: "exact" }
     )
     .eq("point_content.language_id", additionalData?.languageId)
-    .range(start, end);
 
-  return response;
+  if (searchValue) {
+    switch (searchKey) {
+      case 'cause':
+        query
+          .ilike(`point_content.cause`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['cause'],
+    filterFn: f => f?.point_content?.cause === searchValue
+  })
 };
 
 export const getStocks = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("stock")
     .select(
       `
     *,
     warehouse(name),
-    product_variant(id, sku, product(product_content(product_id, name, language_id)))
+    product_variant(id, sku)
   `,
       { count: "exact" }
     )
@@ -627,18 +781,34 @@ export const getStocks = async (page, pageSize, additionalData) => {
       "product_variant.product.product_content.language_id",
       additionalData?.languageId
     )
-    .range(start, end);
 
-  return response;
+  if (searchValue) {
+    switch (searchKey) {
+      case 'warehouse':
+        query
+          .ilike(`warehouse.name`, `%${searchValue}%`)
+        break;
+      case 'variant':
+        query
+          .eq(`product_variant.sku`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['variant', 'warehouse'],
+    filterFn: f => f?.warehouse?.name === searchValue || f?.product_variant?.sku === searchValue
+  })
+
 };
 
 export const getWarehouses = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("warehouse")
     .select(
       `
@@ -647,18 +817,30 @@ export const getWarehouses = async (page, pageSize, additionalData) => {
   `,
       { count: "exact" }
     )
-    .range(start, end);
 
-  return response;
+  if (searchValue) {
+    switch (searchKey) {
+      case 'address':
+        query
+          .ilike(`address.list_one`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['address'],
+    filterFn: f => f?.address?.list_one === searchValue
+  })
+
 };
 
 export const getWarehouseAvailability = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("warehouse_availability")
     .select(
       `
@@ -668,20 +850,35 @@ export const getWarehouseAvailability = async (page, pageSize, additionalData) =
   `,
       { count: "exact" }
     )
-    .range(start, end);
 
-  return response;
+  if (searchValue) {
+    switch (searchKey) {
+      case 'warehouse':
+        query
+          .ilike(`warehouse.name`, `%${searchValue}%`)
+        break;
+      case 'country':
+        query
+          .ilike(`country.name`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['country', 'warehouse'],
+    filterFn: f => f?.warehouse?.name === searchValue || f?.country?.name === searchValue
+  })
+
 };
 
-
-
 export const getNews = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
+
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("news")
     .select(
       `
@@ -691,17 +888,31 @@ export const getNews = async (page, pageSize, additionalData) => {
       { count: "exact" }
     )
     .eq("news_content.language_id", additionalData?.languageId)
-    .range(start, end);
-  return response;
+
+  if (searchValue) {
+    switch (searchKey) {
+      case 'content':
+        query
+          .ilike(`news_content.content`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['content'],
+    filterFn: f => f?.news_content?.content === searchValue
+  })
+
 };
 
 export const getUsers = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
+
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("user")
     .select(
       `
@@ -710,18 +921,32 @@ export const getUsers = async (page, pageSize, additionalData) => {
   `,
       { count: "exact" }
     )
-    .range(start, end);
-  return response;
+
+  if (searchValue) {
+    switch (searchKey) {
+      case 'title':
+        query
+          .ilike(`user_type.title`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['title'],
+    filterFn: f => f?.title?.title === searchValue
+  })
+
 };
 
 
 export const getUsersCart = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
+
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase
+  const query = supabase
     .from("user_cart")
     .select(
       `
@@ -734,43 +959,89 @@ export const getUsersCart = async (page, pageSize, additionalData) => {
       "product_variant.product.product_content.language_id",
       additionalData?.languageId
     ).eq('user_id', additionalData?.userId)
-    .range(start, end);
-  return response;
+
+  if (searchValue) {
+    switch (searchKey) {
+      case 'variant':
+        query
+          .ilike(`product_variant.sku`, `%${searchValue}%`)
+        break;
+      case 'name':
+        query
+          .ilike(`product_variant.product.product_content.name`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['variant', 'name'],
+    filterFn: f => f?.product_variant?.sku === searchValue || f?.product_variant?.product?.product_content?.name
+  })
+
 };
 
 
 export const getUserAddresses = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
+
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase.from("user_address").select(`
+  const query = supabase.from("user_address").select(`
     *,
     address(*, name:line_one)
-    `).eq('user_id', additionalData?.userId).range(start, end);;
-  return response;
+    `).eq('user_id', additionalData?.userId)
+
+  if (searchValue) {
+    switch (searchKey) {
+      case 'address':
+        query
+          .ilike(`address.line_one`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['address'],
+    filterFn: f => f?.address?.name === searchValue
+  })
+
 };
+
 export const getUserLikes = async (page, pageSize, additionalData) => {
-  let start = (page - 1) * pageSize;
-  let end = page * pageSize - 1;
+
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const response = await supabase.from("user_like").select(`
+  const query = supabase.from("user_like").select(`
     *,
-    product(product_content(*))
-    `).eq('user_id', additionalData?.userId).range(start, end);;
-  return response;
+    product(product_content(id, name))
+    `).eq('user_id', additionalData?.userId)
+
+  if (searchValue) {
+    switch (searchKey) {
+      case 'product':
+        query
+          .ilike(`product.product_content.name`, `%${searchValue}%`)
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['name'],
+    filterFn: f => f?.product?.product_content?.name === searchValue
+  })
 };
 
 export const getUserSubTable = async (table, page, pageSize, additionalData) => {
   let start = (page - 1) * pageSize;
   let end = page * pageSize - 1;
-  let searchKey = additionalData?.search?.key;
-  let searchValue = additionalData?.search?.value;
 
-  console.log(table, page, pageSize, additionalData, 'called')
   try {
     const response = await supabase.from(table).select("*").eq('user_id', additionalData?.userId).range(start, end);
     return response;

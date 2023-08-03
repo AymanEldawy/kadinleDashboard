@@ -32,6 +32,7 @@ const DynamicList = ({
   const [data, setData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [selectedColumn, setSelectedColumn] = useState('')
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [pageCount, setPageCount] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
@@ -55,12 +56,15 @@ const DynamicList = ({
         languageId: defaultLanguage?.id,
         regionId: defaultRegion?.id,
         filter,
+        search: { key: selectedColumn, value: searchValue },
         ...additionalData
       }
     );
-    setData(response?.data);
+    console.log(response);
     setTotalCount(response?.count);
-    setPageCount(Math.ceil(totalCount / parseInt(itemsPerPage)));
+    setPageCount(Math.ceil(response?.count / parseInt(itemsPerPage)));
+    setData(response?.data);
+    console.log(Math.ceil(totalCount / parseInt(itemsPerPage)), 'pa');
   };
   useEffect(() => {
     if (defaultLanguage?.id && defaultRegion?.id) fetchData();
@@ -72,11 +76,12 @@ const DynamicList = ({
     filterCategory,
     defaultLanguage?.id,
     defaultRegion?.id,
-    additionalData
+    // selectedColumn,
+    additionalData,
+    searchValue
   ]);
 
   const handlePageClick = (index) => {
-    // const newOffset = (event.selected * itemsPerPage) % filterList?.length;
     setItemOffset(index);
   };
   return (
@@ -94,8 +99,7 @@ const DynamicList = ({
           <TableBar
             onDeleteClick={() => setOpenConfirmation(true)}
             onAddClick={onAddClick}
-            onSearchChange={setSearchValue}
-            searchValue={searchValue}
+            setSearchValue={setSearchValue}
             onSelectChange={setItemsPerPage}
             itemsPerPage={itemsPerPage}
             selectedList={selectedList}
@@ -104,6 +108,9 @@ const DynamicList = ({
             filterCategory={filterCategory}
             setFilterCategory={setFilterCategory}
             customBarButtons={customBarButtons}
+            columns={columns}
+            selectedColumn={selectedColumn}
+            setSelectedColumn={setSelectedColumn}
           />
         )}
         <SuperTable
@@ -116,7 +123,6 @@ const DynamicList = ({
           columns={columns}
           data={data}
           allowSelect={hideSelect || hideDelete ? false : true}
-          searchValue={searchValue}
           selectedList={selectedList}
           setSelectedList={setSelectedList}
           loading={loading}

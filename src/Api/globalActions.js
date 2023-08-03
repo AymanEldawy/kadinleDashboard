@@ -59,7 +59,7 @@ export const getTableDataWithPagination = async (
     const response = await fetchData(page, pageSize, additionalData);
     return response;
   } else {
-    const response = normalFetchWithPagination(table, page, pageSize);
+    const response = normalFetchWithPagination(table, page, pageSize, additionalData);
     return response;
   }
 };

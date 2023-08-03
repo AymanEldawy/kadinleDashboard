@@ -21,19 +21,18 @@ export const TableBar = ({
   onAddClick,
   onDeleteClick,
   onFilterClick,
-  onSearchChange,
-  searchValue,
   onSelectChange,
   itemsPerPage,
   columns,
-  searchKey,
-  setSearchKey,
   selectedList,
   hideDelete,
   allowFilter,
   filterCategory,
   setFilterCategory,
   customBarButtons,
+  setSelectedColumn,
+  selectedColumn,
+  setSearchValue,
 }) => {
   const { defaultLanguage } = useGlobalOptions();
   const { getData } = useFetch();
@@ -49,16 +48,19 @@ export const TableBar = ({
     }
   }, [allowFilter, defaultLanguage?.id]);
 
+
+
+
+
   return (
     <div className="flex justify-between gap-2 mb-4 flex-wrap max-[500px]:items-start ">
       <div className="flex gap-2 items-center">
         <div className="relative">
           <SearchBar
-            value={searchValue}
-            onSearchChange={onSearchChange}
             columns={columns}
-            searchKey={searchKey}
-            setSearchKey={setSearchKey}
+            searchKey={selectedColumn}
+            setSearchKey={setSelectedColumn}
+            setSearchValue={setSearchValue}
           />
         </div>
 

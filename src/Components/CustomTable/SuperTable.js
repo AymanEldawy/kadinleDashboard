@@ -4,10 +4,12 @@ import { useContext } from "react";
 import ReactPaginate from "react-paginate";
 import { Link, useLocation } from "react-router-dom";
 
+import { getTableData } from "../../Api/globalActions";
 import { ChevronIcon } from "../../Helpers/Icons";
 import { useFetch } from "../../hooks/useFetch";
 import { FullImage } from "../Global/FullImage/FullImage";
 import { UserInfo } from "../Global/UserInfo/UserInfo";
+import { useGlobalOptions } from './../../Context/GlobalOptions';
 import { LanguageContext } from "./../../Context/LangContext";
 import { fetchWord } from "./../lang/fetchWord";
 // import { ChevronIcon, SortIcon } from "../Icons";
@@ -23,7 +25,6 @@ const SuperTable = ({
   columns,
   data,
   allowSelect,
-  searchValue,
   itemsPerPage,
   selectedList,
   setSelectedList,
@@ -41,6 +42,7 @@ const SuperTable = ({
 }) => {
   const location = useLocation();
   const { getData } = useFetch();
+  const { defaultLanguage } = useGlobalOptions()
   const { lang } = useContext(LanguageContext);
   const [currentItems, setCurrentItems] = useState([]);
   const [CACHED_TABLE, setCACHED_TABLE] = useState({});
@@ -60,45 +62,12 @@ const SuperTable = ({
     ...defaultPrimaryStyle,
     containerClassName: "!rounded-none",
   };
-
-  useEffect(() => { }, [refresh]);
   useEffect(() => {
-    if (searchValue) {
-      let newList = [];
-      for (const col of columns) {
-        for (const item of data) {
-          let stringItem = JSON.stringify(item);
-          if (
-            stringItem
-              ?.toLocaleLowerCase()
-              ?.indexOf(searchValue?.toLowerCase()) !== -1
-          )
-            newList.push(item);
-          // if(item[col] === 'object')
-          if (typeof item[col] == "string") {
-            if (
-              item[col]?.toLowerCase()?.startsWith(searchValue?.toLowerCase())
-            )
-              newList.push(item);
-          } else {
-            if (
-              item[col]
-                ?.toString()
-                ?.toLowerCase()
-                ?.startsWith(searchValue?.toLowerCase())
-            )
-              newList.push(item);
-          }
-        }
-        setCurrentItems(newList);
-      }
-    } else {
-      setCurrentItems(data);
-    }
-  }, [searchValue, data]);
+    setCurrentItems(data)
+  }, [data])
 
   useEffect(() => {
-    if (columns?.includes("parent_id")) checkRefTable(columns);
+    if (columns?.includes("parent_id")) checkRefTable();
   }, [columns?.length]);
   useEffect(() => {
     if (columns?.includes("user") && location?.pathname === "/user")
@@ -118,14 +87,14 @@ const SuperTable = ({
       };
     });
   }
-  async function checkRefTable(fields) {
+  async function checkRefTable() {
+    console.log('called');
     if (!data?.length) return;
+    const response = await getTableData(`${tableName}_content`, { languageId: defaultLanguage?.id })
     let hash = {};
-    for (const item of data) {
-      let content = `${tableName}_content`;
-      hash[item?.id] = content
-        ? item?.[content]?.[0]?.name || item?.[content]?.[0]?.title
-        : item?.name || item?.title;
+    console.log("🚀 ~ file: SuperTable.js:131 ~ checkRefTable ~ response:", response)
+    for (const item of response?.data) {
+      hash[item?.[`${tableName}_id`]] = item.name || item?.title
     }
     setCACHED_TABLE((prev) => {
       return {
@@ -135,6 +104,7 @@ const SuperTable = ({
     });
   }
 
+  console.log(CACHED_TABLE);
   const handelSelect = (itemId) => {
     if (selectedList[itemId]) {
       let newSelectedList = selectedList;
@@ -194,7 +164,6 @@ const SuperTable = ({
     setRefresh((prev) => !prev);
     sorting[col] = newSortOrder;
   };
-  useEffect(() => { }, [CACHED_TABLE]);
 
   return (
     <div key={itemOffset}>
@@ -222,8 +191,8 @@ const SuperTable = ({
                 return (
                   <TableHeadCol
                     contentClassName={`${classes?.colHeadContentClassName} ${col === "description" || col === "name"
-                        ? "min-w-[160px]"
-                        : ""
+                      ? "min-w-[160px]"
+                      : ""
                       }`}
                     classes={classes?.colHead}
                     key={`${col}-${index}`}
@@ -260,8 +229,8 @@ const SuperTable = ({
                   <TableRow
                     key={`${row?.Name}-${index}`}
                     classes={`border-b dark:border-borderdark ${!!selectedList?.[row?.id]
-                        ? "bg-gray-100 dark:bg-[#1115]"
-                        : ""
+                      ? "bg-gray-100 dark:bg-[#1115]"
+                      : ""
                       } ${classes?.row}`}
                   >
                     {allowSelect ? (
@@ -320,6 +289,7 @@ const SuperTable = ({
                           </TableCol>
                         );
                       } else if (col === "parent_id") {
+                        console.log(row?.[col]);
                         return (
                           <TableCol
                             classes={`!py-4 border ${classes?.colBody}`}
@@ -569,4 +539,4 @@ const SuperTable = ({
   );
 };
 
-export default SuperTable;
+export default memo(SuperTable);

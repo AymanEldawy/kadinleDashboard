@@ -33,12 +33,12 @@ const Layout = ({ children }) => {
   return (
     <>
       <Alert alertMessage={alertMessage} dispatchAlert={dispatchAlert} />
-      <div id="layout-wrapper" className="flex flex-col h-full">
+      <div id="layout-wrapper" className="flex flex-col min-h-screen">
         <div className="flex">
           {location?.pathname === '/login' ? null :
             <Sidebar open={open} setOpen={setOpen} />
           }
-          <div className="flex-1 overflow-hidden shrink">
+          <div className="flex-1 shrink">
             {location?.pathname === '/login' ? null :
               <Header
                 open={open}

@@ -1,5 +1,5 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
-import { contentFilterFetch, getAddresses, getCategories, getChartContent, getChartData, getCollections, getColors, getComments, getCountries, getNews, getOffers, getOrders, getOrderStatus, getPoints, getProductFeatures, getProducts, getReturnRequests, getReturnStatus, getShowreels, getSizes, getStocks, getUserAddresses, getUserLikes, getUsers, getUsersCart, getUserSubTable, getWarehouseAvailability, getWarehouses, normalFetch, normalFetchWithPagination } from "./data";
+import { contentFilterFetch, getAddresses, getCategories, getChartContent, getChartData, getCollections, getCollectionsProducts, getColors, getComments, getCountries, getLogs, getNews, getOffers, getOrders, getOrderStatus, getPoints, getProductFeatures, getProducts, getReturnRequests, getReturnStatus, getSales, getShowreels, getSizes, getStocks, getUserAddresses, getUserLikes, getUsers, getUsersCart, getUserSubTable, getWarehouseAvailability, getWarehouses, normalFetch, normalFetchWithPagination } from "./data";
 import { getRecentUser } from "./statictes";
 
 export const getAdmin = () => {
@@ -46,6 +46,9 @@ const fetches = {
   news: getNews,
   user: getUsers,
   recent_user: getRecentUser,
+  logs: getLogs,
+  collection_products: getCollectionsProducts,
+  sale: getSales
 };
 
 export const getTableDataWithPagination = async (
@@ -55,6 +58,7 @@ export const getTableDataWithPagination = async (
   additionalData
 ) => {
   if (table && fetches.hasOwnProperty(table)) {
+    console.log("🚀 ~ file: globalActions.js:61 ~ table:", table)
     const fetchData = fetches[table];
     const response = await fetchData(page, pageSize, additionalData);
     return response;
@@ -138,6 +142,30 @@ export const deleteItem = async (table, id) => {
     await addNewItem("logs", {
       description: `Failed to Delete item from ${table}`,
       row_id: id,
+      table_name: table,
+      admin_id: ADMIN?.id,
+    });
+  }
+  return response;
+};
+export const removeItemsFrom = async (table, additionalData) => {
+  let { ids } = additionalData;
+  const query = supabase.from(table).delete().in('product_id', ids);
+  if (additionalData?.col2) {
+    query.eq(additionalData?.col, additionalData?.table_id);
+  }
+  const response = await query;
+  if (!response?.error) {
+    await addNewItem("logs", {
+      description: `Removed item from ${table}`,
+      row_id: ids?.[0],
+      table_name: table,
+      admin_id: ADMIN?.id,
+    });
+  } else {
+    await addNewItem("logs", {
+      description: `Failed to Remove item from ${table}`,
+      row_id: ids?.[0],
       table_name: table,
       admin_id: ADMIN?.id,
     });

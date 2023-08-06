@@ -58,3 +58,4 @@ export { default as StoreIcon } from "./StoreIcon";
 export { default as EyeIcon } from "./EyeIcon";
 export { default as LogoutIcon } from "./LogoutIcon";
 export { default as HomeIcon } from "./HomeIcon";
+export { default as ReturnIcon } from "./ReturnIcon";

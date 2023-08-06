@@ -24,7 +24,8 @@ const DynamicList = ({
   hideDelete,
   hidePagination,
   customBarButtons,
-  additionalData
+  additionalData,
+  outerDelete
 }) => {
   const { defaultLanguage, defaultRegion } = useGlobalOptions();
   const { loading, getDataWithPagination } = useFetch();
@@ -60,11 +61,9 @@ const DynamicList = ({
         ...additionalData
       }
     );
-    console.log(response);
     setTotalCount(response?.count);
     setPageCount(Math.ceil(response?.count / parseInt(itemsPerPage)));
     setData(response?.data);
-    console.log(Math.ceil(totalCount / parseInt(itemsPerPage)), 'pa');
   };
   useEffect(() => {
     if (defaultLanguage?.id && defaultRegion?.id) fetchData();
@@ -88,7 +87,11 @@ const DynamicList = ({
     <>
       <ConfirmModal
         onConfirm={() => {
-          handleDeleteItem(selectedList);
+          if (!!outerDelete) {
+            outerDelete(selectedList)
+          } else {
+            // handleDeleteItem(selectedList);
+          }
           setOpenConfirmation(false);
         }}
         open={openConfirmation}

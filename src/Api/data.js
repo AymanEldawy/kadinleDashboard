@@ -24,6 +24,7 @@ export const normalFetchWithPagination = async (table, page, pageSize, additiona
   return response;
 };
 
+
 export const contentFilterFetch = async (table, additionalData) => {
   if (table === "size_content") {
     const response = await supabase
@@ -38,6 +39,18 @@ export const contentFilterFetch = async (table, additionalData) => {
       .eq("language_id", additionalData?.languageId);
     return response;
   }
+};
+
+
+export const getSales = async () => {
+  const response = await supabase
+    .from('sale')
+    .select("*")
+  let hash = {}
+  for (const row of response?.data) {
+    hash[row?.end_date] = row;
+  }
+  return { data: Object.values(hash) };
 };
 
 export const globalGetData = async ({
@@ -55,7 +68,6 @@ export const globalGetData = async ({
   let searchValue = additionalData?.search?.value;
 
   if (page > 1 && CURRENT_SEARCH_DATA?.searchValue === searchValue && CURRENT_SEARCH_DATA?.searchKey === searchKey) {
-    console.log('called');
     return {
       data: CURRENT_SEARCH_DATA?.data?.slice(start, end),
       count: CURRENT_SEARCH_DATA?.data?.length
@@ -85,6 +97,34 @@ export const globalGetData = async ({
 
 
 
+export const getLogs = async (page, pageSize, additionalData) => {
+  let searchKey = additionalData?.search?.key;
+  let searchValue = additionalData?.search?.value;
+
+  const query = supabase
+    .from("logs")
+    .select(
+      `
+    *,
+     user(first_name, last_name, profile_img)
+     `,
+      { count: "exact" }
+    )
+  if (searchValue) {
+    switch (searchKey) {
+      case 'user':
+        query.ilike('user.first_name', searchValue);
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['user'],
+    filterFn: (f) => f?.user?.first_name === searchValue || f?.user?.first_name + ' ' + f?.user?.last_name === searchValue
+  })
+
+};
 export const getCategories = async (page, pageSize, additionalData) => {
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
@@ -307,6 +347,56 @@ export const getReturnRequests = async (page, pageSize, additionalData) => {
 };
 
 
+export const getCollectionsProducts = async (page, pageSize, additionalData) => {
+  let searchKey = additionalData?.search?.key;
+  let searchValue = additionalData?.search?.value;
+
+  const query = supabase
+    .from("product")
+    .select(
+      `
+      *,
+      category(category_content(*, name:title, language_id, language(id, name))),
+      brand(name),
+      product_content(*,language_id, language(id, name)))
+      
+   `,
+      { count: "exact" }
+    )
+    .eq("category.category_content.language_id", additionalData?.languageId)
+    .eq("product_content.language_id", additionalData?.languageId);
+
+  if (additionalData?.filter) {
+    query.eq("category_id", additionalData?.filter);
+  }
+
+  if (searchValue) {
+    switch (searchKey) {
+      case 'name':
+        query
+          .ilike('product_content.name::text', `%${searchValue}%`)
+        break;
+      case 'description':
+        query.ilike('product_content.description', `%${searchValue}%`);
+        break;
+      case 'category':
+        query.ilike('category.category_content.title', `%${searchValue}%`);
+        break;
+      case 'brand':
+        query.eq('brand.name', searchValue);
+        break;
+      default:
+        query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['category', 'name', 'description', 'brand'],
+    filterFn: product => product?.product_content?.length && product?.category?.category_content?.length
+
+  })
+
+};
 export const getProducts = async (page, pageSize, additionalData) => {
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
@@ -324,7 +414,9 @@ export const getProducts = async (page, pageSize, additionalData) => {
       { count: "exact" }
     ).eq("category.category_content.language_id", additionalData?.languageId)
     .eq("product_content.language_id", additionalData?.languageId);
-
+  if (additionalData?.filtersByIds) {
+    query.in('id', additionalData?.product_ids)
+  }
   if (additionalData?.filter) {
     query.eq("category_id", additionalData?.filter);
   }

@@ -3,7 +3,7 @@ import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
 import { SUPERADMIN_PERMISSIONS } from "./permissions";
 
 const USER_STORAGE = localStorage.getItem("KADINLE_ADMIN_USER");
-const user = JSON.parse(USER_STORAGE) ? JSON.parse(USER_STORAGE) : {};
+const user = USER_STORAGE !== 'undefined' || USER_STORAGE ? JSON.parse(USER_STORAGE) : {};
 
 function ProtectedRoutes({ roles, path }) {
   const params = useParams();

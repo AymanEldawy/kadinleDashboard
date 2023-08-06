@@ -4,6 +4,7 @@ import { useFetch } from "../hooks/useFetch";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { getUser } from "../Api/auth";
 import { ADMIN } from "../Api/globalActions";
+import { useNavigate } from "react-router-dom";
 
 export const GlobalOptions = createContext();
 
@@ -13,7 +14,6 @@ export const GlobalOptionsProvider = ({ children }) => {
     "KADINLE_DEFAULT_LANGUAGE",
     ""
   );
-
   const { getData } = useFetch();
   const [openLanguageForm, setOpenLanguageForm] = useState(false);
   const [languages, setLanguages] = useState([]);
@@ -56,6 +56,7 @@ export const GlobalOptionsProvider = ({ children }) => {
       getUser().then((res) => {
         setUser(res);
         localStorage.setItem("KADINLE_ADMIN_USER", JSON.stringify(res));
+        window.location.pathname = '/'
       });
     }
   }, [refresh]);

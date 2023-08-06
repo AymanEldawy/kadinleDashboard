@@ -63,17 +63,13 @@ const combine_chart_data = [
 const combine_collection = [
   "id",
   "created_at",
-  "display_home",
-  "language",
+  // "language",
   "name",
   "description",
   "image",
-];
-const combine_collection_product = [
-  "id",
-  "created_at",
-  "collection",
-  "product",
+  "products",
+  "display_home",
+
 ];
 const combine_color = [
   "id",
@@ -128,6 +124,7 @@ const combine_logs = [
   "id",
   "created_at",
   "description",
+  "admin",
   "row_id",
   "table_name",
 ];
@@ -139,11 +136,12 @@ const combine_offer = [
   "id",
   "created_at",
   "numerical",
-  "display_home",
-  "language",
+  // "language",
   "name",
   "description",
   "media",
+  "products",
+  "display_home",
 ];
 
 const combine_offer_product = ["id", "product", "offer"];
@@ -222,6 +220,15 @@ const combine_product = [
   // "seo_description",
   // "image_alt",
 ];
+const combine_collection_product = [
+  "id",
+  "product_sku",
+  "name",
+  // "image",
+  // "category",
+  // "barcode",
+  "brand",
+];
 
 const combine_product_image = [
   "id",
@@ -243,7 +250,7 @@ const combine_product_variant = [
 
 const combine_region = ["id", "name"];
 const combine_return_status = ["id", "numerical", "language", "status"];
-const combine_sale = ["id", "created_at", "product", "end_date"];
+const combine_sale = ["id", "created_at", "products", "end_date"];
 
 const combine_showreel = [
   "id",

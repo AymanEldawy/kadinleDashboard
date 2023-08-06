@@ -69,9 +69,6 @@ const Login = () => {
       } else {
         toast.success(`Login Successfully`);
         serRefresh((p) => !p);
-        setTimeout(() => {
-          navigate("/");
-        }, 500);
       }
     }
   };

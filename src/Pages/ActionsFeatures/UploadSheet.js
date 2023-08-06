@@ -51,13 +51,13 @@ const UploadSheet = () => {
             boxContainerClassName="w-full !p-4 rounded-md cursor-pointer hover:bg-primary-red hover:text-white"
             className="!bg-transparent"
           />
-          <UploadFile
+          {/* <UploadFile
             onChange={(e) => handleReadAndUploadFile(e, "categories")}
             label="Upload Categories Sheet"
             boxContainerClassName="w-full !p-4 rounded-md cursor-pointer hover:bg-primary-red hover:text-white"
             className="!bg-transparent"
-          />
-          <UploadFile
+          /> */}
+          {/* <UploadFile
             onChange={(e) => handleReadAndUploadFile(e, "colors")}
             name="color"
             label="Upload Colors Sheet"
@@ -75,29 +75,27 @@ const UploadSheet = () => {
             label="Upload Size Chart Sheet"
             boxContainerClassName="w-full !p-4 rounded-md cursor-pointer hover:bg-primary-red hover:text-white"
             className="!bg-transparent"
-          />
+          /> */}
         </div>
       ) : (
         <div className="">
           <div className="max-h-screen overflow-auto">
             {logs?.map((log) => (
               <p
-                className={`text-gray-400 text my-2 border-b pb-1 ${
-                  log?.status === "loading"
-                    ? "text-primary-blue"
-                    : log?.status === "error"
+                className={`text-gray-400 text my-2 border-b pb-1 ${log?.status === "loading"
+                  ? "text-primary-blue"
+                  : log?.status === "error"
                     ? "text-red-500"
                     : "text-primary-green"
-                }`}
+                  }`}
               >
                 <span
-                  className={`font-medium mr-4 inline-block capitalize px-4 py-[2px] text-sm w-[80px] text-center rounded-md ${
-                    log?.status === "loading"
-                      ? "bg-primary-blue text-white "
-                      : log?.status === "error"
+                  className={`font-medium mr-4 inline-block capitalize px-4 py-[2px] text-sm w-[80px] text-center rounded-md ${log?.status === "loading"
+                    ? "bg-primary-blue text-white "
+                    : log?.status === "error"
                       ? "bg-primary-red text-white "
                       : "bg-primary-green text-white "
-                  }`}
+                    }`}
                 >
                   {log?.status}
                 </span>

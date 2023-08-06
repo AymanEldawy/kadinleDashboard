@@ -12,6 +12,7 @@ import { UserInfo } from "../Global/UserInfo/UserInfo";
 import { useGlobalOptions } from './../../Context/GlobalOptions';
 import { LanguageContext } from "./../../Context/LangContext";
 import { fetchWord } from "./../lang/fetchWord";
+import { CollectionProductsCol } from "./CollectionProductsCol";
 // import { ChevronIcon, SortIcon } from "../Icons";
 import Table from "./Table";
 import TableBody from "./TableBody";
@@ -88,11 +89,9 @@ const SuperTable = ({
     });
   }
   async function checkRefTable() {
-    console.log('called');
     if (!data?.length) return;
     const response = await getTableData(`${tableName}_content`, { languageId: defaultLanguage?.id })
     let hash = {};
-    console.log("🚀 ~ file: SuperTable.js:131 ~ checkRefTable ~ response:", response)
     for (const item of response?.data) {
       hash[item?.[`${tableName}_id`]] = item.name || item?.title
     }
@@ -104,7 +103,6 @@ const SuperTable = ({
     });
   }
 
-  console.log(CACHED_TABLE);
   const handelSelect = (itemId) => {
     if (selectedList[itemId]) {
       let newSelectedList = selectedList;
@@ -248,6 +246,15 @@ const SuperTable = ({
                     {columns?.map((col, index) => {
                       let tableNameContent = `${tableName}_content`;
                       if (col === "id") return null;
+                      else if (col === 'products')
+                        return (
+                          <TableCol
+                            key={row?.id}
+                            classes={`!py-4 border ${classes?.colBody}`}
+                          >
+                            <CollectionProductsCol collectionId={row?.id} tableName={tableName} />
+                          </TableCol>
+                        );
                       else if (
                         col?.indexOf("img") !== -1 ||
                         col?.indexOf("image") !== -1 ||
@@ -278,7 +285,7 @@ const SuperTable = ({
                             )}
                           </TableCol>
                         );
-                      else if (col === "user") {
+                      else if (col === "user" || col === 'admin') {
                         return (
                           <TableCol
                             classes={`!py-4 border ${classes?.colBody}`}
@@ -289,7 +296,6 @@ const SuperTable = ({
                           </TableCol>
                         );
                       } else if (col === "parent_id") {
-                        console.log(row?.[col]);
                         return (
                           <TableCol
                             classes={`!py-4 border ${classes?.colBody}`}

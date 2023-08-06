@@ -52,10 +52,10 @@ const SearchBar = ({
       {open && columns ? (
         <>
           <Backdrop open={open} onClose={() => setOpen(false)} />
-          <ul className="absolute z-[100] pb-4 overflow-auto max-h-[200px] bg-white shadow rounded-md w-full ">
+          <ul className="absolute z-[100] py-4 top-4 px-2 overflow-auto  bg-white shadow rounded-md w-full ">
             {columns?.map((col) => (
               <li
-                className="whitespace-nowrap capitalize flex gap-2 items-center px-2 py-2 hover:bg-gray-200"
+                className="whitespace-nowrap cursor-pointer capitalize flex gap-2 items-center px-2 py-2 hover:bg-gray-100"
                 onClick={() => {
                   setSearchKey(col);
                   setOpen(false);

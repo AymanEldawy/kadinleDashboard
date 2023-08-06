@@ -87,10 +87,26 @@ const SelectProduct = ({ }) => {
       })
     }
     if (records?.length) {
-      await addItem(
+      const loading = toast.loading('loading...')
+      const response = await addItem(
         activeStage === "sale" ? activeStage : `${activeStage}_product`,
         records
       );
+      if (response?.error) {
+        toast.update(loading, {
+          render: response.error || "Field to add, please try again",
+          type: "error",
+          isLoading: false,
+          autoClose: 1000,
+        });
+      } else {
+        toast.update(loading, {
+          render: "Successfully set products",
+          type: "success",
+          isLoading: false,
+          autoClose: 1000,
+        });
+      }
     }
 
   };

@@ -8,7 +8,6 @@ import DynamicLayout from "../Dynamics/DynamicLayout";
 
 const Users = (props) => {
   const { user: ADMIN } = useGlobalOptions()
-  console.log("🚀 ~ file: Users.js:8 ~ Stocks ~ user:", props)
   const navigate = useNavigate();
   const columns = COMBINE_DB_API.combine_user || [];
 

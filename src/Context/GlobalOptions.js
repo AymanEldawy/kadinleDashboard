@@ -55,8 +55,9 @@ export const GlobalOptionsProvider = ({ children }) => {
     } else {
       getUser().then((res) => {
         setUser(res);
-        localStorage.setItem("KADINLE_ADMIN_USER", JSON.stringify(res));
-        window.location.pathname = '/'
+        if (res?.id) {
+          localStorage.setItem("KADINLE_ADMIN_USER", JSON.stringify(res));
+        }
       });
     }
   }, [refresh]);

@@ -45,7 +45,6 @@ const AddProductVariantsIncreasable = ({
     });
   };
   const handelChangeSubField = (name, value, row, subRow) => {
-    console.log("🚀 ~ file: AddProductVariantsIncreasable.js:49 ~ handelChangeSubField ~ subRow:", subRow)
     setAllValues((prev) => {
       return {
         ...prev,
@@ -232,7 +231,7 @@ const AddProductVariantsIncreasable = ({
             (item, index) => {
               let skuValue = `${productSku || ""} ${CACHED_TABLES_SKU?.["size"]?.[
                 allValues?.[itemKey]?.sizes?.[item]?.size_id
-                ] || ""
+              ] || ""
                 } ${CACHED_TABLES_SKU?.["color"]?.[
                 allValues?.[itemKey]?.color_id
                 ] || ""

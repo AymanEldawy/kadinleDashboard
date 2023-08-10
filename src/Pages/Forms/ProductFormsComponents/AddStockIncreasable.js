@@ -21,7 +21,6 @@ export const AddStockIncreasable = ({
   const [refresh, setRefresh] = useState(false);
 
   const handelChangeWarehouseField = (name, value, row, subRow, subSubRow) => {
-    console.log(row, subRow, subSubRow)
     setAllValues((prev) => {
       return {
         ...prev,

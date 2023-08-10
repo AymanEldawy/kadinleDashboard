@@ -19,7 +19,6 @@ export const CollectionProductsCol = ({ collectionId, tableName, scope, classes,
 
   const getIds = async () => {
     const response = tableName === 'sale' ? await getData(tableName) : await getRowsById(`${tableName}_product`, `${tableName}_id`, collectionId);
-    console.log(response, collectionId);
     let data = tableName === 'sale' ? response : response?.data
     setProductsIds(data?.map(col => col?.product_id));
   }

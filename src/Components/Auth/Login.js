@@ -26,7 +26,6 @@ const Login = () => {
 
   useEffect(() => {
     if (ADMIN) navigate(-1);
-    console.log("🚀 ~ file: Login.js:26 ~ useEffect ~ ADMIN:", ADMIN)
   }, [ADMIN]);
 
   const insertIntoErrors = (name, value) => {
@@ -69,6 +68,9 @@ const Login = () => {
       } else {
         toast.success(`Login Successfully`);
         serRefresh((p) => !p);
+        setTimeout(() => {
+          window.location.pathname = '/'
+        }, 5000)
       }
     }
   };

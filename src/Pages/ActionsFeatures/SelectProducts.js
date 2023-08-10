@@ -51,8 +51,6 @@ const SelectProduct = ({ }) => {
   };
 
   useEffect(() => {
-    console.log("🚀 ~ file: SelectProducts.js:37 ~ SelectProduct ~ defaultLanguage:", defaultLanguage)
-
     if (!defaultLanguage?.id) return;
 
     for (let table of SELECTED_TABLE) {

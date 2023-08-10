@@ -37,7 +37,6 @@ const HomeSections = () => {
 
   const getSections = async () => {
     const response = await getData('home_sections');
-    console.log("🚀 ~ file: HomeSections.js:29 ~ getSections ~ response:", response)
     if (response?.length)
       setSortedSection(response)
   }
@@ -84,7 +83,6 @@ const HomeSections = () => {
       const loading = toast.loading('loading...')
       let response = null
       for (const section of sortedSections) {
-        console.log("🚀 ~ file: HomeSections.js:87 ~ onSaveOrder ~ section:", section)
         response = await addItem('home_sections', section);
       }
       if (response?.error || !response) {
@@ -103,7 +101,6 @@ const HomeSections = () => {
         });
       }
     }
-    console.log(sortedSections);
   }
 
   const addNewSection = (e) => {
@@ -136,19 +133,16 @@ const HomeSections = () => {
     CACHE_NUMBERS[value] = true;
   }
   const changeVisibility = (e, section_name) => {
-    console.log(e.target.checked);
     let newSortedSections = sortedSections?.map(section => {
       if (section?.section_name === section_name) {
         section.display_home = e.target.checked;
       }
       return section
     })
-    console.log(newSortedSections)
     setSortedSection(newSortedSections)
   }
 
 
-  console.log(CACHE_NUMBERS);
   return (
     <>
       <Modal open={openForm} onClose={() => setOpenForm(false)}>

@@ -4,7 +4,7 @@ import { getRecentUser } from "./statictes";
 
 export const getAdmin = () => {
   const STORAGE_ADMIN = localStorage.getItem("KADINLE_ADMIN_USER");
-  return STORAGE_ADMIN !== "undefined" ? JSON.parse(STORAGE_ADMIN) : null;
+  return STORAGE_ADMIN !== "undefined" && !STORAGE_ADMIN ? JSON.parse(STORAGE_ADMIN) : null;
 };
 export const ADMIN = getAdmin();
 const fetches = {
@@ -58,7 +58,6 @@ export const getTableDataWithPagination = async (
   additionalData
 ) => {
   if (table && fetches.hasOwnProperty(table)) {
-    console.log("🚀 ~ file: globalActions.js:61 ~ table:", table)
     const fetchData = fetches[table];
     const response = await fetchData(page, pageSize, additionalData);
     return response;

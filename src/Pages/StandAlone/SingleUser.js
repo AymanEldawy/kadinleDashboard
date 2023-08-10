@@ -116,8 +116,6 @@ const SingleUser = () => {
     }
     setOpenModal(false);
   };
-  console.log("🚀 ~ file: SingleUser.js:116 ~ updateRole ~ ADMIN:", ADMIN)
-  console.log("🚀 ~ file: SingleUser.js:116 ~ updateRole ~ user:", userData?.user)
   const { user } = userData;
   const type = userData?.type;
   return (

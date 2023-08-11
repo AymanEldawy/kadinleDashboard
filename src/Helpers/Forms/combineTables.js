@@ -176,7 +176,9 @@ const combine_order_return_request = [
   "created_at",
   "order",
   "variant",
+  "other_reason",
   "reason",
+  'images',
   "return_status",
 ];
 
@@ -314,13 +316,7 @@ const combine_warehouse_availability = [
   "id",
   "warehouse",
   "country",
-  "shipping_cost",
-  "fast_shipping",
-  "shipping_duration_min",
-  "shipping_duration_max",
-  "min_price_free_shipping",
-  "fast_shipping_duration",
-  "fast_shipping_price",
+  "shipping_price_id",
 ];
 
 const combine_warehouse = ["id", "name", "address", "number"];
@@ -336,7 +332,16 @@ const combine_season = ["season_id", "language", "name"];
 const combine_sleeve = ["sleeve_id", "language", "name"];
 const combine_material = ["material_id", "language", "name"];
 const combine_pattern = ["pattern_id", "language", "name"];
-
+export const combine_shipping_price = [
+  'area',
+  'weight',
+  'fast_price',
+  'normal_price',
+  'min_fast_duration',
+  'max_fast_duration',
+  'min_normal_duration',
+  'max_normal_duration',
+]
 const COMBINE_DB_API = {
   combine_address,
   combine_brand,
@@ -397,5 +402,6 @@ const COMBINE_DB_API = {
   combine_warehouse,
   combine_stock,
   combine_order_short,
+  combine_shipping_price
 };
 export default COMBINE_DB_API;

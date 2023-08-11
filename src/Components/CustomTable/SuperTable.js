@@ -21,7 +21,9 @@ import TableHead from "./TableHead";
 import TableHeadCol from "./TableHeadCol";
 import TableRow from "./TableRow";
 
+let reasons = {}
 let sorting = {};
+
 const SuperTable = ({
   columns,
   data,
@@ -47,7 +49,9 @@ const SuperTable = ({
   const { lang } = useContext(LanguageContext);
   const [currentItems, setCurrentItems] = useState([]);
   const [CACHED_TABLE, setCACHED_TABLE] = useState({});
+  const [CACHE_REASONS, setCACHE_REASONS] = useState({})
   const [refresh, setRefresh] = useState(false);
+
   let defaultPrimaryStyle = primaryStyles
     ? {
       table: "!border-none !rounded-none",
@@ -75,6 +79,21 @@ const SuperTable = ({
       getAndCacheUserData();
   }, [location?.pathname, columns?.length, tableName]);
 
+  useEffect(() => {
+    if (!defaultLanguage?.id) return;
+    if (tableName === 'order_return_request') {
+      getReasons()
+    }
+  }, [defaultLanguage?.id, tableName])
+
+  async function getReasons() {
+    const response = await getTableData("return_reason_content", { languageId: defaultLanguage?.id });
+    let hash = {}
+    for (const item of response?.data) {
+      hash[item?.return_reason_id] = item?.reason
+    }
+    setCACHE_REASONS(hash);
+  }
   async function getAndCacheUserData() {
     const response = await getData("user");
     let hash = {};
@@ -246,7 +265,40 @@ const SuperTable = ({
                     {columns?.map((col, index) => {
                       let tableNameContent = `${tableName}_content`;
                       if (col === "id") return null;
-                      else if (col === 'products')
+                      else if (tableName === 'shipping_price') {
+                        let value = ''
+                        switch (col) {
+                          case 'normal_price':
+                          case 'fast_price':
+                            value = Object.values(row?.[col])?.[0]
+                            break;
+                          case 'weight':
+                            value = Object.keys(row?.normal_price)?.[0]
+                            break;
+                          default:
+                            value = row?.[col];
+                            break;
+                        }
+
+                        return (
+                          <TableCol
+                            key={row?.id}
+                            classes={`!py-4 border ${classes?.colBody}`}
+                          >
+                            {value}
+                          </TableCol>
+                        )
+                      }
+                      else if (col === 'reason' && tableName === 'order_return_request') {
+                        return (
+                          <TableCol
+                            key={row?.id}
+                            classes={`!py-4 border ${classes?.colBody}`}
+                          >
+                            {CACHE_REASONS?.[row?.return_reason_id]}
+                          </TableCol>
+                        );
+                      } else if (col === 'products')
                         return (
                           <TableCol
                             key={row?.id}
@@ -266,17 +318,39 @@ const SuperTable = ({
                           >
                             {col?.indexOf("image") !== -1 ||
                               col?.indexOf("img") !== -1 ? (
-                              <FullImage
-                                src={
-                                  row?.[col] ||
-                                  row?.collection_content?.[0]?.image ||
-                                  row?.category_content?.[0]?.[col]
+                              <>
+                                {typeof row?.[col] === 'object' && col === 'images' ? (
+                                  <>
+                                    {
+                                      row?.[col]?.map(img => (
+                                        <FullImage
+                                          key={img}
+                                          src={img}
+                                          alt="image description"
+                                          height={40}
+                                          width={40}
+                                          className="inline-block mx-auto cursor-pointer w-8 h-10 object-contain"
+                                        />
+                                      ))
+                                    }
+                                  </>
+
+                                ) : (
+                                  <FullImage
+                                    src={
+                                      row?.[col] ||
+                                      row?.collection_content?.[0]?.image ||
+                                      row?.category_content?.[0]?.[col]
+                                    }
+                                    alt="image description"
+                                    height={50}
+                                    width={70}
+                                    className="block mx-auto cursor-pointer w-20 h-16 object-contain"
+                                  />
+                                )
                                 }
-                                alt="image description"
-                                height={50}
-                                width={70}
-                                className="block mx-auto cursor-pointer w-20 h-16 object-contain"
-                              />
+
+                              </>
                             ) : (
                               <span
                                 className="block min-h-[30px] w-full h-full border border-gray-200"

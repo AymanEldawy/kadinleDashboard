@@ -1,16 +1,21 @@
 import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
 
 import { SUPERADMIN_PERMISSIONS } from "./permissions";
+import { useGlobalOptions } from "../Context/GlobalOptions";
+import { getAdmin } from "../Api/globalActions";
 
-const USER_STORAGE = localStorage.getItem("KADINLE_ADMIN_USER");
-const user = USER_STORAGE !== 'undefined' && !USER_STORAGE ? JSON.parse(USER_STORAGE) : null;
 
 function ProtectedRoutes({ roles, path }) {
   const params = useParams();
+  const { setRefresh } = useGlobalOptions()
   const { name } = params || { name: "" }
+
+  const user = getAdmin();
 
   if (!user) {
     return <Navigate to="/login" />;
+  } else {
+    if (!user?.id) setRefresh()
   }
 
   if (user && !roles?.includes(user?.role?.title) && !roles?.includes("*"))

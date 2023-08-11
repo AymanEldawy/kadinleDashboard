@@ -3,8 +3,7 @@ import { createContext, useState, useEffect, useContext } from "react";
 import { useFetch } from "../hooks/useFetch";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { getUser } from "../Api/auth";
-import { ADMIN } from "../Api/globalActions";
-import { useNavigate } from "react-router-dom";
+import { getAdmin } from "../Api/globalActions";
 
 export const GlobalOptions = createContext();
 
@@ -23,8 +22,7 @@ export const GlobalOptionsProvider = ({ children }) => {
   const [defaultLanguage, setDefaultLanguage] = useState();
   const [defaultRegion, setDefaultRegion] = useState();
   const [user, setUser] = useState();
-  const [refresh, serRefresh] = useState(false);
-  const [refreshLayout, serRefreshLayout] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   // const [languageId, setLanguageId] = useLocalStorage('name', '');
   const getAndCacheData = async (table, setData, setCache) => {
     const response = await getData(table);
@@ -46,10 +44,10 @@ export const GlobalOptionsProvider = ({ children }) => {
       setLanguageId(data);
       setDefaultLanguage(data);
     }
-    serRefreshLayout((p) => !p);
   };
 
   useEffect(() => {
+    const ADMIN = getAdmin();
     if (ADMIN?.id) {
       setUser(ADMIN);
     } else {
@@ -91,7 +89,7 @@ export const GlobalOptionsProvider = ({ children }) => {
     defaultRegion,
     setDefaultSettings,
     setOpenLanguageForm,
-    serRefresh,
+    setRefresh,
     refresh,
     user,
   };

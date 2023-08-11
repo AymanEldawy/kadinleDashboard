@@ -13,17 +13,15 @@ import { useGlobalOptions } from "../../Context/GlobalOptions";
 import InputField from "../CustomForm/InputField";
 
 // import logo from "../../Assets/Images/logo.svg";
-const ADMIN = getAdmin();
 
 const Login = () => {
-  const { serRefresh } = useGlobalOptions();
+  const { setRefresh } = useGlobalOptions();
   const navigate = useNavigate();
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
 
-  // const user = JSON.parse(localStorage.getItem("KADINLE_ADMIN_USER"));
-
+  const ADMIN = getAdmin();
   useEffect(() => {
     if (ADMIN) navigate(-1);
   }, [ADMIN]);
@@ -67,10 +65,10 @@ const Login = () => {
         toast.error(response?.error?.message);
       } else {
         toast.success(`Login Successfully`);
-        serRefresh((p) => !p);
+        setRefresh((p) => !p);
         setTimeout(() => {
           window.location.pathname = '/'
-        }, 5000)
+        }, 3000)
       }
     }
   };

@@ -1,3 +1,4 @@
+import MoneyIcon from "../Components/icons/MoneyIcon";
 import {
   BanknoteIcon,
   BoxClose,
@@ -29,6 +30,7 @@ import {
   StoreIcon,
   TagsIcon,
   ToolsIcon,
+  TrunkIcon,
   UploadIcon,
   UserGroupIcon,
   UserIcon,
@@ -242,6 +244,12 @@ export const menuData = [
         icon: <PackageIcon />,
         path: "/warehouse-availability",
         name: "warehouse availability",
+      },
+      {
+        key: "shipping-prices",
+        icon: <TrunkIcon />,
+        path: "/shipping-prices",
+        name: "shipping prices",
       },
     ],
   },

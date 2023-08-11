@@ -1,10 +1,10 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
-import { contentFilterFetch, getAddresses, getCategories, getChartContent, getChartData, getCollections, getCollectionsProducts, getColors, getComments, getCountries, getLogs, getNews, getOffers, getOrders, getOrderStatus, getPoints, getProductFeatures, getProducts, getReturnRequests, getReturnStatus, getSales, getShowreels, getSizes, getStocks, getUserAddresses, getUserLikes, getUsers, getUsersCart, getUserSubTable, getWarehouseAvailability, getWarehouses, normalFetch, normalFetchWithPagination } from "./data";
+import { contentFilterFetch, getAddresses, getCategories, getChartContent, getChartData, getCollections, getCollectionsProducts, getColors, getComments, getCountries, getLogs, getNews, getOffers, getOrders, getOrderStatus, getPoints, getProductFeatures, getProducts, getReturnRequests, getReturnStatus, getSales, getShippingPrices, getShowreels, getSizes, getStocks, getUserAddresses, getUserLikes, getUsers, getUsersCart, getUserSubTable, getWarehouseAvailability, getWarehouses, normalFetch, normalFetchWithPagination } from "./data";
 import { getRecentUser } from "./statictes";
 
 export const getAdmin = () => {
   const STORAGE_ADMIN = localStorage.getItem("KADINLE_ADMIN_USER");
-  return STORAGE_ADMIN !== "undefined" && !STORAGE_ADMIN ? JSON.parse(STORAGE_ADMIN) : null;
+  return STORAGE_ADMIN !== "undefined" && STORAGE_ADMIN ? JSON.parse(STORAGE_ADMIN) : null;
 };
 export const ADMIN = getAdmin();
 const fetches = {
@@ -48,7 +48,8 @@ const fetches = {
   recent_user: getRecentUser,
   logs: getLogs,
   collection_products: getCollectionsProducts,
-  sale: getSales
+  sale: getSales,
+  shipping_price: getShippingPrices
 };
 
 export const getTableDataWithPagination = async (

@@ -582,12 +582,23 @@ export const order_return_request = [
     tableName: "product_variant",
     refName: "sku",
   },
-  { name: "reason", type: "text", required: true },
+  { name: "other_reason", type: "text", required: true },
+  {
+    name: "reason",
+    type: "text",
+    key: "ref",
+    tableName: "return_reason_content",
+    refId: "return_reason_id",
+    refName: "reason",
+    required: true,
+  },
   {
     name: "return_status",
     type: "uuid",
+    key: "ref",
     tableName: "return_status_content",
     refId: "return_status_id",
+    refName: "status",
     required: true,
   },
 ];
@@ -1259,14 +1270,26 @@ const warehouse_availability = [
     required: true,
     tableName: "country",
   },
-  { name: "shipping_cost", type: "number", required: true },
-  { name: "fast_shipping", key: "checkbox" },
-  { name: "shipping_duration_min", type: "number" },
-  { name: "shipping_duration_max", type: "number" },
-  { name: "min_price_free_shipping", type: "number" },
-  { name: "fast_shipping_duration", type: "number" },
-  { name: "fast_shipping_price", type: "number" },
+  {
+    name: "shipping_price_id",
+    key: "ref",
+    required: true,
+    tableName: "shipping_price",
+    refName: "area"
+  },
 ];
+export const shipping_price = [
+  { "name": "id", "type": "uuid" },
+  { "name": "weight", "type": "string" },
+  { "name": "fast_price", "type": "string" },
+  { "name": "normal_price", "type": "string" },
+  { "name": "min_normal_duration", "type": "number" },
+  { "name": "max_normal_duration", "type": "number" },
+  { "name": "min_fast_duration", "type": "number" },
+  { "name": "max_fast_duration", "type": "number" },
+  { "name": "area", "type": "number" }
+]
+
 
 export const stock_fields = stock;
 
@@ -1351,5 +1374,6 @@ const DB_API = {
   user_wallet,
   warehouse,
   warehouse_availability,
+  shipping_price
 };
 export default DB_API;

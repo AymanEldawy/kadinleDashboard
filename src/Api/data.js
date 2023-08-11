@@ -310,12 +310,17 @@ export const getReturnRequests = async (page, pageSize, additionalData) => {
     .select(
       `
       *,
-      return_status(*, name:numerical),
+      return_status(return_status_content(*, name:status)),
       product_variant(id, sku, product(product_content(product_id, name, language_id))),
-      order(*, name:order_number))
+      order(*, name:order_number)),
+      return_reason(*,return_reason_content(*))
    `,
       { count: "exact" }
     )
+    // .eq(
+    //   "return_reason.return_reason_content.reason",
+    //   additionalData?.languageId
+    // )
     .eq(
       "product_variant.product.product_content.language_id",
       additionalData?.languageId
@@ -333,6 +338,39 @@ export const getReturnRequests = async (page, pageSize, additionalData) => {
         break;
       default:
         query.eq(searchKey, searchValue)
+    }
+  }
+
+  return globalGetData({
+    page, pageSize, additionalData, query, ignoredFilterColumns: ['order', 'variant', 'name'],
+    filterFn: (f) => {
+      return f?.return_status.name === searchValue ||
+        f?.order.order_number === searchValue ||
+        f?.product_variant.sku === searchValue
+    }
+  })
+};
+export const getShippingPrices = async (page, pageSize, additionalData) => {
+
+  let searchKey = additionalData?.search?.key;
+  let searchValue = additionalData?.search?.value;
+
+  const query = supabase
+    .from("shipping_price")
+    .select("*",
+      { count: "exact" }
+    )
+  if (searchValue) {
+    switch (searchKey) {
+      case 'fast_price':
+      case 'normal_price':
+        query.match({ [searchKey]: searchValue });
+        break;
+      case 'weight':
+        query.match({ 'normal_price': searchValue });
+        break;
+      default:
+        query.eq(searchKey, searchValue);
     }
   }
 

@@ -16,6 +16,8 @@ import HomeSections from "../Pages/StandAlone/HomeSections";
 import SingleUser from "../Pages/StandAlone/SingleUser";
 import { AddAddress, AddBrand, AddBulkAlert, AddCategory, AddChart, AddChartContent, AddChartData, AddCollection, AddColor, AddCountry, AddCoupon, AddCurrency, AddHomeReviewer, AddLanguage, AddNews, AddNewsletter, AddOffer, AddOrderStatus, AddPoint, AddProduct, AddRegion, AddReturnStatus, AddSale, AddSize, AddUser, AddWarehouse, AddWarehouseAvailability, InsertOne } from "./../Pages/Forms";
 import { Addresses, Brands, BulkAlert, Categories, Chart, ChartContent, ChartData, Collections, Colors, Comments, Countries, Coupons, Currency, HomeReviews, Languages, Logs, News, Newsletter, NewsletterSubscription, Offers, OrderReturnRequests, Orders, OrderStatus, Points, ProductFeatures, Products, Regions, ReturnStatus, Sales, Sizes, Stocks, Users, WarehouseAvailability, Warehouses } from "./../Pages/Tables";
+import AddShippingPrice from "../Pages/Forms/AddShippingPrice";
+import ShippingPrices from "../Pages/Tables/ShippingPrice";
 
 const authProtectedRoutes = [
 
@@ -135,6 +137,7 @@ const authProtectedRoutes = [
   { path: "/add-return-status", component: <AddReturnStatus />, allowedRoles: ["superadmin"] },
   { path: "/add-warehouse", component: <AddWarehouse />, allowedRoles: ["*"] },
   { path: "/add-warehouse-availability", component: <AddWarehouseAvailability />, allowedRoles: ["*"] },
+  { path: "/add-shipping-price", component: <AddShippingPrice />, allowedRoles: ["*"] },
 
   // **** Group Orders paths ****
   { path: "/orders", component: <Orders />, allowedRoles: ["*"] },
@@ -143,6 +146,7 @@ const authProtectedRoutes = [
   { path: "/return-status", component: <ReturnStatus />, allowedRoles: ["*"] },
   { path: "/warehouses", component: <Warehouses />, allowedRoles: ["*"] },
   { path: "/warehouse-availability", component: <WarehouseAvailability />, allowedRoles: ["*"] },
+  { path: "/shipping-prices", component: <ShippingPrices />, allowedRoles: ["*"] },
 
   // **** Group Award add paths ****
   { path: "/add-point", component: <AddPoint />, allowedRoles: ["*"] },

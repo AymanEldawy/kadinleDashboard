@@ -1212,7 +1212,7 @@ const user_suggestion = [
     tableName: "user",
     refName: "full_name",
   },
-  { name: "suggestion", type: "text", required: true },
+  { name: "suggestion", type: "text", required: true, readonly: true },
   { name: "status", key: "checkbox" },
 ];
 const user_ticket = [
@@ -1226,7 +1226,7 @@ const user_ticket = [
     tableName: "user",
     refName: "full_name",
   },
-  { name: "ticket", type: "text", required: true },
+  { name: "ticket", type: "text", required: true, readonly: true },
   { name: "status", key: "checkbox" },
 ];
 const user_wallet = [

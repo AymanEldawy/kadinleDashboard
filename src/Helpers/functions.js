@@ -48,3 +48,16 @@ export const uploadFile = async ({ data, url }) => {
     );
   }
 };
+
+
+export function TicketIdGen() {
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  let firstId = '';
+  for (let i = 0; i < 3; i++) {
+    let rand = characters.charAt(Math.floor(Math.random() * characters.length));
+    firstId += rand.toString();
+  }
+  const secondId = Math.floor(Math.floor(Math.random() * 999));
+  const thirdId = Math.floor(Math.floor(Math.random() * 99999));
+  return firstId + '-' + secondId + '-' + thirdId;
+}

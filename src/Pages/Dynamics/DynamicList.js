@@ -90,7 +90,7 @@ const DynamicList = ({
           if (!!outerDelete) {
             outerDelete(selectedList)
           } else {
-            // handleDeleteItem(selectedList);
+            handleDeleteItem(selectedList);
           }
           setOpenConfirmation(false);
         }}

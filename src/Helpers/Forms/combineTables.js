@@ -22,7 +22,7 @@ const combine_category = [
   "description",
   "mobile_image",
   "web_image",
-  "language",
+
 ];
 
 const combine_chart = ["id", "number"];
@@ -57,13 +57,13 @@ const combine_chart_data = [
 
 // const combine_content = [
 //   { name: "id", type: "uuid" },
-//   { name: "language", type: "uuid", key: "ref", tableName: "language" },
+//   { name: type: "uuid", key: "ref", tableName: "language" },
 //   { name: "name", type: "text" },
 // ];
 const combine_collection = [
   "id",
   "created_at",
-  // "language",
+  //
   "name",
   "description",
   "image",
@@ -78,7 +78,7 @@ const combine_color = [
   "image",
   "parent_id",
   "numeric",
-  "language",
+
   "name",
 ];
 const combine_comment = [
@@ -129,14 +129,14 @@ const combine_logs = [
   "table_name",
 ];
 
-const combine_news = ["id", "created_at", "link", "language", "content"];
+const combine_news = ["id", "created_at", "link", "content"];
 const combine_newsletter = ["id", "created_at", "subject", "content"];
 const combine_newsletter_subscription = ["email"];
 const combine_offer = [
   "id",
   "created_at",
   "numerical",
-  // "language",
+  //
   "name",
   "description",
   "media",
@@ -182,11 +182,11 @@ const combine_order_return_request = [
   "return_status",
 ];
 
-const combine_order_status = ["id", "language", "numerical", "status"];
+const combine_order_status = ["id", "numerical", "status"];
 const combine_payment_status = [
   "numerical",
   "id",
-  "language",
+
   "payment_status_id",
   "status",
 ];
@@ -217,7 +217,7 @@ const combine_product = [
   // "origin",
   // "pattern",
   // "product",
-  // "language",
+  //
   // "seo_title",
   // "seo_description",
   // "image_alt",
@@ -251,7 +251,7 @@ const combine_product_variant = [
 ];
 
 const combine_region = ["id", "name"];
-const combine_return_status = ["id", "numerical", "language", "status"];
+const combine_return_status = ["id", "numerical", "status"];
 const combine_sale = ["id", "created_at", "products", "end_date"];
 
 const combine_showreel = [
@@ -324,14 +324,14 @@ const combine_warehouse = ["id", "name", "address", "number"];
 const combine_stock = ["id", "variant", "warehouse", "stock"];
 
 // product features
-const combine_collar = ["collar_id", "language", "name"];
-const combine_feature = ["feature_id", "language", "name"];
-const combine_lining = ["lining_id", "language", "name"];
-const combine_fabric = ["fabric_id", "language", "name"];
-const combine_season = ["season_id", "language", "name"];
-const combine_sleeve = ["sleeve_id", "language", "name"];
-const combine_material = ["material_id", "language", "name"];
-const combine_pattern = ["pattern_id", "language", "name"];
+const combine_collar = ["name"];
+const combine_feature = ["name"];
+const combine_lining = ["name"];
+const combine_fabric = ["name"];
+const combine_season = ["name"];
+const combine_sleeve = ["name"];
+const combine_material = ["name"];
+const combine_pattern = ["name"];
 export const combine_shipping_price = [
   'area',
   'weight',

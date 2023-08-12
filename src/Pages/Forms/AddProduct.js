@@ -249,16 +249,21 @@ const AddProduct = ({ layout }) => {
       let data = responseChartData?.data?.filter(
         (chart) => chart?.chart_id === chartRow
       );
-      setProductChartValues((prev) => {
-        return {
-          ...prev,
-          [chartRow]: data,
-        };
-      });
+      for (let i = 1; i <= data?.length; i++) {
+        setProductChartValues((prev) => {
+          return {
+            ...prev,
+            [chartRow]: {
+              ...prev?.[chartRow],
+              [i]: data[i - 1]
+            }
+          };
+        });
+      }
       setChartRowsLength((prev) => {
         return {
           ...prev,
-          [chartRow]: data?.length - 1,
+          [chartRow]: data?.length,
         };
       });
     }
@@ -361,7 +366,7 @@ const AddProduct = ({ layout }) => {
           ? await updateItem("product", productValues)
           : null;
 
-    if (response) {
+    if (response || layout === 'update') {
       const id = response?.data?.[0]?.id || params?.id;
       setProductId(id);
       await onSubmitContent(id);

@@ -1,12 +1,5 @@
 import { addNewItem, updateItem } from "./globalActions";
-import {
-  uploadAvatarImage,
-  uploadCategoryImage,
-  uploadCollectionImage,
-  uploadColorImage,
-  uploadOfferImage,
-  uploadReviewerImage,
-} from "./upload";
+import { uploadAvatarImage, uploadCategoryImage, uploadCollectionImage, uploadColorImage, uploadOfferImage, uploadReviewerImage } from "./upload";
 
 export const handleUploadCategoryImages = async (
   item,
@@ -25,7 +18,7 @@ export const handleUploadCategoryImages = async (
           type: "web",
         })
       : item?.web_image;
-  if (webPath?.url) item.web_image = `https://` + webPath?.url;
+  if (webPath?.url) item.web_image = webPath?.url;
 
   const mobilePath =
     typeof theFileMobileContent === "object"
@@ -37,7 +30,7 @@ export const handleUploadCategoryImages = async (
         })
       : item?.mobile_image;
 
-  if (mobilePath?.url) item.mobile_image = `https://` + mobilePath?.url;
+  if (mobilePath?.url) item.mobile_image = mobilePath?.url;
   if (operation === "add")
     await addNewItem(`category_content`, {
       ...item,
@@ -65,7 +58,7 @@ export const handleUploadOfferImage = async (
           file: theFileWebContent,
         })
       : item?.media;
-  if (media?.url) item.media = `https://` + media?.url;
+  if (media?.url) item.media = media?.url;
   if (operation === "add")
     await addNewItem(`offer_content`, {
       ...item,
@@ -93,7 +86,7 @@ export const handleUploadCollectionImage = async (
           file: theFileWebContent,
         })
       : item?.image;
-  if (image?.url) item.image = `https://` + image?.url;
+  if (image?.url) item.image = image?.url;
   if (operation === "add")
     await addNewItem(`collection_content`, {
       ...item,
@@ -115,7 +108,7 @@ export const handleUploadColorImage = async (item) => {
         })
       : item?.image;
   if (image?.url) {
-    item.image = `https://` + image?.url;
+    item.image = image?.url;
     await updateItem(`color`, item);
   }
 };
@@ -129,7 +122,7 @@ export const handleUploadReviewerImage = async (item, operation = "add") => {
         })
       : item?.image;
   if (image?.url) {
-    item.image = `https://` + image?.url;
+    item.image = image?.url;
     if (operation === "add") {
       await addNewItem(`home_reviews`, item);
     } else {
@@ -148,7 +141,7 @@ export const handleUploadAvatarImage = async (item) => {
         })
       : item?.image;
   if (image?.url) {
-    item.profile_img = `https://` + image?.url;
+    item.profile_img = image?.url;
     await updateItem(`user`, item);
   }
 };

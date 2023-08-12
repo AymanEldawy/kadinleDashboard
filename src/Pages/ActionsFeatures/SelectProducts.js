@@ -175,14 +175,13 @@ const SelectProduct = ({ }) => {
             Save Choices
           </button>
         </div>
+        <div className="">
+
+        </div>
         <DynamicLayout
           SUPABASE_TABLE_NAME={"product"}
           columns={product_columns}
           getSelectedList={setSelectedList}
-
-        // renderTableAction={(data) => {
-        //   return;
-        // }}
         />
       </div>
     </div>

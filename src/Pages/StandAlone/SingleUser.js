@@ -18,6 +18,7 @@ import { MapIcon } from "../../Helpers/Icons";
 import { useDelete } from "../../hooks/useDelete";
 import { useFetch } from "../../hooks/useFetch";
 import { useUpdate } from "../../hooks/useUpdate";
+import { UserTypeRole } from "../../Components/UserTypeRole";
 
 const userOptions = [
   "address",
@@ -59,6 +60,7 @@ const SingleUser = () => {
         type: userType?.data?.[0],
       };
     });
+    setTitle(userType?.data?.[0]?.number)
   };
   const getUserInfo = async (table) => {
     setIsLoading(true)
@@ -131,19 +133,23 @@ const SingleUser = () => {
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <form className="flex flex-col gap-4 ">
           <div>
-            <h3 className="mb-1 text-primary-blue text-lg font-semibold">
-              Change user role
-            </h3>
+            <div className="flex items-center justify-between gap-2 mb-2 border-b pb-2">
+              <h3 className=" text-primary-blue text-lg font-semibold">
+                Change user role
+              </h3>
+              <span className="text-sm">Current Role: <UserTypeRole type={userData?.type} /></span>
+            </div>
             <p className="text-yellow-700 bg-yellow-50 p-1 text-xs">
               Be careful when allowing the user to add or remove roles, as this
               can affect their level of access.
             </p>
+
           </div>
           <SelectField
             name="title"
             label={"title"}
             value={title}
-            list={types}
+            list={types?.filter(type => type?.number !== userData?.type?.number)}
             onChange={(e) => setTitle(e.target.value)}
             keyLabel="title"
           />
@@ -175,25 +181,7 @@ const SingleUser = () => {
               </h3>
               <p className="text-xs text-gray-500 items-center flex gap-1">
                 Role:
-                <span
-                  className={`${type?.number === 0 &&
-                    "text-black px-2 p-1 rounded-md text-xs bg-primary-yellow"
-                    } 
-                ${type?.number === 1 &&
-                    "text-white px-2 p-1 rounded-md text-xs bg-indigo-500"
-                    }
-                 ${type?.number === 2 &&
-                    "text-white px-2 p-1 rounded-md text-xs bg-primary-red"
-                    } 
-                 ${type?.number === 3 &&
-                    "text-white px-2 p-1 rounded-md text-xs bg-primary-blue"
-                    } 
-                 ${type?.number === 4 &&
-                    "text-white px-2 p-1 rounded-md text-xs bg-emerald-700"
-                    }`}
-                >
-                  {type?.title}
-                </span>
+                <UserTypeRole type={userData?.type} />
               </p>
             </div>
           </div>

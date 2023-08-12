@@ -10,14 +10,14 @@ import SelectProduct from "../Pages/ActionsFeatures/SelectProducts";
 import UploadSheet from "../Pages/ActionsFeatures/UploadSheet";
 import DynamicForm from "../Pages/Dynamics/DynamicForm";
 import Update from "../Pages/Dynamics/Update";
+import AddShippingPrice from "../Pages/Forms/AddShippingPrice";
 import NotFoundPage from "../Pages/NotFoundPage/NotFoundPage";
 import Home from "../Pages/StandAlone/Home";
 import HomeSections from "../Pages/StandAlone/HomeSections";
 import SingleUser from "../Pages/StandAlone/SingleUser";
+import ShippingPrices from "../Pages/Tables/ShippingPrice";
 import { AddAddress, AddBrand, AddBulkAlert, AddCategory, AddChart, AddChartContent, AddChartData, AddCollection, AddColor, AddCountry, AddCoupon, AddCurrency, AddHomeReviewer, AddLanguage, AddNews, AddNewsletter, AddOffer, AddOrderStatus, AddPoint, AddProduct, AddRegion, AddReturnStatus, AddSale, AddSize, AddUser, AddWarehouse, AddWarehouseAvailability, InsertOne } from "./../Pages/Forms";
 import { Addresses, Brands, BulkAlert, Categories, Chart, ChartContent, ChartData, Collections, Colors, Comments, Countries, Coupons, Currency, HomeReviews, Languages, Logs, News, Newsletter, NewsletterSubscription, Offers, OrderReturnRequests, Orders, OrderStatus, Points, ProductFeatures, Products, Regions, ReturnStatus, Sales, Sizes, Stocks, Users, WarehouseAvailability, Warehouses } from "./../Pages/Tables";
-import AddShippingPrice from "../Pages/Forms/AddShippingPrice";
-import ShippingPrices from "../Pages/Tables/ShippingPrice";
 
 const authProtectedRoutes = [
 
@@ -115,8 +115,8 @@ const authProtectedRoutes = [
   { path: "/add-chart-data", component: <AddChartData />, allowedRoles: ["*"] },
 
   // **** Group Chart paths ****
-  { path: "/chart", component: <Chart />, allowedRoles: ["*"] },
-  { path: "/chart-content", component: <ChartContent />, allowedRoles: ["*"] },
+  { path: "/chart", component: <ChartContent />, allowedRoles: ["*"] },
+  // { path: "/chart-content", component: <ChartContent />, allowedRoles: ["*"] },
   { path: "/chart-data", component: <ChartData />, allowedRoles: ["*"] },
 
 

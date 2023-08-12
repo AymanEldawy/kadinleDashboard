@@ -5,6 +5,7 @@ import ReactPaginate from "react-paginate";
 import { Link, useLocation } from "react-router-dom";
 
 import { getTableData } from "../../Api/globalActions";
+import { TicketIdGen } from "../../Helpers/functions";
 import { ChevronIcon } from "../../Helpers/Icons";
 import { useFetch } from "../../hooks/useFetch";
 import { FullImage } from "../Global/FullImage/FullImage";
@@ -265,7 +266,14 @@ const SuperTable = ({
                     {columns?.map((col, index) => {
                       let tableNameContent = `${tableName}_content`;
                       if (col === "id") return null;
-                      else if (tableName === 'shipping_price') {
+                      else if (col === 'suggestion' || col === 'ticket') {
+                        return <TableCol
+                          key={row?.id}
+                          classes={`!py-4 border ${classes?.colBody}`}
+                        >
+                          {TicketIdGen()}
+                        </TableCol>
+                      } else if (tableName === 'shipping_price') {
                         let value = ''
                         switch (col) {
                           case 'normal_price':

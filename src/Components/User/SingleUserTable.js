@@ -1,11 +1,9 @@
-
-
 import React, { useEffect } from "react";
+import { useMemo } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
-import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
-import { useMemo } from "react";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
+import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import DynamicLayout from "../../Pages/Dynamics/DynamicLayout";
 import { UserInfo } from "../Global/UserInfo/UserInfo";
 
@@ -20,6 +18,7 @@ export const SingleUserTable = () => {
   }, [name])
 
   const user = location?.state;
+  console.log("🚀 ~ file: SingleUserTable.js:21 ~ SingleUserTable ~ user:", user)
 
   return (
     <DynamicLayout
@@ -27,7 +26,7 @@ export const SingleUserTable = () => {
       additionalData={{ userId: user?.id }}
       columns={columns}
       contentBar={
-        <div className="mb-4 pb-2 border-b dark:border-borderdark">
+        <div className="mb-2 dark:border-borderdark">
           <UserInfo user={user} />
         </div>
       }
@@ -35,7 +34,7 @@ export const SingleUserTable = () => {
         return (
           <Link
             className="text-primary-blue hover:underline"
-            to={`/update/${name}/${data?.id}`}
+            to={`/update/user_${name}/${data?.id}`}
           >
             Edit
           </Link>

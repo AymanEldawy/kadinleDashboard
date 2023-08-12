@@ -13,7 +13,7 @@ export const UserCardInfo = ({ total, title, msg, link, empty, user }) => {
             {msg}
           </p>
           {
-            link && total ? (
+            link && total && title !== 'like' ? (
               <Link state={user} to={link} className='underline italic text-[10px] text-primary-blue hover:underline'>Show more</Link>
             ) : null
           }

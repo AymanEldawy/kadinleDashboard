@@ -146,6 +146,7 @@ const SuperForm = ({
                     index={i}
                     type={field?.type}
                     name={field?.name}
+                    readonly={field?.readonly}
                     label={field?.name}
                     onFocus={() => onTouched(field?.name)}
                     required={field?.required}
@@ -178,6 +179,7 @@ const SuperForm = ({
                     keyLabel={field?.refName || "name"}
                     keyValue={field?.refId || "id"}
                     name={field?.name}
+                    readonly={field?.readonly}
                     required={field?.required}
                     onChange={(e) =>
                       handelChangeField(
@@ -195,6 +197,7 @@ const SuperForm = ({
                     index={i}
                     label={field?.label}
                     name={field?.name}
+                    readonly={field?.readonly}
                     required={field?.required}
                     onFocus={() => onTouched(field?.name)}
                     error={
@@ -219,6 +222,7 @@ const SuperForm = ({
                     index={i}
                     label={field?.name}
                     name={field?.name}
+                    readonly={field?.readonly}
                     required={field?.required}
                     onFocus={() => onTouched(field?.name)}
                     error={
@@ -243,6 +247,7 @@ const SuperForm = ({
                     src={values?.[field?.name]}
                     index={i}
                     name={field?.name}
+                    readonly={field?.readonly}
                     label={field?.name}
                     onFocus={() => onTouched(field?.name)}
                     required={field?.required}
@@ -262,6 +267,7 @@ const SuperForm = ({
                     value={values?.[field?.name]}
                     index={i}
                     name={field?.name}
+                    readOnly={field?.readonly}
                     type={field?.type}
                     label={field?.name}
                     onFocus={() => onTouched(field?.name)}

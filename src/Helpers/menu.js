@@ -1,41 +1,5 @@
 import MoneyIcon from "../Components/icons/MoneyIcon";
-import {
-  BanknoteIcon,
-  BoxClose,
-  BoxIcon,
-  BoxIn,
-  BoxReturn,
-  BrandIcon,
-  BriefcaseIcon,
-  BuildingIcon,
-  BulkIcon,
-  CardIcon,
-  ChartContentIcon,
-  ChartIcon,
-  CollectionIcon,
-  CurrencyIcon,
-  FireIcon,
-  GearIcon,
-  HomeIcon,
-  LanguageIcon,
-  MapIcon,
-  NewsIcon,
-  PaletteIcon,
-  ProductIcon,
-  PuzzleIcon,
-  RulerIcon,
-  SelectIcon,
-  SparklesIcon,
-  StarIcon,
-  StoreIcon,
-  TagsIcon,
-  ToolsIcon,
-  TrunkIcon,
-  UploadIcon,
-  UserGroupIcon,
-  UserIcon,
-  WorldIcon,
-} from "./Icons";
+import { BanknoteIcon, BoxClose, BoxIcon, BoxIn, BoxReturn, BrandIcon, BriefcaseIcon, BuildingIcon, BulkIcon, CardIcon, ChartContentIcon, ChartIcon, CollectionIcon, CurrencyIcon, FireIcon, GearIcon, HomeIcon, LanguageIcon, MapIcon, NewsIcon, PaletteIcon, ProductIcon, PuzzleIcon, RulerIcon, SelectIcon, SparklesIcon, StarIcon, StoreIcon, TagsIcon, ToolsIcon, TrunkIcon, UploadIcon, UserGroupIcon, UserIcon, WorldIcon } from "./Icons";
 import BookOpenIcon from "./Icons/BookOpenIcon";
 import ChartSolidIcon from "./Icons/ChartSolidIcon";
 import ClipboardIcon from "./Icons/ClipboardIcon";
@@ -144,11 +108,11 @@ export const menuData = [
     key: "chart",
     groupTitle: "chart",
     groupList: [
-      { path: "/chart", icon: <ChartSolidIcon />, name: "Chart" },
+      // { path: "/chart", icon: <ChartSolidIcon />, name: "Chart" },
       {
-        path: "/chart-content",
+        path: "/chart",
         icon: <ChartContentIcon />,
-        name: "Chart Content",
+        name: "Chart",
       },
       { path: "/chart-data", icon: <ChartIcon />, name: " Chart data" },
     ],

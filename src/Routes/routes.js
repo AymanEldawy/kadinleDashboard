@@ -17,7 +17,7 @@ import HomeSections from "../Pages/StandAlone/HomeSections";
 import SingleUser from "../Pages/StandAlone/SingleUser";
 import ShippingPrices from "../Pages/Tables/ShippingPrice";
 import { AddAddress, AddBrand, AddBulkAlert, AddCategory, AddChart, AddChartContent, AddChartData, AddCollection, AddColor, AddCountry, AddCoupon, AddCurrency, AddHomeReviewer, AddLanguage, AddNews, AddNewsletter, AddOffer, AddOrderStatus, AddPoint, AddProduct, AddRegion, AddReturnStatus, AddSale, AddSize, AddUser, AddWarehouse, AddWarehouseAvailability, InsertOne } from "./../Pages/Forms";
-import { Addresses, Brands, BulkAlert, Categories, Chart, ChartContent, ChartData, Collections, Colors, Comments, Countries, Coupons, Currency, HomeReviews, Languages, Logs, News, Newsletter, NewsletterSubscription, Offers, OrderReturnRequests, Orders, OrderStatus, Points, ProductFeatures, Products, Regions, ReturnStatus, Sales, Sizes, Stocks, Users, WarehouseAvailability, Warehouses } from "./../Pages/Tables";
+import { Addresses, Brands, BulkAlert, Categories, Chart, ChartContent, ChartData, Collections, CollectionsProducts, Colors, Comments, Countries, Coupons, Currency, HomeReviews, Languages, Logs, News, Newsletter, NewsletterSubscription, Offers, OffersProducts, OrderReturnRequests, Orders, OrderStatus, Points, ProductFeatures, Products, Regions, ReturnStatus, Sales, Sizes, Stocks, Users, WarehouseAvailability, Warehouses } from "./../Pages/Tables";
 
 const authProtectedRoutes = [
 
@@ -104,7 +104,9 @@ const authProtectedRoutes = [
 
   // **** Group Seasons paths ****
   { path: "/collection", component: <Collections />, allowedRoles: ["*"] },
+  { path: "/collections/products", component: <CollectionsProducts />, allowedRoles: ["*"] },
   { path: "/offers", component: <Offers />, allowedRoles: ["*"] },
+  { path: "/offers/products", component: <OffersProducts />, allowedRoles: ["*"] },
   { path: "/sale", component: <Sales />, allowedRoles: ["*"] },
 
 
@@ -138,6 +140,7 @@ const authProtectedRoutes = [
   { path: "/add-warehouse", component: <AddWarehouse />, allowedRoles: ["*"] },
   { path: "/add-warehouse-availability", component: <AddWarehouseAvailability />, allowedRoles: ["*"] },
   { path: "/add-shipping-price", component: <AddShippingPrice />, allowedRoles: ["*"] },
+  { path: "/update/shipping_price/:id", component: <AddShippingPrice />, allowedRoles: ["*"] },
 
   // **** Group Orders paths ****
   { path: "/orders", component: <Orders />, allowedRoles: ["*"] },

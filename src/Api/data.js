@@ -177,7 +177,7 @@ export const getOrders = async (page, pageSize, additionalData) => {
       address(country(name), name:city),
       warehouse_from(name),
       coupon(name:code),
-      order_content(quantity, product_variant(id, sku)),
+      order_content(quantity, product_variant(id, sku,product_id)),
       order_status(numerical, status_content:order_status_content(order_status:status, language_id))
    `,
       { count: "exact" }
@@ -311,7 +311,7 @@ export const getReturnRequests = async (page, pageSize, additionalData) => {
       `
       *,
       return_status(return_status_content(*, name:status)),
-      product_variant(id, sku, product(product_content(product_id, name, language_id))),
+      product_variant(id, sku,product_id, product(product_content(product_id, name, language_id))),
       order(*, name:order_number)),
       return_reason(*,return_reason_content(*))
    `,
@@ -903,7 +903,7 @@ export const getStocks = async (page, pageSize, additionalData) => {
       `
     *,
     warehouse(name),
-    product_variant(id, sku)
+    product_variant(id, sku, product_id)
   `,
       { count: "exact" }
     )
@@ -1081,7 +1081,7 @@ export const getUsersCart = async (page, pageSize, additionalData) => {
     .select(
       `
     *,
-    product_variant(id, sku, product(product_content(product_id, name, language_id)))
+    product_variant(id, sku,product_id, product(product_content(product_id, name, language_id)))
     `,
       { count: "exact" }
     )

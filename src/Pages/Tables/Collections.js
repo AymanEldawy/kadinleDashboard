@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import DynamicLayout from "../Dynamics/DynamicLayout";
+import { EyeIcon } from "../../Helpers/Icons";
 
 const Collections = () => {
   const navigate = useNavigate();
@@ -13,6 +14,13 @@ const Collections = () => {
       columns={columns}
       title="Collections"
       onAddClick={() => navigate(`/add-collection`)}
+      contentBar={
+        <Link to={`/collections/products`} className="flex gap-2 items-center p-1 px-3 hover:bg-primary-blue hover:text-white rounded-md border text-primary-blue border-primary-blue">
+          Show Products
+          <EyeIcon className="h-5 w-5" />
+        </Link>
+      }
+      headerClassName='flex justify-between gap-2 items-center'
     />
   );
 };

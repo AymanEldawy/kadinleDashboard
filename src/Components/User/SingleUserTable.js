@@ -10,7 +10,6 @@ import { UserInfo } from "../Global/UserInfo/UserInfo";
 export const SingleUserTable = () => {
   const params = useParams();
   const location = useLocation();
-  const navigate = useNavigate();
   const { id, name } = params
 
   const columns = useMemo(() => {
@@ -18,7 +17,6 @@ export const SingleUserTable = () => {
   }, [name])
 
   const user = location?.state;
-  console.log("🚀 ~ file: SingleUserTable.js:21 ~ SingleUserTable ~ user:", user)
 
   return (
     <DynamicLayout

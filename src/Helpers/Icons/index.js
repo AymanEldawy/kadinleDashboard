@@ -60,3 +60,6 @@ export { default as LogoutIcon } from "./LogoutIcon";
 export { default as HomeIcon } from "./HomeIcon";
 export { default as ReturnIcon } from "./ReturnIcon";
 export { default as TrunkIcon } from "./TrunkIcon";
+export { default as CalenderIcon } from "./CalenderIcon";
+export { default as BookMarkIcon } from "./BookMarkIcon";
+export { default as BackIcon } from "./BackIcon";

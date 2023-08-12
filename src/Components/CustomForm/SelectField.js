@@ -16,6 +16,7 @@ const SelectField = ({
   onChange,
   firstOptionText,
   containerClassName,
+  labelClassName,
   ...field
 }) => {
 
@@ -35,7 +36,7 @@ const SelectField = ({
       key={`${index}-${label}` || Math.round()}
     >
       {label ? (
-        <label className="overflow-hidden flex gap-1 items-center text-ellipsis text-sm font-normal mb-1 capitalize">
+        <label className={`overflow-hidden flex gap-1 items-center text-ellipsis text-sm font-normal mb-1 capitalize ${labelClassName}`}>
           {label}
           {field?.required ? (
             <span className="text-red-500 font-semibold">*</span>

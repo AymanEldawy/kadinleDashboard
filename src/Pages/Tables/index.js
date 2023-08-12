@@ -32,3 +32,5 @@ export { default as Warehouses } from "./Warehouses";
 export { default as WarehouseAvailability } from "./WarehouseAvailability";
 export { default as OrderStatus } from "./OrderStatus";
 export { default as ReturnStatus } from "./ReturnStatus";
+export { default as CollectionsProducts } from "./CollectionsProducts";
+export { default as OffersProducts } from "./OffersProducts";

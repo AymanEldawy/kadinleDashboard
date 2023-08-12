@@ -25,7 +25,9 @@ const DynamicList = ({
   hidePagination,
   customBarButtons,
   additionalData,
-  outerDelete
+  outerDelete,
+  openDrawerMore,
+  setOpenDrawerMore
 }) => {
   const { defaultLanguage, defaultRegion } = useGlobalOptions();
   const { loading, getDataWithPagination } = useFetch();
@@ -145,6 +147,8 @@ const DynamicList = ({
               </Link>
             );
           }}
+          openDrawerMore={openDrawerMore}
+          setOpenDrawerMore={setOpenDrawerMore}
         />
       </div>
     </>

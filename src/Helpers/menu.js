@@ -290,11 +290,11 @@ export const menuData = [
         path: "/logs",
         name: "Logs",
       },
-      {
-        path: "/select-products",
-        icon: <SelectIcon />,
-        name: "Select products",
-      },
+      // {
+      //   path: "/select-products",
+      //   icon: <SelectIcon />,
+      //   name: "Select products",
+      // },
       {
         path: "/upload-sheet",
         icon: <UploadIcon />,

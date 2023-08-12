@@ -21,7 +21,10 @@ const DynamicLayout = ({
   hideSelect,
   hideDelete,
   customBarButtons,
-  additionalData
+  additionalData,
+  headerClassName,
+  openDrawerMore,
+  setOpenDrawerMore
 }) => {
   const [selectedList, setSelectedList] = useState({});
   useEffect(() => {
@@ -42,6 +45,7 @@ const DynamicLayout = ({
         ) : null
       }
       contentBar={contentBar}
+      headerClassName={headerClassName}
     >
       <DynamicList
         tableName={SUPABASE_TABLE_NAME}
@@ -58,6 +62,8 @@ const DynamicLayout = ({
         allowFilter={allowFilter}
         customBarButtons={customBarButtons}
         additionalData={additionalData}
+        openDrawerMore={openDrawerMore}
+        setOpenDrawerMore={setOpenDrawerMore}
       />
     </BlockPaper>
   );

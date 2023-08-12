@@ -67,7 +67,7 @@ const combine_collection = [
   "name",
   "description",
   "image",
-  "products",
+  // "products",
   "display_home",
 
 ];
@@ -140,7 +140,7 @@ const combine_offer = [
   "name",
   "description",
   "media",
-  "products",
+  // "products",
   "display_home",
 ];
 
@@ -226,10 +226,9 @@ const combine_collection_product = [
   "id",
   "product_sku",
   "name",
-  // "image",
-  // "category",
-  // "barcode",
-  "brand",
+  "category",
+  "barcode",
+  // "brand",
 ];
 
 const combine_product_image = [
@@ -252,7 +251,11 @@ const combine_product_variant = [
 
 const combine_region = ["id", "name"];
 const combine_return_status = ["id", "numerical", "status"];
-const combine_sale = ["id", "created_at", "products", "end_date"];
+const combine_sale = [
+  "id",
+  "created_at",
+  // "products",
+  "end_date"];
 
 const combine_showreel = [
   "id",
@@ -334,9 +337,9 @@ const combine_material = ["name"];
 const combine_pattern = ["name"];
 export const combine_shipping_price = [
   'area',
-  'weight',
-  'fast_price',
-  'normal_price',
+  // 'weight',
+  // 'fast_price',
+  // 'normal_price',
   'min_fast_duration',
   'max_fast_duration',
   'min_normal_duration',

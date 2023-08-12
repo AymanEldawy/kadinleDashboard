@@ -95,6 +95,7 @@ export const TableBar = ({
         ) : null}
         {hideDelete ? null : (
           <button
+            title="Delete all"
             className="bg-red-500 text-sm text-white rounded p-2 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300 disabled:bg-red-200"
             onClick={onDeleteClick}
             disabled={!Object.keys(selectedList)?.length}

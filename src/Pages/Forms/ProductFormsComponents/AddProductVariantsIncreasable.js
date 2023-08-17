@@ -198,7 +198,7 @@ const AddProductVariantsIncreasable = ({
                 </p>
                 <div className="flex gap-4">
                   {allValues?.[itemKey]?.oldMedia?.map((img) => (
-                    <div className="border p-[2px] bg-white rounded-sm shadow relative">
+                    <div className="border p-[2px] bg-white dark:bg-bgmaindark rounded-sm shadow relative">
                       <button
                         onClick={() => handleDeleteImage(img?.id)}
                         className="bg-gray-600 text-white h-4 w-4 absolute top-2 left-2 z-10 rounded-full flex items-center justify-center"

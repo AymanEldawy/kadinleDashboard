@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import DynamicForm from "../Dynamics/DynamicForm";
-import BlockPaper from "../../Components/BlockPaper/BlockPaper";
-import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGlobalOptions } from "../../Context/GlobalOptions";
-import { useAdd } from "../../hooks/useAdd";
+import { toast } from "react-toastify";
+
+import { getRowsById } from "../../Api/globalActions";
+import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import InputField from "../../Components/CustomForm/InputField";
 import SelectField from "../../Components/CustomForm/SelectField";
-import ShippingPriceTable from "./ShippingPricesComponents/ShippingPriceTable";
-import { useFetch } from "../../hooks/useFetch";
 import { Button } from "../../Components/Global/Button";
+import { useGlobalOptions } from "../../Context/GlobalOptions";
+import { useAdd } from "../../hooks/useAdd";
+import { useFetch } from "../../hooks/useFetch";
 import { useUpdate } from "../../hooks/useUpdate";
-import { getRowsById } from "../../Api/globalActions";
+import DynamicForm from "../Dynamics/DynamicForm";
+import ShippingPriceTable from "./ShippingPricesComponents/ShippingPriceTable";
 
 const AddShippingPrice = () => {
   const navigate = useNavigate();
@@ -67,7 +68,6 @@ const AddShippingPrice = () => {
       }
     })
   }
-  // console.log(values);
   const onSubmit = async (e) => {
     e.preventDefault();
     let loading = toast.loading("Please wait...");
@@ -85,10 +85,8 @@ const AddShippingPrice = () => {
       normal_price,
       fast_price
     }
-    // console.log(newValues, 'new value');
 
     const response = params?.id ? updateItem('shipping_price', newValues) : await addItem('shipping_price', newValues);
-    // const response = null;
     if (!response?.error) {
       setValues({});
       toast.update(loading, {
@@ -97,7 +95,8 @@ const AddShippingPrice = () => {
         isLoading: false,
         autoClose: 2000,
       });
-      // navigate(-1);
+      if (!params?.id)
+        navigate(-1);
     } else {
       toast.update(loading, {
         render: params?.id === 'update' ? 'Oops! Failed to updates' : "Oops! Failed to added new",

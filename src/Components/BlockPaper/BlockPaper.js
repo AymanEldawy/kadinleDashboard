@@ -13,7 +13,7 @@ const BlockPaper = ({
 }) => {
   return (
     <div
-      className={`!mb-8 pb-4 shadow overflow-auto relative bg-white ${containerClassName}`}
+      className={`!mb-8 pb-4 shadow overflow-auto relative dark:bg-bgmaindark bg-white ${containerClassName}`}
     >
       <div className={`overflow-hidden`}>
         <div className={`p-4 border-b mb-4 pb-2 dark:border-[#333] bg-white  dark:bg-bgmaindark rounded-md ${headerClassName}`}>

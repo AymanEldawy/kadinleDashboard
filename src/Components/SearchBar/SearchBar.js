@@ -1,8 +1,8 @@
-import Backdrop from "../Backdrop/Backdrop";
 import React from "react";
 import { useState } from "react";
 
 import { ChevronIcon, FilterIcon, SearchIcon } from "../../Helpers/Icons";
+import Backdrop from "../Backdrop/Backdrop";
 
 const SearchBar = ({
   columns,
@@ -52,7 +52,7 @@ const SearchBar = ({
       {open && columns ? (
         <>
           <Backdrop open={open} onClose={() => setOpen(false)} />
-          <ul className="absolute z-[100] py-4 top-4 px-2 overflow-auto  bg-white shadow rounded-md w-full ">
+          <ul className="absolute z-[100] py-4 top-4 px-2 overflow-auto dark:bg-bgmaindark  bg-white shadow rounded-md w-full ">
             {columns?.map((col) => (
               <li
                 className="whitespace-nowrap cursor-pointer capitalize flex gap-2 items-center px-2 py-2 hover:bg-gray-100"

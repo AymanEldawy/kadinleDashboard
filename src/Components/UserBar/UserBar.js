@@ -43,7 +43,7 @@ const UserBar = () => {
           onClick={() => setOpen(false)}
         >
           <div
-            className="z-50 absolute right-0 top-6  my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+            className="z-50 absolute right-0 top-6  my-4 text-base list-none bg-white  divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
             id="user-dropdown"
             onClick={(e) => e.stopPropagation()}
           >

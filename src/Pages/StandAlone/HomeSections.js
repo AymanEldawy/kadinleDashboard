@@ -202,7 +202,7 @@ const HomeSections = () => {
                   } gap-4 p-4`}
               >
                 {sortedSections?.map((section, index) => (
-                  <li className="bg-white relative group-section  overflow-hidden border-gray-500 flex items-center shadow">
+                  <li className="bg-white dark:bg-bgmaindark relative group-section  overflow-hidden border-gray-500 flex items-center shadow">
                     <InputField
                       type="number"
                       className="bg-purple-50 border-purple-50 w-16 text-center text-purple-500 py-2 px-4"

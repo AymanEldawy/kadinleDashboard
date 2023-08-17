@@ -1,7 +1,4 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { getTableContentDataById } from "../../Api/globalActions";
 import { PopupFormOne } from "../../Components/CustomForm/PopupFormOne";
 import SuperForm from "../../Components/CustomForm/SuperForm";
 import Modal from "../../Components/Modal/Modal";
@@ -9,10 +6,12 @@ import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import DB_API from "../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../hooks/useAdd";
 import { useFetch } from "../../hooks/useFetch";
+import { useUpdate } from "../../hooks/useUpdate";
 import DynamicLayout from "../Dynamics/DynamicLayout";
 import EditIcon from "./../../Helpers/Icons/EditIcon";
-import { useUpdate } from "../../hooks/useUpdate";
-import { getTableContentDataById } from "../../Api/globalActions";
+import React, { useEffect } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const productFeatures = [
   "fabric",
@@ -30,7 +29,6 @@ const CACHE_DATA = {};
 const CACHE_FIELDS = {};
 
 const ProductFeatures = () => {
-  const { getData } = useFetch();
   const { addItem } = useAdd();
   const { updateItem } = useUpdate();
   const [activeStage, setActiveStage] = useState(productFeatures[0]);
@@ -67,7 +65,7 @@ const ProductFeatures = () => {
     setLayout("update");
   };
 
-  useEffect(() => {}, [refresh]);
+  useEffect(() => { }, [refresh]);
   const onSubmit = async (data) => {
     if (layout === "update") {
       const response = await updateItem(activeStage, {});
@@ -104,18 +102,17 @@ const ProductFeatures = () => {
         resetForm={resetForm}
       />
       <div>
-        <div className="mb-4 bg-white shadow-sm my-4 w-full p-4">
+        <div className="mb-4 dark:bg-bgmaindark bg-white shadow-sm my-4 w-full p-4">
           <h2 className="text-primary-blue font-semibold mb-4 text-lg">
             Product Features
           </h2>
           <div className=" border-b flex flex-wrap ">
             {productFeatures?.map((stage, index) => (
               <button
-                className={`text-gray-500 px-4 text-sm border-b-2 -mb-[2px] !gap-1 p-2 capitalize flex items-center ${
-                  stage === activeStage
+                className={`text-gray-500 px-4 text-sm border-b-2 -mb-[2px] !gap-1 p-2 capitalize flex items-center ${stage === activeStage
                     ? "border-primary-red text-primary-red font-medium"
                     : ""
-                }`}
+                  }`}
                 onClick={() => setActiveStage(stage)}
               >
                 {stage}

@@ -8,9 +8,10 @@ import { getTableData } from "../../Api/globalActions";
 import { TicketIdGen } from "../../Helpers/functions";
 import { ChevronIcon } from "../../Helpers/Icons";
 import { useFetch } from "../../hooks/useFetch";
+import { DisplayShippingPrices } from "../DisplayShippingPrices/DisplayShippingPrices";
 import { FullImage } from "../Global/FullImage/FullImage";
 import { UserInfo } from "../Global/UserInfo/UserInfo";
-import { useGlobalOptions } from './../../Context/GlobalOptions';
+import { useGlobalOptions } from "./../../Context/GlobalOptions";
 import { LanguageContext } from "./../../Context/LangContext";
 import { fetchWord } from "./../lang/fetchWord";
 import { CollectionProductsCol } from "./CollectionProductsCol";
@@ -21,9 +22,8 @@ import TableCol from "./TableCol";
 import TableHead from "./TableHead";
 import TableHeadCol from "./TableHeadCol";
 import TableRow from "./TableRow";
-import { DisplayShippingPrices } from "../DisplayShippingPrices/DisplayShippingPrices";
 
-let reasons = {}
+let reasons = {};
 let sorting = {};
 
 const SuperTable = ({
@@ -45,26 +45,26 @@ const SuperTable = ({
   hidePagination,
   handlePageClick,
   openDrawerMore,
-  setOpenDrawerMore
+  setOpenDrawerMore,
 }) => {
   const location = useLocation();
   const { getData } = useFetch();
-  const { defaultLanguage } = useGlobalOptions()
+  const { defaultLanguage } = useGlobalOptions();
   const { lang } = useContext(LanguageContext);
   const [currentItems, setCurrentItems] = useState([]);
   const [CACHED_TABLE, setCACHED_TABLE] = useState({});
-  const [CACHE_REASONS, setCACHE_REASONS] = useState({})
+  const [CACHE_REASONS, setCACHE_REASONS] = useState({});
   const [moreData, setMoreData] = useState({});
   const [refresh, setRefresh] = useState(false);
 
   let defaultPrimaryStyle = primaryStyles
     ? {
-      table: "!border-none !rounded-none",
-      headRow: "border-b !border-primary",
-      colHead: "border-b !border-primary !py-4",
-      colBody:
-        "ltr:first:border-l-0  rtl:first:border-r-0 ltr:last:border-r-0 rtl:last:border-l-0",
-    }
+        table: "!border-none !rounded-none",
+        headRow: "border-b !border-primary",
+        colHead: "border-b !border-primary !py-4",
+        colBody:
+          "ltr:first:border-l-0  rtl:first:border-r-0 ltr:last:border-r-0 rtl:last:border-l-0",
+      }
     : {};
   let classes = {
     colHead: "!py-3",
@@ -73,8 +73,8 @@ const SuperTable = ({
     containerClassName: "!rounded-none",
   };
   useEffect(() => {
-    setCurrentItems(data)
-  }, [data])
+    setCurrentItems(data);
+  }, [data]);
 
   useEffect(() => {
     if (columns?.includes("parent_id")) checkRefTable();
@@ -86,16 +86,18 @@ const SuperTable = ({
 
   useEffect(() => {
     if (!defaultLanguage?.id) return;
-    if (tableName === 'order_return_request') {
-      getReasons()
+    if (tableName === "order_return_request") {
+      getReasons();
     }
-  }, [defaultLanguage?.id, tableName])
+  }, [defaultLanguage?.id, tableName]);
 
   async function getReasons() {
-    const response = await getTableData("return_reason_content", { languageId: defaultLanguage?.id });
-    let hash = {}
+    const response = await getTableData("return_reason_content", {
+      languageId: defaultLanguage?.id,
+    });
+    let hash = {};
     for (const item of response?.data) {
-      hash[item?.return_reason_id] = item?.reason
+      hash[item?.return_reason_id] = item?.reason;
     }
     setCACHE_REASONS(hash);
   }
@@ -114,10 +116,12 @@ const SuperTable = ({
   }
   async function checkRefTable() {
     if (!data?.length) return;
-    const response = await getTableData(`${tableName}_content`, { languageId: defaultLanguage?.id })
+    const response = await getTableData(`${tableName}_content`, {
+      languageId: defaultLanguage?.id,
+    });
     let hash = {};
     for (const item of response?.data) {
-      hash[item?.[`${tableName}_id`]] = item.name || item?.title
+      hash[item?.[`${tableName}_id`]] = item.name || item?.title;
     }
     setCACHED_TABLE((prev) => {
       return {
@@ -189,11 +193,10 @@ const SuperTable = ({
 
   useEffect(() => {
     if (openDrawerMore) {
-      let moreData = data?.find(item => item?.id === openDrawerMore)
-      console.log("🚀 ~ file: SuperTable.js:190 ~ useEffect ~ moreData:", moreData)
-      setMoreData(moreData)
-    } else setMoreData({})
-  }, [openDrawerMore, data])
+      let moreData = data?.find((item) => item?.id === openDrawerMore);
+      setMoreData(moreData);
+    } else setMoreData({});
+  }, [openDrawerMore, data]);
 
   return (
     <div className="flex">
@@ -221,10 +224,11 @@ const SuperTable = ({
                 else
                   return (
                     <TableHeadCol
-                      contentClassName={`${classes?.colHeadContentClassName} ${col === "description" || col === "name"
-                        ? "min-w-[160px]"
-                        : ""
-                        }`}
+                      contentClassName={`${classes?.colHeadContentClassName} ${
+                        col === "description" || col === "name"
+                          ? "min-w-[160px]"
+                          : ""
+                      }`}
                       classes={classes?.colHead}
                       key={`${col}-${index}`}
                       sort
@@ -259,10 +263,11 @@ const SuperTable = ({
                   return (
                     <TableRow
                       key={`${row?.Name}-${index}`}
-                      classes={`border-b dark:border-borderdark ${!!selectedList?.[row?.id]
-                        ? "bg-gray-100 dark:bg-[#1115]"
-                        : ""
-                        } ${classes?.row}`}
+                      classes={`border-b dark:border-borderdark ${
+                        !!selectedList?.[row?.id]
+                          ? "bg-gray-100 dark:bg-[#1115]"
+                          : ""
+                      } ${classes?.row}`}
                     >
                       {allowSelect ? (
                         <TableCol classes={`!py-4 border ${classes?.colBody}`}>
@@ -279,22 +284,36 @@ const SuperTable = ({
                       {columns?.map((col, index) => {
                         let tableNameContent = `${tableName}_content`;
                         if (col === "id") return null;
-                        else if (col === 'suggestion' || col === 'ticket') {
-                          return <TableCol
-                            key={row?.id}
-                            classes={`!py-4 border ${classes?.colBody}`}
-                          >
-                            {TicketIdGen()}
-                          </TableCol>
-                        } else if (tableName === 'shipping_price') {
-                          let value = ''
+                        else if (
+                          col === "cause" &&
+                          tableName === "user_point"
+                        ) {
+                          return (
+                            <TableCol
+                              key={row?.id}
+                              classes={`!py-4 border text-green-500 ${classes?.colBody}`}
+                            >
+                              {row?.point?.point_content?.[0]?.cause}
+                            </TableCol>
+                          );
+                        } else if (col === "suggestion" || col === "ticket") {
+                          return (
+                            <TableCol
+                              key={row?.id}
+                              classes={`!py-4 border ${classes?.colBody}`}
+                            >
+                              {TicketIdGen()}
+                            </TableCol>
+                          );
+                        } else if (tableName === "shipping_price") {
+                          let value = "";
                           switch (col) {
-                            case 'normal_price':
-                            case 'fast_price':
-                              value = Object.values(row?.[col])?.[0]
+                            case "normal_price":
+                            case "fast_price":
+                              value = Object.values(row?.[col])?.[0];
                               break;
-                            case 'weight':
-                              value = Object.keys(row?.normal_price)?.[0]
+                            case "weight":
+                              value = Object.keys(row?.normal_price)?.[0];
                               break;
                             default:
                               value = row?.[col];
@@ -308,9 +327,11 @@ const SuperTable = ({
                             >
                               {value}
                             </TableCol>
-                          )
-                        }
-                        else if (col === 'reason' && tableName === 'order_return_request') {
+                          );
+                        } else if (
+                          col === "reason" &&
+                          tableName === "order_return_request"
+                        ) {
                           return (
                             <TableCol
                               key={row?.id}
@@ -339,24 +360,22 @@ const SuperTable = ({
                               classes={`!py-4 border ${classes?.colBody}`}
                             >
                               {col?.indexOf("image") !== -1 ||
-                                col?.indexOf("img") !== -1 ? (
+                              col?.indexOf("img") !== -1 ? (
                                 <>
-                                  {typeof row?.[col] === 'object' && col === 'images' ? (
+                                  {typeof row?.[col] === "object" &&
+                                  col === "images" ? (
                                     <>
-                                      {
-                                        row?.[col]?.map(img => (
-                                          <FullImage
-                                            key={img}
-                                            src={img}
-                                            alt="image description"
-                                            height={40}
-                                            width={40}
-                                            className="inline-block mx-auto cursor-pointer w-8 h-10 object-contain"
-                                          />
-                                        ))
-                                      }
+                                      {row?.[col]?.map((img) => (
+                                        <FullImage
+                                          key={img}
+                                          src={img}
+                                          alt="image description"
+                                          height={40}
+                                          width={40}
+                                          className="inline-block mx-auto cursor-pointer w-8 h-10 object-contain"
+                                        />
+                                      ))}
                                     </>
-
                                   ) : (
                                     <FullImage
                                       src={
@@ -369,9 +388,7 @@ const SuperTable = ({
                                       width={70}
                                       className="block mx-auto cursor-pointer w-20 h-16 object-contain"
                                     />
-                                  )
-                                  }
-
+                                  )}
                                 </>
                               ) : (
                                 <span
@@ -381,7 +398,7 @@ const SuperTable = ({
                               )}
                             </TableCol>
                           );
-                        else if (col === "user" || col === 'admin') {
+                        else if (col === "user" || col === "admin") {
                           return (
                             <TableCol
                               classes={`!py-4 border ${classes?.colBody}`}
@@ -399,22 +416,30 @@ const SuperTable = ({
                             >
                               <Link
                                 className="text-blue-600"
-                                to={`/update/${col?.replace("_id", "")}/${row?.[col]
-                                  }`}
+                                to={`/update/${col?.replace("_id", "")}/${
+                                  row?.[col]
+                                }`}
                               >
                                 {CACHED_TABLE[row?.[col]] || row?.[col]}
                               </Link>
                             </TableCol>
                           );
                         } else if (typeof row?.[col] === "boolean")
-                          return <TableCol>{row?.[col] ? "Yes" : "No"}</TableCol>;
-                        else if (col?.toLowerCase() === "created_at" || col?.toLowerCase() === "end_date")
+                          return (
+                            <TableCol>{row?.[col] ? "Yes" : "No"}</TableCol>
+                          );
+                        else if (
+                          col?.toLowerCase() === "created_at" ||
+                          col?.toLowerCase() === "end_date"
+                        )
                           return (
                             <TableCol
                               classes={`!py-4 border ${classes?.colBody}`}
                               key={index}
                             >
-                              {new Date(row?.[col])?.toLocaleDateString("en-UK")}
+                              {new Date(row?.[col])?.toLocaleDateString(
+                                "en-UK"
+                              )}
                             </TableCol>
                           );
                         else if (col === "number" && tableName === "chart")
@@ -454,12 +479,14 @@ const SuperTable = ({
                           )
                             ? row?.product_variant?.product?.product_content
                             : row?.order_content?.[0]?.product_variant?.product
-                              ?.product_content;
+                                ?.product_content;
                           content = product_content?.[0];
                           // ?.find(
                           //   (c) => c?.language_id === uuidLanguageEn
                           // );
-                          let variants = !!row?.hasOwnProperty("product_variant")
+                          let variants = !!row?.hasOwnProperty(
+                            "product_variant"
+                          )
                             ? row?.product_variant
                             : row?.order_content?.[0]?.product_variant;
                           value = {
@@ -529,11 +556,13 @@ const SuperTable = ({
                               let quantity =
                                 col === "quantity"
                                   ? row?.[tableNameContent]?.reduce(
-                                    (accumulator, currentItem) => {
-                                      return accumulator + currentItem.quantity;
-                                    },
-                                    0
-                                  )
+                                      (accumulator, currentItem) => {
+                                        return (
+                                          accumulator + currentItem.quantity
+                                        );
+                                      },
+                                      0
+                                    )
                                   : null;
                               value = {
                                 name: quantity || content?.[col],
@@ -558,8 +587,8 @@ const SuperTable = ({
                               key={index}
                             >
                               {col === "url" ||
-                                col === "media" ||
-                                value?.image ? (
+                              col === "media" ||
+                              value?.image ? (
                                 <FullImage
                                   src={value?.name}
                                   alt="image description"
@@ -572,7 +601,11 @@ const SuperTable = ({
                                   {value?.link ? (
                                     <Link
                                       className="text-blue-600"
-                                      to={col !== 'variant' ? `/update/${value?.path}/${value?.id}` : `/products/update/product/${value?.id}`}
+                                      to={
+                                        col !== "variant"
+                                          ? `/update/${value?.path}/${value?.id}`
+                                          : `/products/update/product/${value?.id}`
+                                      }
                                     >
                                       {value?.name}
                                     </Link>
@@ -589,7 +622,9 @@ const SuperTable = ({
                               classes={`!py-4 border ${classes?.colBody}`}
                               key={index}
                             >
-                              {typeof row?.[col] !== "object" ? row?.[col] : null}
+                              {typeof row?.[col] !== "object"
+                                ? row?.[col]
+                                : null}
                             </TableCol>
                           );
                       })}
@@ -638,20 +673,20 @@ const SuperTable = ({
           </div>
         ) : null}
       </div>
-      {
-        openDrawerMore ? (
-          <>
-            <div onClick={() => setOpenDrawerMore(false)} className="bg-[#00000060] fixed top-0 left-0 w-full h-full z-[100]" />
-            <div className="shadow p-4 w-[80%] sm:min-w-[350px] max-w-[500px] fixed overflow-auto h-screen top-0 z-[101] right-0 w-[400px] bg-white">
-              <div className="overflow-auto ">
-                <DisplayShippingPrices data={moreData} />
-              </div>
+      {openDrawerMore ? (
+        <>
+          <div
+            onClick={() => setOpenDrawerMore(false)}
+            className="bg-[#00000060] fixed top-0 left-0 w-full h-full z-[100]"
+          />
+          <div className="shadow p-4 w-[80%] sm:min-w-[350px] max-w-[500px] fixed overflow-auto h-screen top-0 z-[101] right-0 bg-white dark:bg-bgmaindark">
+            <div className="overflow-auto ">
+              <DisplayShippingPrices data={moreData} />
             </div>
-          </>
-        ) : null
-      }
+          </div>
+        </>
+      ) : null}
     </div>
-
   );
 };
 

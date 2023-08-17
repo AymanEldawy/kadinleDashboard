@@ -684,8 +684,7 @@ const point_content = [
     type: "uuid",
     key: "ref",
     required: true,
-    tableName: "point_content",
-    refId: "point_id",
+    tableName: "point",
     refName: "numeric",
     hide_in_add_form: true,
   },
@@ -943,7 +942,7 @@ const sale = [
     required: true,
     tableName: "product_content",
     refId: "product_id",
-    hide_in_add_form: true
+    hide_in_add_form: true,
   },
   { name: "end_date", type: "date", required: true },
 ];
@@ -1199,7 +1198,14 @@ const user_point = [
   { name: "point", type: "number", required: true },
   { name: "created_at", type: "date" },
   { name: "status", type: "text", required: true },
-  { name: "cause", type: "text", required: true },
+  {
+    name: "point_numeric",
+    type: "text",
+    key: "ref",
+    tableName: "point",
+    refName: "numeric",
+    required: true,
+  },
 ];
 const user_suggestion = [
   { name: "id", type: "uuid" },
@@ -1275,21 +1281,20 @@ const warehouse_availability = [
     key: "ref",
     required: true,
     tableName: "shipping_price",
-    refName: "area"
+    refName: "area",
   },
 ];
 export const shipping_price = [
-  { "name": "id", "type": "uuid" },
-  { "name": "weight", "type": "string" },
-  { "name": "fast_price", "type": "string" },
-  { "name": "normal_price", "type": "string" },
-  { "name": "min_normal_duration", "type": "number" },
-  { "name": "max_normal_duration", "type": "number" },
-  { "name": "min_fast_duration", "type": "number" },
-  { "name": "max_fast_duration", "type": "number" },
-  { "name": "area", "type": "number" }
-]
-
+  { name: "id", type: "uuid" },
+  { name: "weight", type: "string" },
+  { name: "fast_price", type: "string" },
+  { name: "normal_price", type: "string" },
+  { name: "min_normal_duration", type: "number" },
+  { name: "max_normal_duration", type: "number" },
+  { name: "min_fast_duration", type: "number" },
+  { name: "max_fast_duration", type: "number" },
+  { name: "area", type: "number" },
+];
 
 export const stock_fields = stock;
 
@@ -1374,6 +1379,6 @@ const DB_API = {
   user_wallet,
   warehouse,
   warehouse_availability,
-  shipping_price
+  shipping_price,
 };
 export default DB_API;

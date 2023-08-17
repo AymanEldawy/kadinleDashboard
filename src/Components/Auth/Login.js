@@ -79,7 +79,7 @@ const Login = () => {
     >
       <div className="w-full h-full flex items-center relative z-20">
         <div className="container">
-          <div className="max-w-md mx-auto shadow bg-white p-8 rounded-md ">
+          <div className="max-w-md mx-auto shadow bg-white dark:bg-bgmaindark p-8 rounded-md ">
             <img
               src={logoIcon}
               alt="kadinle logo"

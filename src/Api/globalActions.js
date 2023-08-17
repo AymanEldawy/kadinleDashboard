@@ -1,10 +1,48 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
-import { contentFilterFetch, getAddresses, getCategories, getChartContent, getChartData, getCollections, getCollectionsProducts, getColors, getComments, getCountries, getLogs, getNews, getOffers, getOrders, getOrderStatus, getPoints, getProductFeatures, getProducts, getReturnRequests, getReturnStatus, getSales, getShippingPrices, getShowreels, getSizes, getStocks, getUserAddresses, getUserLikes, getUsers, getUsersCart, getUserSubTable, getWarehouseAvailability, getWarehouses, normalFetch, normalFetchWithPagination } from "./data";
+import {
+  contentFilterFetch,
+  getAddresses,
+  getCategories,
+  getChartContent,
+  getChartData,
+  getCollections,
+  getCollectionsProducts,
+  getColors,
+  getComments,
+  getCountries,
+  getLogs,
+  getNews,
+  getOffers,
+  getOrders,
+  getOrderStatus,
+  getPoints,
+  getProductFeatures,
+  getProducts,
+  getReturnRequests,
+  getReturnStatus,
+  getSales,
+  getShippingPrices,
+  getShowreels,
+  getSizes,
+  getStocks,
+  getUserAddresses,
+  getUserLikes,
+  getUserPoints,
+  getUsers,
+  getUsersCart,
+  getUserSubTable,
+  getWarehouseAvailability,
+  getWarehouses,
+  normalFetch,
+  normalFetchWithPagination,
+} from "./data";
 import { getRecentUser } from "./statictes";
 
 export const getAdmin = () => {
   const STORAGE_ADMIN = localStorage.getItem("KADINLE_ADMIN_USER");
-  return STORAGE_ADMIN !== "undefined" && STORAGE_ADMIN ? JSON.parse(STORAGE_ADMIN) : null;
+  return STORAGE_ADMIN !== "undefined" && STORAGE_ADMIN
+    ? JSON.parse(STORAGE_ADMIN)
+    : null;
 };
 export const ADMIN = getAdmin();
 const fetches = {
@@ -32,11 +70,17 @@ const fetches = {
   user_address: getUserAddresses,
   user_like: getUserLikes,
   user_cart: getUsersCart,
-  user_invite: (page, pageSize, additionalData) => getUserSubTable("user_invite", page, pageSize, additionalData),
-  user_suggestion: (page, pageSize, additionalData) => getUserSubTable("user_suggestion", page, pageSize, additionalData),
-  user_ticket: (page, pageSize, additionalData) => getUserSubTable("user_ticket", page, pageSize, additionalData),
-  user_wallet: (page, pageSize, additionalData) => getUserSubTable("user_wallet", page, pageSize, additionalData),
-  user_point: (page, pageSize, additionalData) => getUserSubTable("user_point", page, pageSize, additionalData),
+  user_invite: (page, pageSize, additionalData) =>
+    getUserSubTable("user_invite", page, pageSize, additionalData),
+  user_suggestion: (page, pageSize, additionalData) =>
+    getUserSubTable("user_suggestion", page, pageSize, additionalData),
+  user_ticket: (page, pageSize, additionalData) =>
+    getUserSubTable("user_ticket", page, pageSize, additionalData),
+  user_wallet: (page, pageSize, additionalData) =>
+    getUserSubTable("user_wallet", page, pageSize, additionalData),
+  // user_point: (page, pageSize, additionalData) => getUserSubTable("user_point", page, pageSize, additionalData),
+  user_point: (page, pageSize, additionalData) =>
+    getUserPoints(page, pageSize, additionalData),
   stock: getStocks,
   warehouse: getWarehouses,
   warehouse_availability: getWarehouseAvailability,
@@ -49,7 +93,7 @@ const fetches = {
   logs: getLogs,
   collection_products: getCollectionsProducts,
   sale: getSales,
-  shipping_price: getShippingPrices
+  shipping_price: getShippingPrices,
 };
 
 export const getTableDataWithPagination = async (
@@ -63,7 +107,12 @@ export const getTableDataWithPagination = async (
     const response = await fetchData(page, pageSize, additionalData);
     return response;
   } else {
-    const response = normalFetchWithPagination(table, page, pageSize, additionalData);
+    const response = normalFetchWithPagination(
+      table,
+      page,
+      pageSize,
+      additionalData
+    );
     return response;
   }
 };
@@ -150,7 +199,7 @@ export const deleteItem = async (table, id) => {
 };
 export const removeItemsFrom = async (table, additionalData) => {
   let { ids } = additionalData;
-  const query = supabase.from(table).delete().in('product_id', ids);
+  const query = supabase.from(table).delete().in("product_id", ids);
   if (additionalData?.col2) {
     query.eq(additionalData?.col, additionalData?.table_id);
   }

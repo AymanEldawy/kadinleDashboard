@@ -98,7 +98,7 @@ const SelectProduct = ({ tableName }) => {
 
   return (
     <div>
-      <div className="mb-4 bg-white shadow-sm my-4 w-full p-4">
+      <div className="mb-4 bg-white dark:bg-bgmaindark dark:text-gray-200 shadow-sm my-4 w-full p-4">
         <h2 className="text-primary-blue capitalize text-xl font-semibold mb-4">
           select product for {activeStage}
         </h2>

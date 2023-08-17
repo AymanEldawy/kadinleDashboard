@@ -22,7 +22,6 @@ const combine_category = [
   "description",
   "mobile_image",
   "web_image",
-
 ];
 
 const combine_chart = ["id", "number"];
@@ -69,7 +68,6 @@ const combine_collection = [
   "image",
   // "products",
   "display_home",
-
 ];
 const combine_color = [
   "id",
@@ -178,7 +176,7 @@ const combine_order_return_request = [
   "variant",
   "other_reason",
   "reason",
-  'images',
+  "images",
   "return_status",
 ];
 
@@ -255,7 +253,8 @@ const combine_sale = [
   "id",
   "created_at",
   // "products",
-  "end_date"];
+  "end_date",
+];
 
 const combine_showreel = [
   "id",
@@ -286,7 +285,7 @@ const combine_user = [
   "wallet",
   "points",
 ];
-const combine_user_address = ["id", "created_at", "title", "address",]; //  "user", 
+const combine_user_address = ["id", "created_at", "title", "address"]; //  "user",
 const combine_user_alert = [
   "id",
   "created_at",
@@ -301,8 +300,8 @@ const combine_user_like = ["id", "created_at", "product"]; //"user",
 const combine_user_point = [
   "id",
   // "user",
-  "point",
   "created_at",
+  "point_numeric",
   "status",
   "cause",
 ];
@@ -313,8 +312,8 @@ const combine_user_suggestion = [
   "suggestion",
   "status",
 ];
-const combine_user_ticket = ["id", "created_at", "ticket", "status"]; //  "user", 
-const combine_user_wallet = ["id", "amount", "created_at"]; //  "user", 
+const combine_user_ticket = ["id", "created_at", "ticket", "status"]; //  "user",
+const combine_user_wallet = ["id", "amount", "created_at"]; //  "user",
 const combine_warehouse_availability = [
   "id",
   "warehouse",
@@ -336,15 +335,15 @@ const combine_sleeve = ["name"];
 const combine_material = ["name"];
 const combine_pattern = ["name"];
 export const combine_shipping_price = [
-  'area',
+  "area",
   // 'weight',
   // 'fast_price',
   // 'normal_price',
-  'min_fast_duration',
-  'max_fast_duration',
-  'min_normal_duration',
-  'max_normal_duration',
-]
+  "min_fast_duration",
+  "max_fast_duration",
+  "min_normal_duration",
+  "max_normal_duration",
+];
 const COMBINE_DB_API = {
   combine_address,
   combine_brand,
@@ -405,6 +404,6 @@ const COMBINE_DB_API = {
   combine_warehouse,
   combine_stock,
   combine_order_short,
-  combine_shipping_price
+  combine_shipping_price,
 };
 export default COMBINE_DB_API;

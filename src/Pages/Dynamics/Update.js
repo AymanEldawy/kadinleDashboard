@@ -20,22 +20,28 @@ import { useGlobalOptions } from "../../Context/GlobalOptions";
 import DB_API from "../../Helpers/Forms/databaseApi";
 import { useFetch } from "../../hooks/useFetch";
 import { useUpdate } from "../../hooks/useUpdate";
+import {
+  onOrderStatusChange,
+  onReturnRequestStatusChange,
+} from "../../Api/globalMail";
+import { ImagesView } from "./ImagesView";
 
 const Update = () => {
   const params = useParams();
-  const { CACHE_LANGUAGES, languages } = useGlobalOptions();
+  const { CACHE_LANGUAGES, languages, defaultLanguage } = useGlobalOptions();
   const { updateItem } = useUpdate();
   const { getData } = useFetch();
   const { name: tableName, id } = params;
 
   const [values, setValues] = useState();
-  const [contentValues, setContentValues] = useState();
+  const [contentValues, setContentValues] = useState({});
   const [errors, setErrors] = useState();
   const [contentErrors, setContentErrors] = useState();
   const [oldList, setOldList] = useState(false);
 
   const fields = DB_API?.[tableName];
-  const fields_content = DB_API?.[tableName + "_content"];
+  const fields_content =
+    tableName !== "order" ? DB_API?.[tableName + "_content"] : [];
   // Handel Submit
   const fetchData = async () => {
     const response = await getData(tableName, id);
@@ -43,23 +49,25 @@ const Update = () => {
   };
   const fetchDataContent = async () => {
     const response = await getData(tableName, id, "content");
+
     let contentsObject = {};
     for (const item of response) {
-      contentsObject[CACHE_LANGUAGES?.[item?.language_id]] = item;
+      contentsObject[
+        item?.language_id ? CACHE_LANGUAGES?.[item?.language_id] : item?.id
+      ] = item;
     }
     setContentValues(contentsObject);
     setOldList((p) => !p);
   };
-  // useEffect(()=>{
-  //   if()
-  // },[])
   useEffect(() => {
     fetchData();
   }, [id, tableName]);
 
   useEffect(() => {
+    if (!defaultLanguage?.id || tableName === "order") return;
+
     if (DB_API?.[`${tableName}_content`]) fetchDataContent();
-  }, [fields_content?.length, id, tableName]);
+  }, [fields_content?.length, id, tableName, defaultLanguage]);
 
   const onSubmit = async () => {
     let loading = toast.loading("Loading ...");
@@ -70,6 +78,11 @@ const Update = () => {
       await handleUploadReviewerImage(values, "update");
     } else {
       const response = await updateItem(tableName, values);
+      if (tableName === "order") {
+        onOrderStatusChange(values);
+      }
+      if (tableName === "order_return_request")
+        onReturnRequestStatusChange(values);
       if (response) {
         if (tableName === "color") await handleUploadColorImage(values);
         const list = Object.values(contentValues);
@@ -96,7 +109,8 @@ const Update = () => {
               "update"
             );
           } else {
-            await updateItem(`${tableName}_content`, item);
+            if (tableName !== "order")
+              await updateItem(`${tableName}_content`, item);
           }
         }
         toast.update(loading, {
@@ -125,6 +139,7 @@ const Update = () => {
           errors={errors}
           setErrors={setErrors}
         />
+        {values?.images?.length ? <ImagesView images={values?.images} /> : null}
       </BlockPaper>
       {fields_content?.length ? (
         <BlockPaper title={tableName + " Content"}>
@@ -137,6 +152,7 @@ const Update = () => {
             setErrors={setContentErrors}
             layout={"update"}
             oldList={oldList}
+            tableName={tableName}
           />
         </BlockPaper>
       ) : null}

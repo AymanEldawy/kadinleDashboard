@@ -22,6 +22,7 @@ import TableCol from "./TableCol";
 import TableHead from "./TableHead";
 import TableHeadCol from "./TableHeadCol";
 import TableRow from "./TableRow";
+import { DisplayOrder } from "../DisplayOrder/DisplayOrder";
 
 let reasons = {};
 let sorting = {};
@@ -681,7 +682,11 @@ const SuperTable = ({
           />
           <div className="shadow p-4 w-[80%] sm:min-w-[350px] max-w-[500px] fixed overflow-auto h-screen top-0 z-[101] right-0 bg-white dark:bg-bgmaindark">
             <div className="overflow-auto ">
-              <DisplayShippingPrices data={moreData} />
+              {tableName === "order" ? (
+                <DisplayOrder data={moreData} />
+              ) : (
+                <DisplayShippingPrices data={moreData} />
+              )}
             </div>
           </div>
         </>

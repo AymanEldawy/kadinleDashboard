@@ -7,7 +7,7 @@ import { EyeIcon } from "../../Helpers/Icons";
 import DynamicLayout from "../Dynamics/DynamicLayout";
 
 const ShippingPrices = () => {
-  const { user: ADMIN } = useGlobalOptions()
+  const { user: ADMIN } = useGlobalOptions();
   const navigate = useNavigate();
   const columns = COMBINE_DB_API.combine_shipping_price || [];
   const [toggleMore, setToggleMore] = useState(false);
@@ -19,20 +19,27 @@ const ShippingPrices = () => {
       title="shipping prices"
       onAddClick={() => navigate(`/add-shipping-price`)}
       renderTableAction={(data) => {
-        return <div className="flex gap-2 items-center">
-          <button onClick={() => setToggleMore(prev => prev ? '' : data?.id)}><EyeIcon className={`${toggleMore === data?.id ? 'text-primary-blue' : 'text-black dark:text-white'} w-5 h-5`} /></button>
-          <Link
-            className="text-primary-blue hover:underline"
-            to={`/update/shipping_price/${data?.id}`}
-          >
-            Edit
-          </Link>
-        </div>
+        return (
+          <div className="flex gap-2 items-center">
+            <button
+              className="bg-primary-red text-white p-1 rounded-md"
+              onClick={() => setToggleMore((prev) => (prev ? "" : data?.id))}
+            >
+              <EyeIcon className={`w-5 h-5`} />
+            </button>
+            <Link
+              className="bg-primary-blue mx-auto text-white text-sm min-w-[80px] flex justify-center items-center gap-1 p-1 rounded-md"
+              to={`/update/shipping_price/${data?.id}`}
+            >
+              Edit
+            </Link>
+          </div>
+        );
       }}
       openDrawerMore={toggleMore}
       setOpenDrawerMore={setToggleMore}
-    // hideDelete={ADMIN?.role?.number !== 4}
-    // hideAction={ADMIN?.role?.number !== 4}
+      // hideDelete={ADMIN?.role?.number !== 4}
+      // hideAction={ADMIN?.role?.number !== 4}
     />
   );
 };

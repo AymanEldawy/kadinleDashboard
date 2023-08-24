@@ -508,8 +508,9 @@ export const order = [
     required: true,
     tableName: "user",
     refName: "full_name",
+    hide_in_add_form: true,
   },
-  { name: "shipping_adress", type: "uuid" },
+  { name: "shipping_adress", type: "uuid", hide_in_add_form: true },
   { name: "price", type: "number", required: true },
   { name: "discount", type: "number" },
   // { name: "payment_status", type: "uuid" },
@@ -520,8 +521,7 @@ export const order = [
     required: true,
     tableName: "warehouse",
   },
-  { name: "shipping_date", type: "date" },
-  // { name: "credit_card_id", type: "uuid" },
+  { name: "shipping_date", type: "text" },
   {
     name: "coupon_id",
     type: "uuid",
@@ -529,6 +529,7 @@ export const order = [
     required: true,
     tableName: "coupon",
     refName: "code",
+    hide_in_add_form: true,
   },
   { name: "order_number", type: "number" },
   {

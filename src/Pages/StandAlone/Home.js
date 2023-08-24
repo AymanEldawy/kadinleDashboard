@@ -1,10 +1,6 @@
 import React, { useEffect } from "react";
-import StatisticsCards from "../../Components/StatisticsCards/StatisticsCards";
 import { useState } from "react";
-import MoneyIcon from "../../Components/icons/MoneyIcon";
-import ShoppingBagIcon from "../../Components/icons/ShoppingBagIcon";
-import UserIcon from "../../Components/icons/UserIcon";
-import WalletIcon from "../../Components/icons/WalletIcon";
+
 import {
   bestSelling,
   getCount,
@@ -12,12 +8,17 @@ import {
   getRecentUser,
   getTotalEarning,
 } from "../../Api/statictes";
-import SkeletonCard from "../../Components/StatisticsCards/SkeletonCard";
-import DynamicList from "../Dynamics/DynamicList";
-import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import SuperTable from "../../Components/CustomTable/SuperTable";
+import MoneyIcon from "../../Components/icons/MoneyIcon";
+import ShoppingBagIcon from "../../Components/icons/ShoppingBagIcon";
+import UserIcon from "../../Components/icons/UserIcon";
+import WalletIcon from "../../Components/icons/WalletIcon";
+import SkeletonCard from "../../Components/StatisticsCards/SkeletonCard";
+import StatisticsCards from "../../Components/StatisticsCards/StatisticsCards";
+import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import DB_API from "../../Helpers/Forms/databaseApi";
 import { StoreIcon } from "../../Helpers/Icons";
+import DynamicList from "../Dynamics/DynamicList";
 
 const dummyStatistics = {
   totalEarnings: {
@@ -161,7 +162,7 @@ const Home = () => {
       <StatisticsCards data={statistics} />
       <div className="grid  items-start grid-cols-1 md:grid-cols-2 gap-8">
         <div className="dark:bg-bgmaindark bg-white shadow my-8">
-          <h4 className="font-medium text-gray-800 text-lg p-2">
+          <h4 className="font-medium dark:text-white text-gray-800 text-lg p-2">
             Recent Orders
           </h4>
           <DynamicList
@@ -174,8 +175,8 @@ const Home = () => {
             hideSelect
           />
         </div>
-        <div className="dark:bg-bgmaindark bg-white shadow my-8">
-          <h4 className="font-medium text-gray-800 text-lg p-2">
+        <div className="dark:bg-bgmaindark bg-white shadow my-8 overflow-auto">
+          <h4 className="font-medium dark:text-white text-gray-800 text-lg p-2">
             Recent Users
           </h4>
           <SuperTable

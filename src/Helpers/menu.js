@@ -1,12 +1,50 @@
 import MoneyIcon from "../Components/icons/MoneyIcon";
-import { BanknoteIcon, BoxClose, BoxIcon, BoxIn, BoxReturn, BrandIcon, BriefcaseIcon, BuildingIcon, BulkIcon, CardIcon, ChartContentIcon, ChartIcon, CollectionIcon, CurrencyIcon, FireIcon, GearIcon, HomeIcon, LanguageIcon, MapIcon, NewsIcon, PaletteIcon, ProductIcon, PuzzleIcon, RulerIcon, SelectIcon, SparklesIcon, StarIcon, StoreIcon, TagsIcon, ToolsIcon, TrunkIcon, UploadIcon, UserGroupIcon, UserIcon, WorldIcon } from "./Icons";
-import BookOpenIcon from "./Icons/BookOpenIcon";
-import ChartSolidIcon from "./Icons/ChartSolidIcon";
-import ClipboardIcon from "./Icons/ClipboardIcon";
-import DatabaseIcon from "./Icons/DatabaseIcon";
-import ExclamationTriangleIcon from "./Icons/ExclamationTriangleIcon";
-import MessageIcon from "./Icons/MessageIcon";
-import PackageIcon from "./Icons/PackageIcon";
+import {
+  ArrowPathIcon,
+  BanknoteIcon,
+  BanknotesIcon,
+  BookOpenIcon,
+  BoxClose,
+  BoxIcon,
+  BoxIn,
+  BoxReturn,
+  BrandIcon,
+  BriefcaseIcon,
+  BuildingIcon,
+  BulkIcon,
+  CardIcon,
+  ChartContentIcon,
+  ChartIcon,
+  ClipboardIcon,
+  CollectionIcon,
+  CurrencyIcon,
+  DatabaseIcon,
+  ExclamationTriangleIcon,
+  FireIcon,
+  GearIcon,
+  HomeIcon,
+  LanguageIcon,
+  MapIcon,
+  MessageIcon,
+  NewsIcon,
+  PackageIcon,
+  PaletteIcon,
+  ProductIcon,
+  PuzzleIcon,
+  RulerIcon,
+  SelectIcon,
+  SenderIcon,
+  SparklesIcon,
+  StarIcon,
+  StoreIcon,
+  TagsIcon,
+  ToolsIcon,
+  TrunkIcon,
+  UploadIcon,
+  UserGroupIcon,
+  UserIcon,
+  WorldIcon,
+} from "./Icons";
 
 export const menuData = [
   {
@@ -218,6 +256,30 @@ export const menuData = [
     ],
   },
   {
+    key: "Reports",
+    groupTitle: "Reports",
+    groupList: [
+      {
+        key: "bill",
+        icon: <BanknotesIcon />,
+        name: "Bill",
+        path: "/bills",
+      },
+      {
+        key: "order-report",
+        icon: <ClipboardIcon />,
+        name: "Order Reports",
+        path: "/order-reports",
+      },
+      {
+        key: "bill-report",
+        icon: <ArrowPathIcon />,
+        name: "bill reports",
+        path: "/bill-reports",
+      },
+    ],
+  },
+  {
     key: "customers",
     groupTitle: "customers",
     groupList: [
@@ -305,7 +367,7 @@ export const menuData = [
         icon: <HomeIcon />,
         name: "Home Sections",
       },
-      // { path: "/send-email", name: "send newsLetter" },
+      { path: "/send-email", icon: <SenderIcon />, name: "send newsLetter" },
     ],
   },
 ];

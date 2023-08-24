@@ -183,10 +183,14 @@ export const getOrders = async (page, pageSize, additionalData) => {
       address(country(name), name:city),
       warehouse_from(name),
       coupon(name:code),
-      order_content(quantity, product_variant(id, sku,product_id)),
+      order_content(quantity, product_variant(id, sku,product(price, barcode, discount, product_content(name)))),
       order_status(numerical, status_content:order_status_content(order_status:status, language_id))
    `,
       { count: "exact" }
+    )
+    .eq(
+      "order_content.product_variant.product.product_content.language_id",
+      additionalData?.languageId
     )
     .eq("order_status.status_content.language_id", additionalData?.languageId)
     .range(start, end);
@@ -1194,6 +1198,108 @@ export const getUsersCart = async (page, pageSize, additionalData) => {
   });
 };
 
+export const getBills = async (page, pageSize, additionalData) => {
+  let searchKey = additionalData?.search?.key;
+  let searchValue = additionalData?.search?.value;
+
+  const query = supabase.from("bill").select(
+    `
+    *,
+    user(first_name, last_name, profile_img),
+    order_number:order(id, name:order_number)
+    `,
+    { count: "exact" }
+  );
+
+  if (searchValue) {
+    switch (searchKey) {
+      case "user":
+        query.ilike(`user.first_name`, `%${searchValue}%`);
+        break;
+      default:
+        query.eq(searchKey, searchValue);
+    }
+  }
+
+  return globalGetData({
+    page,
+    pageSize,
+    additionalData,
+    query,
+    ignoredFilterColumns: ["variant", "name"],
+    filterFn: (f) =>
+      f?.product_variant?.sku === searchValue ||
+      f?.product_variant?.product?.product_content?.name,
+  });
+};
+export const getOrderReports = async (page, pageSize, additionalData) => {
+  let searchKey = additionalData?.search?.key;
+  let searchValue = additionalData?.search?.value;
+
+  const query = supabase.from("order_report").select(
+    `
+    *,
+    user(first_name, last_name, profile_img),
+    order_number:order(id, name:order_number)
+    `,
+    { count: "exact" }
+  );
+
+  if (searchValue) {
+    switch (searchKey) {
+      case "user":
+        query.ilike(`user.first_name`, `%${searchValue}%`);
+        break;
+      default:
+        query.eq(searchKey, searchValue);
+    }
+  }
+
+  return globalGetData({
+    page,
+    pageSize,
+    additionalData,
+    query,
+    ignoredFilterColumns: ["variant", "name"],
+    filterFn: (f) =>
+      f?.product_variant?.sku === searchValue ||
+      f?.product_variant?.product?.product_content?.name,
+  });
+};
+export const getBillReports = async (page, pageSize, additionalData) => {
+  let searchKey = additionalData?.search?.key;
+  let searchValue = additionalData?.search?.value;
+
+  const query = supabase.from("bill_report").select(
+    `
+    *,
+    user(first_name, last_name, profile_img)
+    `,
+    { count: "exact" }
+  );
+
+  if (searchValue) {
+    switch (searchKey) {
+      case "user":
+        query.ilike(`user.first_name`, `%${searchValue}%`);
+        break;
+      default:
+        query.eq(searchKey, searchValue);
+    }
+  }
+
+  return globalGetData({
+    page,
+    pageSize,
+    additionalData,
+    query,
+    ignoredFilterColumns: ["variant", "name"],
+    filterFn: (f) =>
+      f?.product_variant?.sku === searchValue ||
+      f?.product_variant?.product?.product_content?.name,
+  });
+};
+
 export const getUserAddresses = async (page, pageSize, additionalData) => {
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
@@ -1311,5 +1417,13 @@ export const getUserTypeData = async (userTypeId) => {
     .from("user_type")
     .select("*")
     .eq("id", userTypeId);
+  return response;
+};
+
+export const getUserDataFromReport = async () => {};
+
+export const getUsersEmail = async () => {
+  const response = await supabase.from("user").select(" email");
+  console.log("🚀 ~ file: data.js:1429 ~ getUsersEmail ~ response:", response);
   return response;
 };

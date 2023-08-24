@@ -16,7 +16,9 @@ root.render(
       <LangContextProvider>
         <GlobalOptionsProvider>
           <AlertProvider>
-            <App />
+            <LangContextProvider>
+              <App />
+            </LangContextProvider>
           </AlertProvider>
         </GlobalOptionsProvider>
       </LangContextProvider>

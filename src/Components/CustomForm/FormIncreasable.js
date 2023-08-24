@@ -32,6 +32,7 @@ export const FormIncreasable = ({
   setErrors,
   oldList,
   SUPABASE_TABLE_NAME,
+  tableName,
 }) => {
   const { getData } = useFetch();
   const location = useLocation();
@@ -45,9 +46,11 @@ export const FormIncreasable = ({
   useEffect(() => {
     checkRefTable(initialFields);
   }, [initialFields]);
+
   useEffect(() => {
     if (!!onChangeValues) onChangeValues(values);
   }, [values]);
+
   useEffect(() => {
     if (!!values && !!oldList) {
       const list = Object.keys(values);
@@ -141,8 +144,6 @@ export const FormIncreasable = ({
     });
   };
 
-  useEffect(() => {}, [activeTab]);
-
   return (
     <div className="">
       <div className="flex flex-wrap gap-2 items-start">
@@ -153,7 +154,13 @@ export const FormIncreasable = ({
           setActiveTab={setActiveTab}
           activeTab={activeTab}
           maxCount={languages?.length}
-          title={SUPABASE_TABLE_NAME === "size" ? "choose region" : null}
+          title={
+            SUPABASE_TABLE_NAME === "size"
+              ? "choose region"
+              : tableName === "order"
+              ? "view variant"
+              : null
+          }
         />
       </div>
       {listCount?.map((item, index) => (

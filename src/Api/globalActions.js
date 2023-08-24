@@ -2,6 +2,8 @@ import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
 import {
   contentFilterFetch,
   getAddresses,
+  getBillReports,
+  getBills,
   getCategories,
   getChartContent,
   getChartData,
@@ -13,6 +15,7 @@ import {
   getLogs,
   getNews,
   getOffers,
+  getOrderReports,
   getOrders,
   getOrderStatus,
   getPoints,
@@ -94,6 +97,9 @@ const fetches = {
   collection_products: getCollectionsProducts,
   sale: getSales,
   shipping_price: getShippingPrices,
+  bill: getBills,
+  order_report: getOrderReports,
+  bill_report: getBillReports,
 };
 
 export const getTableDataWithPagination = async (

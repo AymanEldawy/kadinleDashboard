@@ -147,17 +147,16 @@ const combine_order = [
   "id",
   "created_at",
   "order_number",
-  "address",
   "price",
-  "discount",
   "warehouse_from",
+  "address",
   "shipping_date",
-  "coupon",
-  "numerical",
   "order_status",
-  "variant",
-  "quantity",
-  // "payment_status",
+  // "discount",
+  // "coupon",
+  // "numerical",
+  // "variant",
+  // "quantity",
   "user",
 ];
 const combine_order_short = [
@@ -344,6 +343,32 @@ export const combine_shipping_price = [
   "min_normal_duration",
   "max_normal_duration",
 ];
+
+export const combine_bill = [
+  "id",
+  "created_at",
+  "user",
+  "order_number",
+  // "bill",
+  "total",
+  "shipping_cost",
+];
+
+export const combine_bill_report = [
+  "id",
+  "created_at",
+  "user",
+  "bill_id",
+  "report",
+];
+export const combine_order_report = [
+  "id",
+  "created_at",
+  "user",
+  "order_number",
+  "report",
+];
+
 const COMBINE_DB_API = {
   combine_address,
   combine_brand,
@@ -405,5 +430,8 @@ const COMBINE_DB_API = {
   combine_stock,
   combine_order_short,
   combine_shipping_price,
+  combine_bill,
+  combine_bill_report,
+  combine_order_report,
 };
 export default COMBINE_DB_API;

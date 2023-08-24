@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-
-import Modal from "../../Modal/Modal";
 import { useEffect } from "react";
 import { useRef } from "react";
+
+import Modal from "../../Modal/Modal";
 
 export const FullImage = ({ src, alt, height, width, ...imgProps }) => {
   const [open, setOpen] = useState(false);
@@ -34,7 +34,7 @@ export const FullImage = ({ src, alt, height, width, ...imgProps }) => {
           src={src}
           alt={alt}
           onClick={() => setOpen(true)}
-          className="cursor-pointer !w-20 !h-16 object-contain"
+          className={`cursor-pointer !w-20 !h-16 object-contain ${imgProps?.className}`}
           {...imgProps}
         />
       ) : (

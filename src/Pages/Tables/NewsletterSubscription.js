@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
+import { removeItemsFrom, removeSubscription } from "../../Api/globalActions";
 import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import DynamicLayout from "../Dynamics/DynamicLayout";
 
 const NewsletterSubscription = () => {
-  const navigate = useNavigate();
   const [selectedList, setSelectedList] = useState([]);
   const columns = COMBINE_DB_API.combine_newsletter_subscription || [];
 
-  // onClickRemove
-  // onClickSend
-  // OnSendMultiple
+  const removeFromSubscription = async (email) => {
+    const response = await removeSubscription(email);
+    if (response?.error) {
+      toast.error("Failed to remove email, please try again later");
+    } else toast.success("Successfully remove the email from Subscription");
+  };
 
   return (
     <DynamicLayout
@@ -21,19 +25,20 @@ const NewsletterSubscription = () => {
       setSelectedList={setSelectedList}
       selectedList={selectedList}
       customBarButtons={
-        <button className="bg-primary-blue p-2 rounded-md text-white">
+        <Link
+          to="/send-email"
+          className="bg-primary-blue p-2 rounded-md text-white"
+        >
           Send to newsletter
-        </button>
+        </Link>
       }
-      // onAddClick={() => navigate("/send-newsletter")}
       renderTableAction={(data) => {
         return (
           <div className="gap-2 flex items-center text-xs">
-            {/* <button className="bg-primary-blue p-2 rounded-md text-white">
-              Send
-            </button> */}
-            {/* <button>edit</button> */}
-            <button className="bg-primary-red p-2 rounded-md text-white">
+            <button
+              onClick={() => removeFromSubscription(data?.email)}
+              className="bg-primary-red p-2 rounded-md text-white"
+            >
               remove
             </button>
           </div>

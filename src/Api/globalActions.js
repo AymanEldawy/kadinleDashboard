@@ -1,44 +1,5 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
-import {
-  contentFilterFetch,
-  getAddresses,
-  getBillReports,
-  getBills,
-  getCategories,
-  getChartContent,
-  getChartData,
-  getCollections,
-  getCollectionsProducts,
-  getColors,
-  getComments,
-  getCountries,
-  getLogs,
-  getNews,
-  getOffers,
-  getOrderReports,
-  getOrders,
-  getOrderStatus,
-  getPoints,
-  getProductFeatures,
-  getProducts,
-  getReturnRequests,
-  getReturnStatus,
-  getSales,
-  getShippingPrices,
-  getShowreels,
-  getSizes,
-  getStocks,
-  getUserAddresses,
-  getUserLikes,
-  getUserPoints,
-  getUsers,
-  getUsersCart,
-  getUserSubTable,
-  getWarehouseAvailability,
-  getWarehouses,
-  normalFetch,
-  normalFetchWithPagination,
-} from "./data";
+import { contentFilterFetch, getAddresses, getBillReports, getBills, getCategories, getChartContent, getChartData, getCollections, getCollectionsProducts, getColors, getComments, getCountries, getLogs, getNews, getOffers, getOrderReports, getOrders, getOrderStatus, getPoints, getProductFeatures, getProducts, getReturnRequests, getReturnStatus, getSales, getShippingPrices, getShowreels, getSizes, getStocks, getUserAddresses, getUserLikes, getUserPoints, getUsers, getUsersCart, getUserSubTable, getWarehouseAvailability, getWarehouses, normalFetch, normalFetchWithPagination } from "./data";
 import { getRecentUser } from "./statictes";
 
 export const getAdmin = () => {
@@ -247,5 +208,14 @@ export const updateItem = async (table, item) => {
     });
   }
   // .single();
+  return response;
+};
+
+export const removeSubscription = async (email) => {
+  const response = await supabase
+    .from("newsletter_subscription")
+    .delete()
+    .eq("email", email);
+
   return response;
 };

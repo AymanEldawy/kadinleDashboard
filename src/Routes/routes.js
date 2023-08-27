@@ -9,6 +9,7 @@ import SelectProduct from "../Pages/ActionsFeatures/SelectProducts";
 import UploadSheet from "../Pages/ActionsFeatures/UploadSheet";
 import Update from "../Pages/Dynamics/Update";
 import AddShippingPrice from "../Pages/Forms/AddShippingPrice";
+import EmailSender from "../Pages/StandAlone/EmailSender";
 import Home from "../Pages/StandAlone/Home";
 import HomeSections from "../Pages/StandAlone/HomeSections";
 import SingleUser from "../Pages/StandAlone/SingleUser";
@@ -84,7 +85,6 @@ import {
   WarehouseAvailability,
   Warehouses,
 } from "./../Pages/Tables";
-import EmailSender from "../Pages/StandAlone/EmailSender";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -249,21 +249,25 @@ const authProtectedRoutes = [
     component: <AddReturnStatus />,
     allowedRoles: ["superadmin"],
   },
-  { path: "/add-warehouse", component: <AddWarehouse />, allowedRoles: ["*"] },
+  {
+    path: "/add-warehouse",
+    component: <AddWarehouse />,
+    allowedRoles: ["admin", "superadmin"],
+  },
   {
     path: "/add-warehouse-availability",
     component: <AddWarehouseAvailability />,
-    allowedRoles: ["*"],
+    allowedRoles: ["admin", "superadmin"],
   },
   {
     path: "/add-shipping-price",
     component: <AddShippingPrice />,
-    allowedRoles: ["*"],
+    allowedRoles: ["admin", "superadmin"],
   },
   {
     path: "/update/shipping_price/:id",
     component: <AddShippingPrice />,
-    allowedRoles: ["*"],
+    allowedRoles: ["admin", "superadmin"],
   },
 
   // **** Group Orders paths ****
@@ -296,8 +300,16 @@ const authProtectedRoutes = [
   { path: "/bill-reports", component: <BillReports />, allowedRoles: ["*"] },
 
   // **** Group Award add paths ****
-  { path: "/add-point", component: <AddPoint />, allowedRoles: ["*"] },
-  { path: "/add-coupon", component: <AddCoupon />, allowedRoles: ["*"] },
+  {
+    path: "/add-point",
+    component: <AddPoint />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/add-coupon",
+    component: <AddCoupon />,
+    allowedRoles: ["admin", "superadmin"],
+  },
 
   // **** Group Award paths ****
   { path: "/coupons", component: <Coupons />, allowedRoles: ["*"] },
@@ -305,25 +317,37 @@ const authProtectedRoutes = [
 
   // **** Group Interactive paths ****
   { path: "/home-reviews", component: <HomeReviews />, allowedRoles: ["*"] },
-  { path: "/add-review", component: <AddHomeReviewer />, allowedRoles: ["*"] },
+  {
+    path: "/add-review",
+    component: <AddHomeReviewer />,
+    allowedRoles: ["admin", "superadmin"],
+  },
   { path: "/comments", component: <Comments />, allowedRoles: ["*"] },
 
   // **** Group User paths ****
   { path: "/users", component: <Users />, allowedRoles: ["*"] },
-  { path: "/add-user", component: <AddUser />, allowedRoles: ["*"] },
-  { path: "/users/:id", component: <SingleUser />, allowedRoles: ["*"] },
+  { path: "/add-user", component: <AddUser />, allowedRoles: ["superadmin"] },
+  {
+    path: "/users/:id",
+    component: <SingleUser />,
+    allowedRoles: ["superadmin"],
+  },
   {
     path: "/users/:id/:name",
     component: <SingleUserTable />,
-    allowedRoles: ["*"],
+    allowedRoles: ["superadmin"],
   },
 
   // **** Group Update paths ****
-  { path: "/update/:name/:id", component: <Update />, allowedRoles: ["*"] },
+  {
+    path: "/update/:name/:id",
+    component: <Update />,
+    allowedRoles: ["admin", "superadmin"],
+  },
   {
     path: "/products/update/product/:id",
     component: <AddProduct layout="update" />,
-    allowedRoles: ["*"],
+    allowedRoles: ["admin", "superadmin"],
   },
 
   // **** Group Useful actions paths ****
@@ -333,9 +357,21 @@ const authProtectedRoutes = [
     component: <SelectProduct />,
     allowedRoles: ["*"],
   },
-  { path: "/upload-sheet", component: <UploadSheet />, allowedRoles: ["*"] },
-  { path: "/send-email", component: <EmailSender />, allowedRoles: ["*"] },
-  { path: "/home-sections", component: <HomeSections />, allowedRoles: ["*"] },
+  {
+    path: "/upload-sheet",
+    component: <UploadSheet />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/send-email",
+    component: <EmailSender />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/home-sections",
+    component: <HomeSections />,
+    allowedRoles: ["admin", "superadmin"],
+  },
 
   // **** Group public paths ****
   { path: "/", component: <Home />, allowedRoles: ["*"] },

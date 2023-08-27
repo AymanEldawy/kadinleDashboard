@@ -34,10 +34,11 @@ export const TableBar = ({
   selectedColumn,
   setSearchValue,
 }) => {
-  const { defaultLanguage } = useGlobalOptions();
+  const { defaultLanguage, user } = useGlobalOptions();
   const { getData } = useFetch();
   const [categories, setCategories] = useState();
 
+  console.log(user);
   useEffect(() => {
     if (allowFilter && defaultLanguage?.id) {
       getTableData("category_content", {
@@ -47,10 +48,6 @@ export const TableBar = ({
       });
     }
   }, [allowFilter, defaultLanguage?.id]);
-
-
-
-
 
   return (
     <div className="flex justify-between gap-2 mb-4 flex-wrap max-[500px]:items-start ">
@@ -83,33 +80,35 @@ export const TableBar = ({
           className="p-2 rounded-md"
         />
       </div>
-      <div className="flex gap-2">
-        {customBarButtons ? customBarButtons : null}
-        {onAddClick ? (
-          <button
-            className="bg-blue-500 whitespace-nowrap text-sm text-white rounded p-2 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300"
-            onClick={onAddClick}
-          >
-            add new
-          </button>
-        ) : null}
-        {hideDelete ? null : (
-          <button
-            title="Delete all"
-            className="bg-red-500 text-sm text-white rounded p-2 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300 disabled:bg-red-200"
-            onClick={onDeleteClick}
-            disabled={!Object.keys(selectedList)?.length}
-          >
-            <TrashIcon />{" "}
-          </button>
-        )}
-        {/* <button
+      {user?.role?.number > 2 ? (
+        <div className="flex gap-2">
+          {customBarButtons ? customBarButtons : null}
+          {onAddClick ? (
+            <button
+              className="bg-blue-500 whitespace-nowrap text-sm text-white rounded p-2 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300"
+              onClick={onAddClick}
+            >
+              add new
+            </button>
+          ) : null}
+          {hideDelete ? null : (
+            <button
+              title="Delete all"
+              className="bg-red-500 text-sm text-white rounded p-2 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300 disabled:bg-red-200"
+              onClick={onDeleteClick}
+              disabled={!Object.keys(selectedList)?.length}
+            >
+              <TrashIcon />{" "}
+            </button>
+          )}
+          {/* <button
           className="bg-green-500 text-sm text-white rounded px-2 py-1 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300"
           onClick={onFilterClick}
         >
           Filter
         </button> */}
-      </div>
+        </div>
+      ) : null}
     </div>
   );
 };

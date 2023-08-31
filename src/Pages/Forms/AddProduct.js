@@ -205,13 +205,13 @@ const AddProduct = ({ layout }) => {
               sizes: {
                 ...prev?.[index]?.sizes,
                 0: {
-                  ...prev?.[index]?.sizes?.['0'],
+                  ...prev?.[index]?.sizes?.["0"],
                   stocks: {
                     ...prev?.[index]?.sizes?.stocks,
                     [i]: stocks?.[i],
-                  }
+                  },
                 },
-              }
+              },
             },
           };
         });
@@ -255,8 +255,8 @@ const AddProduct = ({ layout }) => {
             ...prev,
             [chartRow]: {
               ...prev?.[chartRow],
-              [i]: data[i - 1]
-            }
+              [i]: data[i - 1],
+            },
           };
         });
       }
@@ -349,7 +349,8 @@ const AddProduct = ({ layout }) => {
   }, [defaultLanguage?.id, defaultRegion?.id]);
 
   useEffect(() => {
-    if (productValues?.sku !== productSku) {
+    console.log(productValues?.product_sku);
+    if (productValues?.product_sku !== productSku) {
       setProductSku(productValues?.product_sku);
     }
   }, [productValues]);
@@ -363,16 +364,16 @@ const AddProduct = ({ layout }) => {
       layout !== "update"
         ? await addItem("product", productValues)
         : JSON.stringify(IsUpdated?.PRODUCT) !== JSON.stringify(productValues)
-          ? await updateItem("product", productValues)
-          : null;
+        ? await updateItem("product", productValues)
+        : null;
 
-    if (response || layout === 'update') {
+    if (response || layout === "update") {
       const id = response?.data?.[0]?.id || params?.id;
       setProductId(id);
       await onSubmitContent(id);
       await onSubmitProductVariants(id);
       await onSubmitChart(id);
-      if (layout === 'update') {
+      if (layout === "update") {
         toast.update(loading, {
           render: "Great! Content has been updated successfully",
           type: "success",
@@ -422,6 +423,8 @@ const AddProduct = ({ layout }) => {
       }
     }
   };
+
+  console.log(CACHED_TABLES_SKU, "CACHED_TABLES_SKU");
   const onSubmitProductVariants = async (productId) => {
     if (!productId && layout !== "update") {
       toast.error(`Failed to insert variant product_id is none`);
@@ -443,8 +446,10 @@ const AddProduct = ({ layout }) => {
         const sizes = values?.sizes;
         let variantId = null;
         for (const size of Object.values(sizes)) {
-          const sku = `${productSku} ${CACHED_TABLES_SKU?.size?.[size?.id]} ${CACHED_TABLES_SKU?.color?.[color_id]
-            } ${pattern_sku}`;
+          const sku = `${productSku} ${+CACHED_TABLES_SKU?.size?.[size?.id]} ${
+            CACHED_TABLES_SKU?.color?.[color_id]
+          } ${pattern_sku}`;
+          console.log(sku, "sku");
           let item = {
             product_id: layout === "update" ? params?.id : productId,
             size_id: size?.size_id,
@@ -538,6 +543,8 @@ const AddProduct = ({ layout }) => {
     }
   };
 
+  console.log(productVariantValues, productValues, "productVariantValues");
+
   return (
     <div>
       {loading ? (
@@ -553,10 +560,11 @@ const AddProduct = ({ layout }) => {
         <div className="mb-4 border-b dark:border-[#333] flex flex-wrap w-full">
           {STAGES?.map((stage, index) => (
             <button
-              className={`text-gray-500 px-4 text-sm border-b-2 dark:border-[#333] -mb-[2px] !gap-1 p-2 capitalize flex items-center ${stage === activeStage
-                ? "!border-primary-red text-primary-red font-medium"
-                : ""
-                }`}
+              className={`text-gray-500 px-4 text-sm border-b-2 dark:border-[#333] -mb-[2px] !gap-1 p-2 capitalize flex items-center ${
+                stage === activeStage
+                  ? "!border-primary-red text-primary-red font-medium"
+                  : ""
+              }`}
               onClick={() => setActiveStage(stage)}
             >
               {stage}

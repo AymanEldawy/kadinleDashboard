@@ -1,3 +1,4 @@
+import { addNewItem, ADMIN } from "../../Api/globalActions";
 import { msg17 } from "../Messages/17";
 import { msg18 } from "../Messages/18";
 import { msg30 } from "../Messages/30";
@@ -166,10 +167,30 @@ export const sendMail = async (message, emailList, subject) => {
       }),
     });
     if (!response.ok) {
+      await addNewItem("logs", {
+        description: `Failed to send message to ${
+          emailList?.length === 1
+            ? emailList?.at(0)
+            : `${emailList?.length} user`
+        }`,
+        row_id: `No row id`,
+        table_name: `message: ${subject}`,
+        admin_id: ADMIN?.id,
+      });
       throw new Error(
         `Failed to generate mail. Server responded with status ${response.status}`
       );
     } else {
+      await addNewItem("logs", {
+        description: `Successfully send message to ${
+          emailList?.length === 1
+            ? emailList?.at(0)
+            : `${emailList?.length} user`
+        }`,
+        row_id: `No row id`,
+        table_name: `message: ${subject}`,
+        admin_id: ADMIN?.id,
+      });
     }
     return response;
   }

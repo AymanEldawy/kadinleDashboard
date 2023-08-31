@@ -197,21 +197,23 @@ const AddProductVariantsIncreasable = ({
                   this image
                 </p>
                 <div className="flex gap-4">
-                  {allValues?.[itemKey]?.oldMedia?.map((img) => (
-                    <div className="border p-[2px] bg-white dark:bg-bgmaindark rounded-sm shadow relative">
-                      <button
-                        onClick={() => handleDeleteImage(img?.id)}
-                        className="bg-gray-600 text-white h-4 w-4 absolute top-2 left-2 z-10 rounded-full flex items-center justify-center"
-                      >
-                        <CloseIcon className="h-3 w-3" />
-                      </button>
-                      <FullImage
-                        src={img?.image}
-                        alt="old media"
-                        className="w-[140px] object-contain"
-                      />
-                    </div>
-                  ))}
+                  {allValues?.[itemKey]?.oldMedia?.map((img) => {
+                    return (
+                      <div className="border p-[2px] bg-white dark:bg-bgmaindark rounded-sm shadow relative">
+                        <button
+                          onClick={() => handleDeleteImage(itemKey, img?.id)}
+                          className="bg-gray-600 text-white h-4 w-4 absolute top-2 left-2 z-10 rounded-full flex items-center justify-center"
+                        >
+                          <CloseIcon className="h-3 w-3" />
+                        </button>
+                        <FullImage
+                          src={img?.image}
+                          alt="old media"
+                          className="w-[140px] object-contain"
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             ) : null}
@@ -229,17 +231,20 @@ const AddProductVariantsIncreasable = ({
           />
           {Object.keys(listCountGlobalVariant?.[itemKey]?.sizes)?.map(
             (item, index) => {
-              let skuValue = `${productSku || ""} ${CACHED_TABLES_SKU?.["size"]?.[
-                allValues?.[itemKey]?.sizes?.[item]?.size_id
-              ] || ""
-                } ${CACHED_TABLES_SKU?.["color"]?.[
-                allValues?.[itemKey]?.color_id
+              let skuValue = `${productSku || ""} ${
+                CACHED_TABLES_SKU?.["size"]?.[
+                  allValues?.[itemKey]?.sizes?.[item]?.size_id
                 ] || ""
-                } ${allValues?.[itemKey]?.pattern_sku || ""} `;
+              } ${
+                CACHED_TABLES_SKU?.["color"]?.[
+                  allValues?.[itemKey]?.color_id
+                ] || ""
+              } ${allValues?.[itemKey]?.pattern_sku || ""} `;
               return (
                 <div
-                  className={`relative z-10 ${+activeTabSizes !== +index ? "hidden" : ""
-                    } `}
+                  className={`relative z-10 ${
+                    +activeTabSizes !== +index ? "hidden" : ""
+                  } `}
                   kye={`${index}-size`}
                 >
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4 flex-wrap mb-4">

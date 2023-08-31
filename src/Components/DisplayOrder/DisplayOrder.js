@@ -10,7 +10,6 @@ import TableRow from "../CustomTable/TableRow";
 const columns = ["order_number", "price", "shipping_type", "shipping_date"];
 
 export const DisplayOrder = ({ data }) => {
-  console.log("🚀 ~ file: DisplayOrder.js:4 ~ DisplayOrder ~ data:", data);
   return (
     <div>
       <div className="bg-gray-200 grid grid-cols-2 dark:bg-bgmaindark shadow rounded-md overflow-hidden">

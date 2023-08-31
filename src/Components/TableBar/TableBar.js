@@ -38,7 +38,6 @@ export const TableBar = ({
   const { getData } = useFetch();
   const [categories, setCategories] = useState();
 
-  console.log(user);
   useEffect(() => {
     if (allowFilter && defaultLanguage?.id) {
       getTableData("category_content", {

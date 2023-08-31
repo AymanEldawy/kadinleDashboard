@@ -6,11 +6,21 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
-import { getRowsById, getRowsByIds, getTableData } from "../../Api/globalActions";
+import {
+  getRowsById,
+  getRowsByIds,
+  getTableData,
+} from "../../Api/globalActions";
 import { uploadProductImage } from "../../Api/upload";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
-import { product as fields, product_content as fields_content, product_image as fields_image, product_variant as fields_variant, stock_fields } from "../../Helpers/Forms/databaseApi";
+import {
+  product as fields,
+  product_content as fields_content,
+  product_image as fields_image,
+  product_variant as fields_variant,
+  stock_fields,
+} from "../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../hooks/useAdd";
 import { useFetch } from "../../hooks/useFetch";
 import { useUpdate } from "../../hooks/useUpdate";
@@ -349,7 +359,6 @@ const AddProduct = ({ layout }) => {
   }, [defaultLanguage?.id, defaultRegion?.id]);
 
   useEffect(() => {
-    console.log(productValues?.product_sku);
     if (productValues?.product_sku !== productSku) {
       setProductSku(productValues?.product_sku);
     }
@@ -424,7 +433,6 @@ const AddProduct = ({ layout }) => {
     }
   };
 
-  console.log(CACHED_TABLES_SKU, "CACHED_TABLES_SKU");
   const onSubmitProductVariants = async (productId) => {
     if (!productId && layout !== "update") {
       toast.error(`Failed to insert variant product_id is none`);
@@ -446,10 +454,9 @@ const AddProduct = ({ layout }) => {
         const sizes = values?.sizes;
         let variantId = null;
         for (const size of Object.values(sizes)) {
-          const sku = `${productSku} ${+CACHED_TABLES_SKU?.size?.[size?.id]} ${
-            CACHED_TABLES_SKU?.color?.[color_id]
-          } ${pattern_sku}`;
-          console.log(sku, "sku");
+          const sku = `${productSku} ${+CACHED_TABLES_SKU?.size?.[
+            size?.size_id
+          ]} ${CACHED_TABLES_SKU?.color?.[color_id]} ${pattern_sku}`;
           let item = {
             product_id: layout === "update" ? params?.id : productId,
             size_id: size?.size_id,
@@ -542,8 +549,6 @@ const AddProduct = ({ layout }) => {
       }
     }
   };
-
-  console.log(productVariantValues, productValues, "productVariantValues");
 
   return (
     <div>

@@ -14,10 +14,6 @@ const OrderReports = () => {
       columns={columns}
       title="Order Reports"
       renderTableAction={(data) => {
-        console.log(
-          "🚀 ~ file: OrderReports.js:17 ~ OrderReports ~ data:",
-          data
-        );
         return (
           <Link
             to="/send-email"

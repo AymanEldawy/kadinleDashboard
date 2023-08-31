@@ -85,7 +85,6 @@ const EmailSender = () => {
     let response = null;
     if (state?.userId || email) {
       let to = state?.userId || email;
-      console.log([to], subject);
       response = await sendMail(mail, [to], subject);
     } else {
       const responseEmails = await getUsersEmail();

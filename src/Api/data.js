@@ -1424,6 +1424,5 @@ export const getUserDataFromReport = async () => {};
 
 export const getUsersEmail = async () => {
   const response = await supabase.from("user").select(" email");
-  console.log("🚀 ~ file: data.js:1429 ~ getUsersEmail ~ response:", response);
   return response;
 };

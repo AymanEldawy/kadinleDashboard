@@ -43,7 +43,6 @@ export const onOrderStatusChange = async (order) => {
       .eq("id", order?.shipping_adress);
     country = responseCountry?.data?.at(0)?.country?.name;
   }
-  console.log(country);
 
   let params =
     final === 5
@@ -67,8 +66,8 @@ export const onOrderStatusChange = async (order) => {
 };
 
 export const onReturnRequestStatusChange = (request) => {
-  console.log(
-    "🚀 ~ file: globalMail.js:71 ~ onReturnRequestStatusChange ~ request:",
-    request
-  );
+  // console.log(
+  //   "🚀 ~ file: globalMail.js:71 ~ onReturnRequestStatusChange ~ request:",
+  //   request
+  // );
 };

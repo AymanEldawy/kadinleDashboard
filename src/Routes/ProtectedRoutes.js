@@ -5,10 +5,6 @@ import { useGlobalOptions } from "../Context/GlobalOptions";
 import { SUPERADMIN_PERMISSIONS } from "./permissions";
 
 function ProtectedRoutes({ roles, path }) {
-  console.log(
-    "🚀 ~ file: ProtectedRoutes.js:9 ~ ProtectedRoutes ~ path:",
-    path
-  );
   const params = useParams();
   const location = useLocation();
   const { setRefresh } = useGlobalOptions();

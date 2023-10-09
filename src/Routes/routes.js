@@ -85,6 +85,7 @@ import {
   WarehouseAvailability,
   Warehouses,
 } from "./../Pages/Tables";
+import Suppliers from "../Pages/StandAlone/Suppliers";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -372,8 +373,14 @@ const authProtectedRoutes = [
     component: <HomeSections />,
     allowedRoles: ["admin", "superadmin"],
   },
+  {
+    path: "/suppliers",
+    component: <Suppliers />,
+    allowedRoles: ["admin", "superadmin"],
+  },
 
   // **** Group public paths ****
+
   { path: "/", component: <Home />, allowedRoles: ["*"] },
   { path: "*", component: <NotAllowed />, allowedRoles: ["*"] },
   { path: "/not-found", component: <PageNotFound />, allowedRoles: ["*"] },

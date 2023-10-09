@@ -368,6 +368,7 @@ export const combine_order_report = [
   "order_number",
   "report",
 ];
+const combine_suppliers = ["created_at", "pdf_source", "archive"];
 
 const COMBINE_DB_API = {
   combine_address,
@@ -377,6 +378,7 @@ const COMBINE_DB_API = {
   combine_chart,
   combine_chart_data,
   combine_chart_content,
+  combine_suppliers,
   // combine_content,
   combine_collection,
   combine_collection_product,

@@ -285,7 +285,32 @@ const SuperTable = ({
                       {columns?.map((col, index) => {
                         let tableNameContent = `${tableName}_content`;
                         if (col === "id") return null;
-                        else if (
+                        if (col === "pdf_source") {
+                          return (
+                            <TableCol
+                              key={row?.id}
+                              classes={`!py-4 border  ${row?.archive ? ' grayscale' : ''} ${classes?.colBody}`}
+                            >
+                              <div className="flex flex-wrap gap-4 justify-between">
+                                <div className="flex gap-2 items-center">
+                                  <img
+                                    src="https://www.learningcontainer.com/wp-content/plugins/download-manager/assets/file-type-icons/pdf.svg"
+                                    alt="pdf"
+                                    className="w-5 h-5 object-contain"
+                                  />
+                                  <span>{row?.[col]?.split("/").at(-1)}</span>
+                                </div>
+                                <a
+                                  download
+                                  href={row?.pdf_source}
+                                  className={`bg-green-500 text-white text-xs py-1 px-3 rounded-md`}
+                                >
+                                  Download
+                                </a>
+                              </div>
+                            </TableCol>
+                          );
+                        } else if (
                           col === "cause" &&
                           tableName === "user_point"
                         ) {

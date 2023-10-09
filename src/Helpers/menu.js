@@ -332,12 +332,12 @@ export const menuData = [
         path: "/home-reviews",
         name: "home reviews",
       },
-      // {
-      //   key: "showreels",
-      //   icon: <PackageIcon />,
-      //   path: "/showreels",
-      //   name: "Showreels",
-      // },
+      {
+        key: "suppliers",
+        icon: <UserGroupIcon />,
+        path: "/suppliers",
+        name: "Suppliers",
+      },
     ],
   },
 

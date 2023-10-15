@@ -6,6 +6,7 @@ import { signup } from "../../Api/auth";
 import {
   handleUploadAvatarImage,
   handleUploadCategoryImages,
+  handleUploadCategoryVideo,
   handleUploadCollectionImage,
   handleUploadColorImage,
   handleUploadOfferImage,
@@ -78,6 +79,16 @@ const Update = () => {
       await handleUploadReviewerImage(values, "update");
     } else {
       const response = await updateItem(tableName, values);
+      if (
+        tableName === "category" &&
+        typeof values?.banner_video === "object"
+      ) {
+        await handleUploadCategoryVideo(
+          response?.data?.at(0),
+          values?.id || id
+        );
+      }
+
       if (tableName === "order") {
         onOrderStatusChange(values);
       }

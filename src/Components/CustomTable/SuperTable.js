@@ -23,6 +23,7 @@ import TableHead from "./TableHead";
 import TableHeadCol from "./TableHeadCol";
 import TableRow from "./TableRow";
 import { DisplayOrder } from "../DisplayOrder/DisplayOrder";
+import { FullVideo } from "../Global/FullImage/FullVideo";
 
 let reasons = {};
 let sorting = {};
@@ -285,11 +286,29 @@ const SuperTable = ({
                       {columns?.map((col, index) => {
                         let tableNameContent = `${tableName}_content`;
                         if (col === "id") return null;
+
+                        if (col === "banner_video" && row?.banner_video) {
+                          return (
+                            <TableCol
+                              key={row?.id}
+                              classes={`!py-4 border ${classes?.colBody}`}
+                            >
+                              <FullVideo
+                                src={row?.banner_video}
+                                height={50}
+                                width={70}
+                                className="block mx-auto cursor-pointer w-20 h-16 object-contain"
+                              />
+                            </TableCol>
+                          );
+                        }
                         if (col === "pdf_source") {
                           return (
                             <TableCol
                               key={row?.id}
-                              classes={`!py-4 border  ${row?.archive ? ' grayscale' : ''} ${classes?.colBody}`}
+                              classes={`!py-4 border  ${
+                                row?.archive ? " grayscale" : ""
+                              } ${classes?.colBody}`}
                             >
                               <div className="flex flex-wrap gap-4 justify-between">
                                 <div className="flex gap-2 items-center">
@@ -409,7 +428,7 @@ const SuperTable = ({
                                         row?.collection_content?.[0]?.image ||
                                         row?.category_content?.[0]?.[col]
                                       }
-                                      alt="image description"
+                                      alt="image"
                                       height={50}
                                       width={70}
                                       className="block mx-auto cursor-pointer w-20 h-16 object-contain"

@@ -19,6 +19,7 @@ const combine_category = [
   "display_homepage",
   "numeric",
   "title",
+  "banner_video",
   "description",
   "mobile_image",
   "web_image",

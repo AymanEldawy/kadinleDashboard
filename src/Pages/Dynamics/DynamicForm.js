@@ -3,7 +3,15 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { signup } from "../../Api/auth";
-import { handleUploadAvatarImage, handleUploadCategoryImages, handleUploadCollectionImage, handleUploadColorImage, handleUploadOfferImage, handleUploadReviewerImage } from "../../Api/DynamicUploadHandler";
+import {
+  handleUploadAvatarImage,
+  handleUploadCategoryImages,
+  handleUploadCategoryVideo,
+  handleUploadCollectionImage,
+  handleUploadColorImage,
+  handleUploadOfferImage,
+  handleUploadReviewerImage,
+} from "../../Api/DynamicUploadHandler";
 import { uploadCategoryImage } from "../../Api/upload";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
@@ -40,11 +48,11 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
         toast.success("Successfully add new user");
       }
     } else {
-      if (SUPABASE_TABLE_NAME === 'shipping_price') {
-        let newValue = values
-        newValue.fast_price = { [values?.weight]: values?.fast_price }
-        newValue.normal_price = { [values?.weight]: values?.normal_price }
-        delete newValue?.weight
+      if (SUPABASE_TABLE_NAME === "shipping_price") {
+        let newValue = values;
+        newValue.fast_price = { [values?.weight]: values?.fast_price };
+        newValue.normal_price = { [values?.weight]: values?.normal_price };
+        delete newValue?.weight;
         const response = await addItem(SUPABASE_TABLE_NAME, values);
         if (!response?.error) {
           toast.update(loading, {
@@ -59,6 +67,9 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
         const response = await addItem(SUPABASE_TABLE_NAME, values);
         if (!response?.error) {
           const itemId = response?.data?.[0]?.id;
+          if (SUPABASE_TABLE_NAME === "category" && values?.banner_video) {
+            handleUploadCategoryVideo(response?.data?.at(0), itemId);
+          }
           if (SUPABASE_TABLE_NAME === "color")
             await handleUploadColorImage({
               ...values,
@@ -72,7 +83,11 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
               } else if (SUPABASE_TABLE_NAME === "offer") {
                 await handleUploadOfferImage(item, itemId, CACHE_LANGUAGES);
               } else if (SUPABASE_TABLE_NAME === "collection") {
-                await handleUploadCollectionImage(item, itemId, CACHE_LANGUAGES);
+                await handleUploadCollectionImage(
+                  item,
+                  itemId,
+                  CACHE_LANGUAGES
+                );
               } else {
                 await addItem(`${SUPABASE_TABLE_NAME}_content`, {
                   ...item,

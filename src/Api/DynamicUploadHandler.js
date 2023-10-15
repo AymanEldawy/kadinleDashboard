@@ -1,5 +1,13 @@
 import { addNewItem, updateItem } from "./globalActions";
-import { uploadAvatarImage, uploadCategoryImage, uploadCollectionImage, uploadColorImage, uploadOfferImage, uploadReviewerImage } from "./upload";
+import {
+  uploadAvatarImage,
+  uploadCategoryImage,
+  uploadCategoryVideo,
+  uploadCollectionImage,
+  uploadColorImage,
+  uploadOfferImage,
+  uploadReviewerImage,
+} from "./upload";
 
 export const handleUploadCategoryImages = async (
   item,
@@ -144,4 +152,21 @@ export const handleUploadAvatarImage = async (item) => {
     item.profile_img = image?.url;
     await updateItem(`user`, item);
   }
+};
+
+export const handleUploadCategoryVideo = async (item, itemId) => {
+  let theFileWebContent = item?.banner_video;
+  const media =
+    typeof theFileWebContent === "object"
+      ? await uploadCategoryVideo({
+          id: itemId,
+          file: theFileWebContent,
+        })
+      : item?.banner_video;
+
+  if (media?.url) item.banner_video = media?.url;
+
+  await updateItem(`category`, {
+    ...item,
+  });
 };

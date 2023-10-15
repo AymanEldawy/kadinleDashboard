@@ -8,6 +8,7 @@ async function uploadFile(formData, action) {
   if (action === "uploadAvatar") {
     headers.append("user_id", formData.get("user_id"));
   }
+
   const requestOptions = {
     method: "POST",
     headers: headers,
@@ -82,5 +83,12 @@ export const uploadAvatarImage = async ({ userId, file }) => {
   formData.append("user_id", userId);
   formData.append("file", file);
   return await uploadFile(formData, "uploadAvatar");
+};
+
+export const uploadCategoryVideo = async ({ id, file }) => {
+  const formData = new FormData();
+  formData.append("id", id);
+  formData.append("file", file);
+  return await uploadFile(formData, "uploadCategory");
 };
 // export const uploadInfluencer = async () => {}; // product_id / user_id

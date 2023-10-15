@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { FolderPlusIcon } from "../../Helpers/Icons";
 import { FullImage } from "../Global/FullImage/FullImage";
+import { FullVideo } from "../Global/FullImage/FullVideo";
 
 const UploadFile = ({
   label,
@@ -14,13 +15,22 @@ const UploadFile = ({
   ...field
 }) => {
   const [preview, setPreview] = useState("");
+  const [videoPreview, setVideoPreview] = useState(false);
+
   useEffect(() => {
     if (src && typeof src === "object") {
+      if (src?.type?.indexOf("video/") !== -1) {
+        setVideoPreview(true);
+      }
       setPreview(URL.createObjectURL(src));
     } else {
+      if (src?.indexOf(".mp4") !== -1) {
+        setVideoPreview(true);
+      }
       setPreview(src);
     }
   }, [src]);
+
   return (
     <div
       className={`flex flex-col relative ${containerClassName}`}
@@ -33,11 +43,20 @@ const UploadFile = ({
               {src} {src > 1 ? "Images" : "image"}
             </span>
           ) : (
-            <FullImage
-              src={preview}
-              alt="preview"
-              className="absolute ltr:right-0 rtl:left-0 -top-1 h-16 cursor-pointer border-2 rounded-md border-black w-20 object-contain shadow z-20"
-            />
+            <>
+              {videoPreview ? (
+                <FullVideo
+                  src={preview}
+                  className="absolute ltr:right-0 rtl:left-0 -top-1 h-16 cursor-pointer border-2 rounded-md border-black w-20 object-contain shadow z-20"
+                />
+              ) : (
+                <FullImage
+                  src={preview}
+                  alt="preview"
+                  className="absolute ltr:right-0 rtl:left-0 -top-1 h-16 cursor-pointer border-2 rounded-md border-black w-20 object-contain shadow z-20"
+                />
+              )}
+            </>
           )}
         </>
       ) : null}

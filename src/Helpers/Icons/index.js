@@ -72,3 +72,4 @@ export { default as MessageIcon } from "./MessageIcon";
 export { default as PackageIcon } from "./PackageIcon";
 export { default as BanknotesIcon } from "./BanknotesIcon";
 export { default as ArrowPathIcon } from "./ArrowPathIcon";
+export { default as PlayIcon } from "./PlayIcon";

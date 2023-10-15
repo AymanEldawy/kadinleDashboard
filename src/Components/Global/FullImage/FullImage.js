@@ -1,35 +1,20 @@
 import React, { useState } from "react";
-import { useEffect } from "react";
 import { useRef } from "react";
 
 import Modal from "../../Modal/Modal";
 
 export const FullImage = ({ src, alt, height, width, ...imgProps }) => {
   const [open, setOpen] = useState(false);
-  const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const imageRef = useRef();
 
-  const handleLoad = () => {
-    setLoaded(true);
-  };
-
-  const handleError = () => {
-    setError(true);
-  };
-  useEffect(() => {
-    if (!src) return;
-
-    setError(false);
-    setLoaded(false);
-    imageRef?.current?.addEventListener("load", handleLoad);
-    imageRef?.current?.addEventListener("error", handleError);
-  }, [src]);
+  if (!src) return;
 
   return (
     <>
       {!error ? (
         <img
+          onError={() => setError(true)}
           ref={imageRef}
           src={src}
           alt={alt}

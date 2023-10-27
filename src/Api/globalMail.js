@@ -66,8 +66,5 @@ export const onOrderStatusChange = async (order) => {
 };
 
 export const onReturnRequestStatusChange = (request) => {
-  // console.log(
-  //   "🚀 ~ file: globalMail.js:71 ~ onReturnRequestStatusChange ~ request:",
-  //   request
-  // );
+
 };

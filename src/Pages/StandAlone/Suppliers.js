@@ -1,15 +1,11 @@
 import React from "react";
 import DynamicLayout from "../Dynamics/DynamicLayout";
 import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useUpdate } from "../../hooks/useUpdate";
-import { useDelete } from "../../hooks/useDelete";
 
 const Suppliers = () => {
-  const navigate = useNavigate();
   const { updateItem } = useUpdate();
-  const { deleteItem } = useDelete();
   const columns = COMBINE_DB_API.combine_suppliers || [];
 
   const addToArchive = async (e, data) => {
@@ -28,6 +24,7 @@ const Suppliers = () => {
 
   return (
     <DynamicLayout
+    
       SUPABASE_TABLE_NAME="suppliers"
       columns={columns}
       title="suppliers"

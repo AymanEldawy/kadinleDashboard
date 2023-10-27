@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { menuData } from "../Helpers/menu";
 import { Link } from "react-router-dom";
 import { ChevronIcon } from "../Helpers/Icons";
 
@@ -8,17 +7,21 @@ const Menu = () => {
   const [dropdown, setDropdown] = React.useState(false);
   const [subDropdown, setSubDropdown] = React.useState(false);
   const [dropdownGroup, setDropdownGroup] = React.useState();
+  
   const handleClick = (key) => {
     setDropdown(key);
   };
+
   const handleSubDropdown = (key) => {
     setSubDropdown(key);
   };
+
   const closeDropDown = (e) => {
     e.stopPropagation();
     setDropdown(" ");
     setSubDropdown(" ");
   };
+
   const list = (links) => {
     return links?.map((item) => {
       if (item?.children) {

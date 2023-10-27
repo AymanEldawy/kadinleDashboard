@@ -86,6 +86,10 @@ import {
   Warehouses,
 } from "./../Pages/Tables";
 import Suppliers from "../Pages/StandAlone/Suppliers";
+import SpecialOffer from "../Pages/Tables/SepcialOffer";
+import Support from "../Pages/StandAlone/Support";
+import ChatRoom from "../Pages/StandAlone/ChatRoom";
+import ChatSetting from "../Pages/StandAlone/ChatSetting";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -315,6 +319,7 @@ const authProtectedRoutes = [
   // **** Group Award paths ****
   { path: "/coupons", component: <Coupons />, allowedRoles: ["*"] },
   { path: "/points", component: <Points />, allowedRoles: ["*"] },
+  { path: "/special-offer", component: <SpecialOffer />, allowedRoles: ["*"] },
 
   // **** Group Interactive paths ****
   { path: "/home-reviews", component: <HomeReviews />, allowedRoles: ["*"] },
@@ -351,8 +356,13 @@ const authProtectedRoutes = [
     allowedRoles: ["admin", "superadmin"],
   },
 
+  // **** Group Support paths ****
+  { path: "/support", component: <Support />, allowedRoles: ["*"] },
+  { path: "/chat-setting", component: <ChatSetting />, allowedRoles: ["*"] },
+
   // **** Group Useful actions paths ****
   { path: "/logs", component: <Logs />, allowedRoles: ["*"] },
+  { path: "/rooms/:id", component: <ChatRoom />, allowedRoles: ["*"] },
   {
     path: "/select-products",
     component: <SelectProduct />,

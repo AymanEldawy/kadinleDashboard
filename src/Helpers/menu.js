@@ -15,6 +15,7 @@ import {
   CardIcon,
   ChartContentIcon,
   ChartIcon,
+  ChatIcon,
   ClipboardIcon,
   CollectionIcon,
   CurrencyIcon,
@@ -38,6 +39,7 @@ import {
   StarIcon,
   StoreIcon,
   TagsIcon,
+  TimeIcon,
   ToolsIcon,
   TrunkIcon,
   UploadIcon,
@@ -45,6 +47,7 @@ import {
   UserIcon,
   WorldIcon,
 } from "./Icons";
+import FlashIcon from "./Icons/FlashIcon";
 
 export const menuData = [
   {
@@ -172,6 +175,12 @@ export const menuData = [
         name: "Coupons",
         icon: <CardIcon />,
         path: "/coupons",
+      },
+      {
+        key: "special offer",
+        name: "Special Offer",
+        icon: <FlashIcon />,
+        path: "/special-offer",
       },
     ],
   },
@@ -341,6 +350,25 @@ export const menuData = [
     ],
   },
 
+  {
+    key: "support",
+    icon: <GearIcon />,
+    groupTitle: "support",
+    groupList: [
+      {
+        key: "support",
+        icon: <ChatIcon />,
+        path: "/support",
+        name: "support",
+      },
+      {
+        key: "chat-setting",
+        icon: <TimeIcon />,
+        path: "/chat-setting",
+        name: "chat-setting",
+      },
+    ],
+  },
   {
     key: "actions",
     icon: <GearIcon />,

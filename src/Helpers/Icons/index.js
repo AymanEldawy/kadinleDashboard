@@ -73,3 +73,5 @@ export { default as PackageIcon } from "./PackageIcon";
 export { default as BanknotesIcon } from "./BanknotesIcon";
 export { default as ArrowPathIcon } from "./ArrowPathIcon";
 export { default as PlayIcon } from "./PlayIcon";
+export { default as ChatIcon } from "./ChatIcon";
+export { default as TimeIcon } from "./TimeIcon";

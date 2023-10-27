@@ -1,10 +1,8 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import DynamicList from "../Dynamics/DynamicList";
-import { useFetch } from "./../../hooks/useFetch";
 
 const DynamicLayout = ({
   SUPABASE_TABLE_NAME,
@@ -27,6 +25,7 @@ const DynamicLayout = ({
   setOpenDrawerMore
 }) => {
   const [selectedList, setSelectedList] = useState({});
+  
   useEffect(() => {
     if (!!getSelectedList) getSelectedList(selectedList);
   }, [selectedList]);

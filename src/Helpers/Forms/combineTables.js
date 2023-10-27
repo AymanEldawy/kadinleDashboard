@@ -370,8 +370,12 @@ export const combine_order_report = [
   "report",
 ];
 const combine_suppliers = ["created_at", "pdf_source", "archive"];
+const combine_chat = ["created_at", "user", "content", "room_id"];
+const combine_room = ["created_at", "user"];
 
 const COMBINE_DB_API = {
+  combine_room,
+  combine_chat,
   combine_address,
   combine_brand,
   combine_bulk_alert,

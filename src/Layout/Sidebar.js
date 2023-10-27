@@ -41,7 +41,7 @@ const Sidebar = ({ open, setOpen }) => {
                 {list(item?.groupList, level + 1)}
               </ul>
             </div>
-            <div className="my-3 border-b w-full h-[1px]" />
+            <div className="my-3 border-b :last-border-b-0 w-full h-[1px]" />
           </div>
         );
       }

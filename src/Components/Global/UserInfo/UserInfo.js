@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FullImage } from "../FullImage/FullImage";
 
-export const UserInfo = ({ user }) => {
+export const UserInfo = ({ user, userNameClassName }) => {
   const theName = user?.first_name + " " + user?.last_name;
   return (
     <Link
@@ -18,7 +18,7 @@ export const UserInfo = ({ user }) => {
           className="w-9 h-9 rounded-full p-[1px] border"
         />
       ) : null}
-      <span>{theName}</span>
+      <span className={userNameClassName}>{theName}</span>
     </Link>
   );
 };

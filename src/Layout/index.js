@@ -49,7 +49,7 @@ const Layout = ({ children }) => {
             }
             {/* <Menu /> */}
             <Backdrop open={open} onClose={() => setOpen(false)} hideInLarge />
-            <div className={`main-content ${location?.pathname === '/login' ? '' : 'px-4 my-8 flex-1'}`}>{children}</div>
+            <div className={`main-content ${location?.pathname === '/login' || location?.pathname === '/support'  ? '' : 'px-4 my-8 flex-1'}`}>{children}</div>
             {/* <Footer /> */}
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
-import { contentFilterFetch, getAddresses, getBillReports, getBills, getCategories, getChartContent, getChartData, getCollections, getCollectionsProducts, getColors, getComments, getCountries, getLogs, getNews, getOffers, getOrderReports, getOrders, getOrderStatus, getPoints, getProductFeatures, getProducts, getReturnRequests, getReturnStatus, getSales, getShippingPrices, getShowreels, getSizes, getStocks, getUserAddresses, getUserLikes, getUserPoints, getUsers, getUsersCart, getUserSubTable, getWarehouseAvailability, getWarehouses, normalFetch, normalFetchWithPagination } from "./data";
+import { contentFilterFetch, getAddresses, getBillReports, getBills, getCategories, getChartContent, getChartData, getChats, getCollections, getCollectionsProducts, getColors, getComments, getCountries, getLogs, getNews, getOffers, getOrderReports, getOrders, getOrderStatus, getPoints, getProductFeatures, getProducts, getReturnRequests, getReturnStatus, getRooms, getSales, getShippingPrices, getShowreels, getSizes, getStocks, getUserAddresses, getUserLikes, getUserPoints, getUsers, getUsersCart, getUserSubTable, getWarehouseAvailability, getWarehouses, normalFetch, normalFetchWithPagination } from "./data";
 import { getRecentUser } from "./statictes";
 
 export const getAdmin = () => {
@@ -61,6 +61,8 @@ const fetches = {
   bill: getBills,
   order_report: getOrderReports,
   bill_report: getBillReports,
+  chat: getChats,
+  rooms: getRooms
 };
 
 export const getTableDataWithPagination = async (

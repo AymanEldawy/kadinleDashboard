@@ -51,6 +51,30 @@ export const getSales = async () => {
   return { data: Object.values(hash) };
 };
 
+export const getChats = async () => {
+  const response = await supabase
+    .from(`chat`)
+    .select(`*, user(id, first_name, last_name, profile_img)`)
+    .order("created_at", { ascending: true });
+  let hash = {};
+  for (const row of response?.data) {
+    hash[row?.room_id] = row;
+  }
+  return { data: Object.values(hash) };
+};
+
+export const getRooms = async () => {
+  const response = await supabase
+    .from(`room`)
+    .select(`*, user(id, first_name, last_name, profile_img)`)
+    .order("created_at", { ascending: true });
+  let hash = {};
+  for (const row of response?.data) {
+    hash[row?.user_id] = row;
+  }
+  return { data: Object.values(hash) };
+};
+
 export const globalGetData = async ({
   page,
   pageSize,

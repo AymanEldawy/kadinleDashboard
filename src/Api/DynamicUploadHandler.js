@@ -1,5 +1,6 @@
 import { addNewItem, updateItem } from "./globalActions";
 import {
+  globalUploadImage,
   uploadAvatarImage,
   uploadCategoryImage,
   uploadCategoryVideo,
@@ -57,6 +58,7 @@ export const handleUploadOfferImage = async (
   CACHE_LANGUAGES,
   operation = "add"
 ) => {
+  console.log(itemId);
   let theFileWebContent = item?.media;
   const media =
     typeof theFileWebContent === "object"
@@ -66,6 +68,8 @@ export const handleUploadOfferImage = async (
           file: theFileWebContent,
         })
       : item?.media;
+
+  console.log(item, "item");
   if (media?.url) item.media = media?.url;
   if (operation === "add")
     await addNewItem(`offer_content`, {
@@ -75,7 +79,7 @@ export const handleUploadOfferImage = async (
   else
     await updateItem(`offer_content`, {
       ...item,
-      // offer_id: itemId,
+      offer_id: itemId || item?.id,
     });
 };
 
@@ -120,13 +124,35 @@ export const handleUploadColorImage = async (item) => {
     await updateItem(`color`, item);
   }
 };
+
+export const handleUploadPartnerImage = async (item, operation = "add") => {
+  let theFileWebContent = item?.image;
+  const image =
+    typeof theFileWebContent === "object"
+      ? await globalUploadImage({
+          name: item?.name,
+          file: theFileWebContent,
+          action: "uploadPartner",
+        })
+      : item?.image;
+  if (image?.url) {
+    item.image = image?.url;
+    if (operation === "add") {
+      await addNewItem(`partner`, item);
+    } else {
+      await updateItem(`partner`, item);
+    }
+  }
+};
+
 export const handleUploadReviewerImage = async (item, operation = "add") => {
   let theFileWebContent = item?.image;
   const image =
     typeof theFileWebContent === "object"
-      ? await uploadReviewerImage({
+      ? await globalUploadImage({
           name: item?.name,
           file: theFileWebContent,
+          action: "uploadReviewer",
         })
       : item?.image;
   if (image?.url) {

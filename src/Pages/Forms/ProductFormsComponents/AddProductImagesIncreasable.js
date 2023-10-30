@@ -72,6 +72,7 @@ const AddProductImagesIncreasable = ({
             <div className="flex flex-wrap gap-4 mt-8 bg-gray-100 p-4 border rounded-md">
               {filesPreviews?.map((img) => (
                 <FullImage
+                key={img?.id}
                   src={img}
                   width={120}
                   height={120}

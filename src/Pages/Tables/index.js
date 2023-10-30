@@ -1,3 +1,4 @@
+export { default as Partners } from "./Partners";
 export { default as Products } from "./Products";
 export { default as Colors } from "./Colors";
 export { default as Categories } from "./Categories";

@@ -65,7 +65,7 @@ const ProductFeatures = () => {
     setLayout("update");
   };
 
-  useEffect(() => { }, [refresh]);
+  useEffect(() => {}, [refresh]);
   const onSubmit = async (data) => {
     if (layout === "update") {
       const response = await updateItem(activeStage, {});
@@ -109,10 +109,12 @@ const ProductFeatures = () => {
           <div className=" border-b flex flex-wrap ">
             {productFeatures?.map((stage, index) => (
               <button
-                className={`text-gray-500 px-4 text-sm border-b-2 -mb-[2px] !gap-1 p-2 capitalize flex items-center ${stage === activeStage
+                key={index}
+                className={`text-gray-500 px-4 text-sm border-b-2 -mb-[2px] !gap-1 p-2 capitalize flex items-center ${
+                  stage === activeStage
                     ? "border-primary-red text-primary-red font-medium"
                     : ""
-                  }`}
+                }`}
                 onClick={() => setActiveStage(stage)}
               >
                 {stage}

@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useMemo } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
-import { useGlobalOptions } from "../../Context/GlobalOptions";
 import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import DynamicLayout from "../../Pages/Dynamics/DynamicLayout";
 import { UserInfo } from "../Global/UserInfo/UserInfo";

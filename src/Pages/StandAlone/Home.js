@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-import { getCount, getRecentOrders, getRecentUser, getTotalEarning } from "../../Api/statictes";
+import {
+  getCount,
+  getRecentOrders,
+  getRecentUser,
+  getTotalEarning,
+} from "../../Api/statictes";
 import SuperTable from "../../Components/CustomTable/SuperTable";
 import MoneyIcon from "../../Components/icons/MoneyIcon";
 import ShoppingBagIcon from "../../Components/icons/ShoppingBagIcon";
@@ -11,6 +16,7 @@ import StatisticsCards from "../../Components/StatisticsCards/StatisticsCards";
 import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import { StoreIcon } from "../../Helpers/Icons";
 import DynamicList from "../Dynamics/DynamicList";
+import { supabase } from "../../Helpers/SupabaseConfig/SupabaseConfig";
 
 const dummyStatistics = {
   totalEarnings: {
@@ -124,6 +130,14 @@ const Home = () => {
   };
 
   useEffect(() => {
+    const getHomeSections = async (param_limit) => {
+      const res = await supabase.rpc("get_home_sections", {
+        param_limit,
+      });
+      console.log("🚀 ~ file: Home.js:138 ~ getHomeSections ~ res:", res)
+      return res;
+    };
+    getHomeSections(20);
     getTotalEarningsHandler();
     getOrdersCountHandler();
     getCustomersCountHandler();

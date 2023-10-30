@@ -166,6 +166,7 @@ const AddProductVariantsIncreasable = ({
               {allValues?.[itemKey]?.files?.map((file) => (
                 <FileMosaic
                   {...file}
+                  key={file?.id}
                   preview
                   className="rounded-md bg-gray-100 p-1 border-b pb-2"
                   onDelete={() => {
@@ -199,7 +200,7 @@ const AddProductVariantsIncreasable = ({
                 <div className="flex gap-4">
                   {allValues?.[itemKey]?.oldMedia?.map((img) => {
                     return (
-                      <div className="border p-[2px] bg-white dark:bg-bgmaindark rounded-sm shadow relative">
+                      <div key={img?.id} className="border p-[2px] bg-white dark:bg-bgmaindark rounded-sm shadow relative">
                         <button
                           onClick={() => handleDeleteImage(itemKey, img?.id)}
                           className="bg-gray-600 text-white h-4 w-4 absolute top-2 left-2 z-10 rounded-full flex items-center justify-center"

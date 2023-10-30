@@ -21,11 +21,15 @@ const UploadFile = ({
     if (src && typeof src === "object") {
       if (src?.type?.indexOf("video/") !== -1) {
         setVideoPreview(true);
+      } else {
+        setVideoPreview(false);
       }
       setPreview(URL.createObjectURL(src));
     } else {
       if (src?.indexOf(".mp4") !== -1) {
         setVideoPreview(true);
+      } else {
+        setVideoPreview(false);
       }
       setPreview(src);
     }
@@ -34,7 +38,7 @@ const UploadFile = ({
   return (
     <div
       className={`flex flex-col relative ${containerClassName}`}
-      key={`${field?.index}-${field?.label}` || Math.round()}
+      key={`${field?.index}-${field?.label}-${src}` || Math.round()}
     >
       {!!src ? (
         <>

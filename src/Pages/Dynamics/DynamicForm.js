@@ -10,6 +10,7 @@ import {
   handleUploadCollectionImage,
   handleUploadColorImage,
   handleUploadOfferImage,
+  handleUploadPartnerImage,
   handleUploadReviewerImage,
 } from "../../Api/DynamicUploadHandler";
 import { uploadCategoryImage } from "../../Api/upload";
@@ -38,6 +39,8 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
     let loading = toast.loading("Please wait...");
     if (SUPABASE_TABLE_NAME === "home_reviews") {
       await handleUploadReviewerImage(values);
+    } else if (SUPABASE_TABLE_NAME === "partner") {
+      await handleUploadPartnerImage(values);
     } else if (SUPABASE_TABLE_NAME === "user") {
       const response = await signup(values);
       if (!response?.error) {

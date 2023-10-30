@@ -372,8 +372,10 @@ export const combine_order_report = [
 const combine_suppliers = ["created_at", "pdf_source", "archive"];
 const combine_chat = ["created_at", "user", "content", "room_id"];
 const combine_room = ["created_at", "user"];
+const combine_partner = ["created_at", "name", 'image', 'link'];
 
 const COMBINE_DB_API = {
+  combine_partner,
   combine_room,
   combine_chat,
   combine_address,

@@ -5,7 +5,7 @@ import ArrowIcon from "../../Components/icons/ArrowIcon";
 import { UserInfo } from "../../Components/Global/UserInfo/UserInfo";
 import { ChatSingleMessage } from "../../Components/ChatComponents/ChatSingleMessage";
 
-const ChatRoom = ({ room }) => {
+const ChatRoom = ({ room, socket }) => {
   const { user } = useGlobalOptions();
   const lastMessageRef = useRef();
   const [text, setText] = useState("");
@@ -24,33 +24,25 @@ const ChatRoom = ({ room }) => {
     fetchMessages();
   }, [room?.id]);
 
-  const insertMessage = async (data) => {
-    await supabase.from("chat").insert(data);
-    await supabase
-      .from("room")
-      .update({ last_updated: new Date() })
-      .eq("id", data?.room_id);
-  };
-
   useEffect(() => {
-    if (!room?.id) return;
+    if (!socket) return;
 
-    const channel = supabase.channel("chat");
-    channel
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "chat",
-          filter: "room_id=eq." + room?.id,
-        },
-        (payload) => {
-          if (payload?.new) setMessages((prev) => [...prev, payload?.new]);
-        }
-      )
-      .subscribe();
-  }, [room?.id]);
+    socket.emit("join-room", {
+      user_id: user?.id,
+      room_id: room?.id,
+      socketID: socket.id,
+    });
+
+    socket.on("getMessage", (message) => {
+      if (message?.room_id === room?.id) {
+        setMessages((prevMessages) => [...prevMessages, message]);
+      }
+    });
+
+    return () => {
+      socket.off("getMessage");
+    };
+  }, [room?.id, socket, user?.id]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -62,7 +54,8 @@ const ChatRoom = ({ room }) => {
       user_id: user?.id,
       sender: "SUPPORT",
     };
-    await insertMessage(msg);
+
+    socket.emit("send-chat-message", msg);
     setText("");
   };
 

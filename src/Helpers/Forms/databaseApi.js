@@ -1297,10 +1297,17 @@ export const shipping_price = [
   { name: "max_fast_duration", type: "number" },
   { name: "area", type: "number" },
 ];
+export const partner = [
+  { name: "name", type: "text" },
+  { name: "image", key: "image" },
+  { name: "link", type: "text" },
+ 
+];
 
 export const stock_fields = stock;
 
 const DB_API = {
+  partner,
   stock_fields,
   address,
   brand,

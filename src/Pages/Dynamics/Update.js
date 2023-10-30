@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { signup } from "../../Api/auth";
 import {
   handleUploadAvatarImage,
   handleUploadCategoryImages,
@@ -10,9 +9,9 @@ import {
   handleUploadCollectionImage,
   handleUploadColorImage,
   handleUploadOfferImage,
+  handleUploadPartnerImage,
   handleUploadReviewerImage,
 } from "../../Api/DynamicUploadHandler";
-import { uploadCategoryImage } from "../../Api/upload";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
 import SuperForm from "../../Components/CustomForm/SuperForm";
@@ -75,6 +74,8 @@ const Update = () => {
 
     if (tableName === "user") {
       await handleUploadAvatarImage(values, "update");
+    } else if (tableName === "partner") {
+      await handleUploadPartnerImage(values, "update");
     } else if (tableName === "home_reviews") {
       await handleUploadReviewerImage(values, "update");
     } else {

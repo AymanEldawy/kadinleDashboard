@@ -36,6 +36,7 @@ import {
   AddNewsletter,
   AddOffer,
   AddOrderStatus,
+  AddPartner,
   AddPoint,
   AddProduct,
   AddRegion,
@@ -73,6 +74,7 @@ import {
   OrderReturnRequests,
   Orders,
   OrderStatus,
+  Partners,
   Points,
   ProductFeatures,
   Products,
@@ -381,6 +383,16 @@ const authProtectedRoutes = [
   {
     path: "/home-sections",
     component: <HomeSections />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/partners",
+    component: <Partners />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/add-partner",
+    component: <AddPartner />,
     allowedRoles: ["admin", "superadmin"],
   },
   {

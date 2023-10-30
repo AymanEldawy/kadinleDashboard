@@ -342,6 +342,12 @@ export const menuData = [
         name: "home reviews",
       },
       {
+        key: "partners",
+        icon: <UserGroupIcon />,
+        path: "/partners",
+        name: "Partners",
+      },
+      {
         key: "suppliers",
         icon: <UserGroupIcon />,
         path: "/suppliers",
@@ -365,7 +371,7 @@ export const menuData = [
         key: "chat-setting",
         icon: <TimeIcon />,
         path: "/chat-setting",
-        name: "chat-setting",
+        name: "chat setting",
       },
     ],
   },

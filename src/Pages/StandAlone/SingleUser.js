@@ -29,6 +29,7 @@ const userOptions = [
   "suggestion",
   "ticket",
   "wallet",
+  "chart"
 ];
 
 const SingleUser = () => {
@@ -120,6 +121,7 @@ const SingleUser = () => {
   };
   const { user } = userData;
   const type = userData?.type;
+
   return (
     <>
       <ConfirmModal
@@ -169,7 +171,7 @@ const SingleUser = () => {
               />
             ) : (
               <span
-                className="h-20 w-20 text-3xl bg-purple-500 font-semibold mx-auto block rounded-full p-[2px] shadow flex items-center justify-center"
+                className="h-20 w-20 text-3xl bg-purple-500 font-semibold mx-auto rounded-full p-[2px] shadow flex items-center justify-center"
                 alt="user avatar"
               >
                 {user?.first_name?.[0] || "U"}

@@ -72,12 +72,13 @@ export const uploadColorImage = async ({ colorId, file }) => {
   return await uploadFile(formData, "uploadColor");
 };
 
-export const uploadReviewerImage = async ({ name, file }) => {
+export const globalUploadImage = async ({ name, file, action }) => {
   const formData = new FormData();
   formData.append("name", name);
   formData.append("file", file);
-  return await uploadFile(formData, "uploadReviewer");
+  return await uploadFile(formData, action);
 };
+
 export const uploadAvatarImage = async ({ userId, file }) => {
   const formData = new FormData();
   formData.append("user_id", userId);

@@ -49,15 +49,49 @@ export const uploadFile = async ({ data, url }) => {
   }
 };
 
-
 export function TicketIdGen() {
-  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  let firstId = '';
+  var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  let firstId = "";
   for (let i = 0; i < 3; i++) {
     let rand = characters.charAt(Math.floor(Math.random() * characters.length));
     firstId += rand.toString();
   }
   const secondId = Math.floor(Math.floor(Math.random() * 999));
   const thirdId = Math.floor(Math.floor(Math.random() * 99999));
-  return firstId + '-' + secondId + '-' + thirdId;
+  return firstId + "-" + secondId + "-" + thirdId;
 }
+
+export const generateForm = () => {
+  const list = [
+    "fabric_information",
+    "environment",
+    "style",
+    "package",
+    "sleeve_type",
+    "waist",
+    "belt_condition",
+    "pocket",
+    "leg_type",
+    "closure_type",
+    "thickness",
+    "printing_technique",
+    "embroidery_type",
+    "washing_instructions",
+  ];
+
+  let c = "";
+  for (const item of list) {
+    c += ` {
+      name: "${item}_id",
+      type: "uuid",
+      key: "ref",
+      // required: true,
+      tableName: "${item}_content",
+      refId: "${item}_id",
+    },
+  `;
+  }
+  console.log(c);
+};
+
+generateForm()

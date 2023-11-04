@@ -17,6 +17,7 @@ import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import { StoreIcon } from "../../Helpers/Icons";
 import DynamicList from "../Dynamics/DynamicList";
 import { supabase } from "../../Helpers/SupabaseConfig/SupabaseConfig";
+import { generateForm } from "../../Helpers/functions";
 
 const dummyStatistics = {
   totalEarnings: {
@@ -130,6 +131,7 @@ const Home = () => {
   };
 
   useEffect(() => {
+    generateForm()
     const getHomeSections = async (param_limit) => {
       const res = await supabase.rpc("get_home_sections", {
         param_limit,

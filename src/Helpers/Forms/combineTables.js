@@ -334,6 +334,22 @@ const combine_season = ["name"];
 const combine_sleeve = ["name"];
 const combine_material = ["name"];
 const combine_pattern = ["name"];
+
+const combine_fabric_information = ["name"];
+const combine_environment = ["name"];
+const combine_style = ["name"];
+const combine_package = ["name"];
+const combine_sleeve_type = ["name"];
+const combine_waist = ["name"];
+const combine_belt_condition = ["name"];
+const combine_pocket = ["name"];
+const combine_leg_type = ["name"];
+const combine_closure_type = ["name"];
+const combine_thickness = ["name"];
+const combine_printing_technique = ["name"];
+const combine_embroidery_type = ["name"];
+const combine_washing_instructions = ["name"];
+
 export const combine_shipping_price = [
   "area",
   // 'weight',
@@ -372,7 +388,7 @@ export const combine_order_report = [
 const combine_suppliers = ["created_at", "pdf_source", "archive"];
 const combine_chat = ["created_at", "user", "content", "room_id"];
 const combine_room = ["created_at", "user"];
-const combine_partner = ["created_at", "name", 'image', 'link'];
+const combine_partner = ["created_at", "name", "image", "link"];
 
 const COMBINE_DB_API = {
   combine_partner,
@@ -442,5 +458,19 @@ const COMBINE_DB_API = {
   combine_bill,
   combine_bill_report,
   combine_order_report,
+  combine_fabric_information,
+  combine_environment,
+  combine_style,
+  combine_package,
+  combine_sleeve_type,
+  combine_waist,
+  combine_belt_condition,
+  combine_pocket,
+  combine_leg_type,
+  combine_closure_type,
+  combine_thickness,
+  combine_printing_technique,
+  combine_embroidery_type,
+  combine_washing_instructions,
 };
 export default COMBINE_DB_API;

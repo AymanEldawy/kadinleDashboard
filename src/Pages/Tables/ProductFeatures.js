@@ -22,6 +22,20 @@ const productFeatures = [
   "season",
   "feature",
   "pattern",
+  "fabric_information",
+  "environment",
+  "style",
+  "package",
+  "sleeve_type",
+  "waist",
+  "belt_condition",
+  "pocket",
+  "leg_type",
+  "closure_type",
+  "thickness",
+  "printing_technique",
+  "embroidery_type",
+  "washing_instructions",
 ];
 
 const CACHE_COLUMNS = {};
@@ -107,19 +121,21 @@ const ProductFeatures = () => {
             Product Features
           </h2>
           <div className=" border-b flex flex-wrap ">
-            {productFeatures?.map((stage, index) => (
-              <button
-                key={index}
-                className={`text-gray-500 px-4 text-sm border-b-2 -mb-[2px] !gap-1 p-2 capitalize flex items-center ${
-                  stage === activeStage
-                    ? "border-primary-red text-primary-red font-medium"
-                    : ""
-                }`}
-                onClick={() => setActiveStage(stage)}
-              >
-                {stage}
-              </button>
-            ))}
+            {productFeatures
+              ?.sort((a, b) => a?.localeCompare(b))
+              ?.map((stage, index) => (
+                <button
+                  key={index}
+                  className={`text-gray-500 px-4 text-sm border-b-2 -mb-[2px] !gap-1 p-2 capitalize flex items-center ${
+                    stage === activeStage
+                      ? "border-primary-red text-primary-red font-medium"
+                      : ""
+                  }`}
+                  onClick={() => setActiveStage(stage)}
+                >
+                  {stage}
+                </button>
+              ))}
           </div>
         </div>
         <div key={activeStage}>

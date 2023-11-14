@@ -7,10 +7,17 @@ import { UploadColorsScript } from "../../Helpers/Scripts/UploadColorsScript";
 import { UploadSizesScript } from "../../Helpers/Scripts/UploadSizesScript";
 import { UploadSizesChartScript } from "../../Helpers/Scripts/UploadSizeChartScript";
 
+import CATEGORY_IMG_EXAMPLE from "../../Assets/Images/category.jpeg";
+import COLOR_IMG_EXAMPLE from "../../Assets/Images/color.jpeg";
+import CHART_IMG_EXAMPLE from "../../Assets/Images/chart.jpeg";
+import SIZE_IMG_EXAMPLE from "../../Assets/Images/size.jpeg";
+import Modal from "../../Components/Modal/Modal";
+
 const UploadSheet = () => {
   const [completedProcess, setCompletedProcess] = useState(false);
   const [isProcess, setIsProcess] = useState(false);
   const [logs, setLogs] = useState([]);
+  const [exampleImage, setExampleImage] = useState("");
 
   const handleReadAndUploadFile = async (e, type) => {
     setIsProcess(true);
@@ -38,6 +45,9 @@ const UploadSheet = () => {
 
   return (
     <BlockPaper title="Upload Sheet XLS">
+      <Modal open={exampleImage} onClose={() => setExampleImage("")}>
+        <img src={exampleImage} />
+      </Modal>
       {/* {!completedProcess ? (
         <button className="text-primary-blue absolute ltr:right-8 top-4">
           Back
@@ -56,6 +66,7 @@ const UploadSheet = () => {
             label="Upload Categories Sheet"
             boxContainerClassName="w-full !p-4 rounded-md cursor-pointer hover:bg-primary-red hover:text-white"
             className="!bg-transparent"
+            onShowExample={() => setExampleImage(CATEGORY_IMG_EXAMPLE)}
           />
           <UploadFile
             onChange={(e) => handleReadAndUploadFile(e, "colors")}
@@ -63,12 +74,14 @@ const UploadSheet = () => {
             label="Upload Colors Sheet"
             boxContainerClassName="w-full !p-4 rounded-md cursor-pointer hover:bg-primary-red hover:text-white"
             className="!bg-transparent"
+            onShowExample={() => setExampleImage(COLOR_IMG_EXAMPLE)}
           />
           <UploadFile
             onChange={(e) => handleReadAndUploadFile(e, "sizes")}
             label="Upload Sizes Sheet"
             boxContainerClassName="w-full !p-4 rounded-md cursor-pointer hover:bg-primary-red hover:text-white"
             className="!bg-transparent"
+            onShowExample={() => setExampleImage(SIZE_IMG_EXAMPLE)}
           />
 
           <UploadFile
@@ -76,6 +89,7 @@ const UploadSheet = () => {
             label="Upload Size Chart Sheet"
             boxContainerClassName="w-full !p-4 rounded-md cursor-pointer hover:bg-primary-red hover:text-white"
             className="!bg-transparent"
+            onShowExample={() => setExampleImage(CHART_IMG_EXAMPLE)}
           />
         </div>
       ) : (

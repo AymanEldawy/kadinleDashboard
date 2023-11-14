@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { FolderPlusIcon } from "../../Helpers/Icons";
+import { EyeIcon, FolderPlusIcon } from "../../Helpers/Icons";
 import { FullImage } from "../Global/FullImage/FullImage";
 import { FullVideo } from "../Global/FullImage/FullVideo";
 
@@ -12,6 +12,7 @@ const UploadFile = ({
   textPlaceholder,
   containerClassName,
   boxContainerClassName,
+  onShowExample,
   ...field
 }) => {
   const [preview, setPreview] = useState("");
@@ -98,6 +99,15 @@ const UploadFile = ({
         <p className="bg-red-200 mt-2 rounded text-sm text-red-500 px-2 py-1">
           {error}
         </p>
+      ) : null}
+      {!!onShowExample ? (
+        <button
+          onClick={onShowExample}
+          className="text-red-500 mt-1 hover:underline w-fit flex items-center gap-2 text-xs capitalize"
+        >
+          <EyeIcon className="w-5 h-5" />
+          show example file
+        </button>
       ) : null}
     </div>
   );

@@ -58,7 +58,6 @@ export const handleUploadOfferImage = async (
   CACHE_LANGUAGES,
   operation = "add"
 ) => {
-  console.log(itemId);
   let theFileWebContent = item?.media;
   const media =
     typeof theFileWebContent === "object"
@@ -69,7 +68,6 @@ export const handleUploadOfferImage = async (
         })
       : item?.media;
 
-  console.log(item, "item");
   if (media?.url) item.media = media?.url;
   if (operation === "add")
     await addNewItem(`offer_content`, {

@@ -36,7 +36,6 @@ const Support = () => {
           } else {
             if (payload?.old?.id !== rooms?.[0]?.id) fetchRooms();
             if (payload?.old?.id !== selectedRoom) {
-              console.log("called 23");
               setNewRoomsId((prev) => ({
                 ...prev,
                 [payload?.old?.id]: true,
@@ -59,7 +58,6 @@ const Support = () => {
     }
   }, [selectedRoom, newRoomsId]);
 
-  console.log(newRoomsId);
   return (
     <div className="h-screen -mt-[70px] pt-[70px] flex">
       <div className="bg-teal-600 w-1/3 max-w-[300px]">

@@ -91,7 +91,6 @@ export const generateForm = () => {
     },
   `;
   }
-  console.log(c);
 };
 
 generateForm()

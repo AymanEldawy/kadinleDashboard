@@ -77,7 +77,7 @@ const UploadFile = ({
           )}
         </label>
       ) : null}
-      <div className="relative">
+      <div className="relative group">
         <input
           id={label}
           type="file"
@@ -88,7 +88,7 @@ const UploadFile = ({
           }`}
         />
         <span
-          className={`bg-gray-100 dark:bg-[#2c2c2c] rounded-md hover:bg-gray-200 min-h-[37px] cursor-pointer capitalize left-0 w-full h-full top-0 flex gap-4 items-center justify-center ${boxContainerClassName}`}
+          className={`bg-gray-100 dark:bg-[#2c2c2c] rounded-md group-hover:bg-gray-200 group-hover:shadow min-h-[37px] cursor-pointer capitalize left-0 w-full h-full top-0 flex gap-4 items-center justify-center ${boxContainerClassName}`}
         >
           <FolderPlusIcon />
           {textPlaceholder ? textPlaceholder : "upload file"}

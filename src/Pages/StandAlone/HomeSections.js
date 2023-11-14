@@ -85,7 +85,6 @@ const HomeSections = () => {
     setSortedSection([]);
     setSections(SECTIONS);
   };
-  console.log(sortedSections);
 
   const onSaveOrder = async () => {
     if (!sections?.length) {
@@ -117,7 +116,6 @@ const HomeSections = () => {
     e.preventDefault();
     setSections((prev) => [...prev, { section_name: newSection }]);
     setNewSection("");
-    console.log(sections);
   };
 
   const deleteSection = async (section) => {

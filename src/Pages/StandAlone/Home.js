@@ -136,7 +136,6 @@ const Home = () => {
       const res = await supabase.rpc("get_home_sections", {
         param_limit,
       });
-      console.log("🚀 ~ file: Home.js:138 ~ getHomeSections ~ res:", res)
       return res;
     };
     getHomeSections(20);

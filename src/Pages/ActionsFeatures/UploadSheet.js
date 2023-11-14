@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import UploadFile from "../../Components/CustomForm/UploadFile";
 import { UploadProductScript } from "../../Helpers/Scripts/UploadProductScript";
-import { UploadSizeChartScript } from "../../Helpers/Scripts/UploadSizeChartScript";
 import { UploadCategoryScript } from "./../../Helpers/Scripts/UploadCategoryScript";
 import { UploadColorsScript } from "../../Helpers/Scripts/UploadColorsScript";
 import { UploadSizesScript } from "../../Helpers/Scripts/UploadSizesScript";
+import { UploadSizesChartScript } from "../../Helpers/Scripts/UploadSizeChartScript";
 
 const UploadSheet = () => {
   const [completedProcess, setCompletedProcess] = useState(false);
@@ -22,7 +22,7 @@ const UploadSheet = () => {
         await UploadCategoryScript(e.target.files?.[0], setLogs);
         break;
       case "size_chart":
-        await UploadSizeChartScript(e.target.files?.[0], setLogs);
+        await UploadSizesChartScript(e.target.files?.[0], setLogs);
         break;
       case "colors":
         await UploadColorsScript(e.target.files?.[0], setLogs);
@@ -38,11 +38,11 @@ const UploadSheet = () => {
 
   return (
     <BlockPaper title="Upload Sheet XLS">
-      {!completedProcess ? (
+      {/* {!completedProcess ? (
         <button className="text-primary-blue absolute ltr:right-8 top-4">
           Back
         </button>
-      ) : null}
+      ) : null} */}
       {!isProcess ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <UploadFile
@@ -51,13 +51,13 @@ const UploadSheet = () => {
             boxContainerClassName="w-full !p-4 rounded-md cursor-pointer hover:bg-primary-red hover:text-white"
             className="!bg-transparent"
           />
-          {/* <UploadFile
+          <UploadFile
             onChange={(e) => handleReadAndUploadFile(e, "categories")}
             label="Upload Categories Sheet"
             boxContainerClassName="w-full !p-4 rounded-md cursor-pointer hover:bg-primary-red hover:text-white"
             className="!bg-transparent"
-          /> */}
-          {/* <UploadFile
+          />
+          <UploadFile
             onChange={(e) => handleReadAndUploadFile(e, "colors")}
             name="color"
             label="Upload Colors Sheet"
@@ -70,32 +70,35 @@ const UploadSheet = () => {
             boxContainerClassName="w-full !p-4 rounded-md cursor-pointer hover:bg-primary-red hover:text-white"
             className="!bg-transparent"
           />
+
           <UploadFile
             onChange={(e) => handleReadAndUploadFile(e, "size_chart")}
             label="Upload Size Chart Sheet"
             boxContainerClassName="w-full !p-4 rounded-md cursor-pointer hover:bg-primary-red hover:text-white"
             className="!bg-transparent"
-          /> */}
+          />
         </div>
       ) : (
         <div className="">
           <div className="max-h-screen overflow-auto">
             {logs?.map((log) => (
               <p
-                className={`text-gray-400 text my-2 border-b pb-1 ${log?.status === "loading"
-                  ? "text-primary-blue"
-                  : log?.status === "error"
+                className={`text-gray-400 text my-2 border-b pb-1 ${
+                  log?.status === "loading"
+                    ? "text-primary-blue"
+                    : log?.status === "error"
                     ? "text-red-500"
                     : "text-primary-green"
-                  }`}
+                }`}
               >
                 <span
-                  className={`font-medium mr-4 inline-block capitalize px-4 py-[2px] text-sm w-[80px] text-center rounded-md ${log?.status === "loading"
-                    ? "bg-primary-blue text-white "
-                    : log?.status === "error"
+                  className={`font-medium mr-4 inline-block capitalize px-4 py-[2px] text-sm w-[80px] text-center rounded-md ${
+                    log?.status === "loading"
+                      ? "bg-primary-blue text-white "
+                      : log?.status === "error"
                       ? "bg-primary-red text-white "
                       : "bg-primary-green text-white "
-                    }`}
+                  }`}
                 >
                   {log?.status}
                 </span>

@@ -27,3 +27,5 @@ export { default as AddUser } from "./AddUser";
 export { default as AddWarehouse } from "./AddWarehouse";
 export { default as AddWarehouseAvailability } from "./AddWarehouseAvailability";
 export { default as AddPartner } from "./AddPartner";
+export { default as AddNewSupplier } from "./AddNewSupplier";
+export { default as AddSupplierRequest } from "./AddSupplierRequest";

@@ -41,38 +41,35 @@ const DynamicList = ({
   setOpenDrawerMore,
 }) => {
   const { defaultLanguage, defaultRegion, user } = useGlobalOptions();
-  const { loading, getDataWithPagination } = useFetch();
+  const { getDataWithPagination } = useFetch();
   const { deleteItem: onDelete } = useDelete();
-  // const [data, setData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [selectedColumn, setSelectedColumn] = useState("");
   const [openConfirmation, setOpenConfirmation] = useState(false);
-  const [pageCount, setPageCount] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
   const [totalCount, setTotalCount] = useState(0);
-  const [itemOffset, setItemOffset] = useState(0);
   const [filterCategory, setFilterCategory] = useState();
+
   const [rowSelection, setRowSelection] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [columnOrder, setColumnOrder] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [pagination, setPagination] = useState({
-    pageIndex: 1,
-    pageSize: 50,
+    pageIndex: 0,
+    pageSize: 10,
   });
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: [tableName, "list", defaultLanguage?.id, defaultRegion?.id],
+    queryKey: [tableName, "list"],
     queryFn: async () => {
-      // if (!defaultLanguage?.id || defaultRegion?.id) return;
       let filter =
         filterCategory?.indexOf("Choose") !== -1 ? "" : filterCategory;
       const response = await getDataWithPagination(
         tableName,
-        pagination?.pageIndex + 1,
-        pagination?.pageSize,
+        table.getPageCount() + 1,
+        table,
         {
           languageId: defaultLanguage?.id,
           regionId: defaultRegion?.id,
@@ -81,16 +78,13 @@ const DynamicList = ({
           ...additionalData,
         }
       );
-      setPageCount(Math.ceil(response?.count / parseInt(pagination?.pageSize)));
-      return response?.data;
+      setTotalCount(response?.count);
     },
   });
 
   const table = useReactTable({
-    columns: columns({
-      hideAction,
-    }),
-    data: isLoading ? [] : data,
+    columns,
+    data,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -102,15 +96,13 @@ const DynamicList = ({
     onColumnOrderChange: setColumnOrder,
     onRowSelectionChange: setRowSelection,
     columnResizeMode: "onChange",
-    onPaginationChange: setPagination,
-    pageCount,
+    // onPaginationChange: setPagination,
     state: {
       columnFilters,
       globalFilter,
       rowSelection,
       columnOrder,
       columnVisibility,
-      pagination,
     },
   });
 
@@ -138,12 +130,10 @@ const DynamicList = ({
   useEffect(() => {
     if (defaultLanguage?.id && defaultRegion?.id) refetch();
   }, [
-    pagination?.pageIndex,
-    refresh,
+    pagination.pageIndex,
     filterCategory,
     defaultLanguage?.id,
     defaultRegion?.id,
-    // selectedColumn,
     additionalData,
     searchValue,
   ]);
@@ -181,7 +171,13 @@ const DynamicList = ({
             setSelectedColumn={setSelectedColumn}
           />
         )}
-        <CustomTable columns={columns} table={table} tableName={tableName} />
+        <CustomTable
+          columns={columns}
+          data={[]}
+          table={table}
+          // loading={}
+          tableName={tableName}
+        />
 
         {/* <SuperTable
           itemOffset={itemOffset}

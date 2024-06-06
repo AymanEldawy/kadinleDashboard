@@ -77,7 +77,7 @@ const Sidebar = ({ open, setOpen }) => {
   };
   return (
     <aside
-      className={`h-[100dvh] top-0 sticky shadow overflow-hidden flex flex-col z-50 transition-all duration-300 bg-white dark:bg-bgmaindark ${
+      className={`hide-scroll h-[100dvh] top-0 sticky shadow overflow-hidden flex flex-col z-50 transition-all duration-300 bg-white dark:bg-bgmaindark ${
         open ? "translate-x-0 min-w-[250px] " : "w-12 overflow-x-hidden"
       } hover:w-[250px]`}
       onMouseLeave={() => (dropdown && !open ? setDropdown("") : undefined)}

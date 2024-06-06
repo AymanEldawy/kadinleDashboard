@@ -1416,7 +1416,44 @@ export const partner = [
 
 export const stock_fields = stock;
 
+const supplier_request = [
+  { name: "id", type: "uuid" },
+  { name: "created_at", type: "timestamptz" },
+  {
+    name: "user_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "user",
+    refName: "title",
+  },
+  { name: "company_name", type: "varchar" },
+  { name: "company_type", type: "varchar" },
+  { name: "tax_office", type: "varchar" },
+  { name: "tax_number", type: "varchar" },
+  { name: "kep_address", type: "varchar" },
+  { name: "mersis_number", type: "varchar" },
+  { name: "iban_number", type: "varchar" },
+  { name: "billing_address", type: "varchar" },
+  { name: "shipping_address", type: "varchar" },
+  { name: "return_address", type: "varchar" },
+  { name: "province", type: "varchar" },
+  { name: "district", type: "varchar" },
+  { name: "neighborhood", type: "varchar" },
+  { name: "address", type: "varchar" },
+  { name: "full_name", type: "varchar" },
+  { name: "email_address", type: "varchar" },
+  { name: "phone_number", type: "varchar" },
+  { name: "main", type: "varchar" },
+  { name: "finance", type: "varchar" },
+  { name: "operations", type: "varchar" },
+  { name: "sales", type: "varchar" },
+  { name: "other", type: "varchar" },
+  { name: "status", type: "checkbox" },
+  { name: "ban", type: "checkbox" },
+];
+
 const DB_API = {
+  supplier_request,
   partner,
   stock_fields,
   address,

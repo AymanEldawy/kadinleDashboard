@@ -14,13 +14,19 @@ const Index = () => {
       <Layout>
         <Routes>
           {Object.values(authProtectedRoutes).map((route, index) => (
-            <Route element={<ProtectedRoutes path={route?.path} roles={route?.allowedRoles} key={route?.path} />}>
+            <Route
+              element={
+                <ProtectedRoutes
+                  path={route.path}
+                  roles={route?.allowedRoles}
+                />
+              }
+            >
               <Route
-                path={route.path}
-                element={route.component}
                 key={index}
                 exact={true}
-
+                path={route.path}
+                element={route?.component}
               />
             </Route>
           ))}

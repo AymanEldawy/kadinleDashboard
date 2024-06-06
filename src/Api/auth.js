@@ -1,4 +1,6 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
+import Cookies from "js-cookie";
+
 
 export const getUser = async () => {
   try {
@@ -29,6 +31,12 @@ export const login = async (email, password) => {
     email,
     password,
   });
+
+  // Cookies.set("KADINLES_ADMIN", "ahmed", {
+  //   expires: hour,
+  //   path: "/",
+  // });
+
   return { user, session, error };
 };
 
@@ -36,7 +44,7 @@ export const login = async (email, password) => {
 export const logout = async () => {
   const response = await supabase.auth.signOut();
   if (response?.error) return;
-  localStorage.removeItem("KADINLE_ADMIN_USER");
+  Cookies.remove("KADINLE_ADMIN");
 
   return response;
 };

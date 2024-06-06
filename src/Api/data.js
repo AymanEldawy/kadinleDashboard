@@ -75,6 +75,23 @@ export const getRooms = async () => {
   return { data: Object.values(hash) };
 };
 
+export const getSingleSupplier = async (id) => {
+  const response = await supabase
+    .from(`supplier_request`)
+    .select(`*, user(id, first_name, last_name, profile_img)`)
+    .eq("id", id);
+
+  return response?.data?.at(0);
+};
+// export const getSuppliers = async () => {
+//   const response = await supabase
+//     .from(`supplier_request`)
+//     .select(`*, user(id, first_name, last_name, profile_img)`)
+//     .order("created_at", { ascending: false });
+
+//   return response;
+// };
+
 export const globalGetData = async ({
   page,
   pageSize,
@@ -162,13 +179,15 @@ export const getCategories = async (page, pageSize, additionalData) => {
     .select(
       `
     *,
-     category_content(*,
+    parent_id(id, category_content(id, title, language_id)),
+    category_content(*,
       language(id, name )
       )
      `,
       { count: "exact" }
     )
-    .eq("category_content.language_id", additionalData?.languageId);
+    .eq("category_content.language_id", additionalData?.languageId)
+    .eq("parent_id.category_content.language_id", additionalData?.languageId);
 
   if (searchValue) {
     switch (searchKey) {
@@ -807,7 +826,8 @@ export const getSizes = async (page, pageSize, additionalData) => {
       { count: "exact" }
     )
     .eq("category.category_content.language_id", additionalData?.languageId)
-    .eq("size_content.region_id", additionalData?.regionId);
+    // .eq("size_content.region_id", additionalData?.regionId);
+console.log(additionalData, 'add');
 
   if (searchValue) {
     switch (searchKey) {
@@ -953,6 +973,69 @@ export const getAddresses = async (page, pageSize, additionalData) => {
     query,
     ignoredFilterColumns: ["country"],
     filterFn: (f) => f?.country?.name === searchValue,
+  });
+};
+
+export const getSupplierAttachment = async (id) => {
+  return await supabase
+    .from(`supplier_attachment`)
+    .select("*")
+    .eq("supplier_id", id);
+};
+
+export const getSuppliers = async (page, pageSize, additionalData) => {
+  let searchKey = additionalData?.search?.key;
+  let searchValue = additionalData?.search?.value;
+
+  const query = supabase.from(`supplier`).select(`*, user(*)`, {
+    count: "exact",
+  });
+
+  if (searchValue) {
+    switch (searchKey) {
+      case "user":
+        query.ilike(`user.first_name`, `%${searchValue}%`);
+        break;
+      default:
+        query.eq(searchKey, searchValue);
+    }
+  }
+
+  return globalGetData({
+    page,
+    pageSize,
+    additionalData,
+    query,
+    ignoredFilterColumns: ["user"],
+    filterFn: (f) => f?.user?.first_name === searchValue,
+  });
+};
+
+export const getSuppliersRequests = async (page, pageSize, additionalData) => {
+  let searchKey = additionalData?.search?.key;
+  let searchValue = additionalData?.search?.value;
+
+  const query = supabase.from(`supplier_request`).select(`*, user(*)`, {
+    count: "exact",
+  });
+
+  if (searchValue) {
+    switch (searchKey) {
+      case "user":
+        query.ilike(`user.first_name`, `%${searchValue}%`);
+        break;
+      default:
+        query.eq(searchKey, searchValue);
+    }
+  }
+
+  return globalGetData({
+    page,
+    pageSize,
+    additionalData,
+    query,
+    ignoredFilterColumns: ["user"],
+    filterFn: (f) => f?.user?.first_name === searchValue,
   });
 };
 
@@ -1449,4 +1532,40 @@ export const getUserDataFromReport = async () => {};
 export const getUsersEmail = async () => {
   const response = await supabase.from("user").select(" email");
   return response;
+};
+
+export const getAllCategories = async (languageId) => {
+  const response = await supabase
+    .from("category_content")
+    .select(`*, label:title, value:id`)
+    .eq("language_id", languageId);
+  // .limit(20);
+  return response;
+};
+export const getHomeSections = async (languageId) => {
+  const response = await supabase
+    .from("home_sections")
+    .select(
+      "id,deletable,display_home,section_id,section_name,section_order,section_type"
+    );
+  return response?.data;
+};
+
+export const updateCategoryStatus = async (cateId) => {
+  const response = await supabase
+    .from("category")
+    .update({ display_homepage: true })
+    .eq("id", cateId);
+  return response;
+};
+
+export const updateUserType = async (userId) => {
+  const userType = await supabase.from("user_type").select("*").eq("number", 6);
+  if (userType?.error) return;
+  await supabase
+    .from("user")
+    .update({
+      user_type_id: userType?.data?.at(0)?.id,
+    })
+    .eq("id", userId);
 };

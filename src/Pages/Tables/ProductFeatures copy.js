@@ -8,7 +8,6 @@ import { useAdd } from "../../hooks/useAdd";
 import { useFetch } from "../../hooks/useFetch";
 import { useUpdate } from "../../hooks/useUpdate";
 import DynamicLayout from "../Dynamics/DynamicLayout";
-import DynamicList from "../Dynamics/DynamicList";
 import EditIcon from "./../../Helpers/Icons/EditIcon";
 import React, { useEffect } from "react";
 import { useState } from "react";
@@ -140,7 +139,7 @@ const ProductFeatures = () => {
           </div>
         </div>
         <div key={activeStage}>
-          <DynamicList
+          <DynamicLayout
             SUPABASE_TABLE_NAME={`${activeStage}_content`}
             columns={
               CACHE_COLUMNS[activeStage] ||

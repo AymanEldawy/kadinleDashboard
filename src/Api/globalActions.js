@@ -1,14 +1,59 @@
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
-import { contentFilterFetch, getAddresses, getBillReports, getBills, getCategories, getChartContent, getChartData, getChats, getCollections, getCollectionsProducts, getColors, getComments, getCountries, getLogs, getNews, getOffers, getOrderReports, getOrders, getOrderStatus, getPoints, getProductFeatures, getProducts, getReturnRequests, getReturnStatus, getRooms, getSales, getShippingPrices, getShowreels, getSizes, getStocks, getUserAddresses, getUserLikes, getUserPoints, getUsers, getUsersCart, getUserSubTable, getWarehouseAvailability, getWarehouses, normalFetch, normalFetchWithPagination } from "./data";
+import {
+  contentFilterFetch,
+  getAddresses,
+  getBillReports,
+  getBills,
+  getCategories,
+  getChartContent,
+  getChartData,
+  getChats,
+  getCollections,
+  getCollectionsProducts,
+  getColors,
+  getComments,
+  getCountries,
+  getLogs,
+  getNews,
+  getOffers,
+  getOrderReports,
+  getOrders,
+  getOrderStatus,
+  getPoints,
+  getProductFeatures,
+  getProducts,
+  getReturnRequests,
+  getReturnStatus,
+  getRooms,
+  getSales,
+  getShippingPrices,
+  getShowreels,
+  getSizes,
+  getStocks,
+  getSuppliers,
+  getSuppliersRequests,
+  getUserAddresses,
+  getUserLikes,
+  getUserPoints,
+  getUsers,
+  getUsersCart,
+  getUserSubTable,
+  getWarehouseAvailability,
+  getWarehouses,
+  normalFetch,
+  normalFetchWithPagination,
+} from "./data";
 import { getRecentUser } from "./statictes";
+import Cookies from "js-cookie";
 
 export const getAdmin = () => {
-  const STORAGE_ADMIN = localStorage.getItem("KADINLE_ADMIN_USER");
-  return STORAGE_ADMIN !== "undefined" && STORAGE_ADMIN
-    ? JSON.parse(STORAGE_ADMIN)
+  return Cookies.get("KADINLE_ADMIN")
+    ? JSON.parse(Cookies.get("KADINLE_ADMIN"))
     : null;
 };
+
 export const ADMIN = getAdmin();
+
 const fetches = {
   address: getAddresses,
   category: getCategories,
@@ -62,7 +107,9 @@ const fetches = {
   order_report: getOrderReports,
   bill_report: getBillReports,
   chat: getChats,
-  rooms: getRooms
+  rooms: getRooms,
+  supplier_request: getSuppliersRequests,
+  supplier: getSuppliers,
 };
 
 export const getTableDataWithPagination = async (

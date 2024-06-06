@@ -1,5 +1,4 @@
 import React from "react";
-import { redirect } from "react-router-dom";
 
 import Login from "../Components/Auth/Login";
 import NotAllowed from "../Components/Auth/NotAllowed";
@@ -18,7 +17,6 @@ import Bills from "../Pages/Tables/Bills";
 import OrderReports from "../Pages/Tables/OrderReports";
 import ShippingPrices from "../Pages/Tables/ShippingPrice";
 import {
-  AddAddress,
   AddBrand,
   AddBulkAlert,
   AddCategory,
@@ -32,6 +30,7 @@ import {
   AddCurrency,
   AddHomeReviewer,
   AddLanguage,
+  AddNewSupplier,
   AddNews,
   AddNewsletter,
   AddOffer,
@@ -43,6 +42,7 @@ import {
   AddReturnStatus,
   AddSale,
   AddSize,
+  AddSupplierRequest,
   AddUser,
   AddWarehouse,
   AddWarehouseAvailability,
@@ -53,7 +53,6 @@ import {
   Brands,
   BulkAlert,
   Categories,
-  Chart,
   ChartContent,
   ChartData,
   Collections,
@@ -83,15 +82,17 @@ import {
   Sales,
   Sizes,
   Stocks,
+  SupplierRequest,
+  Suppliers,
   Users,
   WarehouseAvailability,
   Warehouses,
 } from "./../Pages/Tables";
-import Suppliers from "../Pages/StandAlone/Suppliers";
 import SpecialOffer from "../Pages/Tables/SepcialOffer";
 import Support from "../Pages/StandAlone/Support";
 import ChatRoom from "../Pages/StandAlone/ChatRoom";
 import ChatSetting from "../Pages/StandAlone/ChatSetting";
+import SingleSupplier from "../Pages/StandAlone/SingleSupplier";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -400,13 +401,31 @@ const authProtectedRoutes = [
     component: <Suppliers />,
     allowedRoles: ["admin", "superadmin"],
   },
+  {
+    path: "/suppliers/:id",
+    component: <SingleSupplier />,
+    allowedRoles: ["admin", "superadmin"],
+  },
 
+  {
+    path: "/supplier-request",
+    component: <SupplierRequest />,
+    allowedRoles: ["admin", "superadmin"],
+  },
   // **** Group public paths ****
+  {
+    path: "/add-supplier-request",
+    component: <AddSupplierRequest />,
+    allowedRoles: ["*"],
+  },
 
   { path: "/", component: <Home />, allowedRoles: ["*"] },
   { path: "*", component: <NotAllowed />, allowedRoles: ["*"] },
   { path: "/not-found", component: <PageNotFound />, allowedRoles: ["*"] },
 ];
 
-const publicRoutes = [{ path: "/login", component: <Login /> }];
+const publicRoutes = [
+  { path: "/login", component: <Login /> },
+  { path: "/join-supplier", component: <AddNewSupplier /> },
+];
 export { authProtectedRoutes, publicRoutes };

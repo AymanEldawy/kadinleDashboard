@@ -131,7 +131,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    generateForm()
+    generateForm();
     const getHomeSections = async (param_limit) => {
       const res = await supabase.rpc("get_home_sections", {
         param_limit,
@@ -174,7 +174,7 @@ const Home = () => {
           </h4>
           <DynamicList
             tableName="order"
-            columns={COMBINE_DB_API.combine_order_short}
+            columns={COMBINE_DB_API?.combine_order_short}
             hideBar
             hideAction
             oldData={orders}
@@ -187,7 +187,7 @@ const Home = () => {
             Recent Users
           </h4>
           <SuperTable
-            columns={COMBINE_DB_API.combine_user}
+            columns={COMBINE_DB_API?.combine_user()}
             tableName="user"
             data={recentUsers}
             hideBar

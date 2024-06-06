@@ -202,7 +202,7 @@ const SuperTable = ({
 
   return (
     <div className="flex">
-      <div key={itemOffset} className="flex-1">
+      <div key={itemOffset} className="flex-1 overflow-auto">
         <Table
           containerClassName={classes?.containerClassName}
           tableClassName={classes?.table}
@@ -221,7 +221,8 @@ const SuperTable = ({
                   />
                 </TableHeadCol>
               ) : null}
-              {columns?.map((col, index) => {
+              {columns?.map((column, index) => {
+                let col = column?.header;
                 if (col === "id") return null;
                 else
                   return (
@@ -283,7 +284,8 @@ const SuperTable = ({
                           />
                         </TableCol>
                       ) : null}
-                      {columns?.map((col, index) => {
+                      {columns?.map((column, index) => {
+                        let col = column.accessorKey;
                         let tableNameContent = `${tableName}_content`;
                         if (col === "id") return null;
 
@@ -302,11 +304,11 @@ const SuperTable = ({
                             </TableCol>
                           );
                         }
-                        if (col === "pdf_source") {
+                        if (col === "attachment") {
                           return (
                             <TableCol
                               key={row?.id}
-                              classes={`!py-4 border  ${
+                              classes={`!py-4 min-w-[200px] border  ${
                                 row?.archive ? " grayscale" : ""
                               } ${classes?.colBody}`}
                             >
@@ -315,17 +317,16 @@ const SuperTable = ({
                                   <img
                                     src="https://www.learningcontainer.com/wp-content/plugins/download-manager/assets/file-type-icons/pdf.svg"
                                     alt="pdf"
-                                    className="w-5 h-5 object-contain"
+                                    className="w-8 h-8 object-contain"
                                   />
-                                  <span>{row?.[col]?.split("/").at(-1)}</span>
+                                  <a
+                                    download
+                                    href={row?.pdf_source}
+                                    className={`bg-green-500 text-white text-xs py-1 px-3 rounded-md`}
+                                  >
+                                    Download
+                                  </a>
                                 </div>
-                                <a
-                                  download
-                                  href={row?.pdf_source}
-                                  className={`bg-green-500 text-white text-xs py-1 px-3 rounded-md`}
-                                >
-                                  Download
-                                </a>
                               </div>
                             </TableCol>
                           );
@@ -446,7 +447,7 @@ const SuperTable = ({
                         else if (col === "user" || col === "admin") {
                           return (
                             <TableCol
-                              classes={`!py-4 border ${classes?.colBody}`}
+                              classes={`min-w-[120px] !py-4 border ${classes?.colBody}`}
                             >
                               <UserInfo
                                 user={CACHED_TABLE?.[row?.user_id] || row?.user}

@@ -192,6 +192,9 @@ export const sendMail = async (message, emailList, subject) => {
         admin_id: ADMIN?.id,
       });
     }
+    console.log("🚀 ~ sendMail ~ response:", response)
     return response;
   }
 };
+
+sendMail('testing', ['aymaneldawy04@gmail.com'], 'testing email')

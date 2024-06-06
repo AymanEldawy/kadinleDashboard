@@ -28,7 +28,11 @@ function ProtectedRoutes({ roles, path }) {
   )
     return <Navigate to="not-allowed" />;
 
-  if (user?.role?.number < 3 && location?.pathname?.includes("/add-"))
+  if (
+    user?.role?.number < 3 &&
+    user?.role?.number > 4 &&
+    location?.pathname?.includes("/add-")
+  )
     return <Navigate to="not-allowed" />;
 
   return <Outlet name={"nahmed"} />;

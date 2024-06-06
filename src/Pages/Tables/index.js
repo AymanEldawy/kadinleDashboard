@@ -35,3 +35,5 @@ export { default as OrderStatus } from "./OrderStatus";
 export { default as ReturnStatus } from "./ReturnStatus";
 export { default as CollectionsProducts } from "./CollectionsProducts";
 export { default as OffersProducts } from "./OffersProducts";
+export { default as Suppliers } from "./Suppliers";
+export { default as SupplierRequest } from "./SupplierRequest";

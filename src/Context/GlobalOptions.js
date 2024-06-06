@@ -4,6 +4,7 @@ import { useFetch } from "../hooks/useFetch";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { getUser } from "../Api/auth";
 import { getAdmin } from "../Api/globalActions";
+import Cookies from "js-cookie";
 
 export const GlobalOptions = createContext();
 
@@ -38,6 +39,7 @@ export const GlobalOptionsProvider = ({ children }) => {
   };
   const setDefaultSettings = (type, data) => {
     if (type === "region") {
+      console.log(data,'called');
       setDefaultRegion(data);
       setRegionId(data);
     } else {
@@ -50,13 +52,6 @@ export const GlobalOptionsProvider = ({ children }) => {
     const ADMIN = getAdmin();
     if (ADMIN?.id) {
       setUser(ADMIN);
-    } else {
-      getUser().then((res) => {
-        setUser(res);
-        if (res?.id) {
-          localStorage.setItem("KADINLE_ADMIN_USER", JSON.stringify(res));
-        }
-      });
     }
   }, [refresh]);
 
@@ -92,6 +87,7 @@ export const GlobalOptionsProvider = ({ children }) => {
     setRefresh,
     refresh,
     user,
+    setUser,
   };
   return (
     <GlobalOptions.Provider value={values}>{children}</GlobalOptions.Provider>

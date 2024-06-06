@@ -79,7 +79,7 @@ export const TableBar = ({
           className="p-2 rounded-md"
         />
       </div>
-      {user?.role?.number > 2 ? (
+      {user?.role?.number > 2 && user?.role?.number < 5 ? (
         <div className="flex gap-2">
           {customBarButtons ? customBarButtons : null}
           {onAddClick ? (

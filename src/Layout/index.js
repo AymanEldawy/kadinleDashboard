@@ -38,7 +38,7 @@ const Layout = ({ children }) => {
           {location?.pathname === '/login' ? null :
             <Sidebar open={open} setOpen={setOpen} />
           }
-          <div className="flex-1 shrink">
+          <div className="w-full">
             {location?.pathname === '/login' ? null :
               <Header
                 open={open}

@@ -1,8 +1,7 @@
-import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { getUser, login } from "../../Api/auth";
@@ -13,9 +12,10 @@ import { useGlobalOptions } from "../../Context/GlobalOptions";
 import InputField from "../CustomForm/InputField";
 
 // import logo from "../../Assets/Images/logo.svg";
+import Cookies from "js-cookie";
 
 const Login = () => {
-  const { setRefresh } = useGlobalOptions();
+  const { setRefresh, setUser } = useGlobalOptions();
   const navigate = useNavigate();
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
@@ -23,7 +23,7 @@ const Login = () => {
 
   const ADMIN = getAdmin();
   useEffect(() => {
-    if (ADMIN) navigate(-1);
+    // if (ADMIN) navigate(-1);
   }, [ADMIN]);
 
   const insertIntoErrors = (name, value) => {
@@ -58,26 +58,37 @@ const Login = () => {
       };
     });
   };
-  const handelSubmit = async () => {
+
+  const handelSubmit = async (e) => {
+    e.preventDefault();
+
     if (!Object.keys(errors)?.length) {
       const response = await login(values?.email, values?.password);
       if (response?.error) {
         toast.error(response?.error?.message);
       } else {
+        const user = await getUser();
+        const hour = new Date(new Date().getTime() + 60 * 60 * 1000);
+        Cookies.set("KADINLE_ADMIN", JSON.stringify(user || ""), {
+          expires: hour,
+        });
+        setUser(user);
         toast.success(`Login Successfully`);
-        setRefresh((p) => !p);
         setTimeout(() => {
-          window.location.pathname = '/'
-        }, 3000)
+          window.location.pathname = "/";
+        }, 3000);
       }
     }
   };
   return (
     <div
       className="h-screen flex items-center backdrop-blur-sm bg-pink-50 bg-gradient-to-tr from-pink-300 to-pink-400"
-    // style={{ backgroundImage: `url(${wallpaper})` }}
+      // style={{ backgroundImage: `url(${wallpaper})` }}
     >
-      <div className="w-full h-full flex items-center relative z-20">
+      <form
+        onSubmit={handelSubmit}
+        className="w-full h-full flex items-center relative z-20"
+      >
         <div className="container">
           <div className="max-w-md mx-auto shadow bg-white dark:bg-bgmaindark p-8 rounded-md ">
             <img
@@ -113,14 +124,10 @@ const Login = () => {
                   : null
               }
             />
-            <Button
-              classes="mt-8 block w-full text-green-500"
-              onClick={handelSubmit}
-              title="Login"
-            />
+            <Button classes="mt-8 block w-full text-green-500" title="Login" />
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

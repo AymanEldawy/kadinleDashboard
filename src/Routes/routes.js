@@ -93,6 +93,7 @@ import Support from "../Pages/StandAlone/Support";
 import ChatRoom from "../Pages/StandAlone/ChatRoom";
 import ChatSetting from "../Pages/StandAlone/ChatSetting";
 import SingleSupplier from "../Pages/StandAlone/SingleSupplier";
+import HomeSlider from "../Pages/StandAlone/HomeSlider";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -384,6 +385,11 @@ const authProtectedRoutes = [
   {
     path: "/home-sections",
     component: <HomeSections />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/home-slider",
+    component: <HomeSlider />,
     allowedRoles: ["admin", "superadmin"],
   },
   {

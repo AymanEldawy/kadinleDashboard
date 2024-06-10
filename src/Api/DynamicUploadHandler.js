@@ -162,6 +162,7 @@ export const handleUploadReviewerImage = async (item, operation = "add") => {
     }
   }
 };
+
 export const handleUploadAvatarImage = async (item) => {
   let theFileWebContent = item?.profile_img;
 
@@ -193,4 +194,24 @@ export const handleUploadCategoryVideo = async (item, itemId) => {
   await updateItem(`category`, {
     ...item,
   });
+};
+
+export const handleUploadSlider = async (item) => {
+  let theFileWebContent = item?.image;
+  const image =
+    typeof theFileWebContent === "object"
+      ? await globalUploadImage({
+          name: theFileWebContent?.name || item?.sku || 'slider',
+          file: theFileWebContent,
+          action: "uploadSlider",
+        })
+      : item?.image;
+  if (image?.url) {
+    item.image = image?.url;
+    if (item?.id) {
+      await updateItem(`home_sliders`, item);
+    } else {
+      await addNewItem(`home_sliders`, item);
+    }
+  }
 };

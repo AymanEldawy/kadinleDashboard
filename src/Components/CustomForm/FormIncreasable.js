@@ -33,6 +33,7 @@ export const FormIncreasable = ({
   oldList,
   SUPABASE_TABLE_NAME,
   tableName,
+  customGrid
 }) => {
   const { getData } = useFetch();
   const location = useLocation();
@@ -153,12 +154,14 @@ export const FormIncreasable = ({
           values={values}
           setActiveTab={setActiveTab}
           activeTab={activeTab}
-          maxCount={languages?.length}
+          maxCount={maxCount}
           title={
             SUPABASE_TABLE_NAME === "size"
               ? "choose region"
               : tableName === "order"
               ? "view variant"
+              : increasableTitle
+              ? increasableTitle
               : null
           }
         />
@@ -169,7 +172,7 @@ export const FormIncreasable = ({
           tabName={item}
           key={item}
         >
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+          <div className={customGrid || "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8"}>
             {!!initialFields
               ? initialFields?.map((field, i) => {
                   if (field?.name === "id" || field?.hide_in_add_form)

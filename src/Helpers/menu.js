@@ -35,6 +35,7 @@ import {
   WorldIcon
 } from "./Icons";
 import FlashIcon from "./Icons/FlashIcon";
+import GalleryIcon from './Icons/GalleryIcon';
 
 export const menuData = [
   {
@@ -393,6 +394,11 @@ export const menuData = [
         path: "/home-sections",
         icon: <HomeIcon />,
         name: "Home Sections",
+      },
+      {
+        path: "/home-slider",
+        icon: <GalleryIcon />,
+        name: "Home slider",
       },
       { path: "/send-email", icon: <SenderIcon />, name: "send newsLetter" },
     ],

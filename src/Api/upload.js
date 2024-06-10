@@ -92,4 +92,3 @@ export const uploadCategoryVideo = async ({ id, file }) => {
   formData.append("file", file);
   return await uploadFile(formData, "uploadCategory");
 };
-// export const uploadInfluencer = async () => {}; // product_id / user_id

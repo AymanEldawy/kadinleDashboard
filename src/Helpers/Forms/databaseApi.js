@@ -1452,7 +1452,16 @@ const supplier_request = [
   { name: "ban", type: "checkbox" },
 ];
 
+const home_sliders = [
+  { name: "image", type: "text", key: "image", required: true  },
+  { name: "title", type: "text" },
+  { name: "description", type: "text" },
+  { name: "url", type: "text" },
+  { name: "sku", type: "number",  required: true },
+];
+
 const DB_API = {
+  home_sliders,
   supplier_request,
   partner,
   stock_fields,

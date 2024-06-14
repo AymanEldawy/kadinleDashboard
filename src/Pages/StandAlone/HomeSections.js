@@ -15,6 +15,8 @@ import {
 } from "../../Api/data";
 import { SectionOrderCard } from "../../Components/HomeSectionOrder/SectionOrderCard";
 import ReactSelect from "react-select";
+import { useQuery } from "@tanstack/react-query";
+import AsyncSelect from "react-select/async";
 
 const SECTIONS = [
   {
@@ -94,35 +96,25 @@ const HomeSections = () => {
   const [categories, setCategories] = useState([]);
   const [HASH_SECTIONS, setHASH_SECTIONS] = useState({});
 
+  const getCategories = async () => {
+    const res = await getAllCategories(defaultLanguage?.id);
+    setCategories(res);
+  };
+  useEffect(() => {
+    if (defaultLanguage?.id) {
+      getCategories();
+    }
+  }, [defaultLanguage?.id]);
+
   const getSections = async () => {
     const response = await getHomeSections();
     if (response?.length) {
       let hash = {};
       setSortedSection(response);
       for (const item of response) {
-        hash[item?.id] = item;
+        hash[item?.section_id] = item;
       }
-      setHASH_SECTIONS(hash);
-    } else {
-      // setSortedSection(SECTIONS);
-      // const cate = await getAllCategories(defaultLanguage?.id);
-      // setCategories(cate?.data);
-      // let sections = [];
-      // let count = 0;
-      // for (const c of cate?.data) {
-      //   if (SELECTED_CATE?.[c?.title]) {
-      //     sections.push({
-      //       section_id: c?.category_id,
-      //       section_type: "CATEGORY",
-      //       section_name: c?.title,
-      //       section_order: count + 1,
-      //       display_home: true,
-      //       deletable: true,
-      //     });
-      //     count += 1;
-      //   }
-      // }
-      // setSortedSection((prev) => [...prev, ...sections]);
+      setHASH_SECTIONS(...hash);
     }
   };
 
@@ -137,8 +129,9 @@ const HomeSections = () => {
 
       for (const section of sortedSections) {
         if (section?.id) {
-          // let oldSection = HASH_SECTIONS?.[section?.id];
-          // if (JSON.stringify(oldSection) !== JSON.stringify(section))
+          let oldSection = HASH_SECTIONS?.[section?.section_id];
+          console.log("🚀 ~ onSaveOrder ~ oldSection:", oldSection, section);
+          if (section?.section_order !== oldSection?.section_order)
             response = await updateItem("home_sections", section);
         } else {
           response = await addItem("home_sections", section);
@@ -170,7 +163,7 @@ const HomeSections = () => {
     setSortedSection((prev) => [
       ...prev,
       {
-        section_id: newSection?.id,
+        section_id: newSection?.category_id,
         section_type: "CATEGORY",
         section_name: newSection?.title,
         section_order: sortedSections?.length + 1,
@@ -193,7 +186,6 @@ const HomeSections = () => {
 
   const onChangeNumber = (e, section_name) => {
     let value = e.target.value;
-    if (CACHE_NUMBERS[value]) return;
     let newSortedSections = sortedSections?.map((section) => {
       if (section?.section_name === section_name) {
         section.section_order = +value;
@@ -218,6 +210,8 @@ const HomeSections = () => {
     setSortedSection(newSortedSections);
   };
 
+  console.log(categories, "categories");
+
   return (
     <>
       <BlockPaper
@@ -227,8 +221,8 @@ const HomeSections = () => {
           <div className="flex gap-1 items-center">
             <ReactSelect
               className="w-[220px]"
-              options={categories || []}
-              value={newSection}
+              options={categories}
+              // value={newSection}
               onChange={(value) => {
                 setNewSection(value);
               }}

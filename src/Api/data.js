@@ -1540,7 +1540,7 @@ export const getAllCategories = async (languageId) => {
     .select(`*, label:title, value:id`)
     .eq("language_id", languageId);
   // .limit(20);
-  return response;
+  return response?.data;
 };
 export const getHomeSections = async (languageId) => {
   const response = await supabase

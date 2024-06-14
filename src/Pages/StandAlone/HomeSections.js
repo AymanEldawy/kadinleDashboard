@@ -178,9 +178,13 @@ const HomeSections = () => {
     setSortedSection((prev) =>
       prev?.filter((p) => prev?.section_name !== section?.section_name)
     );
-    if (section?.id) {
+    if (section?.id && section?.section_type === "CATEGORY") {
       // delete section from database
       await deleteItem("home_sections", [section?.id]);
+      await updateItem("category", {
+        id: section?.section_id,
+        display_homepage: false,
+      });
     }
   };
 

@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { signup } from "../../Api/auth";
 import {
   handleUploadAvatarImage,
+  handleUploadCategoryImage,
   handleUploadCategoryImages,
+  handleUploadCategoryMedia,
   handleUploadCategoryVideo,
   handleUploadCollectionImage,
   handleUploadColorImage,
@@ -13,7 +15,6 @@ import {
   handleUploadPartnerImage,
   handleUploadReviewerImage,
 } from "../../Api/DynamicUploadHandler";
-import { uploadCategoryImage } from "../../Api/upload";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
 import SuperForm from "../../Components/CustomForm/SuperForm";
@@ -70,8 +71,20 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
         const response = await addItem(SUPABASE_TABLE_NAME, values);
         if (!response?.error) {
           const itemId = response?.data?.[0]?.id;
-          if (SUPABASE_TABLE_NAME === "category" && values?.banner_video) {
-            handleUploadCategoryVideo(response?.data?.at(0), itemId);
+          if (
+            SUPABASE_TABLE_NAME === "category" &&
+            typeof values?.banner_video === "object"
+          ) {
+            handleUploadCategoryVideo({
+              id: itemId,
+              banner_video: values?.banner_video,
+            });
+          }
+          if (
+            SUPABASE_TABLE_NAME === "category" &&
+            typeof values?.image === "object"
+          ) {
+            handleUploadCategoryImage({ id: itemId, image: values?.image });
           }
           if (SUPABASE_TABLE_NAME === "color")
             await handleUploadColorImage({

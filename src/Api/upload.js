@@ -18,6 +18,7 @@ async function uploadFile(formData, action) {
 
   const response = await fetch(
     `http://kadinle.com:4321/${action}`,
+    // `http://localhost:4321/${action}`,
     requestOptions
   );
   return response?.json();
@@ -86,9 +87,12 @@ export const uploadAvatarImage = async ({ userId, file }) => {
   return await uploadFile(formData, "uploadAvatar");
 };
 
-export const uploadCategoryVideo = async ({ id, file }) => {
+export const uploadCategoryMedia = async ({ id, file, type }) => {
   const formData = new FormData();
   formData.append("id", id);
+  formData.append("lang", "ALL");
+  formData.append("type", type);
   formData.append("file", file);
   return await uploadFile(formData, "uploadCategory");
 };
+

@@ -3,7 +3,7 @@ import {
   globalUploadImage,
   uploadAvatarImage,
   uploadCategoryImage,
-  uploadCategoryVideo,
+  uploadCategoryMedia,
   uploadCollectionImage,
   uploadColorImage,
   uploadOfferImage,
@@ -179,17 +179,36 @@ export const handleUploadAvatarImage = async (item) => {
   }
 };
 
-export const handleUploadCategoryVideo = async (item, itemId) => {
+export const handleUploadCategoryVideo = async (item) => {
   let theFileWebContent = item?.banner_video;
   const media =
     typeof theFileWebContent === "object"
-      ? await uploadCategoryVideo({
-          id: itemId,
+      ? await uploadCategoryMedia({
+          id: item?.id,
           file: theFileWebContent,
+          type: "video",
         })
       : item?.banner_video;
 
   if (media?.url) item.banner_video = media?.url;
+
+  await updateItem(`category`, {
+    ...item,
+  });
+};
+
+export const handleUploadCategoryImage = async (item) => {
+  let theFileWebContent = item?.image;
+  const media =
+    typeof theFileWebContent === "object"
+      ? await uploadCategoryMedia({
+          id: item?.id,
+          file: theFileWebContent,
+          type: "icon",
+        })
+      : item?.image;
+
+  if (media?.url) item.image = media?.url;
 
   await updateItem(`category`, {
     ...item,
@@ -201,7 +220,7 @@ export const handleUploadSlider = async (item) => {
   const image =
     typeof theFileWebContent === "object"
       ? await globalUploadImage({
-          name: theFileWebContent?.name || item?.sku || 'slider',
+          name: theFileWebContent?.name || item?.sku || "slider",
           file: theFileWebContent,
           action: "uploadSlider",
         })

@@ -39,6 +39,7 @@ const category = [
   { name: "display_homepage", key: "checkbox" },
   { name: "numeric", type: "text" },
   { name: "banner_video", type: "text", key: "image" },
+  { name: "image", type: "text", key: "image" },
 ];
 
 const category_content = [

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 
 import {
   handleUploadAvatarImage,
+  handleUploadCategoryImage,
   handleUploadCategoryImages,
   handleUploadCategoryVideo,
   handleUploadCollectionImage,
@@ -82,12 +83,23 @@ const Update = () => {
       const response = await updateItem(tableName, values);
       if (
         tableName === "category" &&
+        values?.banner_video &&
         typeof values?.banner_video === "object"
       ) {
-        await handleUploadCategoryVideo(
-          response?.data?.at(0),
-          values?.id || id
-        );
+        await handleUploadCategoryVideo({
+          id: values?.id,
+          banner_video: values?.banner_video,
+        });
+      }
+      if (
+        tableName === "category" &&
+        values?.image &&
+        typeof values?.image === "object"
+      ) {
+        await handleUploadCategoryImage({
+          id: values?.id,
+          image: values?.image,
+        });
       }
 
       if (tableName === "order") {

@@ -1,4 +1,7 @@
 import { Link } from "react-router-dom";
+import { FullImage } from "./../../Components/Global/FullImage/FullImage";
+import { UserInfo } from "../../Components/Global/UserInfo/UserInfo";
+import { EyeIcon, SlashEyeIcon } from "../Icons";
 
 const combine_address = () => [
   {
@@ -217,10 +220,37 @@ const combine_category = () => [
       );
     },
   },
-  { accessorKey: "banner_video", header: "banner_video" },
-  { accessorKey: "description", header: "description" },
-  { accessorKey: "mobile_image", header: "mobile_image" },
-  { accessorKey: "web_image", header: "web_image" },
+  {
+    accessorKey: "banner_video",
+    header: "banner_video",
+    cell: ({ getValue }) => {
+      return <FullImage src={getValue()} alt={"banner_video"} />;
+    },
+  },
+  {
+    accessorKey: "description",
+    header: "description",
+    cell: ({ row }) => {
+      let content = row?.original?.category_content?.at(0);
+      return <span>{content?.description}</span>;
+    },
+  },
+  {
+    accessorKey: "mobile_image",
+    header: "mobile_image",
+    cell: ({ row }) => {
+      let content = row?.original?.category_content?.at(0);
+      return <FullImage src={content?.mobile_image} alt={content?.title} />;
+    },
+  },
+  {
+    accessorKey: "web_image",
+    header: "web_image",
+    cell: ({ row }) => {
+      let content = row?.original?.category_content?.at(0);
+      return <FullImage src={content?.web_image} alt={content?.title} />;
+    },
+  },
   {
     accessorKey: "actions",
     header: "actions",
@@ -265,7 +295,11 @@ const combine_chart = () => [
       </div>
     ),
   },
-  { accessorKey: "number", header: "number" },
+  {
+    accessorKey: "number",
+    header: "number",
+    cell: ({ row }) => <span>{row?.original?.chart?.number}</span>,
+  },
   {
     accessorKey: "actions",
     header: "actions",
@@ -310,7 +344,11 @@ const combine_chart_content = () => [
     ),
   },
 
-  { accessorKey: "number", header: "number" },
+  {
+    accessorKey: "number",
+    header: "number",
+    cell: ({ row }) => <span>{row?.original?.chart?.number}</span>,
+  },
   {
     accessorKey: "name",
     header: "name",
@@ -474,6 +512,7 @@ const combine_color = () => [
     ),
   },
 
+  { accessorKey: "numeric", header: "numeric" },
   { accessorKey: "color_sku", header: "color_sku" },
   {
     accessorKey: "hex",
@@ -485,10 +524,6 @@ const combine_color = () => [
       />
     ),
   },
-  { accessorKey: "image", header: "image" },
-  { accessorKey: "parent_id", header: "parent_id" },
-  { accessorKey: "numeric", header: "numeric" },
-
   {
     accessorKey: "name",
     header: "name",
@@ -502,6 +537,8 @@ const combine_color = () => [
       </Link>
     ),
   },
+  { accessorKey: "image", header: "image" },
+  // { accessorKey: "parent_id", header: "parent_id" },
 ];
 const combine_comment = () => [
   {
@@ -539,7 +576,11 @@ const combine_comment = () => [
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "user", header: "user" },
+  {
+    accessorKey: "user",
+    header: "user",
+    cell: ({ getValue }) => <UserInfo user={getValue()} />,
+  },
   { accessorKey: "product", header: "product" },
   { accessorKey: "rating", header: "rating" },
   { accessorKey: "content", header: "content" },
@@ -577,6 +618,8 @@ const combine_country = () => [
     ),
   },
   { accessorKey: "name", header: "name" },
+  { accessorKey: "ar_name", header: "ar_name" },
+  { accessorKey: "tr_name", header: "tr_name" },
   { accessorKey: "alph-2", header: "alph-2" },
   { accessorKey: "alph-3", header: "alph-3" },
   {
@@ -632,11 +675,42 @@ const combine_coupon = () => [
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "code", header: "code" },
+  {
+    accessorKey: "code",
+    header: "code",
+    cell: ({ row, getValue }) => (
+      <Link
+        to={`/update/coupon/${row?.original?.id}`}
+        className="text-blue-500 hover:underline"
+      >
+        {getValue()}
+      </Link>
+    ),
+  },
   { accessorKey: "value", header: "value" },
-  { accessorKey: "percentage", header: "percentage" },
-  { accessorKey: "expiration_date", header: "expiration_date" },
-  { accessorKey: "public", header: "public" },
+  {
+    accessorKey: "percentage",
+    header: "percentage",
+    cell: ({ getValue }) => <span>{getValue() ? "Yes" : "No"}</span>,
+  },
+  {
+    accessorKey: "expiration_date",
+    header: "expiration_date",
+    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
+  },
+  {
+    accessorKey: "public",
+    header: "public",
+    cell: ({ getValue }) => (
+      <span>
+        {getValue() ? (
+          <EyeIcon className="h-5 w-5 text-green-500" />
+        ) : (
+          <SlashEyeIcon className="h-5 w-5 text-gray-500" />
+        )}
+      </span>
+    ),
+  },
 ];
 const combine_credit_card = () => [
   {
@@ -674,7 +748,11 @@ const combine_credit_card = () => [
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "user", header: "user" },
+  {
+    accessorKey: "user",
+    header: "user",
+    cell: ({ getValue }) => <UserInfo user={getValue()} />,
+  },
   { accessorKey: "number", header: "number" },
   { accessorKey: "exp_date", header: "exp_date" },
   { accessorKey: "CCV", header: "CCV" },
@@ -860,7 +938,13 @@ const combine_news = () => [
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
   { accessorKey: "link", header: "link" },
-  { accessorKey: "content", header: "content" },
+  {
+    accessorKey: "content",
+    header: "content",
+    cell: ({ row }) => (
+      <span>{row?.original?.news_content?.at(0)?.content}</span>
+    ),
+  },
 ];
 const combine_newsletter = () => [
   {
@@ -969,10 +1053,40 @@ const combine_offer = () => [
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
   { accessorKey: "numerical", header: "numerical" },
-
-  { accessorKey: "name", header: "name" },
-  { accessorKey: "description", header: "description" },
-  { accessorKey: "media", header: "media" },
+  {
+    accessorKey: "name",
+    header: "name",
+    cell: ({ row }) => {
+      return (
+        <Link
+          to={`/update/offer/${row?.original?.id}`}
+          className="text-blue-500 hover:underline"
+        >
+          {row?.original?.offer_content?.at(0)?.name}
+        </Link>
+      );
+    },
+  },
+  {
+    accessorKey: "description",
+    header: "description",
+    cell: ({ row }) => {
+      return <span>{row?.original?.offer_content?.at(0)?.description}</span>;
+    },
+  },
+  {
+    accessorKey: "media",
+    header: "media",
+    cell: ({ row }) => {
+      return (
+        <FullImage
+          src={row?.original?.offer_content?.at(0)?.media}
+          width={80}
+          height={60}
+        />
+      );
+    },
+  },
   { accessorKey: "display_home", header: "display_home" },
 ];
 
@@ -1047,48 +1161,55 @@ export const combine_order = () => [
   },
   { accessorKey: "order_number", header: "order_number" },
   { accessorKey: "price", header: "price" },
-  { accessorKey: "warehouse_from", header: "warehouse_from" },
-  { accessorKey: "address", header: "address" },
+  {
+    accessorKey: "warehouse_from",
+    header: "warehouse_from",
+    cell: ({ getValue }) => <span>{getValue()?.name}</span>,
+  },
+  {
+    accessorKey: "address",
+    header: "address",
+    cell: ({ getValue }) => <span>{getValue()?.country?.name}</span>,
+  },
   { accessorKey: "shipping_date", header: "shipping_date" },
-  { accessorKey: "order_status", header: "order_status" },
-  { accessorKey: "user", header: "user" },
+  {
+    accessorKey: "order_status",
+    header: "order_status",
+    cell: ({ getValue }) => {
+      let status = getValue()?.status_content?.at(0)?.order_status;
+      return <span>{status}</span>;
+    },
+  },
+  {
+    accessorKey: "user",
+    header: "user",
+    cell: ({ getValue }) => <UserInfo user={getValue()} />,
+  },
 ];
 const combine_order_short = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
   { accessorKey: "order_number", header: "order_number" },
-  { accessorKey: "user", header: "user" },
-  { accessorKey: "variant", header: "variant" },
+  {
+    accessorKey: "user",
+    header: "user",
+    cell: ({ getValue }) => <UserInfo user={getValue()} />,
+  },
+  // {
+  //   accessorKey: "variant",
+  //   header: "variant",
+  //   cell: ({ getValue, row }) => {
+  //     console.log(getValue(), row.original);
+  //   },
+  // },
   { accessorKey: "price", header: "price" },
-  { accessorKey: "order_status", header: "order_status" },
-  { accessorKey: "quantity", header: "quantity" },
+  {
+    accessorKey: "order_status",
+    header: "order_status",
+    cell: ({ getValue }) => {
+      let status = getValue()?.status_content?.at(0)?.order_status;
+      return <span>{status}</span>;
+    },
+  },
+  // { accessorKey: "quantity", header: "quantity" },
 ];
 
 const combine_order_return_request = () => [
@@ -1127,12 +1248,26 @@ const combine_order_return_request = () => [
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "order", header: "order" },
-  { accessorKey: "variant", header: "variant" },
+  {
+    accessorKey: "order",
+    header: "order",
+    cell: ({ getValue }) => <span>{getValue()?.order_number}</span>,
+  },
+  {
+    accessorKey: "variant",
+    header: "variant",
+    cell: ({ row }) => <span>{row?.original?.product_variant?.sku}</span>,
+  },
+  {
+    accessorKey: "return_status",
+    header: "return_status",
+    cell: ({ getValue }) => (
+      <span>{getValue()?.return_status_content?.at(0)?.status}</span>
+    ),
+  },
   { accessorKey: "other_reason", header: "other_reason" },
   { accessorKey: "reason", header: "reason" },
   { accessorKey: "images", header: "images" },
-  { accessorKey: "return_status", header: "return_status" },
 ];
 
 const combine_order_status = () => [
@@ -1166,7 +1301,14 @@ const combine_order_status = () => [
     ),
   },
   { accessorKey: "numerical", header: "numerical" },
-  { accessorKey: "status", header: "status" },
+  {
+    accessorKey: "status",
+    header: "status",
+
+    cell: ({ row }) => (
+      <span>{row?.original?.order_status_content?.at(0)?.status}</span>
+    ),
+  },
 ];
 const combine_payment_status = () => [
   {
@@ -1235,8 +1377,13 @@ const combine_point = () => [
   },
   { accessorKey: "numeric", header: "numeric" },
   { accessorKey: "point_count", header: "point_count" },
-  { accessorKey: "cause", header: "cause" },
-  { accessorKey: "language", header: "language" },
+  {
+    accessorKey: "cause",
+    header: "cause",
+    cell: ({ row }) => (
+      <span>{row?.original?.point_content?.at(0)?.cause}</span>
+    ),
+  },
 ];
 
 const combine_product = () => [
@@ -1330,36 +1477,6 @@ const combine_product = () => [
   },
 ];
 const combine_collection_product = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-
   { accessorKey: "product_sku", header: "product_sku" },
   { accessorKey: "name", header: "name" },
   { accessorKey: "category", header: "category" },
@@ -1517,7 +1634,13 @@ const combine_return_status = () => [
     ),
   },
   { accessorKey: "numerical", header: "numerical" },
-  { accessorKey: "status", header: "status" },
+  {
+    accessorKey: "status",
+    header: "status",
+    cell: ({ row }) => (
+      <span>{row?.original?.return_status_content?.at(0)?.status}</span>
+    ),
+  },
 ];
 const combine_sale = () => [
   {
@@ -1594,7 +1717,11 @@ const combine_showreel = () => [
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "user", header: "user" },
+  {
+    accessorKey: "user",
+    header: "user",
+    cell: ({ getValue }) => <UserInfo user={getValue()} />,
+  },
   { accessorKey: "product", header: "product" },
   { accessorKey: "url", header: "url" },
   { accessorKey: "views", header: "views" },
@@ -1666,47 +1793,55 @@ const combine_size = () => [
 ];
 
 const combine_user = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
+  // {
+  //   id: "select",
+  //   size: 20,
+  //   header: ({ table }) => (
+  //     <input
+  //       type="checkbox"
+  //       className="h-5 w-5"
+  //       {...{
+  //         checked: table?.getIsAllRowsSelected(),
+  //         // indeterminate: table?.getIsSomeRowsSelected(),
+  //         onChange: table?.getToggleAllRowsSelectedHandler(),
+  //       }}
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <div className="px-1">
+  //       <input
+  //         type="checkbox"
+  //         className="h-5 w-5"
+  //         {...{
+  //           checked: row?.getIsSelected(),
+  //           disabled: !row?.getCanSelect(),
+  //           // indeterminate: row?.getIsSomeSelected(),
+  //           onChange: row?.getToggleSelectedHandler(),
+  //         }}
+  //       />
+  //     </div>
+  //   ),
+  // },
 
   {
     accessorKey: "created_at",
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "first_name", header: "first_name" },
-  { accessorKey: "last_name", header: "last_name" },
+  {
+    accessorKey: "user",
+    header: "user",
+    cell: ({ row }) => (
+      <UserInfo
+        user={{
+          ...row?.original,
+        }}
+      />
+    ),
+  },
   { accessorKey: "email", header: "email" },
-  { accessorKey: "title", header: "title" },
+  { accessorKey: "title", header: "title", cell: ({getValue}) => <span>{getValue()?.name}</span> },
   { accessorKey: "phone", header: "phone" },
-  { accessorKey: "profile_img", header: "profile_img" },
   { accessorKey: "wallet", header: "wallet" },
   { accessorKey: "points", header: "points" },
 ];
@@ -1746,7 +1881,11 @@ const combine_user_address = () => [
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
   { accessorKey: "title", header: "title" },
-  { accessorKey: "address", header: "address" },
+  {
+    accessorKey: "address",
+    header: "address",
+    cell: ({ getValue }) => <span>{getValue()?.name}</span>,
+  },
 ];
 const combine_user_alert = () => [
   {
@@ -2087,7 +2226,11 @@ const combine_warehouse_availability = () => [
     ),
   },
 
-  { accessorKey: "warehouse", header: "warehouse" },
+  {
+    accessorKey: "warehouse",
+    header: "warehouse",
+    cell: ({ getValue }) => <span>{getValue()?.name}</span>,
+  },
   {
     accessorKey: "country",
     header: "country",
@@ -2103,7 +2246,7 @@ const combine_warehouse_availability = () => [
       );
     },
   },
-  { accessorKey: "shipping_price_id", header: "shipping_price_id" },
+  // { accessorKey: "shipping_price_id", header: "shipping_price_id" },
 ];
 
 const combine_warehouse = () => [
@@ -2136,9 +2279,13 @@ const combine_warehouse = () => [
       </div>
     ),
   },
-  { accessorKey: "name", header: "name" },
-  { accessorKey: "address", header: "address" },
   { accessorKey: "number", header: "number" },
+  { accessorKey: "name", header: "name" },
+  {
+    accessorKey: "address",
+    header: "address",
+    cell: ({ getValue }) => <span>{getValue()?.name}</span>,
+  },
 ];
 
 const combine_stock = () => [
@@ -2171,8 +2318,17 @@ const combine_stock = () => [
       </div>
     ),
   },
-  { accessorKey: "variant", header: "variant" },
-  { accessorKey: "warehouse", header: "warehouse" },
+  {
+    accessorKey: "variant",
+    header: "variant",
+
+    cell: ({ row }) => <span> {row?.original?.product_variant?.sku}</span>,
+  },
+  {
+    accessorKey: "warehouse",
+    header: "warehouse",
+    cell: ({ getValue }) => <span> {getValue()?.name}</span>,
+  },
   { accessorKey: "stock", header: "stock" },
   {
     accessorKey: "actions",
@@ -2316,551 +2472,7 @@ const combine_fabric = () => [
   },
   { accessorKey: "name", header: "name" },
 ];
-const combine_season = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
-const combine_sleeve = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
-const combine_material = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
-const combine_pattern = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
 
-const combine_fabric_information = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
-const combine_environment = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
-const combine_style = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
-const combine_package = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
-const combine_sleeve_type = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
-const combine_waist = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
-const combine_belt_condition = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
-const combine_pocket = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
-const combine_leg_type = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
-const combine_closure_type = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
-const combine_thickness = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
-const combine_printing_technique = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
-const combine_embroidery_type = () => [
-  {
-    id: "select",
-    size: 20,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  { accessorKey: "name", header: "name" },
-];
 const combine_washing_instructions = () => [
   {
     id: "select",
@@ -2967,7 +2579,11 @@ export const combine_bill = () => [
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "user", header: "user" },
+  {
+    accessorKey: "user",
+    header: "user",
+    cell: ({ getValue }) => <UserInfo user={getValue()} />,
+  },
   { accessorKey: "order_number", header: "order_number" },
   { accessorKey: "total", header: "total" },
   { accessorKey: "shipping_cost", header: "shipping_cost" },
@@ -3009,7 +2625,11 @@ export const combine_bill_report = () => [
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "user", header: "user" },
+  {
+    accessorKey: "user",
+    header: "user",
+    cell: ({ getValue }) => <UserInfo user={getValue()} />,
+  },
   { accessorKey: "bill_id", header: "bill_id" },
   { accessorKey: "report", header: "report" },
 ];
@@ -3049,7 +2669,11 @@ export const combine_order_report = () => [
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "user", header: "user" },
+  {
+    accessorKey: "user",
+    header: "user",
+    cell: ({ getValue }) => <UserInfo user={getValue()} />,
+  },
   { accessorKey: "order_number", header: "order_number" },
   { accessorKey: "report", header: "report" },
 ];
@@ -3090,7 +2714,11 @@ const combine_suppliers = () => [
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
   { accessorKey: "supplier_number_id", header: "supplier_number_id" },
-  { accessorKey: "user", header: "user" },
+  {
+    accessorKey: "user",
+    header: "user",
+    cell: ({ getValue }) => <UserInfo user={getValue()} />,
+  },
   { accessorKey: "attachment", header: "attachment" },
   { accessorKey: "company_name", header: "company_name" },
   { accessorKey: "company_type", header: "company_type" },
@@ -3105,7 +2733,11 @@ const combine_suppliers = () => [
   { accessorKey: "province", header: "province" },
   { accessorKey: "district", header: "district" },
   { accessorKey: "neighborhood", header: "neighborhood" },
-  { accessorKey: "address", header: "address" },
+  {
+    accessorKey: "address",
+    header: "address",
+    cell: ({ getValue }) => <span>{getValue()?.name}</span>,
+  },
   { accessorKey: "main", header: "main" },
   { accessorKey: "finance", header: "finance" },
   { accessorKey: "operations", header: "operations" },
@@ -3152,7 +2784,11 @@ const combine_chat = () => [
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "user", header: "user" },
+  {
+    accessorKey: "user",
+    header: "user",
+    cell: ({ getValue }) => <UserInfo user={getValue()} />,
+  },
   { accessorKey: "content", header: "content" },
   { accessorKey: "room_id", header: "room_id" },
 ];
@@ -3191,7 +2827,11 @@ const combine_room = () => [
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "user", header: "user" },
+  {
+    accessorKey: "user",
+    header: "user",
+    cell: ({ getValue }) => <UserInfo user={getValue()} />,
+  },
 ];
 const combine_partner = () => [
   {
@@ -3268,7 +2908,11 @@ const supplier_request = () => [
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "user", header: "user" },
+  {
+    accessorKey: "user",
+    header: "user",
+    cell: ({ getValue }) => <UserInfo user={getValue()} />,
+  },
   { accessorKey: "attachment", header: "attachment" },
   { accessorKey: "company_name", header: "company_name" },
   { accessorKey: "company_contact", header: "company_contact" },
@@ -3310,7 +2954,6 @@ const COMBINE_DB_API = {
   combine_chart_data,
   combine_chart_content,
   combine_suppliers,
-
   combine_collection,
   combine_collection_product,
   combine_color,
@@ -3319,14 +2962,9 @@ const COMBINE_DB_API = {
   combine_coupon,
   combine_credit_card,
   combine_currency,
-  combine_fabric,
-  combine_feature,
-  combine_collar,
   combine_home_reviews,
   combine_language,
-  combine_lining,
   combine_logs,
-  combine_material,
   combine_news,
   combine_newsletter,
   combine_newsletter_subscription,
@@ -3335,7 +2973,6 @@ const COMBINE_DB_API = {
   combine_order,
   combine_order_return_request,
   combine_order_status,
-  combine_pattern,
   combine_payment_status,
   combine_point,
   combine_product,
@@ -3344,10 +2981,8 @@ const COMBINE_DB_API = {
   combine_region,
   combine_return_status,
   combine_sale,
-  combine_season,
   combine_showreel,
   combine_size,
-  combine_sleeve,
   combine_user,
   combine_user_address,
   combine_user_alert,
@@ -3366,19 +3001,6 @@ const COMBINE_DB_API = {
   combine_bill,
   combine_bill_report,
   combine_order_report,
-  combine_fabric_information,
-  combine_environment,
-  combine_style,
-  combine_package,
-  combine_sleeve_type,
-  combine_waist,
-  combine_belt_condition,
-  combine_pocket,
-  combine_leg_type,
-  combine_closure_type,
-  combine_thickness,
-  combine_printing_technique,
-  combine_embroidery_type,
   combine_washing_instructions,
 };
 export default COMBINE_DB_API;

@@ -89,7 +89,7 @@ const Sidebar = ({ open, setOpen }) => {
           className={`${open ? "w-44" : "w-8"} object-contain`}
         />
       </Link>
-      <div className="flex-col flex-1 overflow-auto text-gray-500 dark:text-gray-400 text-sm font-medium min-h-[40px] flex items-start justify-between capitalize">
+      <div className="flex-col flex-1 hide-scroll overflow-auto text-gray-500 dark:text-gray-400 text-sm font-medium min-h-[40px] flex items-start justify-between capitalize">
         {list(menuData)}
       </div>
     </aside>

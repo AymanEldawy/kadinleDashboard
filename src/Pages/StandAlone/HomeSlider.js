@@ -10,6 +10,7 @@ import Loading from "../../Components/Loading/Loading";
 import { Button } from "../../Components/Global/Button";
 import { toast } from "react-toastify";
 import { handleUploadSlider } from "../../Api/DynamicUploadHandler";
+import { addNewItem, updateItem } from "../../Api/globalActions";
 
 let CACHE_SLIDERS = {};
 
@@ -36,7 +37,6 @@ const HomeSlider = () => {
 
   const fields = useMemo(() => DB_API.home_sliders, []);
 
-  console.log(values);
   const onSubmit = async () => {
     if (JSON.stringify(CACHE_SLIDERS) === JSON.stringify(values)) {
       toast.error(`data isn't change`);
@@ -44,7 +44,38 @@ const HomeSlider = () => {
     }
 
     for (const value of Object.values(values)) {
-      await handleUploadSlider(value);
+      const loading = toast.loading("loading...");
+      const web_image = await handleUploadSlider(value, "web_image");
+      const mobile_image = await handleUploadSlider(value, "mobile_image");
+      let response = null;
+      if (value?.id) {
+        response = await updateItem(`home_sliders`, {
+          ...value,
+          web_image,
+          mobile_image,
+        });
+      } else {
+        response = await addNewItem(`home_sliders`, {
+          ...value,
+          web_image,
+          mobile_image,
+        });
+      }
+      if (response?.error) {
+        toast.update(loading, {
+          render: response.error || "Field to sort sections, please try again",
+          type: "error",
+          isLoading: false,
+          autoClose: 1000,
+        });
+      } else {
+        toast.update(loading, {
+          render: "Successfully sorted home page sections",
+          type: "success",
+          isLoading: false,
+          autoClose: 1000,
+        });
+      }
     }
   };
 

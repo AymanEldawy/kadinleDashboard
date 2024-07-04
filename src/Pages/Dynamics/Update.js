@@ -121,7 +121,7 @@ const Update = () => {
           } else if (tableName === "offer") {
             await handleUploadOfferImage(
               item,
-              item?.offer_id || id,
+              item?.id || id,
               CACHE_LANGUAGES,
               "update"
             );

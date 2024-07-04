@@ -13,8 +13,7 @@ import {
 export const handleUploadCategoryImages = async (
   item,
   itemId,
-  CACHE_LANGUAGES,
-  operation = "add"
+  CACHE_LANGUAGES
 ) => {
   let theFileWebContent = item?.web_image;
   let theFileMobileContent = item?.mobile_image;
@@ -40,7 +39,7 @@ export const handleUploadCategoryImages = async (
       : item?.mobile_image;
 
   if (mobilePath?.url) item.mobile_image = mobilePath?.url;
-  if (operation === "add")
+  if (!item?.id)
     await addNewItem(`category_content`, {
       ...item,
       category_id: itemId,
@@ -52,12 +51,8 @@ export const handleUploadCategoryImages = async (
     });
 };
 
-export const handleUploadOfferImage = async (
-  item,
-  itemId,
-  CACHE_LANGUAGES,
-  operation = "add"
-) => {
+export const handleUploadOfferImage = async (item, itemId, CACHE_LANGUAGES) => {
+
   let theFileWebContent = item?.media;
   const media =
     typeof theFileWebContent === "object"
@@ -69,7 +64,7 @@ export const handleUploadOfferImage = async (
       : item?.media;
 
   if (media?.url) item.media = media?.url;
-  if (operation === "add")
+  if (!item?.id)
     await addNewItem(`offer_content`, {
       ...item,
       offer_id: itemId,
@@ -77,15 +72,13 @@ export const handleUploadOfferImage = async (
   else
     await updateItem(`offer_content`, {
       ...item,
-      offer_id: itemId || item?.id,
     });
 };
 
 export const handleUploadCollectionImage = async (
   item,
   itemId,
-  CACHE_LANGUAGES,
-  operation = "add"
+  CACHE_LANGUAGES
 ) => {
   let theFileWebContent = item?.image;
   const image =
@@ -97,7 +90,7 @@ export const handleUploadCollectionImage = async (
         })
       : item?.image;
   if (image?.url) item.image = image?.url;
-  if (operation === "add")
+  if (!item?.id)
     await addNewItem(`collection_content`, {
       ...item,
       collection_id: itemId,
@@ -123,7 +116,7 @@ export const handleUploadColorImage = async (item) => {
   }
 };
 
-export const handleUploadPartnerImage = async (item, operation = "add") => {
+export const handleUploadPartnerImage = async (item) => {
   let theFileWebContent = item?.image;
   const image =
     typeof theFileWebContent === "object"
@@ -135,7 +128,7 @@ export const handleUploadPartnerImage = async (item, operation = "add") => {
       : item?.image;
   if (image?.url) {
     item.image = image?.url;
-    if (operation === "add") {
+    if (!item?.id) {
       await addNewItem(`partner`, item);
     } else {
       await updateItem(`partner`, item);
@@ -143,7 +136,7 @@ export const handleUploadPartnerImage = async (item, operation = "add") => {
   }
 };
 
-export const handleUploadReviewerImage = async (item, operation = "add") => {
+export const handleUploadReviewerImage = async (item) => {
   let theFileWebContent = item?.image;
   const image =
     typeof theFileWebContent === "object"
@@ -155,7 +148,7 @@ export const handleUploadReviewerImage = async (item, operation = "add") => {
       : item?.image;
   if (image?.url) {
     item.image = image?.url;
-    if (operation === "add") {
+    if (!item?.id) {
       await addNewItem(`home_reviews`, item);
     } else {
       await updateItem(`home_reviews`, item);
@@ -215,8 +208,8 @@ export const handleUploadCategoryImage = async (item) => {
   });
 };
 
-export const handleUploadSlider = async (item) => {
-  let theFileWebContent = item?.image;
+export const handleUploadSlider = async (item, key) => {
+  let theFileWebContent = item?.[key];
   const image =
     typeof theFileWebContent === "object"
       ? await globalUploadImage({
@@ -224,13 +217,11 @@ export const handleUploadSlider = async (item) => {
           file: theFileWebContent,
           action: "uploadSlider",
         })
-      : item?.image;
-  if (image?.url) {
-    item.image = image?.url;
-    if (item?.id) {
-      await updateItem(`home_sliders`, item);
-    } else {
-      await addNewItem(`home_sliders`, item);
-    }
-  }
+      : item?.[key];
+
+  return image?.url || item?.[key];
+  // if (image?.url) {
+  //   item[key] = image?.url;
+  //   await updateItem(`home_sliders`, item);
+  // }
 };

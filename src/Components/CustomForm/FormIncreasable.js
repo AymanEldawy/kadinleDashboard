@@ -1,18 +1,13 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import { getTableData } from "../../Api/globalActions";
-import TabsList from "../../Components/Tabs/TabsList";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
-import { CloseIcon, PlusIcon } from "../../Helpers/Icons";
 import { useFetch } from "../../hooks/useFetch";
-import { Button } from "../Global/Button";
 import { IncreasableBar } from "../Global/IncreasableBar";
-import TabsContent from "./../../Components/Tabs/TabsContent";
 import CheckboxField from "./CheckboxField";
 import InputField from "./InputField";
 import RadioField from "./RadioField";

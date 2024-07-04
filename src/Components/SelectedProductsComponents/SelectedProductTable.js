@@ -199,6 +199,7 @@ export const SelectedProductTable = ({
     setItemOffset(index);
   };
 
+
   return (
     <div>
       <TableBar
@@ -216,7 +217,7 @@ export const SelectedProductTable = ({
             <button onClick={insertMany} title="Choose all" className='p-2 rounded-md bg-primary-blue text-white'><PlusIcon /></button>
           </>
         }
-        columns={columns}
+        columns={() => {}}
         selectedColumn={selectedColumn}
         setSelectedColumn={setSelectedColumn}
 
@@ -236,21 +237,21 @@ export const SelectedProductTable = ({
                 onChange={handleSelectedAll}
               />
             </TableHeadCol>
-            {columns?.map((col, index) => {
+            {columns()?.map((col, index) => {
               if (col === "id") return null;
               else
                 return (
                   <TableHeadCol
-                    contentClassName={` ${col === "description" || col === "name"
+                    contentClassName={` ${col?.accessorKey === "description" || col?.accessorKey === "name"
                       ? "min-w-[160px]"
                       : ""
                       }`}
                     classes={''}
-                    key={`${col}-${index}`}
+                    key={`${col?.header}-${index}`}
                   // sort
                   // sortBy={sortBy}
                   >
-                    {col}
+                    {col?.header}
                   </TableHeadCol>
                 );
             })}

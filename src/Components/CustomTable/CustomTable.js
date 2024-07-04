@@ -16,12 +16,14 @@ import { SortIcon } from "../../Helpers/Icons";
 import { ResizeBar } from "./TableResizeBar";
 import { flexRender } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
+import { TableSkeleton } from "./TableSkeleton";
 
 let columnBeingDragged;
 
 const CustomTable = ({
   columns,
   data,
+  isLoading,
   loading,
   tableName,
   openDrawerMore,
@@ -34,76 +36,14 @@ const CustomTable = ({
   tableBodyClassName,
   tdClassName,
 }) => {
-  console.log("🚀 ~ data:", data)
   const { t } = useTranslation();
-  const location = useLocation();
-  const { getData } = useFetch();
-  const { defaultLanguage } = useGlobalOptions();
   const { lang } = useContext(LanguageContext);
   const [currentItems, setCurrentItems] = useState([]);
-  const [CACHED_TABLE, setCACHED_TABLE] = useState({});
-  const [CACHE_REASONS, setCACHE_REASONS] = useState({});
   const [moreData, setMoreData] = useState({});
 
   useEffect(() => {
     setCurrentItems(data);
   }, [data]);
-
-  // useEffect(() => {
-  //   if (columns?.includes("parent_id")) checkRefTable();
-  // }, [columns?.length]);
-
-  // useEffect(() => {
-  //   if (columns?.includes("user") && location?.pathname === "/user")
-  //     getAndCacheUserData();
-  // }, [location?.pathname, columns?.length, tableName]);
-
-  // useEffect(() => {
-  //   if (!defaultLanguage?.id) return;
-  //   if (tableName === "order_return_request") {
-  //     getReasons();
-  //   }
-  // }, [defaultLanguage?.id, tableName]);
-
-  // async function getReasons() {
-  //   const response = await getTableData("return_reason_content", {
-  //     languageId: defaultLanguage?.id,
-  //   });
-  //   let hash = {};
-  //   for (const item of response?.data) {
-  //     hash[item?.return_reason_id] = item?.reason;
-  //   }
-  //   setCACHE_REASONS(hash);
-  // }
-  // async function getAndCacheUserData() {
-  //   const response = await getData("user");
-  //   let hash = {};
-  //   for (const user of response) {
-  //     hash[user?.id] = user;
-  //   }
-  //   setCACHED_TABLE((prev) => {
-  //     return {
-  //       ...prev,
-  //       ...hash,
-  //     };
-  //   });
-  // }
-  // async function checkRefTable() {
-  //   if (!data?.length) return;
-  //   const response = await getTableData(`${tableName}_content`, {
-  //     languageId: defaultLanguage?.id,
-  //   });
-  //   let hash = {};
-  //   for (const item of response?.data) {
-  //     hash[item?.[`${tableName}_id`]] = item.name || item?.title;
-  //   }
-  //   setCACHED_TABLE((prev) => {
-  //     return {
-  //       ...prev,
-  //       ...hash,
-  //     };
-  //   });
-  // }
 
   const onDragStart = (e) => {
     columnBeingDragged = Number(e.currentTarget.dataset.columnIndex);
@@ -186,12 +126,11 @@ const CustomTable = ({
             })}
           </thead>
           <tbody className={`${tableBodyClassName}`}>
-            {loading ? (
-              <></>
+            {isLoading ? (
+              <TableSkeleton columns={columns} />
             ) : (
-              // <TableSkeleton columns={columns} />
               <>
-                {table.getRowModel()?.rows?.length ? (
+                {data?.length ? (
                   table.getRowModel().rows.map((row) => {
                     return (
                       <tr
@@ -218,8 +157,7 @@ const CustomTable = ({
                 ) : (
                   <tr className="text-red-500 h-28 bg-[#f1f1f1e8] p-1 rounded-sm text-center mt-2">
                     <td
-                      colSpan={columns?.length}
-                      rowSpan={5}
+                      colSpan={columns()?.length || 5}
                       className="ltr:text-left rtl:text-right relative"
                     >
                       <span className="sticky left-1/2 -translate-x-1/2">

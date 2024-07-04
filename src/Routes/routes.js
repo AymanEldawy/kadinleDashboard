@@ -94,6 +94,7 @@ import ChatRoom from "../Pages/StandAlone/ChatRoom";
 import ChatSetting from "../Pages/StandAlone/ChatSetting";
 import SingleSupplier from "../Pages/StandAlone/SingleSupplier";
 import HomeSlider from "../Pages/StandAlone/HomeSlider";
+import XMLImport from "../Pages/StandAlone/XMLImport";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -139,47 +140,10 @@ const authProtectedRoutes = [
   { path: "/add-color", component: <AddColor />, allowedRoles: ["*"] },
   { path: "/add-size", component: <AddSize />, allowedRoles: ["*"] },
   {
-    path: "/add-collar",
-    component: <InsertOne layout="collar" />,
-    allowedRoles: ["*"],
-  },
-
-  {
-    path: "/add-fabric",
-    component: <InsertOne layout="fabric" />,
-    allowedRoles: ["*"],
-  },
-  {
-    path: "/add-feature",
-    component: <InsertOne layout="feature" />,
-    allowedRoles: ["*"],
-  },
-  {
-    path: "/add-lining",
-    component: <InsertOne layout="lining" />,
-    allowedRoles: ["*"],
-  },
-  {
-    path: "/add-material",
-    component: <InsertOne layout="material" />,
-    allowedRoles: ["*"],
-  },
-  {
-    path: "/add-pattern",
-    component: <InsertOne layout="pattern" />,
-    allowedRoles: ["*"],
-  },
-  {
     path: "/add-season",
     component: <InsertOne layout="season" />,
     allowedRoles: ["*"],
   },
-  {
-    path: "/add-sleeve",
-    component: <InsertOne layout="sleeve" />,
-    allowedRoles: ["*"],
-  },
-
   // **** Group Feature paths ****
   { path: "/color", component: <Colors />, allowedRoles: ["*"] },
   { path: "/category", component: <Categories />, allowedRoles: ["*"] },
@@ -390,6 +354,11 @@ const authProtectedRoutes = [
   {
     path: "/home-slider",
     component: <HomeSlider />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/xml-import",
+    component: <XMLImport />,
     allowedRoles: ["admin", "superadmin"],
   },
   {

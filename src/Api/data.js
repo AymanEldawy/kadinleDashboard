@@ -381,7 +381,7 @@ export const getReturnRequests = async (page, pageSize, additionalData) => {
       { count: "exact" }
     )
     // .eq(
-    //   "return_reason.return_reason_content.reason",
+    //   "return_reason.return_status_content.name",
     //   additionalData?.languageId
     // )
     .eq(
@@ -567,43 +567,6 @@ export const getProducts = async (page, pageSize, additionalData) => {
   });
 };
 
-export const getProductFeatures = async (
-  table,
-  page,
-  pageSize,
-  additionalData
-) => {
-  let searchKey = additionalData?.search?.key;
-  let searchValue = additionalData?.search?.value;
-
-  const query = supabase.from(table).select(
-    `
-      *,
-      language_id,
-      language(id, name)
-   `,
-    { count: "exact" }
-  );
-
-  if (searchValue) {
-    switch (searchKey) {
-      case "language":
-        query.ilike("language.name", `%${searchValue}%`);
-        break;
-      default:
-        query.eq(searchKey, searchValue);
-    }
-  }
-
-  return globalGetData({
-    page,
-    pageSize,
-    additionalData,
-    query,
-    ignoredFilterColumns: ["language"],
-  });
-};
-
 export const getCountries = async (page, pageSize, additionalData) => {
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
@@ -786,10 +749,12 @@ export const getColors = async (page, pageSize, additionalData) => {
      color_content(*,
       language (id, name )
       )
+      parent_id(id, color_content:parent(id, name, language_id))
      `,
       { count: "exact" }
     )
-    .eq("color_content.language_id", additionalData?.languageId);
+    .eq("color_content.language_id", additionalData?.languageId)
+    // .eq("parent_id.color_content.language_id", additionalData?.languageId);
 
   if (searchValue) {
     switch (searchKey) {
@@ -825,9 +790,8 @@ export const getSizes = async (page, pageSize, additionalData) => {
       `,
       { count: "exact" }
     )
-    .eq("category.category_content.language_id", additionalData?.languageId)
-    // .eq("size_content.region_id", additionalData?.regionId);
-console.log(additionalData, 'add');
+    .eq("category.category_content.language_id", additionalData?.languageId);
+  // .eq("size_content.region_id", additionalData?.regionId);
 
   if (searchValue) {
     switch (searchKey) {
@@ -1078,20 +1042,14 @@ export const getStocks = async (page, pageSize, additionalData) => {
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
-  const query = supabase
-    .from("stock")
-    .select(
-      `
+  const query = supabase.from("stock").select(
+    `
     *,
     warehouse(name),
-    product_variant(id, sku, product_id)
+    product_variant(id, sku)
   `,
-      { count: "exact" }
-    )
-    .eq(
-      "product_variant.product.product_content.language_id",
-      additionalData?.languageId
-    );
+    { count: "exact" }
+  );
 
   if (searchValue) {
     switch (searchKey) {

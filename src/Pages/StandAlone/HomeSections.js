@@ -130,7 +130,6 @@ const HomeSections = () => {
       for (const section of sortedSections) {
         if (section?.id) {
           let oldSection = HASH_SECTIONS?.[section?.section_id];
-          console.log("🚀 ~ onSaveOrder ~ oldSection:", oldSection, section);
           if (section?.section_order !== oldSection?.section_order)
             response = await updateItem("home_sections", section);
         } else {
@@ -214,7 +213,6 @@ const HomeSections = () => {
     setSortedSection(newSortedSections);
   };
 
-  console.log(categories, "categories");
 
   return (
     <>

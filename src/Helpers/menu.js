@@ -124,12 +124,12 @@ export const menuData = [
         icon: <RulerIcon />,
         path: "/size",
       },
-      {
-        key: "Product Features",
-        name: "Product Features",
-        icon: <FireIcon />,
-        path: "product-features",
-      },
+      // {
+      //   key: "Product Features",
+      //   name: "Product Features",
+      //   icon: <FireIcon />,
+      //   path: "product-features",
+      // },
     ],
   },
 
@@ -293,12 +293,12 @@ export const menuData = [
     key: "seasons",
     groupTitle: "seasons",
     groupList: [
-      {
-        key: "Collections",
-        name: "Collections",
-        icon: <CollectionIcon />,
-        path: "/collection",
-      },
+      // {
+      //   key: "Collections",
+      //   name: "Collections",
+      //   icon: <CollectionIcon />,
+      //   path: "/collection",
+      // },
       {
         key: "Sales",
         name: "Sales",
@@ -399,6 +399,11 @@ export const menuData = [
         path: "/home-slider",
         icon: <GalleryIcon />,
         name: "Home slider",
+      },
+      {
+        path: "/xml-import",
+        icon: <UploadIcon />,
+        name: "XML Import",
       },
       { path: "/send-email", icon: <SenderIcon />, name: "send newsLetter" },
     ],

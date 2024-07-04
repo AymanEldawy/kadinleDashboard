@@ -11,3 +11,9 @@ export const regions = {
   EU: "83f4acbc-d93b-4b3d-9c78-11d1b353517a",
 };
 
+export const XML_IMPORT_STEPS = [
+  { name: "Upload File", icon: "" },
+  { name: "Mapping", icon: "" },
+  { name: "Processing", icon: "" },
+  { name: "Completed", icon: "" },
+];

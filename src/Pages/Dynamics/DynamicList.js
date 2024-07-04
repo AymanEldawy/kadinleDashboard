@@ -128,6 +128,7 @@ const DynamicList = ({
       await onDelete(list, ids);
     }
   };
+  
 
   const handleDeleteItem = async (selectedList) => {
     await onDelete(tableName, Object.values(selectedList));
@@ -181,7 +182,7 @@ const DynamicList = ({
             setSelectedColumn={setSelectedColumn}
           />
         )}
-        <CustomTable columns={columns} table={table} tableName={tableName} />
+        <CustomTable columns={columns} table={table} tableName={tableName} isLoading={isLoading} data={data} />
 
         {/* <SuperTable
           itemOffset={itemOffset}

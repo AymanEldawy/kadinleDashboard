@@ -15,7 +15,7 @@ export const UserInfo = ({ user, userNameClassName }) => {
           width={40}
           src={user?.profile_img}
           alt={`${theName} avatar`}
-          className="w-9 h-9 rounded-full p-[1px] border"
+          className="w-9 h-9 rounded-full p-[1px] border shrink-0"
         />
       ) : null}
       <span className={userNameClassName}>{theName}</span>

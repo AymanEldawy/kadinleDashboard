@@ -132,13 +132,6 @@ const Home = () => {
 
   useEffect(() => {
     generateForm();
-    const getHomeSections = async (param_limit) => {
-      const res = await supabase.rpc("get_home_sections", {
-        param_limit,
-      });
-      return res;
-    };
-    getHomeSections(20);
     getTotalEarningsHandler();
     getOrdersCountHandler();
     getCustomersCountHandler();

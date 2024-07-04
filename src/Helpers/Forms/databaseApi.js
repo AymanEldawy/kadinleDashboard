@@ -39,7 +39,7 @@ const category = [
   { name: "display_homepage", key: "checkbox" },
   { name: "numeric", type: "text" },
   { name: "banner_video", type: "text", key: "image" },
-  { name: "image", type: "text", key: "image" },
+  { label: "icon", name: "image", type: "text", key: "image" },
 ];
 
 const category_content = [
@@ -279,6 +279,8 @@ const comment_media = [
 const country = [
   { name: "id", type: "uuid" },
   { name: "name", type: "text", required: true },
+  { name: "ar_name", type: "text", required: true },
+  { name: "tr_name", type: "text", required: true },
   { name: "alph-2", type: "text" },
   { name: "alph-3", type: "text" },
   { name: "code", type: "text", required: true },
@@ -410,6 +412,7 @@ const logs = [
   { name: "row_id", type: "uuid" },
   { name: "table_name", type: "text" },
 ];
+
 const material = [{ name: "id", type: "uuid" }];
 const material_content = [
   { name: "id", type: "uuid" },
@@ -431,6 +434,7 @@ const material_content = [
   },
   { name: "name", type: "text" },
 ];
+
 const news = [
   { name: "id", type: "uuid" },
   // { name: "created_at", type: "date" },
@@ -457,6 +461,7 @@ const offer = [
   { name: "created_at", type: "date" },
   { name: "numerical", type: "number" },
   { name: "display_home", key: "checkbox" },
+  { name: "is_banner", key: "checkbox" },
 ];
 export const offer_content = [
   { name: "id", type: "uuid" },
@@ -1454,11 +1459,19 @@ const supplier_request = [
 ];
 
 const home_sliders = [
-  { name: "image", type: "text", key: "image", required: true  },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
+  { name: "web_image", type: "text", key: "image", required: true },
+  { name: "mobile_image", type: "text", key: "image", required: true },
   { name: "title", type: "text" },
   { name: "description", type: "text" },
   { name: "url", type: "text" },
-  { name: "sku", type: "number",  required: true },
+  { name: "sku", type: "number", required: true },
 ];
 
 const DB_API = {

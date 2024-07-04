@@ -5,14 +5,11 @@ import Modal from "../../Components/Modal/Modal";
 import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import DB_API from "../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../hooks/useAdd";
-import { useFetch } from "../../hooks/useFetch";
 import { useUpdate } from "../../hooks/useUpdate";
-import DynamicLayout from "../Dynamics/DynamicLayout";
 import DynamicList from "../Dynamics/DynamicList";
 import EditIcon from "./../../Helpers/Icons/EditIcon";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const productFeatures = [
   "fabric",

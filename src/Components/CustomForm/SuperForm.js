@@ -249,7 +249,7 @@ const SuperForm = ({
                       index={i}
                       name={field?.name}
                       readonly={field?.readonly}
-                      label={field?.name}
+                      label={field?.label || field?.name}
                       onFocus={() => onTouched(field?.name)}
                       required={field?.required}
                       error={

@@ -476,10 +476,47 @@ const combine_collection = () => [
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
 
-  { accessorKey: "name", header: "name" },
-  { accessorKey: "description", header: "description" },
-  { accessorKey: "image", header: "image" },
-  { accessorKey: "display_home", header: "display_home" },
+  {
+    accessorKey: "name",
+    header: "name",
+    cell: ({ row }) => {
+      return (
+        <Link
+          to={`/update/offer/${row?.original?.id}`}
+          className="text-blue-500 hover:underline"
+        >
+          {row?.original?.collection_content?.at(0)?.name}
+        </Link>
+      );
+    },
+  },
+  {
+    accessorKey: "description",
+    header: "description",
+    cell: ({ row }) => {
+      return (
+        <span>{row?.original?.collection_content?.at(0)?.description}</span>
+      );
+    },
+  },
+  {
+    accessorKey: "image",
+    header: "image",
+    cell: ({ row }) => {
+      return (
+        <FullImage
+          src={row?.original?.collection_content?.at(0)?.image}
+          width={80}
+          height={60}
+        />
+      );
+    },
+  },
+  {
+    accessorKey: "display_home",
+    header: "display_home",
+    cell: ({ getValue }) => <span>{getValue() ? "YES" : "No"}</span>,
+  },
 ];
 const combine_color = () => [
   {
@@ -1840,7 +1877,11 @@ const combine_user = () => [
     ),
   },
   { accessorKey: "email", header: "email" },
-  { accessorKey: "title", header: "title", cell: ({getValue}) => <span>{getValue()?.name}</span> },
+  {
+    accessorKey: "title",
+    header: "title",
+    cell: ({ getValue }) => <span>{getValue()?.name}</span>,
+  },
   { accessorKey: "phone", header: "phone" },
   { accessorKey: "wallet", header: "wallet" },
   { accessorKey: "points", header: "points" },
@@ -2941,7 +2982,262 @@ const supplier_request = () => [
   { accessorKey: "company_certificates", header: "company_certificates" },
 ];
 
+export const combine_definitions = () => [
+  {
+    id: "select",
+    size: 20,
+    header: ({ table }) => (
+      <input
+        type="checkbox"
+        className="h-5 w-5"
+        {...{
+          checked: table?.getIsAllRowsSelected(),
+          // indeterminate: table?.getIsSomeRowsSelected(),
+          onChange: table?.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <input
+          type="checkbox"
+          className="h-5 w-5"
+          {...{
+            checked: row?.getIsSelected(),
+            disabled: !row?.getCanSelect(),
+            // indeterminate: row?.getIsSomeSelected(),
+            onChange: row?.getToggleSelectedHandler(),
+          }}
+        />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "created_at",
+    header: "created_at",
+    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
+  },
+  {
+    accessorKey: "sku",
+    header: "sku",
+    cell: ({ getValue, row }) => {
+      return (
+        <Link
+          to={`/update/definitions/${row.original.id}`}
+          className="text-blue-500 hover:underline"
+        >
+          {getValue()}
+        </Link>
+      );
+    },
+  },
+
+  {
+    accessorKey: "image",
+    header: "image",
+    cell: ({ getValue }) => {
+      return <FullImage src={getValue()} alt={"image"} />;
+    },
+  },
+  { accessorKey: "url", header: "url" },
+];
+
+export const combine_less_than = () => [
+  {
+    id: "select",
+    size: 20,
+    header: ({ table }) => (
+      <input
+        type="checkbox"
+        className="h-5 w-5"
+        {...{
+          checked: table?.getIsAllRowsSelected(),
+          // indeterminate: table?.getIsSomeRowsSelected(),
+          onChange: table?.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <input
+          type="checkbox"
+          className="h-5 w-5"
+          {...{
+            checked: row?.getIsSelected(),
+            disabled: !row?.getCanSelect(),
+            // indeterminate: row?.getIsSomeSelected(),
+            onChange: row?.getToggleSelectedHandler(),
+          }}
+        />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "created_at",
+    header: "created_at",
+    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
+  },
+  {
+    accessorKey: "sku",
+    header: "sku",
+    cell: ({ getValue, row }) => {
+      return (
+        <Link
+          to={`/update/less_than/${row.original.id}`}
+          className="text-blue-500 hover:underline"
+        >
+          {getValue()}
+        </Link>
+      );
+    },
+  },
+  {
+    accessorKey: "web_image",
+    header: "web_image",
+    cell: ({ getValue }) => {
+      return <FullImage src={getValue()} alt={"image"} />;
+    },
+  },
+  {
+    accessorKey: "mobile_image",
+    header: "mobile_image",
+    cell: ({ getValue }) => {
+      return <FullImage src={getValue()} alt={"image"} />;
+    },
+  },
+  { accessorKey: "price", header: "price" },
+];
+
+const home_sliders = () => [
+  {
+    id: "select",
+    size: 20,
+    header: ({ table }) => (
+      <input
+        type="checkbox"
+        className="h-5 w-5"
+        {...{
+          checked: table?.getIsAllRowsSelected(),
+          // indeterminate: table?.getIsSomeRowsSelected(),
+          onChange: table?.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <input
+          type="checkbox"
+          className="h-5 w-5"
+          {...{
+            checked: row?.getIsSelected(),
+            disabled: !row?.getCanSelect(),
+            // indeterminate: row?.getIsSomeSelected(),
+            onChange: row?.getToggleSelectedHandler(),
+          }}
+        />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "created_at",
+    header: "created_at",
+    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
+  },
+  {
+    accessorKey: "sku",
+    header: "sku",
+    cell: ({ getValue, row }) => {
+      return (
+        <Link
+          to={`/update/home_sliders/${row.original.id}`}
+          className="text-blue-500 hover:underline"
+        >
+          {getValue()}
+        </Link>
+      );
+    },
+  },
+  {
+    accessorKey: "web_image",
+    header: "web_image",
+    cell: ({ getValue }) => {
+      return <FullImage src={getValue()} alt={"image"} />;
+    },
+  },
+  {
+    accessorKey: "mobile_image",
+    header: "mobile_image",
+    cell: ({ getValue }) => {
+      return <FullImage src={getValue()} alt={"image"} />;
+    },
+  },
+  { accessorKey: "title", header: "title" },
+  { accessorKey: "description", header: "description" },
+  { accessorKey: "url", header: "url" },
+];
+
+const products_slider = () => [
+  {
+    id: "select",
+    size: 20,
+    header: ({ table }) => (
+      <input
+        type="checkbox"
+        className="h-5 w-5"
+        {...{
+          checked: table?.getIsAllRowsSelected(),
+          // indeterminate: table?.getIsSomeRowsSelected(),
+          onChange: table?.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <input
+          type="checkbox"
+          className="h-5 w-5"
+          {...{
+            checked: row?.getIsSelected(),
+            disabled: !row?.getCanSelect(),
+            // indeterminate: row?.getIsSomeSelected(),
+            onChange: row?.getToggleSelectedHandler(),
+          }}
+        />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "created_at",
+    header: "created_at",
+    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
+  },
+  {
+    accessorKey: "sku",
+    header: "sku",
+    cell: ({ getValue, row }) => {
+      return (
+        <Link
+          to={`/update-products-slider/${row.original.id}`}
+          className="text-blue-500 hover:underline"
+        >
+          {getValue()}
+        </Link>
+      );
+    },
+  },
+  {
+    accessorKey: "products_sku",
+    header: "products_sku",
+    cell: ({ getValue }) => <span>{getValue()?.length} Products</span>,
+  },
+  { accessorKey: "display_home", header: "display_home" },
+];
+
 const COMBINE_DB_API = {
+  products_slider,
+  home_sliders,
+  combine_less_than,
+  combine_definitions,
   supplier_request,
   combine_partner,
   combine_room,

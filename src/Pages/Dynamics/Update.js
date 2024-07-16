@@ -12,6 +12,7 @@ import {
   handleUploadOfferImage,
   handleUploadPartnerImage,
   handleUploadReviewerImage,
+  handleUploadSlider,
 } from "../../Api/DynamicUploadHandler";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
@@ -26,11 +27,13 @@ import {
   onReturnRequestStatusChange,
 } from "../../Api/globalMail";
 import { ImagesView } from "./ImagesView";
+import { useAdd } from "../../hooks/useAdd";
 
 const Update = () => {
   const params = useParams();
   const { CACHE_LANGUAGES, languages, defaultLanguage } = useGlobalOptions();
   const { updateItem } = useUpdate();
+  const { addItem } = useAdd();
   const { getData } = useFetch();
   const { name: tableName, id } = params;
 
@@ -80,6 +83,31 @@ const Update = () => {
     } else if (tableName === "home_reviews") {
       await handleUploadReviewerImage(values, "update");
     } else {
+      if (tableName === "definitions") {
+        const image = await handleUploadSlider(values, "image");
+        setValues((prev) => ({
+          ...prev,
+          image,
+        }));
+      }
+      if (tableName === "less_than" || tableName === "home_sliders") {
+        const web_image = await handleUploadSlider(
+          values,
+          "web_image",
+          tableName
+        );
+        const mobile_image = await handleUploadSlider(
+          values,
+          "mobile_image",
+          tableName
+        );
+        setValues((prev) => ({
+          ...prev,
+          mobile_image,
+          web_image,
+        }));
+      }
+
       const response = await updateItem(tableName, values);
       if (
         tableName === "category" &&
@@ -111,24 +139,67 @@ const Update = () => {
         if (tableName === "color") await handleUploadColorImage(values);
         const list = Object.values(contentValues);
         for (const item of list) {
-          if (tableName === "category") {
+          if (tableName === "less_than" || tableName === "home_sliders") {
+            const web_image = await handleUploadSlider(
+              item,
+              "web_image",
+              tableName
+            );
+            const mobile_image = await handleUploadSlider(
+              item,
+              "mobile_image",
+              tableName
+            );
+            console.log('----',web_image, mobile_image);
+            if (item?.id) {
+              const res = await updateItem(`${tableName}_content`, {
+                ...item,
+                web_image,
+                mobile_image,
+              });
+              console.log("🚀 ~ onSubmit ~ res:", res);
+            } else {
+              await addItem(`${tableName}_content`, {
+                ...item,
+                [`${tableName}_id`]: params?.id,
+                web_image,
+                mobile_image,
+              });
+            }
+          }
+          else if (tableName === "definitions") {
+            const image = await handleUploadSlider(item, "image", tableName);
+            if (item?.[[`${tableName}_id`]]) {
+              await updateItem(`${tableName}_content`, {
+                ...item,
+                image,
+              });
+            } else {
+              await addItem(`${tableName}_content`, {
+                ...item,
+                [`${tableName}_id`]: params?.id,
+                image,
+              });
+            }
+          }
+
+          else if (tableName === "category") {
             await handleUploadCategoryImages(
               item,
-              item?.category_id || id,
-              CACHE_LANGUAGES,
-              "update"
+              item?.category_id || params?.id,
+              CACHE_LANGUAGES
             );
           } else if (tableName === "offer") {
             await handleUploadOfferImage(
               item,
-              item?.id || id,
+              item?.id,
               CACHE_LANGUAGES,
               "update"
             );
           } else if (tableName === "collection") {
             await handleUploadCollectionImage(
               item,
-              item?.collection_id || id,
+              item?.collection_id,
               CACHE_LANGUAGES,
               "update"
             );

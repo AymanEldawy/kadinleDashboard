@@ -87,10 +87,9 @@ const Login = () => {
     >
       <form
         onSubmit={handelSubmit}
-        className="w-full h-full flex items-center relative z-20"
+        className="flex items-center relative z-20 max-w-md w-full mx-auto bg-white dark:bg-bgmaindark shadow  p-8 rounded-md "
       >
-        <div className="container">
-          <div className="max-w-md mx-auto shadow bg-white dark:bg-bgmaindark p-8 rounded-md ">
+          <div className="w-full">
             <img
               src={logoIcon}
               alt="kadinle logo"
@@ -126,7 +125,6 @@ const Login = () => {
             />
             <Button classes="mt-8 block w-full text-green-500" title="Login" />
           </div>
-        </div>
       </form>
     </div>
   );

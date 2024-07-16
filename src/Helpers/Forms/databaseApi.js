@@ -162,6 +162,15 @@ const collar_content = [
 const collection = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date" },
+  { name: "collection_connect", key: "collection_connect" },
+  {
+    name: "category_id",
+    key: "ref",
+    refId: "category_id",
+    tableName: "category_content",
+    refName: "title",
+    hide_in_add_form: true,
+  },
   { name: "display_home", key: "checkbox" },
 ];
 const collection_content = [
@@ -187,6 +196,40 @@ const collection_content = [
   { name: "description", type: "text" },
   { name: "image", type: "text", key: "image" },
 ];
+
+const less_than = [
+  { name: "sku", type: "number", required: true },
+  { name: "price", type: "number", required: true },
+];
+
+const less_than_content = [
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
+  { name: "web_image", type: "text", key: "image", required: true },
+  { name: "mobile_image", type: "text", key: "image", required: true },
+];
+
+const definitions = [
+  { name: "sku", type: "text", required: true },
+  { name: "url", type: "text", required: true },
+];
+
+const definitions_content = [
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
+  { name: "image", type: "text", key: "image", required: true },
+];
+
 const collection_product = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
@@ -1459,6 +1502,11 @@ const supplier_request = [
 ];
 
 const home_sliders = [
+  { name: "url", type: "text" },
+  { name: "sku", type: "number", required: true },
+];
+
+const home_sliders_content = [
   {
     name: "language_id",
     required: true,
@@ -1466,16 +1514,30 @@ const home_sliders = [
     key: "ref",
     tableName: "language",
   },
-  { name: "web_image", type: "text", key: "image", required: true },
-  { name: "mobile_image", type: "text", key: "image", required: true },
   { name: "title", type: "text" },
   { name: "description", type: "text" },
-  { name: "url", type: "text" },
+  { name: "web_image", type: "text", key: "image", required: true },
+  { name: "mobile_image", type: "text", key: "image", required: true },
+];
+
+const products_slider = [
+  {
+    name: "product_id",
+    type: "uuid",
+    key: "ref",
+    tableName: "product_content",
+    refId: "product_id",
+    required: true,
+    hide_in_add_form: true,
+  },
   { name: "sku", type: "number", required: true },
+  { name: "display_homepage", key: "checkbox" },
 ];
 
 const DB_API = {
+  products_slider,
   home_sliders,
+  home_sliders_content,
   supplier_request,
   partner,
   stock_fields,
@@ -1559,5 +1621,9 @@ const DB_API = {
   warehouse,
   warehouse_availability,
   shipping_price,
+  less_than,
+  less_than_content,
+  definitions,
+  definitions_content,
 };
 export default DB_API;

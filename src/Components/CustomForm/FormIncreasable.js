@@ -49,7 +49,7 @@ export const FormIncreasable = ({
 
   useEffect(() => {
     if (!!values && !!oldList) {
-      const list = Object.keys(values);
+      const list = Object.keys(values)?.length ?  Object.keys(values) : [1];
       setListCount(list);
       setActiveTab(list[0]);
     }

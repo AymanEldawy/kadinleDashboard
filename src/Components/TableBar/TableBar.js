@@ -33,6 +33,8 @@ export const TableBar = ({
   setSelectedColumn,
   selectedColumn,
   setSearchValue,
+  rowSelection,
+  hideSearch,
 }) => {
   const { defaultLanguage, user } = useGlobalOptions();
   const { getData } = useFetch();
@@ -51,14 +53,16 @@ export const TableBar = ({
   return (
     <div className="flex justify-between gap-2 mb-4 flex-wrap max-[500px]:items-start ">
       <div className="flex gap-2 items-center">
-        <div className="relative">
-          <SearchBar
-            columns={columns}
-            searchKey={selectedColumn}
-            setSearchKey={setSelectedColumn}
-            setSearchValue={setSearchValue}
-          />
-        </div>
+        {hideSearch ? null : (
+          <div className="relative">
+            <SearchBar
+              columns={columns}
+              searchKey={selectedColumn}
+              setSearchKey={setSelectedColumn}
+              setSearchValue={setSearchValue}
+            />
+          </div>
+        )}
 
         {allowFilter ? (
           <SelectField
@@ -95,7 +99,7 @@ export const TableBar = ({
               title="Delete all"
               className="bg-red-500 text-sm text-white rounded p-2 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300 disabled:bg-red-200"
               onClick={onDeleteClick}
-              disabled={!Object.keys(selectedList)?.length}
+              disabled={!Object.keys(rowSelection)?.length}
             >
               <TrashIcon />{" "}
             </button>

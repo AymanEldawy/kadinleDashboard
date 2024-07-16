@@ -13,6 +13,7 @@ import InputField from "./InputField";
 import RadioField from "./RadioField";
 import SelectField from "./SelectField";
 import UploadFile from "./UploadFile";
+import { CollectionConnectFields } from "./CollectionConnectFields";
 
 let CACHED_TABLE = {};
 
@@ -83,6 +84,7 @@ const SuperForm = ({
   const getCachedList = (tableName) => {
     return CACHED_TABLE?.[tableName];
   };
+  console.log("🚀 ~ getCachedList ~ CACHED_TABLE:", CACHED_TABLE);
 
   const insertIntoErrors = (name, value) => {
     if (value === "") {
@@ -168,6 +170,17 @@ const SuperForm = ({
                       }
                     />
                   );
+                } else if (field?.key === "collection_connect") {
+                  return (
+                    <CollectionConnectFields
+                      index={i}
+                      values={values}
+                      handelChangeField={handelChangeField}
+                      getCachedList={getCachedList}
+                      onTouched={onTouched}
+                    />
+                  );
+                } else if (field?.key === "radio") {
                 } else if (field?.key === "ref") {
                   return (
                     <SelectField

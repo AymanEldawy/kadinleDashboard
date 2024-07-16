@@ -93,6 +93,7 @@ const HomeSections = () => {
   const { addItem } = useAdd();
   const [sortedSections, setSortedSection] = useState([]);
   const [newSection, setNewSection] = useState("");
+  const [newCategory, setNewCategory] = useState("");
   const [categories, setCategories] = useState([]);
   const [HASH_SECTIONS, setHASH_SECTIONS] = useState({});
 
@@ -158,13 +159,28 @@ const HomeSections = () => {
     }
   };
 
+  const addNewCategory = () => {
+    setSortedSection((prev) => [
+      ...prev,
+      {
+        section_id: newCategory?.category_id,
+        section_type: "CATEGORY",
+        section_name: newCategory?.title,
+        section_order: sortedSections?.length + 1,
+        display_home: true,
+        deletable: true,
+      },
+    ]);
+    setNewCategory("");
+  };
+
   const addNewSection = () => {
     setSortedSection((prev) => [
       ...prev,
       {
-        section_id: newSection?.category_id,
-        section_type: "CATEGORY",
-        section_name: newSection?.title,
+        section_id: newSection,
+        section_type: "SECTION",
+        section_name: newSection,
         section_order: sortedSections?.length + 1,
         display_home: true,
         deletable: true,
@@ -213,27 +229,50 @@ const HomeSections = () => {
     setSortedSection(newSortedSections);
   };
 
-
   return (
     <>
       <BlockPaper
         title="Home sections"
         headerClassName="flex items-center justify-between"
-        contentBar={
+        // contentBar={
+        // }
+      >
+        <div className="flex gap-3 items-center mb-6 justify-between">
           <div className="flex gap-1 items-center">
             <ReactSelect
               className="w-[220px]"
               options={categories}
-              // value={newSection}
+              // value={newCategory}
               onChange={(value) => {
-                setNewSection(value);
+                setNewCategory(value);
               }}
+              placeholder="Enter new category ..."
+            />
+            <Button
+              classes="!py-2"
+              title="Add new category"
+              onClick={addNewCategory}
+            />
+          </div>
+          <div className="flex gap-1 items-center">
+            <select className="w-[220px] border p-2 rounded-md">
+              <option>Section</option>
+              <option>Slider</option>
+              <option>offer</option>
+            </select>
+            <input
+              className="w-[220px] border p-2 rounded-md"
+              onChange={(e) => setNewSection(e.target.value)}
               placeholder="Enter new section ..."
             />
-            <Button classes="!py-2" title="Add new" onClick={addNewSection} />
+            <Button
+              classes="!py-2 bg-orange-500"
+              title="Add new section"
+              onClick={addNewSection}
+            />
           </div>
-        }
-      >
+        </div>
+
         <div className="flex-1 min-w-[250px] ">
           <div className="bg-purple-200 shadow h-full min-h-[250px]">
             <ul

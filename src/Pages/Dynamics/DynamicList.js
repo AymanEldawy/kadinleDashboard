@@ -50,8 +50,6 @@ const DynamicList = ({
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [pageCount, setPageCount] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
-  const [totalCount, setTotalCount] = useState(0);
-  const [itemOffset, setItemOffset] = useState(0);
   const [filterCategory, setFilterCategory] = useState();
   const [rowSelection, setRowSelection] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -114,7 +112,7 @@ const DynamicList = ({
     },
   });
 
-  const deleteItem = async () => {
+  const handleDeleteItem = async () => {
     let ids = [];
     let list = [];
     let selected = table.getFilteredSelectedRowModel();
@@ -123,16 +121,10 @@ const DynamicList = ({
       list.push(row.original);
       ids.push(row.original.id);
     }
-    // let res = null;
-    if (onDelete) {
-      await onDelete(list, ids);
-    }
-  };
-  
-
-  const handleDeleteItem = async (selectedList) => {
-    await onDelete(tableName, Object.values(selectedList));
-    setSelectedList({});
+    
+    console.log("🚀 ~ handleDeleteItem ~ selectedList:", ids, list);
+    await onDelete(tableName, ids);
+    setRowSelection({})
     setRefresh((p) => !p);
   };
 
@@ -180,9 +172,16 @@ const DynamicList = ({
             columns={columns}
             selectedColumn={selectedColumn}
             setSelectedColumn={setSelectedColumn}
+            rowSelection={rowSelection}
           />
         )}
-        <CustomTable columns={columns} table={table} tableName={tableName} isLoading={isLoading} data={data} />
+        <CustomTable
+          columns={columns}
+          table={table}
+          tableName={tableName}
+          isLoading={isLoading}
+          data={data}
+        />
 
         {/* <SuperTable
           itemOffset={itemOffset}

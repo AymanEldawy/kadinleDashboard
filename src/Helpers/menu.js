@@ -1,5 +1,6 @@
 import {
   ArrowPathIcon, BanknotesIcon,
+  BookMarkIcon,
   BookOpenIcon,
   BoxClose,
   BoxIcon,
@@ -36,6 +37,7 @@ import {
 } from "./Icons";
 import FlashIcon from "./Icons/FlashIcon";
 import GalleryIcon from './Icons/GalleryIcon';
+import MinusIcon from "./Icons/MinusIcon";
 
 export const menuData = [
   {
@@ -159,6 +161,12 @@ export const menuData = [
       },
 
       {
+        key: "less_than",
+        name: "less than",
+        icon: <MinusIcon />,
+        path: "/less_than",
+      },
+      {
         key: "Coupons",
         name: "Coupons",
         icon: <CardIcon />,
@@ -177,6 +185,12 @@ export const menuData = [
     key: "news",
     groupTitle: "News",
     groupList: [
+      {
+        key: "definitions",
+        name: "definitions",
+        icon: <BookMarkIcon />,
+        path: "/definitions",
+      },
       {
         key: "News",
         name: "News",
@@ -293,12 +307,12 @@ export const menuData = [
     key: "seasons",
     groupTitle: "seasons",
     groupList: [
-      // {
-      //   key: "Collections",
-      //   name: "Collections",
-      //   icon: <CollectionIcon />,
-      //   path: "/collection",
-      // },
+      {
+        key: "Collections",
+        name: "Collections",
+        icon: <CollectionIcon />,
+        path: "/collection",
+      },
       {
         key: "Sales",
         name: "Sales",
@@ -394,6 +408,11 @@ export const menuData = [
         path: "/home-sections",
         icon: <HomeIcon />,
         name: "Home Sections",
+      },
+      {
+        path: "/products-slider",
+        icon: <GalleryIcon />,
+        name: "Products slider",
       },
       {
         path: "/home-slider",

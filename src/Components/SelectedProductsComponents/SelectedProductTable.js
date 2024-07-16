@@ -1,23 +1,29 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import ReactPaginate from 'react-paginate';
+import React, { useCallback, useEffect, useState } from "react";
+import ReactPaginate from "react-paginate";
 
-import { useGlobalOptions } from '../../Context/GlobalOptions';
-import COMBINE_DB_API from '../../Helpers/Forms/combineTables';
-import { BookMarkIcon, ChevronIcon, CloseIcon, EyeIcon, PlusIcon } from '../../Helpers/Icons';
-import MinusIcon from '../../Helpers/Icons/MinusIcon';
-import { useDelete } from '../../hooks/useDelete';
-import { useFetch } from '../../hooks/useFetch';
-import SuperTable from '../CustomTable/SuperTable'
-import Table from '../CustomTable/Table'
-import TableBody from '../CustomTable/TableBody';
-import TableCol from '../CustomTable/TableCol';
-import TableHead from '../CustomTable/TableHead';
-import TableHeadCol from '../CustomTable/TableHeadCol';
-import TableRow from '../CustomTable/TableRow';
-import { TableBar } from '../TableBar/TableBar';
-import { Link } from 'react-router-dom';
-import { getRowsById, removeItemsFrom } from '../../Api/globalActions';
-import { toast } from 'react-toastify';
+import { useGlobalOptions } from "../../Context/GlobalOptions";
+import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
+import {
+  BookMarkIcon,
+  ChevronIcon,
+  CloseIcon,
+  EyeIcon,
+  PlusIcon,
+} from "../../Helpers/Icons";
+import MinusIcon from "../../Helpers/Icons/MinusIcon";
+import { useDelete } from "../../hooks/useDelete";
+import { useFetch } from "../../hooks/useFetch";
+import SuperTable from "../CustomTable/SuperTable";
+import Table from "../CustomTable/Table";
+import TableBody from "../CustomTable/TableBody";
+import TableCol from "../CustomTable/TableCol";
+import TableHead from "../CustomTable/TableHead";
+import TableHeadCol from "../CustomTable/TableHeadCol";
+import TableRow from "../CustomTable/TableRow";
+import { TableBar } from "../TableBar/TableBar";
+import { Link } from "react-router-dom";
+import { getRowsById, removeItemsFrom } from "../../Api/globalActions";
+import { toast } from "react-toastify";
 
 export const SelectedProductTable = ({
   selectedList,
@@ -26,14 +32,16 @@ export const SelectedProductTable = ({
   additionalData,
   setProductLength,
   tableName,
-  id
+  id,
+  hideSearch,
+  deleteProductIds,
 }) => {
   const { defaultLanguage, defaultRegion } = useGlobalOptions();
   const { getDataWithPagination } = useFetch();
   const { getData } = useFetch();
   const [data, setData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const [selectedColumn, setSelectedColumn] = useState('')
+  const [selectedColumn, setSelectedColumn] = useState("");
   const [pageCount, setPageCount] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
   const [itemOffset, setItemOffset] = useState(0);
@@ -42,13 +50,15 @@ export const SelectedProductTable = ({
   const [products, setProducts] = useState({});
 
   useEffect(() => {
-    setProductLength(typeof selectedList === 'object' ? Object.keys(selectedList)?.length : 0)
-  }, [selectedList, refresh])
+    setProductLength(
+      typeof selectedList === "object" ? Object.keys(selectedList)?.length : 0
+    );
+  }, [selectedList, refresh]);
 
   const fetchData = async () => {
     let filter = filterCategory?.indexOf("Choose") !== -1 ? "" : filterCategory;
     const response = await getDataWithPagination(
-      'product',
+      "product",
       itemOffset + 1,
       itemsPerPage,
       {
@@ -56,28 +66,36 @@ export const SelectedProductTable = ({
         regionId: defaultRegion?.id,
         filter,
         search: { key: selectedColumn, value: searchValue },
-        ...additionalData
+        ...additionalData,
       }
     );
     setPageCount(Math.ceil(response?.count / parseInt(itemsPerPage)));
     setData(response?.data);
-
   };
 
   const getProductsIds = async () => {
-    const response = tableName === 'sale' ? await getData('sale') : await getRowsById(`${tableName}_product`, `${tableName}_id`, id)
-    let CACHE_PRODUCTS = {}
-    let data = tableName === 'sale' ? response : response?.data;
+    // if (deleteProductIds) {
+    //   setSelectedList(deleteProductIds);
+    //   setProducts(deleteProductIds);
+    //   return;
+    // }
+
+    const response =
+      tableName === "sale"
+        ? await getData("sale")
+        : await getRowsById(`${tableName}_product`, `${tableName}_id`, id);
+    let CACHE_PRODUCTS = {};
+    let data = tableName === "sale" ? response : response?.data;
     for (const product of data) {
-      CACHE_PRODUCTS[product?.product_id] = product?.product_id
+      CACHE_PRODUCTS[product?.product_id] = product?.product_id;
     }
     setSelectedList({ ...CACHE_PRODUCTS });
     setProducts({ ...CACHE_PRODUCTS });
-  }
+  };
 
   useEffect(() => {
-    getProductsIds()
-  }, [id])
+    getProductsIds();
+  }, [id]);
 
   useEffect(() => {
     if (defaultLanguage?.id && defaultRegion?.id) fetchData();
@@ -88,11 +106,10 @@ export const SelectedProductTable = ({
     filterCategory,
     defaultLanguage?.id,
     defaultRegion?.id,
-    searchValue
+    searchValue,
   ]);
 
   const columns = COMBINE_DB_API.combine_collection_product;
-
 
   const handleSelectedAll = useCallback(
     (e) => {
@@ -138,12 +155,12 @@ export const SelectedProductTable = ({
 
   const handleDeleteItem = async (list = selectedList) => {
     let loadLanguage = toast.loading("Please wait...");
-    let table = tableName === 'sale' ? tableName : `${tableName}_product`;
+    let table = tableName === "sale" ? tableName : `${tableName}_product`;
     const response = await removeItemsFrom(table, {
       table_id: id,
       ids: Object.keys(list),
-      col: tableName !== 'sale' ? `${tableName}_id` : undefined,
-    })
+      col: tableName !== "sale" ? `${tableName}_id` : undefined,
+    });
     if (response.error) {
       toast.update(loadLanguage, {
         render: response.error || "Field remove, please try again",
@@ -158,13 +175,13 @@ export const SelectedProductTable = ({
         isLoading: false,
         autoClose: 1000,
       });
-      getProductsIds()
-      setRefresh(p => !p)
-    };
-  }
+      getProductsIds();
+      setRefresh((p) => !p);
+    }
+  };
 
   const saveChanges = async () => {
-    //loop of selected if 
+    //loop of selected if
     let productsList = Object.keys(products);
     let listOfIds = Object.keys(selectedList);
     let deleteList = {};
@@ -175,30 +192,29 @@ export const SelectedProductTable = ({
           deleteList[id] = id;
         }
       }
-      handleDeleteItem(deleteList)
+      handleDeleteItem(deleteList);
     }
     if (listOfIds?.length) {
       for (const id of listOfIds) {
         if (!products?.[id]) {
-          insertList[id] = id
+          insertList[id] = id;
         }
       }
-      await insertMany(insertList)
-      getProductsIds()
+      await insertMany(insertList);
+      getProductsIds();
     }
-  }
+  };
 
   const handleUnSelect = async (productId) => {
-    let newSelectedList = selectedList
-    delete newSelectedList[productId]
-    setSelectedList(newSelectedList)
-    setRefresh(p => !p)
-  }
+    let newSelectedList = selectedList;
+    delete newSelectedList[productId];
+    setSelectedList(newSelectedList);
+    setRefresh((p) => !p);
+  };
 
   const handlePageClick = (index) => {
     setItemOffset(index);
   };
-
 
   return (
     <div>
@@ -208,23 +224,37 @@ export const SelectedProductTable = ({
         onSelectChange={setItemsPerPage}
         itemsPerPage={itemsPerPage}
         selectedList={selectedList}
+        hideSearch={hideSearch}
         allowFilter
         filterCategory={filterCategory}
         setFilterCategory={setFilterCategory}
+        hideDelete
         customBarButtons={
           <>
-            <button onClick={saveChanges} title='Save Changes' className='p-2 rounded-md bg-primary-green text-white'><BookMarkIcon className="h-5 w-5" /></button>
-            <button onClick={insertMany} title="Choose all" className='p-2 rounded-md bg-primary-blue text-white'><PlusIcon /></button>
+            <button
+              type="button"
+              onClick={saveChanges}
+              title="Save Changes"
+              className="p-2 rounded-md bg-primary-blue text-white flex items-center gap-2 text-base"
+            >
+              <BookMarkIcon className="h-5 w-5" />
+              Save
+            </button>
+            {/* <button
+              type="button"
+              onClick={insertMany}
+              title="Choose all"
+              className="p-2 rounded-md bg-primary-blue text-white"
+            >
+              <PlusIcon />
+            </button> */}
           </>
         }
         columns={() => {}}
         selectedColumn={selectedColumn}
         setSelectedColumn={setSelectedColumn}
-
       />
-      <Table
-        containerClassName="rounded-none"
-      >
+      <Table containerClassName="rounded-none">
         <TableHead>
           <TableRow>
             <TableHeadCol
@@ -242,69 +272,65 @@ export const SelectedProductTable = ({
               else
                 return (
                   <TableHeadCol
-                    contentClassName={` ${col?.accessorKey === "description" || col?.accessorKey === "name"
-                      ? "min-w-[160px]"
-                      : ""
-                      }`}
-                    classes={''}
+                    contentClassName={` ${
+                      col?.accessorKey === "description" ||
+                      col?.accessorKey === "name"
+                        ? "min-w-[160px]"
+                        : ""
+                    }`}
+                    classes={""}
                     key={`${col?.header}-${index}`}
-                  // sort
-                  // sortBy={sortBy}
+                    // sort
+                    // sortBy={sortBy}
                   >
                     {col?.header}
                   </TableHeadCol>
                 );
             })}
-            <TableHeadCol
-              contentClassName={``}
-              classes={` w-[90px]`}
-            >
+            <TableHeadCol contentClassName={``} classes={` w-[90px]`}>
               Action
             </TableHeadCol>
           </TableRow>
         </TableHead>
-        <TableBody classes={''}>
-          {
-            data?.map(product => {
-              let selected = !!selectedList?.[product?.id]
-              return (
-                <TableRow classes={`${selected ? 'bg-blue-50' : ''}`}>
-                  <TableCol classes={`!py-4 border`}>
-                    {
-                      selected ? (
-                        <button onClick={() => handleUnSelect(product?.id)} ><CloseIcon /></button>
-                      ) : (
-                        <input
-                          className="w-4 h-4 mx-auto block"
-                          type="checkbox"
-                          onChange={() => handelSelect(product?.id)}
-                        />
-                      )
-                    }
-
-                  </TableCol>
-                  <TableCol classes={`!py-4 border`}>
-                    {product?.product_sku}
-                  </TableCol>
-                  <TableCol classes={`!py-4 border`}>
-                    {product?.product_content?.[0]?.name}
-                  </TableCol>
-                  <TableCol classes={`!py-4 border`}>
-                    {product?.category?.category_content?.[0]?.title}
-                  </TableCol>
-                  <TableCol classes={`!py-4 border`}>
-                    {product?.barcode}
-                  </TableCol>
-                  <TableCol classes={`!py-4 border`}>
-                    <Link to={`/products/update/product/${product?.id}`} className='hover:translate-x-1 transition-transform rounded-2xl px-2 p-1 bg-primary-blue text-white'>
-                      <EyeIcon className=" w-4 h-4" />
-                    </Link>
-                  </TableCol>
-                </TableRow>
-
-              )
-            })
-          }
+        <TableBody classes={""}>
+          {data?.map((product) => {
+            let selected = !!selectedList?.[product?.id];
+            return (
+              <TableRow classes={`${selected ? "bg-blue-50" : ""}`}>
+                <TableCol classes={`!py-4 border`}>
+                  {selected ? (
+                    <button onClick={() => handleUnSelect(product?.id)}>
+                      <CloseIcon />
+                    </button>
+                  ) : (
+                    <input
+                      className="w-4 h-4 mx-auto block"
+                      type="checkbox"
+                      onChange={() => handelSelect(product?.id)}
+                    />
+                  )}
+                </TableCol>
+                <TableCol classes={`!py-4 border`}>
+                  {product?.product_sku}
+                </TableCol>
+                <TableCol classes={`!py-4 border`}>
+                  {product?.product_content?.[0]?.name}
+                </TableCol>
+                <TableCol classes={`!py-4 border`}>
+                  {product?.category?.category_content?.[0]?.title}
+                </TableCol>
+                <TableCol classes={`!py-4 border`}>{product?.barcode}</TableCol>
+                <TableCol classes={`!py-4 border`}>
+                  <Link
+                    to={`/products/update/product/${product?.id}`}
+                    className="hover:translate-x-1 transition-transform rounded-2xl px-2 p-1 bg-primary-blue text-white"
+                  >
+                    <EyeIcon className=" w-4 h-4" />
+                  </Link>
+                </TableCol>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
       {pageCount ? (
@@ -334,7 +360,6 @@ export const SelectedProductTable = ({
           />
         </>
       ) : null}
-
     </div>
-  )
-}
+  );
+};

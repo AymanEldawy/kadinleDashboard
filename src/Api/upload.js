@@ -1,4 +1,5 @@
 async function uploadFile(formData, action) {
+  if (!formData.get('file')) return;
   const headers = new Headers();
   headers.append(
     "key",
@@ -95,4 +96,3 @@ export const uploadCategoryMedia = async ({ id, file, type }) => {
   formData.append("file", file);
   return await uploadFile(formData, "uploadCategory");
 };
-

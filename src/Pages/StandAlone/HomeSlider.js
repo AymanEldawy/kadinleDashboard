@@ -11,31 +11,36 @@ import { Button } from "../../Components/Global/Button";
 import { toast } from "react-toastify";
 import { handleUploadSlider } from "../../Api/DynamicUploadHandler";
 import { addNewItem, updateItem } from "../../Api/globalActions";
+import { useParams } from "react-router-dom";
 
 let CACHE_SLIDERS = {};
 
 const HomeSlider = () => {
+  const params = useParams();
   const { getData } = useFetch();
-  const name = "home_sliders";
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
+  const name = params?.name;
 
   const { isLoading, refetch } = useQuery({
     queryKey: [name],
     queryFn: async () => {
-      const data = await getData(name);
-      if (data?.length) {
-        let hash = {};
-        for (const item of data) {
-          hash[item?.id] = item;
+      if (params?.id) {
+        const data = await getData(name, params?.id);
+        console.log("🚀 ~ queryFn: ~ data:", data);
+        if (data?.length) {
+          let hash = {};
+          for (const item of data) {
+            hash[item?.id] = item;
+          }
+          setValues(hash);
+          CACHE_SLIDERS = hash;
         }
-        setValues(hash);
-        CACHE_SLIDERS = hash;
       }
     },
   });
 
-  const fields = useMemo(() => DB_API.home_sliders, []);
+  const fields = useMemo(() => DB_API[name], []);
 
   const onSubmit = async () => {
     if (JSON.stringify(CACHE_SLIDERS) === JSON.stringify(values)) {
@@ -45,20 +50,31 @@ const HomeSlider = () => {
 
     for (const value of Object.values(values)) {
       const loading = toast.loading("loading...");
-      const web_image = await handleUploadSlider(value, "web_image");
-      const mobile_image = await handleUploadSlider(value, "mobile_image");
+      let additional = {};
+      if (name !== "definitions") {
+        const web_image = await handleUploadSlider(value, "web_image", name);
+        const mobile_image = await handleUploadSlider(value, "mobile_image", name);
+        additional = {
+          web_image,
+          mobile_image,
+        };
+      } else {
+        const image = await handleUploadSlider(value, "image", name);
+        additional = {
+          image,
+        };
+      }
+
       let response = null;
       if (value?.id) {
-        response = await updateItem(`home_sliders`, {
+        response = await updateItem(name, {
           ...value,
-          web_image,
-          mobile_image,
+          additional,
         });
       } else {
-        response = await addNewItem(`home_sliders`, {
+        response = await addNewItem(name, {
           ...value,
-          web_image,
-          mobile_image,
+          additional,
         });
       }
       if (response?.error) {
@@ -94,6 +110,7 @@ const HomeSlider = () => {
             customGrid="grid grid-cols-5 gap-4 mt-8 p-4 border rounded-md bg-white"
             errors={errors}
             setErrors={setErrors}
+            maxCount={3}
           />
           <Button
             title="Submit"

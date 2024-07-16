@@ -14,6 +14,7 @@ import {
   handleUploadOfferImage,
   handleUploadPartnerImage,
   handleUploadReviewerImage,
+  handleUploadSlider,
 } from "../../Api/DynamicUploadHandler";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
@@ -36,20 +37,18 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   const fields = DB_API?.[SUPABASE_TABLE_NAME];
   const fields_content = DB_API?.[SUPABASE_TABLE_NAME + "_content"];
 
+  console.log(SUPABASE_TABLE_NAME, "SUPABASE_TABLE_NAME");
   const onSubmit = async () => {
+    let response = null;
     let loading = toast.loading("Please wait...");
     if (SUPABASE_TABLE_NAME === "home_reviews") {
       await handleUploadReviewerImage(values);
     } else if (SUPABASE_TABLE_NAME === "partner") {
       await handleUploadPartnerImage(values);
     } else if (SUPABASE_TABLE_NAME === "user") {
-      const response = await signup(values);
-      if (!response?.error) {
-        if (values?.profile_img) {
-          await handleUploadAvatarImage(values, "update");
-        }
-        setResetForm(true);
-        toast.success("Successfully add new user");
+      response = await signup(values);
+      if (values?.profile_img) {
+        await handleUploadAvatarImage(values, "update");
       }
     } else {
       if (SUPABASE_TABLE_NAME === "shipping_price") {
@@ -57,18 +56,9 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
         newValue.fast_price = { [values?.weight]: values?.fast_price };
         newValue.normal_price = { [values?.weight]: values?.normal_price };
         delete newValue?.weight;
-        const response = await addItem(SUPABASE_TABLE_NAME, values);
-        if (!response?.error) {
-          toast.update(loading, {
-            render: "Great! successfully added",
-            type: "success",
-            isLoading: false,
-            autoClose: 2000,
-          });
-          navigate(-1);
-        }
+        response = await addItem(SUPABASE_TABLE_NAME, values);
       } else {
-        const response = await addItem(SUPABASE_TABLE_NAME, values);
+        response = await addItem(SUPABASE_TABLE_NAME, values);
         if (!response?.error) {
           const itemId = response?.data?.[0]?.id;
           if (
@@ -94,7 +84,38 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
           const list = Object.values(contentValues);
           if (list?.length) {
             for (const item of list) {
-              if (SUPABASE_TABLE_NAME === "category") {
+              if (
+                SUPABASE_TABLE_NAME === "less_than" ||
+                SUPABASE_TABLE_NAME === "home_sliders"
+              ) {
+                const web_image = await handleUploadSlider(
+                  item,
+                  "web_image",
+                  SUPABASE_TABLE_NAME
+                );
+                const mobile_image = await handleUploadSlider(
+                  item,
+                  "mobile_image",
+                  SUPABASE_TABLE_NAME
+                );
+                response = await addItem(`${SUPABASE_TABLE_NAME}_content`, {
+                  ...item,
+                  [`${SUPABASE_TABLE_NAME}_id`]: itemId,
+                  web_image,
+                  mobile_image,
+                });
+              } else if (SUPABASE_TABLE_NAME === "definitions") {
+                const image = await handleUploadSlider(
+                  item,
+                  "image",
+                  SUPABASE_TABLE_NAME
+                );
+                response = await addItem(`${SUPABASE_TABLE_NAME}_content`, {
+                  ...item,
+                  [`${SUPABASE_TABLE_NAME}_id`]: itemId,
+                  image,
+                });
+              } else if (SUPABASE_TABLE_NAME === "category") {
                 await handleUploadCategoryImages(item, itemId, CACHE_LANGUAGES);
               } else if (SUPABASE_TABLE_NAME === "offer") {
                 await handleUploadOfferImage(item, itemId, CACHE_LANGUAGES);
@@ -112,24 +133,26 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
               }
             }
           }
-          setValues({});
-          setContentValues({});
-          toast.update(loading, {
-            render: "Great! successfully added",
-            type: "success",
-            isLoading: false,
-            autoClose: 2000,
-          });
-          navigate(-1);
-        } else {
-          toast.update(loading, {
-            render: "Oops! failed to added new",
-            type: "error",
-            isLoading: false,
-            autoClose: 2000,
-          });
         }
       }
+    }
+    if (!response?.error) {
+      setValues({});
+      setContentValues({});
+      toast.update(loading, {
+        render: "Great! successfully added",
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+      });
+      navigate(-1);
+    } else {
+      toast.update(loading, {
+        render: "Oops! failed to added new",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
     }
   };
   return (

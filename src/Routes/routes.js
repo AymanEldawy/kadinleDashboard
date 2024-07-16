@@ -28,8 +28,11 @@ import {
   AddCountry,
   AddCoupon,
   AddCurrency,
+  AddDefinitions,
   AddHomeReviewer,
+  AddHomeSlider,
   AddLanguage,
+  AddLessThan,
   AddNewSupplier,
   AddNews,
   AddNewsletter,
@@ -62,8 +65,10 @@ import {
   Countries,
   Coupons,
   Currency,
+  Definitions,
   HomeReviews,
   Languages,
+  LessThan,
   Logs,
   News,
   Newsletter,
@@ -93,8 +98,10 @@ import Support from "../Pages/StandAlone/Support";
 import ChatRoom from "../Pages/StandAlone/ChatRoom";
 import ChatSetting from "../Pages/StandAlone/ChatSetting";
 import SingleSupplier from "../Pages/StandAlone/SingleSupplier";
-import HomeSlider from "../Pages/StandAlone/HomeSlider";
 import XMLImport from "../Pages/StandAlone/XMLImport";
+import HomeSliders from "../Pages/Tables/HomeSliders";
+import ProductsSlider from "../Pages/Tables/ProductsSlider";
+import ProductsSLidersForm from "../Pages/StandAlone/ProductsSLidersForm";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -194,6 +201,11 @@ const authProtectedRoutes = [
 
   // **** Group News add paths ****
   { path: "/add-bulk-alert", component: <AddBulkAlert />, allowedRoles: ["*"] },
+  {
+    path: "/add-definitions",
+    component: <AddDefinitions />,
+    allowedRoles: ["*"],
+  },
   { path: "/add-news", component: <AddNews />, allowedRoles: ["*"] },
   {
     path: "/add-newsletter",
@@ -204,6 +216,7 @@ const authProtectedRoutes = [
   // **** Group News paths ****
   { path: "/bulk-alert", component: <BulkAlert />, allowedRoles: ["*"] },
   { path: "/news", component: <News />, allowedRoles: ["*"] },
+  { path: "/definitions", component: <Definitions />, allowedRoles: ["*"] },
   { path: "/newsletter", component: <Newsletter />, allowedRoles: ["*"] },
   {
     path: "/newsletter-subscription",
@@ -283,9 +296,17 @@ const authProtectedRoutes = [
     component: <AddCoupon />,
     allowedRoles: ["admin", "superadmin"],
   },
+  {
+    path: "/add-less_than",
+    // component: <AddLessThan />,
+    component: <AddLessThan name="less_than" />,
+
+    allowedRoles: ["admin", "superadmin"],
+  },
 
   // **** Group Award paths ****
   { path: "/coupons", component: <Coupons />, allowedRoles: ["*"] },
+  { path: "/less_than", component: <LessThan />, allowedRoles: ["*"] },
   { path: "/points", component: <Points />, allowedRoles: ["*"] },
   { path: "/special-offer", component: <SpecialOffer />, allowedRoles: ["*"] },
 
@@ -329,6 +350,9 @@ const authProtectedRoutes = [
   { path: "/chat-setting", component: <ChatSetting />, allowedRoles: ["*"] },
 
   // **** Group Useful actions paths ****
+  { path: "/add-products-slider", component: <ProductsSLidersForm />, allowedRoles: ["*"] },
+  { path: "/update-products-slider/:id", component: <ProductsSLidersForm />, allowedRoles: ["*"] },
+  { path: "/products-slider", component: <ProductsSlider />, allowedRoles: ["*"] },
   { path: "/logs", component: <Logs />, allowedRoles: ["*"] },
   { path: "/rooms/:id", component: <ChatRoom />, allowedRoles: ["*"] },
   {
@@ -353,12 +377,17 @@ const authProtectedRoutes = [
   },
   {
     path: "/home-slider",
-    component: <HomeSlider />,
+    component: <HomeSliders />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/add-home-sliders",
+    component: <AddHomeSlider />,
     allowedRoles: ["admin", "superadmin"],
   },
   {
     path: "/xml-import",
-    component: <XMLImport />,
+    component:<XMLImport />,
     allowedRoles: ["admin", "superadmin"],
   },
   {
@@ -387,6 +416,7 @@ const authProtectedRoutes = [
     component: <SupplierRequest />,
     allowedRoles: ["admin", "superadmin"],
   },
+
   // **** Group public paths ****
   {
     path: "/add-supplier-request",

@@ -37,7 +37,6 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   const fields = DB_API?.[SUPABASE_TABLE_NAME];
   const fields_content = DB_API?.[SUPABASE_TABLE_NAME + "_content"];
 
-  console.log(SUPABASE_TABLE_NAME, "SUPABASE_TABLE_NAME");
   const onSubmit = async () => {
     let response = null;
     let loading = toast.loading("Please wait...");

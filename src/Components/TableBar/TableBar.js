@@ -35,6 +35,7 @@ export const TableBar = ({
   setSearchValue,
   rowSelection,
   hideSearch,
+  searchValue,
 }) => {
   const { defaultLanguage, user } = useGlobalOptions();
   const { getData } = useFetch();
@@ -56,6 +57,7 @@ export const TableBar = ({
         {hideSearch ? null : (
           <div className="relative">
             <SearchBar
+              searchValue={searchValue}
               columns={columns}
               searchKey={selectedColumn}
               setSearchKey={setSelectedColumn}
@@ -75,13 +77,13 @@ export const TableBar = ({
             className="p-2 rounded-md"
           />
         ) : null}
-        <SelectField
+        {/* <SelectField
           hideText
           value={itemsPerPage}
           onChange={(e) => onSelectChange(e.target.value)}
           list={itemsListPerPages}
           className="p-2 rounded-md"
-        />
+        /> */}
       </div>
       {user?.role?.number > 2 && user?.role?.number < 5 ? (
         <div className="flex gap-2">

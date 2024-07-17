@@ -9,7 +9,7 @@ export const CollectionConnectFields = ({
   onTouched,
   handelChangeField,
 }) => {
-  console.log("🚀 ~ values:", values);
+
   return (
     <div className="grid grid-cols-2 gap-4 w-full">
       <SelectField

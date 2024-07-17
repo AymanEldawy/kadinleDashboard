@@ -61,10 +61,12 @@ const DynamicList = ({
     pageSize: 50,
   });
 
+  console.log(pagination?.pageSize,'pagination?.pageSize');
+
   const { data, isLoading, refetch } = useQuery({
     queryKey: [tableName, "list", defaultLanguage?.id, defaultRegion?.id],
     queryFn: async () => {
-      // if (!defaultLanguage?.id || defaultRegion?.id) return;
+      if (!defaultLanguage?.id) return;
       let filter =
         filterCategory?.indexOf("Choose") !== -1 ? "" : filterCategory;
       const response = await getDataWithPagination(
@@ -122,7 +124,6 @@ const DynamicList = ({
       ids.push(row.original.id);
     }
     
-    console.log("🚀 ~ handleDeleteItem ~ selectedList:", ids, list);
     await onDelete(tableName, ids);
     setRowSelection({})
     setRefresh((p) => !p);
@@ -139,6 +140,7 @@ const DynamicList = ({
     // selectedColumn,
     additionalData,
     searchValue,
+    pagination?.pageSize,
   ]);
 
   return (
@@ -170,6 +172,7 @@ const DynamicList = ({
             setFilterCategory={setFilterCategory}
             customBarButtons={customBarButtons}
             columns={columns}
+            searchValue={searchValue}
             selectedColumn={selectedColumn}
             setSelectedColumn={setSelectedColumn}
             rowSelection={rowSelection}

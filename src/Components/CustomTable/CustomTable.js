@@ -174,11 +174,12 @@ const CustomTable = ({
 
       <TablePagination table={table} />
 
-      {!loading && !currentItems?.length ? (
+      {!loading && !data?.length ? (
         <div className="text-red-500 text-center mt-2">
           {fetchWord("no_results", lang)}
         </div>
       ) : null}
+      
       {openDrawerMore ? (
         <>
           <div

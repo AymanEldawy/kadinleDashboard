@@ -3035,8 +3035,13 @@ export const combine_definitions = () => [
   {
     accessorKey: "image",
     header: "image",
-    cell: ({ getValue }) => {
-      return <FullImage src={getValue()} alt={"image"} />;
+    cell: ({ row }) => {
+      return (
+        <FullImage
+          src={row.original?.definitions_content?.at(0).mobile_image}
+          alt={"image"}
+        />
+      );
     },
   },
   { accessorKey: "url", header: "url" },
@@ -3094,15 +3099,25 @@ export const combine_less_than = () => [
   {
     accessorKey: "web_image",
     header: "web_image",
-    cell: ({ getValue }) => {
-      return <FullImage src={getValue()} alt={"image"} />;
+    cell: ({ getValue, row }) => {
+      return (
+        <FullImage
+          src={row.original?.less_than_content?.at(0).web_image}
+          alt={"image"}
+        />
+      );
     },
   },
   {
     accessorKey: "mobile_image",
     header: "mobile_image",
-    cell: ({ getValue }) => {
-      return <FullImage src={getValue()} alt={"image"} />;
+    cell: ({ row }) => {
+      return (
+        <FullImage
+          src={row.original?.less_than_content?.at(0).mobile_image}
+          alt={"image"}
+        />
+      );
     },
   },
   { accessorKey: "price", header: "price" },
@@ -3160,15 +3175,25 @@ const home_sliders = () => [
   {
     accessorKey: "web_image",
     header: "web_image",
-    cell: ({ getValue }) => {
-      return <FullImage src={getValue()} alt={"image"} />;
+    cell: ({ row }) => {
+      return (
+        <FullImage
+          src={row.original?.home_sliders_content?.at(0).mobile_image}
+          alt={"image"}
+        />
+      );
     },
   },
   {
     accessorKey: "mobile_image",
     header: "mobile_image",
-    cell: ({ getValue }) => {
-      return <FullImage src={getValue()} alt={"image"} />;
+    cell: ({ row }) => {
+      return (
+        <FullImage
+          src={row.original?.home_sliders_content?.at(0).mobile_image}
+          alt={"image"}
+        />
+      );
     },
   },
   { accessorKey: "title", header: "title" },

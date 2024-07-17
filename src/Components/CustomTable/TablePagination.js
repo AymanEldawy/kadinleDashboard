@@ -31,7 +31,7 @@ export const TablePagination = ({ table }) => {
         | {t("go_to_page")}:
         <input
           type="number"
-          defaultValue={table.getState().pagination.pageIndex + 1}
+          defaultValue={table.getState().pagination.pageIndex}
           onChange={(e) => {
             const page = e.target.value ? Number(e.target.value) - 1 : 0;
             table.setPageIndex(page);

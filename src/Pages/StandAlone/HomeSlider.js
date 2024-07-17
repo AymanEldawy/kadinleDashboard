@@ -27,7 +27,6 @@ const HomeSlider = () => {
     queryFn: async () => {
       if (params?.id) {
         const data = await getData(name, params?.id);
-        console.log("🚀 ~ queryFn: ~ data:", data);
         if (data?.length) {
           let hash = {};
           for (const item of data) {

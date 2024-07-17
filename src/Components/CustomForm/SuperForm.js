@@ -84,7 +84,6 @@ const SuperForm = ({
   const getCachedList = (tableName) => {
     return CACHED_TABLE?.[tableName];
   };
-  console.log("🚀 ~ getCachedList ~ CACHED_TABLE:", CACHED_TABLE);
 
   const insertIntoErrors = (name, value) => {
     if (value === "") {

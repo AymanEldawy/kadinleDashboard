@@ -3,9 +3,16 @@ import { useState } from "react";
 
 import { ChevronIcon, FilterIcon, SearchIcon } from "../../Helpers/Icons";
 import Backdrop from "../Backdrop/Backdrop";
+import DebouncedInput from "./DebouncedInput";
 
-const SearchBar = ({ columns, searchKey, setSearchKey, setSearchValue }) => {
-  console.log(searchKey, "searchKey");
+const SearchBar = ({
+  columns,
+  searchKey,
+  setSearchKey,
+  searchValue,
+  setSearchValue,
+}) => {
+  const [open, setOpen] = useState(false);
   const columnsKeys = useMemo(
     () =>
       columns()
@@ -14,14 +21,8 @@ const SearchBar = ({ columns, searchKey, setSearchKey, setSearchValue }) => {
     [columns?.length]
   );
 
-  const [search, setSearch] = useState("");
-  const [open, setOpen] = useState(false);
-  const onSubmitSearch = (reset) => {
-    if (search === "" && !reset) return;
-    setSearchValue(search);
-  };
   return (
-    <div className="relative flex items-center">
+    <form className="relative flex items-center">
       <div className="absolute inset-y-0 left-0 flex items-center pl-2 overflow-hidden">
         {!!setSearchKey ? (
           <button
@@ -32,27 +33,27 @@ const SearchBar = ({ columns, searchKey, setSearchKey, setSearchValue }) => {
           </button>
         ) : null}
       </div>
-      <input
+      <DebouncedInput
         type="text"
-        value={search}
+        value={searchValue}
         id="search-navbar"
         className={`block w-full p-2  text-sm rounded-md dark:text-white text-gray-900 border border-gray-300  bg-gray-100 active:ring-blue-200 focus-visible:ring-blue-200 focus:ring-blue-500 focus:border-blue-500 ${
           !!columns ? "pl-10" : "pl-8"
         }`}
         placeholder={!!searchKey ? `Search in ${searchKey}` : "Search..."}
-        onChange={(e) => {
-          setSearch(e.target.value);
+        onChange={(value) => {
+          setSearchValue(value);
         }}
-        onBlur={(e) => {
-          if (e?.target?.value === "") {
-            onSubmitSearch("reset");
-          }
-        }}
+        // onBlur={(e) => {
+        //   if (e?.target?.value === "") {
+        //     setSearchValue("");
+        //   }
+        // }}
       />
 
-      <button onClick={onSubmitSearch} className="absolute top-2 ltr:right-2">
+      <span className="absolute top-2 ltr:right-2">
         <SearchIcon />
-      </button>
+      </span>
       {open && columns ? (
         <>
           <Backdrop open={open} onClose={() => setOpen(false)} />
@@ -76,7 +77,7 @@ const SearchBar = ({ columns, searchKey, setSearchKey, setSearchValue }) => {
           </ul>
         </>
       ) : null}
-    </div>
+    </form>
   );
 };
 

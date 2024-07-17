@@ -19,7 +19,6 @@ const ProductsSLidersForm = () => {
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [selectedList, setSelectedList] = useState({});
-  console.log("🚀 ~ ProductsSLidersForm ~ selectedList:", selectedList);
   const [productsLength, setProductLength] = useState(0);
 
   const { isLoading, refetch } = useQuery({
@@ -64,7 +63,6 @@ const ProductsSLidersForm = () => {
       };
     });
   };
-  console.log(values, selectedList);
 
   const onSubmit = async (list) => {
     const loading = toast.loading("loading...");

@@ -13,6 +13,7 @@ import {
   getColors,
   getComments,
   getCountries,
+  getHomeSliders,
   getLogs,
   getNews,
   getOffers,
@@ -101,6 +102,9 @@ const fetches = {
   rooms: getRooms,
   supplier_request: getSuppliersRequests,
   supplier: getSuppliers,
+  less_than: (page, pageSize, additionalData) => getHomeSliders('less_than', page, pageSize, additionalData),
+  home_sliders: (page, pageSize, additionalData) => getHomeSliders('home_sliders', page, pageSize, additionalData),
+  definitions: (page, pageSize, additionalData) => getHomeSliders('definitions', page, pageSize, additionalData),
 };
 
 export const getTableDataWithPagination = async (

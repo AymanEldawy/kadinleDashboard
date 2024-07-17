@@ -94,6 +94,7 @@ const HomeSections = () => {
   const [sortedSections, setSortedSection] = useState([]);
   const [newSection, setNewSection] = useState("");
   const [newCategory, setNewCategory] = useState("");
+  const [selectedType, setSelectedType] = useState("");
   const [categories, setCategories] = useState([]);
   const [HASH_SECTIONS, setHASH_SECTIONS] = useState({});
 
@@ -175,15 +176,37 @@ const HomeSections = () => {
   };
 
   const addNewSection = () => {
+    let item = {
+      section_id: newSection?.replace(/" "/gi, "_").toLocaleUpperCase(),
+      section_type: "SECTION",
+      section_name: newSection,
+      section_order: sortedSections?.length + 1,
+      display_home: true,
+      deletable: false,
+    };
+    
+    if (+selectedType === 1) {
+      item = {
+        ...item,
+        section_id: newSection?.replace(/" "/gi, "_").toLocaleUpperCase(),
+        section_type: "SECTION",
+        section_name: newSection,
+      };
+    } else {
+      let type = +selectedType === 2 ? "SLIDER" : "OFFER";
+      item = {
+        ...item,
+        section_id: type + "_" + newSection,
+        section_type: type,
+        section_name: type + "_" + newSection,
+        deletable: true,
+      };
+    }
+
     setSortedSection((prev) => [
       ...prev,
       {
-        section_id: newSection,
-        section_type: "SECTION",
-        section_name: newSection,
-        section_order: sortedSections?.length + 1,
-        display_home: true,
-        deletable: true,
+        ...item,
       },
     ]);
     setNewSection("");
@@ -243,6 +266,7 @@ const HomeSections = () => {
               className="w-[220px]"
               options={categories}
               // value={newCategory}
+              value={newCategory}
               onChange={(value) => {
                 setNewCategory(value);
               }}
@@ -255,12 +279,17 @@ const HomeSections = () => {
             />
           </div>
           <div className="flex gap-1 items-center">
-            <select className="w-[220px] border p-2 rounded-md">
-              <option>Section</option>
-              <option>Slider</option>
-              <option>offer</option>
+            <select
+              className="w-[220px] border p-2 rounded-md"
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+            >
+              <option value={1}>Section</option>
+              <option value={2}>Slider</option>
+              <option value={3}>offer</option>
             </select>
             <input
+              value={newSection}
               className="w-[220px] border p-2 rounded-md"
               onChange={(e) => setNewSection(e.target.value)}
               placeholder="Enter new section ..."

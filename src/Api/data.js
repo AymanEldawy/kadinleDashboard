@@ -753,8 +753,8 @@ export const getColors = async (page, pageSize, additionalData) => {
      `,
       { count: "exact" }
     )
-    .eq("color_content.language_id", additionalData?.languageId)
-    // .eq("parent_id.color_content.language_id", additionalData?.languageId);
+    .eq("color_content.language_id", additionalData?.languageId);
+  // .eq("parent_id.color_content.language_id", additionalData?.languageId);
 
   if (searchValue) {
     switch (searchKey) {
@@ -819,6 +819,44 @@ export const getSizes = async (page, pageSize, additionalData) => {
       f?.size_content?.name === searchValue ||
       f?.category?.category_content?.name === searchValue ||
       f?.size_content.region.name === searchValue,
+  });
+};
+
+export const getHomeSliders = async (
+  tableName,
+  page,
+  pageSize,
+  additionalData
+) => {
+  let searchKey = additionalData?.search?.key;
+  let searchValue = additionalData?.search?.value;
+
+  const query = supabase
+    .from(tableName)
+    .select(
+      `
+    *,
+    ${tableName}_content (*)
+      `,
+      { count: "exact" }
+    )
+    .eq(`${tableName}_content.language_id`, additionalData?.languageId);
+
+  if (searchValue) {
+    switch (searchKey) {
+      case "sku":
+        query.ilike(`${tableName}.sku`, `%${searchValue}%`);
+        break;
+      default:
+        query.eq(searchKey, searchValue);
+    }
+  }
+
+  return globalGetData({
+    page,
+    pageSize,
+    additionalData,
+    query,
   });
 };
 

@@ -39,7 +39,6 @@ export const GlobalOptionsProvider = ({ children }) => {
   };
   const setDefaultSettings = (type, data) => {
     if (type === "region") {
-      console.log(data,'called');
       setDefaultRegion(data);
       setRegionId(data);
     } else {

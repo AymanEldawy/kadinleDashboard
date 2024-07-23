@@ -177,7 +177,7 @@ const HomeSections = () => {
 
   const addNewSection = () => {
     let item = {
-      section_id: newSection?.replace(/" "/gi, "_").toLocaleUpperCase(),
+      section_id: newSection?.replace(/ /gi, "_").toLocaleUpperCase(),
       section_type: "SECTION",
       section_name: newSection,
       section_order: sortedSections?.length + 1,
@@ -188,7 +188,7 @@ const HomeSections = () => {
     if (+selectedType === 1) {
       item = {
         ...item,
-        section_id: newSection?.replace(/" "/gi, "_").toLocaleUpperCase(),
+        section_id: newSection?.replace(/ /gi, "_").toLocaleUpperCase(),
         section_type: "SECTION",
         section_name: newSection,
       };

@@ -23,6 +23,7 @@ import { Button } from "../../Components/Global/Button";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 import DB_API from "../../Helpers/Forms/databaseApi";
 import { useAdd } from "../../hooks/useAdd";
+import { ChevronIcon } from "../../Helpers/Icons";
 
 const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   const navigate = useNavigate();
@@ -156,6 +157,9 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   };
   return (
     <>
+    <div className="my-2">
+      <button><ChevronIcon /> Back</button>
+    </div>
       <BlockPaper title={title}>
         <SuperForm
           initialFields={fields}

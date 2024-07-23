@@ -22,7 +22,7 @@ const SearchBar = ({
   );
 
   return (
-    <form className="relative flex items-center">
+    <div className="relative flex items-center">
       <div className="absolute inset-y-0 left-0 flex items-center pl-2 overflow-hidden">
         {!!setSearchKey ? (
           <button
@@ -77,7 +77,7 @@ const SearchBar = ({
           </ul>
         </>
       ) : null}
-    </form>
+    </div>
   );
 };
 

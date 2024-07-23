@@ -482,7 +482,7 @@ const combine_collection = () => [
     cell: ({ row }) => {
       return (
         <Link
-          to={`/update/offer/${row?.original?.id}`}
+          to={`/update/collection/${row?.original?.id}`}
           className="text-blue-500 hover:underline"
         >
           {row?.original?.collection_content?.at(0)?.name}

@@ -125,7 +125,7 @@ const ProductsSLidersForm = () => {
         tableName={"products slider"}
         selectedList={selectedList}
         setSelectedList={setSelectedList}
-        hideSearch
+        // hideSearch
       />
     </BlockPaper>
   );

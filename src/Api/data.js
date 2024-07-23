@@ -541,6 +541,9 @@ export const getProducts = async (page, pageSize, additionalData) => {
       case "name":
         query.ilike("product_content.name::text", `%${searchValue}%`);
         break;
+      // case "sku":
+      //   query.ilike("product.sku", `%${searchValue}%`);
+      //   break;
       case "description":
         query.ilike("product_content.description", `%${searchValue}%`);
         break;

@@ -250,7 +250,10 @@ export const SelectedProductTable = ({
             </button> */}
           </>
         }
-        columns={() => {}}
+        columns={() => [
+          { header: "name", accessorKey: "name" },
+          { header: "product_sku", accessorKey: "product_sku" },
+        ]}
         selectedColumn={selectedColumn}
         setSelectedColumn={setSelectedColumn}
       />

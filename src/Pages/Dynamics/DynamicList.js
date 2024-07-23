@@ -66,7 +66,7 @@ const DynamicList = ({
   const { data, isLoading, refetch } = useQuery({
     queryKey: [tableName, "list", defaultLanguage?.id, defaultRegion?.id],
     queryFn: async () => {
-      if (!defaultLanguage?.id) return;
+      // if (!defaultLanguage?.id) return;
       let filter =
         filterCategory?.indexOf("Choose") !== -1 ? "" : filterCategory;
       const response = await getDataWithPagination(

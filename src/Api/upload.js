@@ -18,7 +18,7 @@ async function uploadFile(formData, action) {
   };
 
   const response = await fetch(
-    `http://kadinle.com:4321/${action}`,
+    `${process.env.REACT_APP_KADINLE_API}/${action}`,
     // `http://localhost:4321/${action}`,
     requestOptions
   );

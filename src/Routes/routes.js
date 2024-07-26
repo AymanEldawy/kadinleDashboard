@@ -146,20 +146,15 @@ const authProtectedRoutes = [
   { path: "/add-category", component: <AddCategory />, allowedRoles: ["*"] },
   { path: "/add-color", component: <AddColor />, allowedRoles: ["*"] },
   { path: "/add-size", component: <AddSize />, allowedRoles: ["*"] },
-  {
-    path: "/add-season",
-    component: <InsertOne layout="season" />,
-    allowedRoles: ["*"],
-  },
   // **** Group Feature paths ****
   { path: "/color", component: <Colors />, allowedRoles: ["*"] },
   { path: "/category", component: <Categories />, allowedRoles: ["*"] },
   { path: "/size", component: <Sizes />, allowedRoles: ["*"] },
-  {
-    path: "/product-features",
-    component: <ProductFeatures />,
-    allowedRoles: ["*"],
-  },
+  // {
+  //   path: "/product-features",
+  //   component: <ProductFeatures />,
+  //   allowedRoles: ["*"],
+  // },
 
   // **** Group Seasons add paths ****
   { path: "/add-sale", component: <AddSale />, allowedRoles: ["*"] },

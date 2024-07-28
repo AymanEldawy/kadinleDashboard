@@ -1,0 +1,6 @@
+version: '3.8'
+services:
+  dashboard:
+    build: .
+    ports:
+      - '3001:80'

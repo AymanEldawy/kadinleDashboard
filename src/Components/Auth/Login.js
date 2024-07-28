@@ -15,7 +15,7 @@ import InputField from "../CustomForm/InputField";
 import Cookies from "js-cookie";
 
 const Login = () => {
-  // const { setRefresh, setUser } = useGlobalOptions();
+  const { setRefresh, setUser } = useGlobalOptions();
   const navigate = useNavigate();
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
@@ -72,7 +72,7 @@ const Login = () => {
         Cookies.set("KADINLE_ADMIN", JSON.stringify(user || ""), {
           expires: hour,
         });
-        // setUser(user);
+        setUser(user);
         toast.success(`Login Successfully`);
         setTimeout(() => {
           window.location.pathname = "/";

@@ -13,7 +13,7 @@ const Index = () => {
     <>
       <Layout>
         <Routes>
-          {/* {Object.values(authProtectedRoutes).map((route, index) => (
+          {Object.values(authProtectedRoutes).map((route, index) => (
             <Route
               element={
                 <ProtectedRoutes
@@ -29,7 +29,7 @@ const Index = () => {
                 element={route?.component}
               />
             </Route>
-          ))} */}
+          ))}
           <Route path="/login" element={<Login />} />
         </Routes>
       </Layout>

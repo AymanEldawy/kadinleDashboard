@@ -251,6 +251,7 @@ const SuperTable = ({
               ) : null}
             </TableRow>
           </TableHead>
+          
           <TableBody classes={classes?.body}>
             {loading ? (
               <tr className="h-16">
@@ -445,12 +446,14 @@ const SuperTable = ({
                             </TableCol>
                           );
                         else if (col === "user" || col === "admin") {
+                          // show user in the table
                           return (
                             <TableCol
                               classes={`min-w-[120px] !py-4 border ${classes?.colBody}`}
                             >
                               <UserInfo
-                                user={CACHED_TABLE?.[row?.user_id] || row?.user}
+                                user={CACHED_TABLE?.[row?.user_id] || row}
+                                userNameClassName="whitespace-nowrap"
                               />
                             </TableCol>
                           );
@@ -479,6 +482,7 @@ const SuperTable = ({
                           col?.toLowerCase() === "end_date"
                         )
                           return (
+                          //  show the date in the table
                             <TableCol
                               classes={`!py-4 border ${classes?.colBody}`}
                               key={index}
@@ -664,6 +668,7 @@ const SuperTable = ({
                           );
                         } else
                           return (
+                            // show email in the table
                             <TableCol
                               classes={`!py-4 border ${classes?.colBody}`}
                               key={index}

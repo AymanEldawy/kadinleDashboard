@@ -125,7 +125,8 @@ export const TEMPLATES = {
 
 export const generateMail = async (messageType, userEmail, params) => {
   if (messageType) {
-    const response = await fetch(`http://api.kadinle.com/sender`, {
+    // const response = await fetch(`http://api.kadinle.com/sender`, {
+    const response = await fetch(`${process.env.REACT_APP_KADINLE_API}/sender`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

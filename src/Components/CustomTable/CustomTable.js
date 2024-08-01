@@ -179,7 +179,7 @@ const CustomTable = ({
           {fetchWord("no_results", lang)}
         </div>
       ) : null}
-      
+
       {openDrawerMore ? (
         <>
           <div

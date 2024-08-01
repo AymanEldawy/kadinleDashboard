@@ -57,11 +57,11 @@ const DynamicList = ({
   const [columnOrder, setColumnOrder] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [pagination, setPagination] = useState({
-    pageIndex: 1,
+    pageIndex: 0,
     pageSize: 50,
   });
 
-  console.log(pagination?.pageSize,'pagination?.pageSize');
+  console.log(pagination?.pageSize, "pagination?.pageSize");
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: [tableName, "list", defaultLanguage?.id, defaultRegion?.id],
@@ -123,9 +123,9 @@ const DynamicList = ({
       list.push(row.original);
       ids.push(row.original.id);
     }
-    
+
     await onDelete(tableName, ids);
-    setRowSelection({})
+    setRowSelection({});
     setRefresh((p) => !p);
   };
 

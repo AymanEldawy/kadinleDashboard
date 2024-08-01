@@ -2974,7 +2974,7 @@ export const combine_definitions = () => [
     cell: ({ row }) => {
       return (
         <FullImage
-          src={row.original?.definitions_content?.at(0).mobile_image}
+          src={row.original?.definitions_content?.at?.(0)?.mobile_image}
           alt={"image"}
         />
       );
@@ -3038,7 +3038,7 @@ export const combine_less_than = () => [
     cell: ({ getValue, row }) => {
       return (
         <FullImage
-          src={row.original?.less_than_content?.at(0).web_image}
+          src={row.original?.less_than_content?.at?.(0)?.web_image}
           alt={"image"}
         />
       );
@@ -3050,7 +3050,7 @@ export const combine_less_than = () => [
     cell: ({ row }) => {
       return (
         <FullImage
-          src={row.original?.less_than_content?.at(0).mobile_image}
+          src={row.original?.less_than_content?.at?.(0)?.mobile_image}
           alt={"image"}
         />
       );
@@ -3114,7 +3114,7 @@ const home_sliders = () => [
     cell: ({ row }) => {
       return (
         <FullImage
-          src={row.original?.home_sliders_content?.at(0).mobile_image}
+          src={row.original?.home_sliders_content?.at?.(0)?.mobile_image}
           alt={"image"}
         />
       );
@@ -3126,7 +3126,7 @@ const home_sliders = () => [
     cell: ({ row }) => {
       return (
         <FullImage
-          src={row.original?.home_sliders_content?.at(0).mobile_image}
+          src={row.original?.home_sliders_content?.at?.(0)?.mobile_image}
           alt={"image"}
         />
       );

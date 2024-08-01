@@ -3,4 +3,4 @@ services:
   dashboard:
     build: .
     ports:
-      - '3001:80'
+      - '3005:80'

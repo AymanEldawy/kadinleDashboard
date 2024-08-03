@@ -63,32 +63,8 @@ const XMLImport = () => {
               </div>
             </>
           ) : null}
-          {/* {activeStage === STAGES[1] ? (
-            <AddProductVariants
-              getCachedList={getCachedList}
-              fields_variant={fields_variant}
-              fields_stock={stock_fields}
-              productId={productId}
-              productSku={productValues?.product_sku}
-              CACHED_TABLES_SKU={CACHED_TABLES_SKU}
-              allValues={productVariantValues}
-              setAllValues={setProductVariantValues}
-              variantErrors={variantErrors}
-              setVariantErrors={setVariantErrors}
-              activeTabVariant={activeTabVariant}
-              setActiveTabVariant={setActiveTabVariant}
-              activeTabSizes={activeTabSizes}
-              setActiveTabSizes={setActiveTabSizes}
-              activeTabStocks={activeTabStocks}
-              setActiveTabStocks={setActiveTabStocks}
-              dropzoneRef={dropzoneRef}
-              listCountGlobalVariant={listCountGlobalVariant}
-              setListCountGlobalVariant={setListCountGlobalVariant}
-              layout={layout}
-            />
-          ) : null} */}
+          
         </div>
-        {/* <InputField label="language_id" /> */}
 
         {/* STEPS */}
         {/* BODY */}

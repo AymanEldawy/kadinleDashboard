@@ -1,6 +1,6 @@
 import React from "react";
 
-export const StepsBar = ({ items, activeIndex = 2 }) => {
+export const StepsBar = ({ items, activeIndex }) => {
   return (
     <div className="flex items-center justify-between max-w-2xl mx-auto">
       {items?.map((item, index) => (
@@ -13,13 +13,21 @@ export const StepsBar = ({ items, activeIndex = 2 }) => {
             ${activeIndex >= index ? "bg-blue-400" : "bg-gray-200"}
             `}
             ></span>
-            <span className={`${activeIndex >= index ? "text-blue-400" : "text-gray-400"}`}>{item?.name}</span>
+            <span
+              className={`${
+                activeIndex >= index ? "text-blue-400" : "text-gray-400"
+              }`}
+            >
+              {item?.name}
+            </span>
           </div>
           {index < items?.length - 1 ? (
-            <div className={`
+            <div
+              className={`
                h-[2px] flex-1 -mt-8 shadow
                ${activeIndex > index ? "bg-blue-400" : "bg-gray-200"}
-              `} />
+              `}
+            />
           ) : null}
         </>
       ))}

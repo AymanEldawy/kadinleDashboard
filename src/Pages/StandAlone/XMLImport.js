@@ -5,12 +5,28 @@ import { XML_IMPORT_STEPS } from "../../Helpers/Scripts/constants";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import InputField from "../../Components/CustomForm/InputField";
 import SelectField from "../../Components/CustomForm/SelectField";
-import { useFetch } from "../../hooks/useFetch";
 import SuccessIcon from "../../Components/icons/SuccessIcon";
 import FailedIcon from "../../Components/icons/FailedIcon";
 import { Link } from "react-router-dom";
 
 const XMLImport = () => {
+  // static data
+  const response = "success";
+  const tableHeaders = [
+    { id: 1, header: "Header" },
+    { id: 2, header: "Sample Row" },
+    { id: 3, header: "Map To" },
+  ];
+  const data = [
+    { id: 1, header: "product_sku", sample: "test", type: "number" },
+    { id: 2, header: "category_name", sample: "test", type: "text" },
+    { id: 3, header: "price", sample: "test", type: "number" },
+  ];
+
+  // states
+  const [createXmlData, setCreateXmlData] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const STAGES = XML_IMPORT_STEPS.map((step) => step.name);
   const [activeStage, setActiveStage] = useState(STAGES[0]);
@@ -21,6 +37,45 @@ const XMLImport = () => {
     url: "",
     template_name: "",
   });
+
+  // fetch data
+  const createXmlFileUrl = process.env.REACT_APP_KADINLE_API + "xml"
+  console.log(createXmlData);
+   // test button handler
+      const handleSubmit = async (event) => {
+        event.preventDefault();
+        setLoading(true);
+        setError(null);
+
+        const payload = {
+          url: "https://convert.stockmount.com/xml/publish/28094/xmloutlet",
+          template_name: "xml file1",
+        };
+
+        try {
+          const response = await fetch(createXmlFileUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          const result = await response.json();
+          setCreateXmlData(result);
+          console.log(createXmlData);
+        } catch (error) {
+          setError(error.toString());
+          console.log("first catch", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  // functions
   const checkFileData = (data) => {
     const isValid = Object.values(data).every((value) => value !== "");
     setNextStep(isValid);
@@ -29,28 +84,19 @@ const XMLImport = () => {
   useEffect(() => {
     checkFileData(fileData);
   }, [fileData]);
-  const response = "success";
-  const tableHeaders = [
-    { id: 1, header: "Header" },
-    { id: 2, header: "Sample Row" },
-    { id: 3, header: "Map To" },
-  ];
-
-  const data = [
-    { id: 1, header: "product_sku", sample: "test", type: "number" },
-    { id: 2, header: "category_name", sample: "test", type: "text" },
-    { id: 3, header: "price", sample: "test", type: "number" },
-  ];
 
   const onSubmit = () => {
     let index = STAGES?.indexOf(activeStage);
     setActiveStage(STAGES?.[index + 1]);
     setActiveIndex(index + 1);
   };
+
   return (
     <>
       <BlockPaper title="XML import">
+        {/* STEPS */}
         <StepsBar items={XML_IMPORT_STEPS} activeIndex={activeIndex} />
+        {/* BODY */}
         <div className="my-10">
           {activeStage === STAGES[0] ? (
             <>
@@ -194,11 +240,9 @@ const XMLImport = () => {
             </div>
           ) : null}
         </div>
-
-        {/* STEPS */}
-        {/* BODY */}
       </BlockPaper>
       <div className="flex mt-12 gap-5 items-center justify-between">
+        <button onClick={handleSubmit}>test api</button>
         {activeStage === STAGES?.[3] ? null : (
           <button
             disabled={activeStage === STAGES[0]}

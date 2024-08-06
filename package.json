@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:3001",
+  
   "dependencies": {
     "@dropzone-ui/react": "^7.0.4",
     "@supabase/supabase-js": "^2.26.0",

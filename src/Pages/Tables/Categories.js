@@ -13,6 +13,7 @@ const Categories = () => {
       SUPABASE_TABLE_NAME="category"
       columns={columns}
       title="Categories"
+      allowFilter
       onAddClick={() => navigate(`/add-category`)}
     />
   );

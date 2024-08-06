@@ -65,6 +65,7 @@ const DynamicList = ({
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: [tableName, "list", defaultLanguage?.id, defaultRegion?.id],
+    keepPreviousData: true,
     queryFn: async () => {
       // if (!defaultLanguage?.id) return;
       let filter =
@@ -86,33 +87,43 @@ const DynamicList = ({
     },
   });
 
-  const table = useReactTable({
-    columns: columns({
-      hideAction,
-    }),
-    data: isLoading ? [] : data,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    onColumnVisibilityChange: setColumnVisibility,
-    enableRowSelection: true,
-    onColumnOrderChange: setColumnOrder,
-    onRowSelectionChange: setRowSelection,
-    columnResizeMode: "onChange",
-    onPaginationChange: setPagination,
-    pageCount,
-    state: {
-      columnFilters,
-      globalFilter,
-      rowSelection,
-      columnOrder,
-      columnVisibility,
-      pagination,
+  const table = useReactTable(
+    {
+      columns: columns({
+        hideAction,
+      }),
+      data: isLoading ? [] : data,
+      getCoreRowModel: getCoreRowModel(),
+      getFilteredRowModel: getFilteredRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+      onColumnFiltersChange: setColumnFilters,
+      onGlobalFilterChange: setGlobalFilter,
+      onColumnVisibilityChange: setColumnVisibility,
+      enableRowSelection: true,
+      onColumnOrderChange: setColumnOrder,
+      onRowSelectionChange: setRowSelection,
+      columnResizeMode: "onChange",
+      onPaginationChange: (v) => {
+        console.log("🚀 ~ v:", v);
+        setPagination(v);
+        return {};
+      },
+      manualPagination: true,
+      pageCount,
+      autoResetPage: false,
+      state: {
+        columnFilters,
+        globalFilter,
+        rowSelection,
+        columnOrder,
+        columnVisibility,
+        pagination,
+      },
     },
-  });
+  );
+
+  console.log(table.getPageCount());
 
   const handleDeleteItem = async () => {
     let ids = [];

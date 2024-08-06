@@ -116,6 +116,8 @@ export const globalGetData = async ({
     };
   }
 
+  console.log(start,end );
+  
   if (!ignoredFilterColumns?.includes(searchKey)) {
     query.range(start, end);
   }
@@ -173,6 +175,7 @@ export const getLogs = async (page, pageSize, additionalData) => {
 export const getCategories = async (page, pageSize, additionalData) => {
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
+  console.log("🚀 ~ getCategories ~ additionalData:", additionalData);
 
   const query = supabase
     .from("category")
@@ -200,6 +203,9 @@ export const getCategories = async (page, pageSize, additionalData) => {
       default:
         query.eq(searchKey, searchValue);
     }
+  }
+  if (additionalData?.filter) {
+    query.eq("parent_id", additionalData?.filter);
   }
   return globalGetData({
     page,

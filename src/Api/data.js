@@ -34,11 +34,14 @@ export const contentFilterFetch = async (table, additionalData) => {
       .eq("region_id", additionalData?.regionId);
     return response;
   } else {
-    const response = await supabase
+    const response = supabase
       .from(table)
       .select()
       .eq("language_id", additionalData?.languageId);
-    return response;
+    if (additionalData?.sort) {
+      response.order("title");
+    }
+    return await response;
   }
 };
 
@@ -116,6 +119,8 @@ export const globalGetData = async ({
     };
   }
 
+  console.log(start, end);
+
   if (!ignoredFilterColumns?.includes(searchKey)) {
     query.range(start, end);
   }
@@ -173,6 +178,7 @@ export const getLogs = async (page, pageSize, additionalData) => {
 export const getCategories = async (page, pageSize, additionalData) => {
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
+  console.log("🚀 ~ getCategories ~ additionalData:", additionalData);
 
   const query = supabase
     .from("category")
@@ -200,6 +206,9 @@ export const getCategories = async (page, pageSize, additionalData) => {
       default:
         query.eq(searchKey, searchValue);
     }
+  }
+  if (additionalData?.filter) {
+    query.eq("parent_id", additionalData?.filter);
   }
   return globalGetData({
     page,

@@ -37,7 +37,7 @@ export const contentFilterFetch = async (table, additionalData) => {
     const response = await supabase
       .from(table)
       .select()
-      .eq("language_id", additionalData?.languageId);
+      .eq("language_id", additionalData?.languageId).order('title');
     return response;
   }
 };

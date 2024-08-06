@@ -45,6 +45,7 @@ export const TableBar = ({
     if (allowFilter && defaultLanguage?.id) {
       getTableData("category_content", {
         languageId: defaultLanguage?.id,
+        sort: true
       }).then((res) => {
         setCategories(res?.data);
       });

@@ -34,11 +34,14 @@ export const contentFilterFetch = async (table, additionalData) => {
       .eq("region_id", additionalData?.regionId);
     return response;
   } else {
-    const response = await supabase
+    const response = supabase
       .from(table)
       .select()
-      .eq("language_id", additionalData?.languageId).order('title');
-    return response;
+      .eq("language_id", additionalData?.languageId);
+    if (additionalData?.sort) {
+      response.order("title");
+    }
+    return await response;
   }
 };
 
@@ -116,8 +119,8 @@ export const globalGetData = async ({
     };
   }
 
-  console.log(start,end );
-  
+  console.log(start, end);
+
   if (!ignoredFilterColumns?.includes(searchKey)) {
     query.range(start, end);
   }

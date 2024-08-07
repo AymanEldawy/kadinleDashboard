@@ -72,3 +72,15 @@ body {
 body::backdrop {
   background: inherit;
 }
+.delete-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.delete-button:hover {
+  color: red;
+}

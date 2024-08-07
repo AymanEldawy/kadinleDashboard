@@ -9,7 +9,7 @@ import SuccessIcon from "../../Components/icons/SuccessIcon";
 import FailedIcon from "../../Components/icons/FailedIcon";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import LongArrow from "../../Components/icons/LongArrow";
+import {Reorder} from "framer-motion"
 
 //test url: "https://convert.stockmount.com/xml/publish/28094/xmloutlet"
 
@@ -30,11 +30,8 @@ const XMLImport = () => {
     { id: 2, name: "color" },
     { id: 3, name: "size" },
   ];
-  const data = [
-    { id: 1, header: "product_sku", sample: "test", type: "number" },
-    { id: 2, header: "category_name", sample: "test", type: "text" },
-    { id: 3, header: "price", sample: "test", type: "number" },
-  ];
+  const [data,setData]= useState([1,2,3,4])
+  console.log("data",data)
   // states
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -131,22 +128,38 @@ const XMLImport = () => {
       <BlockPaper title="XML import">
         {/* STEPS */}
         <StepsBar items={XML_IMPORT_STEPS} activeIndex={activeIndex} />
+        <h2 className="text-center font-semibold">
+          Drag and drop fields on the blue line
+        </h2>
         <div className={`w-full flex justify-center items-center gap-20`}>
-          <div className="left flex flex-col gap-5">
-            {fields.map((field) => (
-              <div key={field.id} className="flex items-center justify-center gap-4">
+          <div className="left flex flex-col gap-16">
+            {fields.map((field, index) => (
+              <div
+                key={field.id}
+                className="flex items-center justify-center gap-4"
+              >
                 <span className="w-20">{field.name}</span>
                 <div className="h-1 w-48 bg-[#5D9FF2] mt-2" />
               </div>
             ))}
           </div>
-          <div className="center flex flex-col gap-5">
-            {/* {fields.map((field) => (
-              <div key={field.id} className="h-3 w-10 bg-[#5D9FF2]" />
-            ))} */}
+
+          <div className="right">
+            <Reorder.Group values={data} onReorder={setData}>
+              {data.map((field) => (
+                <Reorder.Item value={field} key={field}>
+                  <div
+                    key={field.id}
+                    className="p-4 my-1 rounded-md bg-[#5D9FF2] text-white"
+                  >
+                    {field}
+                  </div>
+                </Reorder.Item>
+              ))}
+            </Reorder.Group>
           </div>
-          <div className="right"></div>
         </div>
+        {/* <Draggable fields={fields} data ={data}/> */}
         {/* BODY */}
         <div className="mt-10">
           {activeStage === STAGES[0] ? (

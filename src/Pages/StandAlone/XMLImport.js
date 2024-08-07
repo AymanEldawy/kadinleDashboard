@@ -35,11 +35,15 @@ const XMLImport = () => {
   // states
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  console.log(isDragging);
   const [activeIndex, setActiveIndex] = useState(0);
   const STAGES = XML_IMPORT_STEPS.map((step) => step.name);
   const [activeStage, setActiveStage] = useState(STAGES[0]);
   const [nextStep, setNextStep] = useState(false);
   const [fieldsData, setFieldsData] = useState(null);
+  const [valuesData, setValuesData] = useState(null);
+  console.log("valuesData", valuesData);
   const [fileData, setFileData] = useState({
     language_id: "",
     supplier_id: "",
@@ -52,7 +56,9 @@ const XMLImport = () => {
     process.env.REACT_APP_KADINLE_API + "/xml-mapping/xml";
   const getXmlFieldsUrl =
     process.env.REACT_APP_KADINLE_API + "/xml-mapping/xml/9/fields";
-
+  const getXmlValuesUrl =
+    process.env.REACT_APP_KADINLE_API +
+    "/xml-mapping/xml/9/values-to-map?category=Category&size=VariantValue1&color=VariantValue2";
   // fetch data
   // 1.handle first step (create xml file)
   const handleSubmitCreateXml = async (event) => {
@@ -90,13 +96,13 @@ const XMLImport = () => {
       toast.error("Error creating XML file.");
     } finally {
       setLoading(false);
-      fetchData();
+      fetchFieldsData();
     }
   };
 
-  // 2.handle first step (get xml fields)
+  // 2.Fetch first step (get xml fields)
 
-  const fetchData = async () => {
+  const fetchFieldsData = async () => {
     setLoading(true);
     setError(null);
     try {
@@ -170,6 +176,29 @@ const XMLImport = () => {
       setLoading(false);
     }
   };
+
+  // 4.Fetch first step (get xml fields)
+  useEffect(() => {
+    const fetchXmlValuesData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(getXmlValuesUrl);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setValuesData(data);
+      } catch (error) {
+        setError(error.toString());
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchXmlValuesData();
+  }, []);
+
   // functions
   const checkFileData = (data) => {
     const isValid = Object.values(data).every((value) => value !== "");
@@ -190,12 +219,50 @@ const XMLImport = () => {
     checkFileData(fileData);
   }, [fileData]);
 
+  // move up or down (under testing)
+  useEffect(() => {
+    if (isDragging) {
+      const handleScroll = (event) => {
+        const y = event.clientY;
+        const pageHeight = window.innerHeight;
+
+        if (y < 100) {
+          window.scrollBy(0, -10);
+        } else if (y > pageHeight - 100) {
+          window.scrollBy(0, 10);
+        }
+      };
+
+      window.addEventListener("mousemove", handleScroll);
+      return () => {
+        window.removeEventListener("mousemove", handleScroll);
+      };
+    }
+  }, [isDragging]);
   return (
     <>
       <BlockPaper title="XML import">
         {/* STEPS */}
         <StepsBar items={XML_IMPORT_STEPS} activeIndex={activeIndex} />
-
+        {/* <div className="text-center">
+          {response === "success" ? (
+            <div className="flex flex-col justify-center items-center space-y-3">
+              <span>product inserted successfully</span>
+              <span>
+                <SuccessIcon />
+              </span>
+            </div>
+          ) : response === "error" ? (
+            <div className="flex flex-col justify-center items-center space-y-3">
+              <span>failed to insert product ...</span>
+              <span>
+                <FailedIcon />
+              </span>
+            </div>
+          ) : (
+            <span>row no 2 under the processing. </span>
+          )}
+        </div> */}
         {/* BODY */}
         <div className="mt-10">
           {activeStage === STAGES[0] ? (
@@ -298,10 +365,16 @@ const XMLImport = () => {
                       <Reorder.Group
                         values={fieldsData.map((field) => field.key)}
                         onReorder={handleReorder}
+                        onDragStart={(event, info) =>
+                          console.log(info.point.x, info.point.y)
+                        }
+                        onDragEnd={(event, info) =>
+                          console.log(info.point.x, info.point.y)
+                        }
                       >
                         {fieldsData?.map((field, index) => (
                           <Reorder.Item value={field.key} key={field.key}>
-                            <div className="relative p-2 my-2 rounded-md bg-gray-600 text-white">
+                            <div className="relative p-2 my-2 rounded-md bg-gray-600 text-white cursor-grab">
                               {field.value}
                               <span className="absolute right-2 top-0 rounded-full">
                                 <button
@@ -329,6 +402,7 @@ const XMLImport = () => {
               </div>
             </div>
           ) : null}
+
           {activeStage === STAGES[2] ? (
             <div className="text-center">
               {response === "success" ? (

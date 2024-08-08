@@ -14,6 +14,7 @@ import Loading from "../../Components/Loading/Loading";
 import Tooltip from "../../Components/Xml/Tooltip";
 import AsyncSelect from "react-select/async";
 import { set } from "react-hook-form";
+import { MappingColumn } from "../../Components/Xml/MappingColumn";
 
 //test url: "https://convert.stockmount.com/xml/publish/28094/xmloutlet"
 
@@ -47,9 +48,16 @@ const XMLImport = () => {
   const [fieldsData, setFieldsData] = useState(null);
   const [valuesData, setValuesData] = useState(null);
   const [categories, setCategories] = useState(null);
-  console.log("categories", categories);
   const [colors, setColors] = useState(null);
-  const [sizes, setSizes] = useState(null);
+    const [sizes, setSizes] = useState(null);
+    console.log("colors", colors);
+  const [xmlValuesPayload, setXmlValuesPayload] = useState({
+    category: [],
+    size: [],
+    color: [],
+  });
+  console.log("xmlValuesPayload", xmlValuesPayload);
+
   console.log("valuesData", valuesData);
   const [fileData, setFileData] = useState({
     language_id: "",
@@ -66,9 +74,13 @@ const XMLImport = () => {
   const getXmlValuesUrl =
     process.env.REACT_APP_KADINLE_API +
     "/xml-mapping/xml/9/values-to-map?category=Category&size=VariantValue1&color=VariantValue2";
-  const getCategoriesUrl = process.env.REACT_APP_KADINLE_API + "/categories";
-  const getColorsUrl = process.env.REACT_APP_KADINLE_API + "/colors";
-  const getSizesUrl = process.env.REACT_APP_KADINLE_API + "/sizes";
+  const getCategoriesUrl =
+    process.env.REACT_APP_KADINLE_API + "/xml-mapping/categories";
+  const getColorsUrl =
+    process.env.REACT_APP_KADINLE_API + "/xml-mapping/colors";
+  const getSizesUrl = process.env.REACT_APP_KADINLE_API + "/xml-mapping/sizes";
+  const postXmlValuesUrl =
+    process.env.REACT_APP_KADINLE_API + "/xml-mapping/xml/9/values-to-map";
   // fetch data
   // 1.handle first step (create xml file)
   const handleSubmitCreateXml = async (event) => {
@@ -188,38 +200,24 @@ const XMLImport = () => {
   };
 
   // 4.Fetch third step (get category, color , size)
-  //  const categoryResponse = await fetch(getCategoriesUrl);
-
-  //     const categoryData = await categoryResponse.json();
-  //     setCategories(categoryData);
-
   useEffect(() => {
     const fetchXmlValuesData = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        const response = await fetch(getCategoriesUrl);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setCategories(data);
-      } catch (error) {
-        setError(error.toString());
-      } finally {
-        setLoading(false);
-      }
-    };
+        const categoryResponse = await fetch(getCategoriesUrl);
+        const categoryData = await categoryResponse.json();
+        setCategories(categoryData);
 
-    fetchXmlValuesData();
-  }, [getCategoriesUrl]);
-  useEffect(() => {
-    const fetchXmlValuesData = async () => {
-      setLoading(true);
-      setError(null);
+        const colorResponse = await fetch(getColorsUrl);
+        const colorData = await colorResponse.json();
+        setColors(colorData);
 
-      try {
+        const sizeResponse = await fetch(getSizesUrl);
+        const sizeData = await sizeResponse.json();
+        setSizes(sizeData);
+
         const response = await fetch(getXmlValuesUrl);
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -234,8 +232,43 @@ const XMLImport = () => {
     };
 
     fetchXmlValuesData();
-  }, [getXmlValuesUrl]);
+  }, [getCategoriesUrl, getColorsUrl, getSizesUrl, getXmlValuesUrl]);
 
+  // 5.handle third step (post xml file values)
+  const handleSubmitXmlFileValues = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const payload = xmlValuesPayload;
+
+    try {
+      const response = await fetch(postXmlValuesUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      console.log("response from server", response);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      if (response.ok === true) {
+        toast.success(`Fields uploaded Successfully.`);
+        let index = STAGES?.indexOf(activeStage);
+        setActiveStage(STAGES?.[index + 1]);
+        setActiveIndex(index + 1);
+      } else {
+        toast.error("Error creating XML file.");
+      }
+    } catch (error) {
+      setError(error.toString());
+      toast.error("Error creating XML file.");
+    } finally {
+      setLoading(false);
+    }
+  };
   // functions
   const checkFileData = (data) => {
     const isValid = Object.values(data).every((value) => value !== "");
@@ -255,31 +288,7 @@ const XMLImport = () => {
   useEffect(() => {
     checkFileData(fileData);
   }, [fileData]);
-  // react select function
-  const filterColors = (inputValue) => {
-    if (!valuesData) return [];
-    return valuesData.variantvalue1.filter((value) =>
-      value.toLowerCase().includes(inputValue.toLowerCase())
-    );
-  };
-  const promiseColorsOptions = (inputValue) =>
-    new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(filterColors(inputValue));
-      }, 1000);
-    });
-  const filterSize = (inputValue) => {
-    if (!valuesData) return [];
-    return valuesData.variantvalue2.filter((value) =>
-      value.toLowerCase().includes(inputValue.toLowerCase())
-    );
-  };
-  const promiseSizeOptions = (inputValue) =>
-    new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(filterSize(inputValue));
-      }, 1000);
-    });
+
   // move up or down (under testing)
   useEffect(() => {
     if (isDragging) {
@@ -305,81 +314,7 @@ const XMLImport = () => {
       <BlockPaper title="XML import">
         {/* STEPS */}
         <StepsBar items={XML_IMPORT_STEPS} activeIndex={activeIndex} />
-        <div className={`w-full`}>
-          <h2 className="text-center font-semibold my-5">Mapping Schema</h2>
 
-          {loading ? (
-            <div className="flex justify-center items-center">
-              <Loading />
-            </div>
-          ) : (
-            <div className={`w-full flex justify-center`}>
-              {setValuesData.length > 0 && (
-                <div className="left flex flex-col gap-3 mt-1 w-full">
-                  <h2>category</h2>
-                  {valuesData?.category.map((item, index) => (
-                    <div
-                      key={index}
-                      className="text-gray-500 flex items-start w-full gap-4"
-                    >
-                      <Tooltip text={item} />
-
-                      <span className="text-white bg-slate-400 rounded-sm text-[12px] px-1">
-                        required
-                      </span>
-                      <AsyncSelect
-                        placeholder="Select Color..."
-                        required
-                        className="flex-1"
-                        cacheOptions
-                        defaultOptions={valuesData.variantvalue1.map(
-                          (value) => ({
-                            label: value,
-                            value: value,
-                          })
-                        )}
-                        loadOptions={(inputValue) =>
-                          promiseColorsOptions(inputValue).then((options) =>
-                            options.map((value) => ({
-                              label: value,
-                              value: value,
-                            }))
-                          )
-                        }
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-              <AsyncSelect
-                required
-                placeholder="Select Size..."
-                className="flex-1"
-                cacheOptions
-                defaultOptions={valuesData.variantvalue2.map((value) => ({
-                  label: value,
-                  value: value,
-                }))}
-                loadOptions={(inputValue) =>
-                  promiseSizeOptions(inputValue).then((options) =>
-                    options.map((value) => ({
-                      label: value,
-                      value: value,
-                    }))
-                  )
-                }
-              />
-            </div>
-          )}
-          <div className="w-full flex justify-center">
-            <button
-              className="p-2 my-8 rounded px-8 bg-primary-blue text-white disabled:bg-gray-200 disabled:text-gray-500"
-              onClick={handleSubmitXmlFields}
-            >
-              {loading ? <Loading /> : "Submit"}
-            </button>
-          </div>
-        </div>
         {/* BODY */}
         <div className="mt-10">
           {activeStage === STAGES[0] ? (
@@ -521,24 +456,47 @@ const XMLImport = () => {
           ) : null}
 
           {activeStage === STAGES[2] ? (
-            <div className="text-center">
-              {response === "success" ? (
-                <div className="flex flex-col justify-center items-center space-y-3">
-                  <span>product inserted successfully</span>
-                  <span>
-                    <SuccessIcon />
-                  </span>
-                </div>
-              ) : response === "error" ? (
-                <div className="flex flex-col justify-center items-center space-y-3">
-                  <span>failed to insert product ...</span>
-                  <span>
-                    <FailedIcon />
-                  </span>
+            <div className={`w-full`}>
+              <h2 className="text-center font-semibold my-5">Mapping Schema</h2>
+
+              {loading ? (
+                <div className="flex justify-center items-center">
+                  <Loading />
                 </div>
               ) : (
-                <span>row no 2 under the processing. </span>
+                <div className={`w-full flex justify-center`}>
+                  <div className="w-full lg:flex gap-8">
+                    <MappingColumn
+                      className="flex-1"
+                      data={valuesData?.category}
+                      categories={categories}
+                      title="Categories"
+                      setXmlValuesPayload={setXmlValuesPayload}
+                    />
+                    <MappingColumn
+                      data={valuesData?.variantvalue1}
+                      categories={colors}
+                      title="Colors"
+                      setXmlValuesPayload={setXmlValuesPayload}
+                    />
+                    <MappingColumn
+                      data={valuesData?.variantvalue2}
+                      categories={sizes}
+                      title="Sizes"
+                      setXmlValuesPayload={setXmlValuesPayload}
+                    />
+                  </div>
+                </div>
               )}
+              <div className="w-full flex justify-center">
+                <button
+                  disabled={xmlValuesPayload.category.length === 0}
+                  className="p-2 my-8 rounded px-8 bg-primary-blue text-white disabled:bg-gray-200 disabled:text-gray-500"
+                  onClick={handleSubmitXmlFileValues}
+                >
+                  {loading ? <Loading /> : "Submit"}
+                </button>
+              </div>
             </div>
           ) : null}
           {activeStage === STAGES[3] ? (

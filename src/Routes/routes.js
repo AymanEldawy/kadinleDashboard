@@ -102,6 +102,7 @@ import XMLImport from "../Pages/StandAlone/XMLImport";
 import HomeSliders from "../Pages/Tables/HomeSliders";
 import ProductsSlider from "../Pages/Tables/ProductsSlider";
 import ProductsSLidersForm from "../Pages/StandAlone/ProductsSLidersForm";
+import SupplierProducts from "../Pages/StandAlone/SupplierProducts";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -345,9 +346,21 @@ const authProtectedRoutes = [
   { path: "/chat-setting", component: <ChatSetting />, allowedRoles: ["*"] },
 
   // **** Group Useful actions paths ****
-  { path: "/add-products-slider", component: <ProductsSLidersForm />, allowedRoles: ["*"] },
-  { path: "/update-products-slider/:id", component: <ProductsSLidersForm />, allowedRoles: ["*"] },
-  { path: "/products-slider", component: <ProductsSlider />, allowedRoles: ["*"] },
+  {
+    path: "/add-products-slider",
+    component: <ProductsSLidersForm />,
+    allowedRoles: ["*"],
+  },
+  {
+    path: "/update-products-slider/:id",
+    component: <ProductsSLidersForm />,
+    allowedRoles: ["*"],
+  },
+  {
+    path: "/products-slider",
+    component: <ProductsSlider />,
+    allowedRoles: ["*"],
+  },
   { path: "/logs", component: <Logs />, allowedRoles: ["*"] },
   { path: "/rooms/:id", component: <ChatRoom />, allowedRoles: ["*"] },
   {
@@ -381,8 +394,13 @@ const authProtectedRoutes = [
     allowedRoles: ["admin", "superadmin"],
   },
   {
+    path:"/products-supplier",
+    component: <SupplierProducts/>,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
     path: "/xml-import",
-    component:<XMLImport />,
+    component: <XMLImport />,
     allowedRoles: ["admin", "superadmin"],
   },
   {

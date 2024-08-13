@@ -420,6 +420,11 @@ export const menuData = [
         name: "Home slider",
       },
       {
+        path: "/products-supplier",
+        icon: <GalleryIcon />,
+        name: "Products supplier",
+      },
+      {
         path: "/xml-import",
         icon: <UploadIcon />,
         name: "XML Import",

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { FilterIcon } from '../../Helpers/Icons';
 
-const FilterPopover = ({ STATUSES }) => {
+const FilterPopover = ({ STATUSES, selectedStatus, setSelectedStatus }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState("");
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -11,22 +11,25 @@ const FilterPopover = ({ STATUSES }) => {
 
   const handleSelect = (status) => {
     setSelectedStatus(status);
-    setIsMenuOpen(false); // إخفاء القائمة بعد اختيار عنصر
+    setIsMenuOpen(false);
   };
 
   return (
     <div className="relative flex gap-2">
-      <button onClick={toggleMenu} className="bg-gray-100 px-2 rounded-r-md h-10">
+      <button
+        onClick={toggleMenu}
+        className="bg-gray-100 px-2 rounded-r-md h-10"
+      >
         <FilterIcon />
       </button>
 
       {isMenuOpen && (
-        <ul className="absolute z-10 bg-gray-300 text-black rounded mt-10 w-48 shadow-lg">
+        <ul className="absolute z-10 bg-gray-100 text-black rounded mt-10 w-48 shadow-lg">
           {STATUSES.map((status, index) => (
             <li
               key={index}
               onClick={() => handleSelect(status)}
-              className="cursor-pointer p-2 hover:bg-gray-400"
+              className="cursor-pointer p-2 hover:bg-gray-200"
             >
               {status}
             </li>
@@ -35,7 +38,7 @@ const FilterPopover = ({ STATUSES }) => {
       )}
 
       {selectedStatus && (
-        <div className="mt-2 text-gray-700">Sort by: {selectedStatus}</div>
+        <div className="mt-2 text-gray-700">Filter by: {selectedStatus}</div>
       )}
     </div>
   );

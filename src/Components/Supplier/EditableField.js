@@ -9,7 +9,7 @@ const EditableField = ({ initial }) => {
      setIsEditing(true);
      setTimeout(() => {
        if (inputRef.current) {
-         inputRef.current.select(); // تحديد النص داخل الـ input بعد التغيير إلى وضع التعديل
+         inputRef.current.select();
        }
      }, 0);
    };

@@ -1,11 +1,15 @@
 import {
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import React, { useState } from "react";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import EditableField from "../../Components/Supplier/EditableField";
+import Filters from "../../Components/Supplier/Filters";
+import { FilterIcon } from "../../Helpers/Icons";
+import FilterPopover from "../../Components/Supplier/FilterPopover";
 
 const SupplierProducts = () => {
   const DATA = [
@@ -50,6 +54,7 @@ const SupplierProducts = () => {
       six: "15",
     },
   ];
+  const STATUSES = ["one", "two", "three", "four", "five", "six"]
   const columns = [
     {
       accessorKey: "one",
@@ -84,16 +89,35 @@ const SupplierProducts = () => {
   ];
 
   const [data, setData] = useState(DATA);
+  const [columnFilters, setColumnFilters] = useState([
+    // {
+    //   id: "one",
+    //   value:"Add"
+    // }
+  ]);
 
   const table = useReactTable({
     data,
     columns,
+    state:{
+      columnFilters,
+    },
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     columnResizeMode: "onChange",
   });
   // console.log("table", table.getHeaderGroups());
+    console.log("columnFilters", columnFilters); 
   return (
     <BlockPaper title="Products Supplier">
+      <div className="flex">
+        <Filters
+          columnFilters={columnFilters}
+          setColumnFilters={setColumnFilters}
+        />
+        <FilterPopover STATUSES={STATUSES} />
+      </div>
+
       <table className="table-auto w-full border border-gray-300 rounded-md">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (

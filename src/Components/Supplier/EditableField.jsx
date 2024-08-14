@@ -27,13 +27,12 @@ const EditableField = ({ initial }) => {
     <div className="relative">
       {isEditing ? (
         <input
-        
           ref={inputRef}
           type="number"
           value={text}
           onChange={handleChange}
           onBlur={handleBlur}
-          className="rounded w-[40%] px-2"
+          className="rounded w-[80%] lg:w-[40%] px-2"
         />
       ) : (
         <span

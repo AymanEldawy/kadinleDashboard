@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import {
@@ -28,9 +28,11 @@ import {
 } from "../../Api/globalMail";
 import { ImagesView } from "./ImagesView";
 import { useAdd } from "../../hooks/useAdd";
+import { ChevronIcon } from "../../Helpers/Icons";
 
 const Update = () => {
   const params = useParams();
+  const navigate = useNavigate();
   const { CACHE_LANGUAGES, languages, defaultLanguage } = useGlobalOptions();
   const { updateItem } = useUpdate();
   const { addItem } = useAdd();
@@ -150,7 +152,7 @@ const Update = () => {
               "mobile_image",
               tableName
             );
-            console.log('----',web_image, mobile_image);
+            console.log("----", web_image, mobile_image);
             if (item?.id) {
               const res = await updateItem(`${tableName}_content`, {
                 ...item,
@@ -166,8 +168,7 @@ const Update = () => {
                 mobile_image,
               });
             }
-          }
-          else if (tableName === "definitions") {
+          } else if (tableName === "definitions") {
             const image = await handleUploadSlider(item, "image", tableName);
             if (item?.[[`${tableName}_id`]]) {
               await updateItem(`${tableName}_content`, {
@@ -181,9 +182,7 @@ const Update = () => {
                 image,
               });
             }
-          }
-
-          else if (tableName === "category") {
+          } else if (tableName === "category") {
             await handleUploadCategoryImages(
               item,
               item?.category_id || params?.id,
@@ -226,6 +225,14 @@ const Update = () => {
   };
   return (
     <>
+      <div className="my-2">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex gap-2 items-center border border-blue-500 text-blue-500 hover:text-white hover:bg-blue-500 duration-300 px-3 py-1 text-sm rounded-md"
+        >
+          <ChevronIcon className="rotate-90 w-4 h-4" /> Back
+        </button>
+      </div>
       <BlockPaper title={tableName}>
         <SuperForm
           initialFields={fields}

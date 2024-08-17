@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
@@ -28,6 +28,7 @@ import AddProductForm from "./ProductFormsComponents/AddProductForm";
 import AddProductVariants from "./ProductFormsComponents/AddProductVariants";
 import AddSizeChart from "./ProductFormsComponents/AddSizeChart";
 import { FormProductIncreasable } from "./ProductFormsComponents/FormProductIncreasable";
+import { ChevronIcon } from "../../Helpers/Icons";
 
 const CACHE_SIZE_CHART_CONTENT = {};
 const CACHED_DATA_UPDATED = {};
@@ -81,6 +82,7 @@ const getCachedList = (tableName) => {
 // getRowsById(table, col, itemId)
 const AddProduct = ({ layout }) => {
   const params = useParams();
+  const navigate = useNavigate();
   const { addItem, status } = useAdd();
   const { getData } = useFetch();
   const { updateItem } = useUpdate();
@@ -332,8 +334,8 @@ const AddProduct = ({ layout }) => {
         isLoading: false,
         autoClose: 1000,
       });
-      setLoading(false);
     });
+    setLoading(false);
 
     checkRefTable(
       [
@@ -552,6 +554,14 @@ const AddProduct = ({ layout }) => {
 
   return (
     <div>
+      <div className="my-2">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex gap-2 items-center border border-blue-500 text-blue-500 hover:text-white hover:bg-blue-500 duration-300 px-3 py-1 text-sm rounded-md"
+        >
+          <ChevronIcon className="rotate-90 w-4 h-4" /> Back
+        </button>
+      </div>
       {loading ? (
         <div className="fixed top-0 left-0 w-full h-full z-[100] bg-[#0003]" />
       ) : null}

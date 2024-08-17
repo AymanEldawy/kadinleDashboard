@@ -9,6 +9,7 @@ export { default as AddCoupon } from "./AddCoupon";
 export { default as AddCurrency } from "./AddCurrency";
 export { default as AddLanguage } from "./AddLanguage";
 export { default as AddNews } from "./AddNews";
+export { default as AddChunks } from "./AddChunks";
 export { default as AddNewsletter } from "./AddNewsletter";
 export { default as AddProduct } from "./AddProduct";
 export { default as AddRegion } from "./AddRegion";

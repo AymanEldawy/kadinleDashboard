@@ -116,6 +116,48 @@ const combine_brand = () => [
   },
 ];
 
+const combine_chunks= () => [
+  {
+    id: "select",
+    size: 20,
+    header: ({ table }) => (
+      <input
+        type="checkbox"
+        className="h-5 w-5"
+        {...{
+          checked: table?.getIsAllRowsSelected(),
+          // indeterminate: table?.getIsSomeRowsSelected(),
+          onChange: table?.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <input
+          type="checkbox"
+          className="h-5 w-5"
+          {...{
+            checked: row?.getIsSelected(),
+            disabled: !row?.getCanSelect(),
+            // indeterminate: row?.getIsSomeSelected(),
+            onChange: row?.getToggleSelectedHandler(),
+          }}
+        />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "created_at",
+    header: "created_at",
+    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
+  },
+  { accessorKey: "min_price", header: "min_price" },
+  { accessorKey: "max_price", header: "max_price" },
+  { accessorKey: "percentage", header: "percentage" },
+  { accessorKey: "available", header: "available" },
+ 
+];
+
 const combine_bulk_alert = () => [
   {
     id: "select",
@@ -3259,5 +3301,6 @@ const COMBINE_DB_API = {
   combine_bill_report,
   combine_order_report,
   combine_washing_instructions,
+  combine_chunks
 };
 export default COMBINE_DB_API;

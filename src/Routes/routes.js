@@ -23,6 +23,7 @@ import {
   AddChart,
   AddChartContent,
   AddChartData,
+  AddChunks,
   AddCollection,
   AddColor,
   AddCountry,
@@ -103,6 +104,7 @@ import HomeSliders from "../Pages/Tables/HomeSliders";
 import ProductsSlider from "../Pages/Tables/ProductsSlider";
 import ProductsSLidersForm from "../Pages/StandAlone/ProductsSLidersForm";
 import SupplierProducts from "../Pages/StandAlone/SupplierProducts";
+import Chunks from "../Pages/Tables/Chunks";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -361,6 +363,8 @@ const authProtectedRoutes = [
     component: <ProductsSlider />,
     allowedRoles: ["*"],
   },
+  { path: "/add-chunks", component: <AddChunks />, allowedRoles: ["admin", "superadmin"] },
+  { path: "/chunks", component: <Chunks />, allowedRoles: ["admin", "superadmin"] },
   { path: "/logs", component: <Logs />, allowedRoles: ["*"] },
   { path: "/rooms/:id", component: <ChatRoom />, allowedRoles: ["*"] },
   {

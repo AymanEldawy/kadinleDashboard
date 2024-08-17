@@ -20,6 +20,13 @@ const brand = [
   { name: "name", type: "text", required: true },
 ];
 
+const chunks = [
+  { name: "min_price", type: "number", required: true },
+  { name: "max_price", type: "number", required: true },
+  { name: "percentage", type: "number", required: true },
+  { name: "available", key: "checkbox", required: false },
+];
+
 const bulk_alert = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date", hide_in_add_form: true },
@@ -1399,5 +1406,6 @@ const DB_API = {
   less_than_content,
   definitions,
   definitions_content,
+  chunks
 };
 export default DB_API;

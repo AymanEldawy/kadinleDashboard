@@ -35,6 +35,7 @@ import {
   UsersPlusIcon,
   WorldIcon
 } from "./Icons";
+import ChipsIcon from "./Icons/ChipsIcon";
 import FlashIcon from "./Icons/FlashIcon";
 import GalleryIcon from './Icons/GalleryIcon';
 import MinusIcon from "./Icons/MinusIcon";
@@ -388,6 +389,12 @@ export const menuData = [
     icon: <GearIcon />,
     groupTitle: "Actions",
     groupList: [
+      {
+        key: "chunks",
+        icon: <ChipsIcon className="h-6 w-6" />,
+        path: "/chunks",
+        name: "Chunks",
+      },
       {
         key: "logs",
         icon: <ExclamationTriangleIcon />,

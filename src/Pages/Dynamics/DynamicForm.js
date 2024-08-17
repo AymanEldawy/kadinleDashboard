@@ -157,9 +157,11 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   };
   return (
     <>
-    <div className="my-2">
-      <button><ChevronIcon /> Back</button>
-    </div>
+      <div className="my-2">
+        <button onClick={() => navigate(-1)} className="flex gap-2 items-center border border-blue-500 text-blue-500 hover:text-white hover:bg-blue-500 duration-300 px-3 py-1 text-sm rounded-md">
+          <ChevronIcon className="rotate-90 w-4 h-4" /> Back
+        </button>
+      </div>
       <BlockPaper title={title}>
         <SuperForm
           initialFields={fields}

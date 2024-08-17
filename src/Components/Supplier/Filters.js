@@ -30,14 +30,14 @@ const Filters = ({
     setSearchTerm(term);
 
     if (term === "") {
-      setData(originalDataRef.current); // إعادة تعيين البيانات الأصلية عند مسح النص
+      setData(originalDataRef.current); 
     } else {
       const filtered = originalDataRef.current.filter((item) =>
         item.product_content.some((content) =>
           content.name.toLowerCase().includes(term)
         )
       );
-      setData(filtered); // تعيين البيانات المصفاة
+      setData(filtered);
     }
   };
   console.log("data filtered: ", data);

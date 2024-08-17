@@ -52,6 +52,7 @@ const category = [
 const category_content = [
   { name: "id", type: "uuid" },
   { name: "title", type: "text", required: true },
+  { name: "short_title", type: "text", },
   { name: "description", type: "text" },
   {
     name: "category_id",

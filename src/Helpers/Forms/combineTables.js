@@ -264,12 +264,27 @@ const combine_category = () => [
     accessorKey: "title",
     header: "title",
     cell: ({ getValue, row }) => {
+      console.log("🚀 ~ row:", row.original)
       return (
         <Link
           to={`/update/category/${row?.original?.id}`}
           className="text-blue-500 hover:underline"
         >
           {row?.original?.category_content?.at(0)?.title}
+        </Link>
+      );
+    },
+  },
+  {
+    accessorKey: "short_title",
+    header: "short_title",
+    cell: ({ getValue, row }) => {
+      return (
+        <Link
+          to={`/update/category/${row?.original?.id}`}
+          className="text-blue-500 hover:underline"
+        >
+          {row?.original?.category_content?.at(0)?.short_title}
         </Link>
       );
     },

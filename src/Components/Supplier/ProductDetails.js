@@ -1,17 +1,21 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import NextArrow from "../icons/NextArrow";
 import CopyButton from "./CopyButton";
 
-const ProductDetails = ({ product, showVariant, setShowVariant }) => {
+const ProductDetails = ({
+  product,
+  showVariant,
+  setShowVariant,
+}) => {
   //   console.log("product", product);
   const baseURL = "https://kadinle.com/en/product/";
 
-  const show = useMemo(
+  let show = useMemo(
     () => showVariant?.find((variant) => variant.id === product?.id)?.show,
     [product?.id, showVariant]
   );
 
-  //   console.log("show", show);
+  // console.log("show",typeof show);
   return (
     <div className="flex flex-col space-y-4">
       <div className="flex w-full space-x-2 relative">

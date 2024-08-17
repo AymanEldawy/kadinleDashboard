@@ -155,6 +155,18 @@ const combine_chunks= () => [
   { accessorKey: "max_price", header: "max_price" },
   { accessorKey: "percentage", header: "percentage" },
   { accessorKey: "available", header: "available" },
+  {
+    accessorKey: "actions",
+    header: "actions",
+    cell: ({ row }) => (
+      <Link
+        to={`/update/chunks/${row?.original?.id}`}
+        className="text-blue-500 hover:underline"
+      >
+        Edit
+      </Link>
+    ),
+  },
  
 ];
 

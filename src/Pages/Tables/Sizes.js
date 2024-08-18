@@ -13,6 +13,7 @@ const Sizes = () => {
       columns={columns}
       title="Sizes"
       onAddClick={() => navigate(`/add-size`)}
+      allowFilter
     />
   );
 };

@@ -207,9 +207,11 @@ export const getCategories = async (page, pageSize, additionalData) => {
         query.eq(searchKey, searchValue);
     }
   }
+
   if (additionalData?.filter) {
     query.eq("parent_id", additionalData?.filter);
   }
+
   return globalGetData({
     page,
     pageSize,
@@ -542,7 +544,8 @@ export const getProducts = async (page, pageSize, additionalData) => {
     query.in("id", additionalData?.product_ids);
   }
   if (additionalData?.filter) {
-    query.eq("category_id", additionalData?.filter);
+    const categories = await getCategoryChildrenIDS(additionalData?.filter);
+    query.in("category_id", [...categories, additionalData?.filter]);
   }
 
   if (searchValue) {
@@ -803,7 +806,10 @@ export const getSizes = async (page, pageSize, additionalData) => {
       { count: "exact" }
     )
     .eq("category.category_content.language_id", additionalData?.languageId);
-  // .eq("size_content.region_id", additionalData?.regionId);
+
+  if (additionalData?.filter) {
+    query.eq("category_id", additionalData?.filter);
+  }
 
   if (searchValue) {
     switch (searchKey) {
@@ -1576,4 +1582,29 @@ export const updateUserType = async (userId) => {
       user_type_id: userType?.data?.at(0)?.id,
     })
     .eq("id", userId);
+};
+
+export const getOnlyParentCategory = async (languageId) => {
+  return await supabase
+    .from("category")
+    .select(`*, category_content(id, language_id, title)`)
+    .is("parent_id", null)
+    .eq("category_content.language_id", languageId);
+};
+
+export const getCategoryChildren = async (parent_id, languageId) => {
+  return await supabase
+    .from("category")
+    .select(`*, category_content(id, language_id, title)`)
+    .eq("parent_id", parent_id)
+    .eq("category_content.language_id", languageId);
+};
+
+export const getCategoryChildrenIDS = async (parent_id) => {
+  const res = await supabase
+    .from("category")
+    .select(`id`)
+    .eq("parent_id", parent_id);
+
+  return res?.data?.length ? res?.data?.map((c) => c?.id) : [];
 };

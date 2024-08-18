@@ -241,7 +241,7 @@ const combine_category = () => [
 
   {
     accessorKey: "parent_id",
-    header: "parent_id",
+    header: "parent",
     cell: ({ getValue, row }) => {
       let parent = getValue();
       return (
@@ -254,17 +254,12 @@ const combine_category = () => [
       );
     },
   },
-  {
-    accessorKey: "display_homepage",
-    header: "display_homepage",
-    cell: ({ getValue }) => <span>{getValue() ? "YES" : "NO"}</span>,
-  },
+  
   { accessorKey: "numeric", header: "numeric" },
   {
     accessorKey: "title",
     header: "title",
     cell: ({ getValue, row }) => {
-      console.log("🚀 ~ row:", row.original)
       return (
         <Link
           to={`/update/category/${row?.original?.id}`}
@@ -289,19 +284,21 @@ const combine_category = () => [
       );
     },
   },
-  {
-    accessorKey: "banner_video",
-    header: "banner_video",
-    cell: ({ getValue }) => {
-      return <FullImage src={getValue()} alt={"banner_video"} />;
-    },
-  },
+ 
+
   {
     accessorKey: "description",
     header: "description",
     cell: ({ row }) => {
       let content = row?.original?.category_content?.at(0);
       return <span>{content?.description}</span>;
+    },
+  },
+  {
+    accessorKey: "image",
+    header: "icon",
+    cell: ({ getValue }) => {
+      return <FullImage src={getValue()} alt={"image"} />;
     },
   },
   {
@@ -319,6 +316,11 @@ const combine_category = () => [
       let content = row?.original?.category_content?.at(0);
       return <FullImage src={content?.web_image} alt={content?.title} />;
     },
+  },
+  {
+    accessorKey: "display_homepage",
+    header: "display_homepage",
+    cell: ({ getValue }) => <span>{getValue() ? "YES" : "NO"}</span>,
   },
   {
     accessorKey: "actions",

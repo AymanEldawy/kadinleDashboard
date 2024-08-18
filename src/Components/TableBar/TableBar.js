@@ -8,6 +8,7 @@ import { useFetch } from "../../hooks/useFetch";
 import Backdrop from "../Backdrop/Backdrop";
 import SelectField from "../CustomForm/SelectField";
 import SearchBar from "../SearchBar/SearchBar";
+import { CategoryMultiFilter } from "./CategoryMultiFilter";
 
 const itemsListPerPages = [
   { id: "10", name: "Number of rows 10" },
@@ -45,7 +46,7 @@ export const TableBar = ({
     if (allowFilter && defaultLanguage?.id) {
       getTableData("category_content", {
         languageId: defaultLanguage?.id,
-        sort: true
+        sort: true,
       }).then((res) => {
         setCategories(res?.data);
       });
@@ -68,15 +69,24 @@ export const TableBar = ({
         )}
 
         {allowFilter ? (
-          <SelectField
-            name="category"
-            list={categories}
-            keyValue="category_id"
-            keyLabel="title"
-            value={filterCategory}
-            onChange={(e) => setFilterCategory(e.target.value)}
-            className="p-2 rounded-md"
-          />
+            <CategoryMultiFilter
+              filterCategory={filterCategory}
+              setFilterCategory={setFilterCategory}
+            />
+          // <>
+          // {window.location.pathname === "/category" ? (
+          //   ) : (
+          //     <SelectField
+          //       name="category"
+          //       list={categories}
+          //       keyValue="category_id"
+          //       keyLabel="title"
+          //       value={filterCategory}
+          //       onChange={(e) => setFilterCategory(e.target.value)}
+          //       className="p-2 rounded-md"
+          //     />
+          //   )}
+          // </>
         ) : null}
         {/* <SelectField
           hideText

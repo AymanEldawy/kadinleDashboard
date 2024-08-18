@@ -119,6 +119,12 @@ other
 - you can generate **new table** for all `contracts and Attachments files`
 - we should create new `endpoint` for attachments files or images
 
+
+- [X] category short title (sub category - slider)
+- [X] category slider two rows 
+- [X] sub category filter 
+- [X] Filter category for size page (only category sizes) 
+
 ## New Notes
 - [] Page Search keywords 
 - [] Pages (most like - most interactive - best seller)

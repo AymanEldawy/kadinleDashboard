@@ -61,15 +61,11 @@ const DynamicList = ({
     pageSize: 50,
   });
 
-  console.log(pagination?.pageSize, "pagination?.pageSize");
-
   const { data, isLoading, refetch } = useQuery({
     queryKey: [tableName, "list", defaultLanguage?.id, defaultRegion?.id],
     keepPreviousData: true,
     queryFn: async () => {
       // if (!defaultLanguage?.id) return;
-      let filter =
-        filterCategory?.indexOf("Choose") !== -1 ? "" : filterCategory;
       const response = await getDataWithPagination(
         tableName,
         pagination?.pageIndex + 1,
@@ -77,7 +73,7 @@ const DynamicList = ({
         {
           languageId: defaultLanguage?.id,
           regionId: defaultRegion?.id,
-          filter,
+          filter: filterCategory,
           search: { key: selectedColumn, value: searchValue },
           ...additionalData,
         }
@@ -87,43 +83,39 @@ const DynamicList = ({
     },
   });
 
-  const table = useReactTable(
-    {
-      columns: columns({
-        hideAction,
-      }),
-      data: isLoading ? [] : data,
-      getCoreRowModel: getCoreRowModel(),
-      getFilteredRowModel: getFilteredRowModel(),
-      getSortedRowModel: getSortedRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      onColumnFiltersChange: setColumnFilters,
-      onGlobalFilterChange: setGlobalFilter,
-      onColumnVisibilityChange: setColumnVisibility,
-      enableRowSelection: true,
-      onColumnOrderChange: setColumnOrder,
-      onRowSelectionChange: setRowSelection,
-      columnResizeMode: "onChange",
-      onPaginationChange: (v) => {
-        console.log("🚀 ~ v:", v);
-        setPagination(v);
-        return {};
-      },
-      manualPagination: true,
-      pageCount,
-      autoResetPage: false,
-      state: {
-        columnFilters,
-        globalFilter,
-        rowSelection,
-        columnOrder,
-        columnVisibility,
-        pagination,
-      },
+  const table = useReactTable({
+    columns: columns({
+      hideAction,
+    }),
+    data: isLoading ? [] : data,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
+    onColumnVisibilityChange: setColumnVisibility,
+    enableRowSelection: true,
+    onColumnOrderChange: setColumnOrder,
+    onRowSelectionChange: setRowSelection,
+    columnResizeMode: "onChange",
+    onPaginationChange: (v) => {
+      console.log("🚀 ~ v:", v);
+      setPagination(v);
+      return {};
     },
-  );
-
-  console.log(table.getPageCount());
+    manualPagination: true,
+    pageCount,
+    autoResetPage: false,
+    state: {
+      columnFilters,
+      globalFilter,
+      rowSelection,
+      columnOrder,
+      columnVisibility,
+      pagination,
+    },
+  });
 
   const handleDeleteItem = async () => {
     let ids = [];

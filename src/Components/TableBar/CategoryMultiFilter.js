@@ -64,11 +64,13 @@ export const CategoryMultiFilter = ({ filterCategory, setFilterCategory }) => {
             {value?.length ? (
               <>
                 <option selected>Select category</option>
-                {value?.map((category) => (
-                  <option value={category?.id}>
-                    {category?.category_content?.at(0)?.title}
-                  </option>
-                ))}
+                {value
+                  ?.sort((a, b) => a?.category_content?.at(0)?.title.localeCompare(b?.category_content?.at(0)?.title))
+                  ?.map((category) => (
+                    <option value={category?.id}>
+                      {category?.category_content?.at(0)?.title}
+                    </option>
+                  ))}
               </>
             ) : (
               <option disabled selected>

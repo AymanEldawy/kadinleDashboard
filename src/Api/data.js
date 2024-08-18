@@ -1589,7 +1589,7 @@ export const getOnlyParentCategory = async (languageId) => {
     .from("category")
     .select(`*, category_content(id, language_id, title)`)
     .is("parent_id", null)
-    .eq("category_content.language_id", languageId);
+    .eq("category_content.language_id", languageId)
 };
 
 export const getCategoryChildren = async (parent_id, languageId) => {
@@ -1597,7 +1597,7 @@ export const getCategoryChildren = async (parent_id, languageId) => {
     .from("category")
     .select(`*, category_content(id, language_id, title)`)
     .eq("parent_id", parent_id)
-    .eq("category_content.language_id", languageId);
+    .eq("category_content.language_id", languageId)
 };
 
 export const getCategoryChildrenIDS = async (parent_id) => {

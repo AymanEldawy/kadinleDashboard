@@ -15,6 +15,8 @@ import { supabase } from "../../Helpers/SupabaseConfig/SupabaseConfig";
 import ProductDetails from "../../Components/Supplier/ProductDetails";
 import Pagination from "../../Components/Supplier/Pagination";
 import Loading from "../../Components/Loading/Loading";
+import Variant from "../../Components/Supplier/Variant";
+import KadinlePrice from "../../Components/Supplier/KadinlePrice";
 
 const SupplierProducts = () => {
   // const DATA = [
@@ -63,6 +65,7 @@ const SupplierProducts = () => {
   // states
   const originalDataRef = useRef([]);
   const [data, setData] = useState([]);
+  // console.log("data", data);
   const [showVariant, setShowVariant] = useState([]);
   // console.log("showVariant", showVariant);
   const [columnFilters, setColumnFilters] = useState([
@@ -101,7 +104,19 @@ const SupplierProducts = () => {
 
     fetchData();
   }, [getSuppliersProduct]);
-  const STATUSES = ["product", "two", "three", "percentage", "price", "six"];
+  const STATUSES = [
+    "product",
+    "category",
+    "color",
+    "size",
+    "stock",
+    "variant",
+    "brand",
+    "supplier price",
+    "kadinle price",
+    "percentage",
+    "supplier",
+  ];
   const columns = [
     {
       accessorKey: "product",
@@ -115,28 +130,57 @@ const SupplierProducts = () => {
       ),
     },
     {
-      accessorKey: "two",
-      header: "two",
+      accessorKey: "category",
+      header: "category",
       cell: (props) => <p>{props.getValue()}</p>,
     },
     {
-      accessorKey: "three",
-      header: "three",
+      accessorKey: "color",
+      header: "color",
       cell: (props) => <p>{props.getValue()}</p>,
+    },
+    {
+      accessorKey: "size",
+      header: "size",
+      // cell: (props) => <EditableField initial={props.getValue()} />,
+    },
+    {
+      accessorKey: "stock",
+      header: "stock",
+      // cell: (props) => <EditableField initial={props.getValue()} />,
+    },
+    {
+      accessorKey: "variant",
+      header: "variant",
+      cell: (props) => (
+        <Variant product={props.row.original} showVariant={showVariant} />
+      ),
+    },
+    {
+      accessorKey: "brand",
+      header: "brand",
+      cell: (props) => <p>{props.getValue()}</p>,
+    },
+    {
+      accessorKey: "supplier price",
+      header: "supplier price",
+      // cell: (props) => <EditableField initial={props.getValue()} />,
+    },
+    {
+      accessorKey: "kadinle price",
+      header: "kadinle price",
+      cell: (props) => (
+        <KadinlePrice product={props.row.original} showVariant={showVariant} />
+      ),
     },
     {
       accessorKey: "percentage",
       header: "percentage",
-      cell: (props) => <EditableField initial={props.getValue()} />,
+      cell: (props) => <p>{props.getValue()}</p>,
     },
     {
-      accessorKey: "price",
-      header: "price",
-      cell: (props) => <EditableField initial={props.getValue()} />,
-    },
-    {
-      accessorKey: "six",
-      header: "six",
+      accessorKey: "supplier",
+      header: "supplier",
       cell: (props) => <p>{props.getValue()}</p>,
     },
   ];
@@ -154,7 +198,7 @@ const SupplierProducts = () => {
     columnResizeMode: "onChange",
   });
   // console.log("table", table.getHeaderGroups());
-  console.log("columnFilters", columnFilters);
+  // console.log("columnFilters", columnFilters);
   return (
     <BlockPaper title="Products Supplier">
       <div className="flex justify-between items-center">
@@ -173,7 +217,7 @@ const SupplierProducts = () => {
             setSelectedStatus={setSelectedStatus}
           />
         </div>
-        <div className="m-4">
+        <div className="m-4 max-sm:hidden">
           <Pagination
             pageIndex={table.getState().pagination.pageIndex}
             pageCount={table.getPageCount()}
@@ -185,64 +229,65 @@ const SupplierProducts = () => {
       </div>
       {data.length > 0 ? (
         <>
-          <table className="table-auto w-full border border-gray-300 rounded-md">
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr
-                  key={headerGroup.id}
-                  className="bg-gray-200 text-gray-700 font-medium text-base leading-4 tracking-wider group"
-                >
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      key={header.id}
-                      className={`px-4 py-4 text-start relative`}
-                      style={{ width: header.getSize() }}
-                    >
-                      {header.column.columnDef.header}
-                      {header.column.getCanSort() && (
+          <div className="overflow-x-auto">
+            <table className="table-auto w-full border border-gray-300 rounded-md">
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr
+                    key={headerGroup.id}
+                    className="bg-gray-200 text-gray-700 font-medium text-xs leading-4 tracking-wider group"
+                  >
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        className={`px-4 py-4 text-center relative`}
+                        style={{ width: header.getSize() }}
+                      >
+                        {header.column.columnDef.header}
+                        {/* {header.column.getCanSort() && (
                         <button
                           onClick={header.column.getToggleSortingHandler()}
                           className="rotate-90 mx-3 hidden group-hover:inline-block absolute right-2 lg:right-8"
                         >
                           ⇆
                         </button>
-                      )}
-                      <div className="absolute -left-1 top-4">
-                        {
+                      )} */}
+                        <div className="absolute -left-1 top-4">
                           {
-                            asc: "🔼",
-                            desc: "🔽",
-                          }[header.column.getIsSorted()]
-                        }
-                      </div>
-                      <div
-                        onMouseDown={header.getResizeHandler()}
-                        onTouchStart={header.getResizeHandler()}
-                        className={`absolute flex items-center right-0 top-0 bottom-0 h-full cursor-col-resize px-1.5 select-none invisible group-hover:visible`}
-                      >
-                        &#x2502;
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map((row) => (
-                <tr key={row.id} className="odd:bg-white even:bg-[#e9edf1]">
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="pl-6 pr-4 py-2 text-start">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
+                            {
+                              asc: "🔼",
+                              desc: "🔽",
+                            }[header.column.getIsSorted()]
+                          }
+                        </div>
+                        <div
+                          onMouseDown={header.getResizeHandler()}
+                          onTouchStart={header.getResizeHandler()}
+                          className={`absolute flex items-center right-0 top-0 bottom-0 h-full cursor-col-resize px-1.5 select-none invisible group-hover:visible`}
+                        >
+                          &#x2502;
+                        </div>
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody>
+                {table.getRowModel().rows.map((row) => (
+                  <tr key={row.id} className="odd:bg-white even:bg-[#e9edf1]">
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id} className="pl-6 pr-4 py-2 text-start">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <div className="m-4">
             <Pagination
               pageIndex={table.getState().pagination.pageIndex}

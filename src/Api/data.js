@@ -158,7 +158,7 @@ export const getLogs = async (page, pageSize, additionalData) => {
   if (searchValue) {
     switch (searchKey) {
       case "user":
-        query.ilike("user.first_name", searchValue);
+        query.ilike("user.first_name", `%${searchValue}%`);
         break;
       default:
         query.eq(searchKey, searchValue);
@@ -198,10 +198,10 @@ export const getCategories = async (page, pageSize, additionalData) => {
   if (searchValue) {
     switch (searchKey) {
       case "title":
-        query.ilike("category_content.title", searchValue);
+        query.ilike("category_content.title", `%${searchValue}%`);
         break;
       case "description":
-        query.ilike("category_content.description", searchValue);
+        query.ilike("category_content.description", `%${searchValue}%`);
         break;
       default:
         query.eq(searchKey, searchValue);
@@ -252,23 +252,23 @@ export const getOrders = async (page, pageSize, additionalData) => {
   if (searchValue) {
     switch (searchKey) {
       case "user":
-        query.ilike("user.first_name", searchValue);
+        query.ilike("user.first_name", `%${searchValue}%`);
         break;
       case "address":
-        query.ilike("address.country.name", searchValue);
+        query.ilike("address.country.name", `%${searchValue}%`);
         break;
       case "coupon":
       case "warehouse_from":
-        query.ilike(`${searchKey}.name`, searchValue);
+        query.ilike(`${searchKey}.name`, `%${searchValue}%`);
         break;
       case "variant":
-        query.ilike(`order_content.product_variant.sku`, searchValue);
+        query.ilike(`order_content.product_variant.sku`, `%${searchValue}%`);
         break;
       case "quantity":
-        query.ilike(`category_content.quantity`, searchValue);
+        query.ilike(`category_content.quantity`, `%${searchValue}%`);
         break;
       case "order_status":
-        query.ilike(`order_status.order_status_content.status`, searchValue);
+        query.ilike(`order_status.order_status_content.status`, `%${searchValue}%`);
         break;
       default:
         query.eq(searchKey, searchValue);
@@ -322,7 +322,7 @@ export const getReturnStatus = async (page, pageSize, additionalData) => {
   if (searchValue) {
     switch (searchKey) {
       case "status":
-        query.ilike(`return_status_content.status`, searchValue);
+        query.ilike(`return_status_content.status`, `%${searchValue}%`);
         break;
       default:
         query.eq(searchKey, searchValue);
@@ -358,7 +358,7 @@ export const getOrderStatus = async (page, pageSize, additionalData) => {
   if (searchValue) {
     switch (searchKey) {
       case "status":
-        query.ilike(`order_status_content.status`, searchValue);
+        query.ilike(`order_status_content.status`, `%${searchValue}%`);
         break;
       default:
         query.eq(searchKey, searchValue);
@@ -402,13 +402,13 @@ export const getReturnRequests = async (page, pageSize, additionalData) => {
   if (searchValue) {
     switch (searchKey) {
       case "name":
-        query.ilike(`return_status.name`, searchValue);
+        query.ilike(`return_status.name`, `%${searchValue}%`);
         break;
       case "order":
-        query.eq(`order.order_number`, searchValue);
+        query.eq(`order.order_number`, `%${searchValue}%`);
         break;
       case "variant":
-        query.ilike(`product_variant.sku`, searchValue);
+        query.ilike(`product_variant.sku`, `%${searchValue}%`);
         break;
       default:
         query.eq(searchKey, searchValue);
@@ -534,6 +534,7 @@ export const getProducts = async (page, pageSize, additionalData) => {
       category(category_content(*, name:title, language_id, language(id, name))),
       brand(name),
       product_content(*,language_id, language(id, name)))
+      product_image
       
    `,
       { count: "exact" }
@@ -546,6 +547,10 @@ export const getProducts = async (page, pageSize, additionalData) => {
   if (additionalData?.filter) {
     const categories = await getCategoryChildrenIDS(additionalData?.filter);
     query.in("category_id", [...categories, additionalData?.filter]);
+  }
+
+  if (additionalData?.supplierId) {
+    query.eq("supplier_id", additionalData?.supplierId);
   }
 
   if (searchValue) {
@@ -1589,7 +1594,7 @@ export const getOnlyParentCategory = async (languageId) => {
     .from("category")
     .select(`*, category_content(id, language_id, title)`)
     .is("parent_id", null)
-    .eq("category_content.language_id", languageId)
+    .eq("category_content.language_id", languageId);
 };
 
 export const getCategoryChildren = async (parent_id, languageId) => {
@@ -1597,7 +1602,7 @@ export const getCategoryChildren = async (parent_id, languageId) => {
     .from("category")
     .select(`*, category_content(id, language_id, title)`)
     .eq("parent_id", parent_id)
-    .eq("category_content.language_id", languageId)
+    .eq("category_content.language_id", languageId);
 };
 
 export const getCategoryChildrenIDS = async (parent_id) => {
@@ -1607,4 +1612,63 @@ export const getCategoryChildrenIDS = async (parent_id) => {
     .eq("parent_id", parent_id);
 
   return res?.data?.length ? res?.data?.map((c) => c?.id) : [];
+};
+
+// export const getSupplierProducts = async (supplierId, categoryId) => {
+//   const res = await supabase
+//     .from("category")
+//     .select(`id`)
+//     .eq("parent_id", parent_id)
+//     .limit()
+
+//   return res?.data?.length ? res?.data?.map((c) => c?.id) : [];
+// };
+
+export const getSupplierProducts = async (page, pageSize, additionalData) => {
+  let searchKey = additionalData?.search?.key;
+  let searchValue = additionalData?.search?.value;
+
+  const query = supabase
+    .from("product")
+    .select(
+      `
+    supplier_id, seller_sku, product_sku, id,
+    category(category_content(name:title, language_id)),
+    brand(name),
+    product_content(name, language_id),
+    product_image(image)
+    `,
+      { count: "exact" }
+    )
+    .eq("category.category_content.language_id", additionalData?.languageId);
+
+  if (additionalData?.filter) {
+    const categories = await getCategoryChildrenIDS(additionalData?.filter);
+    query.in("category_id", [...categories, additionalData?.filter]);
+  }
+
+  if (additionalData?.supplierId) {
+    query.eq("supplier_id", additionalData?.supplierId);
+  }
+
+  return globalGetData({
+    page,
+    pageSize,
+    additionalData,
+    query,
+    // ignoredFilterColumns: ["category", "name", "description", "brand"],
+    ignoredFilterColumns: [],
+    filterFn: (product) =>
+      product?.product_content?.length &&
+      product?.category?.category_content?.length,
+  });
+};
+
+export const getCategoriesList = async (language_id, value) => {
+  const response = await supabase
+    .from("category_content")
+    .select("title, category_id, language_id")
+    .eq("language_id", language_id)
+    .ilike("title", `%${value}%`);    
+  return response?.data;
 };

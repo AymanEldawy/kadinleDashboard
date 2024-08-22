@@ -9,13 +9,12 @@ export const CategoryMultiFilter = ({ filterCategory, setFilterCategory }) => {
   const [listCategories, setListCategories] = useState({});
 
   const getCategoriesChildren = async (parent_id, level) => {
+    if (parent_id === "Select category") return;
     const category = await getCategoryChildren(parent_id, defaultLanguage?.id);
     setListCategories((props) => ({
       ...props,
       [level]: category?.data,
     }));
-    // if (category?.data?.length) {
-    // }
     return category?.data;
   };
 
@@ -65,7 +64,11 @@ export const CategoryMultiFilter = ({ filterCategory, setFilterCategory }) => {
               <>
                 <option selected>Select category</option>
                 {value
-                  ?.sort((a, b) => a?.category_content?.at(0)?.title.localeCompare(b?.category_content?.at(0)?.title))
+                  ?.sort((a, b) =>
+                    a?.category_content
+                      ?.at(0)
+                      ?.title.localeCompare(b?.category_content?.at(0)?.title)
+                  )
                   ?.map((category) => (
                     <option value={category?.id}>
                       {category?.category_content?.at(0)?.title}

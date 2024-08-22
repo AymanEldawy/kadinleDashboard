@@ -30,6 +30,7 @@ import {
   getShowreels,
   getSizes,
   getStocks,
+  getSupplierProducts,
   getSuppliers,
   getSuppliersRequests,
   getUserAddresses,
@@ -102,9 +103,13 @@ const fetches = {
   rooms: getRooms,
   supplier_request: getSuppliersRequests,
   supplier: getSuppliers,
-  less_than: (page, pageSize, additionalData) => getHomeSliders('less_than', page, pageSize, additionalData),
-  home_sliders: (page, pageSize, additionalData) => getHomeSliders('home_sliders', page, pageSize, additionalData),
-  definitions: (page, pageSize, additionalData) => getHomeSliders('definitions', page, pageSize, additionalData),
+  less_than: (page, pageSize, additionalData) =>
+    getHomeSliders("less_than", page, pageSize, additionalData),
+  home_sliders: (page, pageSize, additionalData) =>
+    getHomeSliders("home_sliders", page, pageSize, additionalData),
+  definitions: (page, pageSize, additionalData) =>
+    getHomeSliders("definitions", page, pageSize, additionalData),
+  supplier_products: getSupplierProducts
 };
 
 export const getTableDataWithPagination = async (
@@ -113,6 +118,15 @@ export const getTableDataWithPagination = async (
   pageSize,
   additionalData
 ) => {
+  console.log(
+    table,
+
+    page,
+    pageSize,
+    additionalData,
+    "----"
+  );
+
   if (table && fetches.hasOwnProperty(table)) {
     const fetchData = fetches[table];
     const response = await fetchData(page, pageSize, additionalData);
@@ -230,6 +244,12 @@ export const removeItemsFrom = async (table, additionalData) => {
       admin_id: ADMIN?.id,
     });
   }
+  return response;
+};
+
+// update items
+export const upsertTheItem = async (table, item) => {
+  const response = await supabase.from(table).upsert(item);
   return response;
 };
 

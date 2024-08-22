@@ -39,6 +39,7 @@ import ChipsIcon from "./Icons/ChipsIcon";
 import FlashIcon from "./Icons/FlashIcon";
 import GalleryIcon from './Icons/GalleryIcon';
 import MinusIcon from "./Icons/MinusIcon";
+import RoundedArrowsIcon from "./Icons/RoundedArrowsIcon";
 
 export const menuData = [
   {
@@ -389,6 +390,12 @@ export const menuData = [
     icon: <GearIcon />,
     groupTitle: "Actions",
     groupList: [
+      {
+        key: "change-category",
+        icon: <RoundedArrowsIcon className="h-6 w-6" />,
+        path: "/change-category",
+        name: "change-category",
+      },
       {
         key: "chunks",
         icon: <ChipsIcon className="h-6 w-6" />,

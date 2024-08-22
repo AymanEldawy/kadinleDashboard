@@ -35,6 +35,7 @@ export const SelectedProductTable = ({
   id,
   hideSearch,
   deleteProductIds,
+  hideTableBar
 }) => {
   const { defaultLanguage, defaultRegion } = useGlobalOptions();
   const { getDataWithPagination } = useFetch();
@@ -218,45 +219,47 @@ export const SelectedProductTable = ({
 
   return (
     <div>
-      <TableBar
-        onDeleteClick={handleDeleteItem}
-        setSearchValue={setSearchValue}
-        onSelectChange={setItemsPerPage}
-        itemsPerPage={itemsPerPage}
-        selectedList={selectedList}
-        hideSearch={hideSearch}
-        allowFilter
-        filterCategory={filterCategory}
-        setFilterCategory={setFilterCategory}
-        hideDelete
-        customBarButtons={
-          <>
-            <button
-              type="button"
-              onClick={saveChanges}
-              title="Save Changes"
-              className="p-2 rounded-md bg-primary-blue text-white flex items-center gap-2 text-base"
-            >
-              <BookMarkIcon className="h-5 w-5" />
-              Save
-            </button>
-            {/* <button
+      {hideTableBar ? null : (
+        <TableBar
+          onDeleteClick={handleDeleteItem}
+          setSearchValue={setSearchValue}
+          onSelectChange={setItemsPerPage}
+          itemsPerPage={itemsPerPage}
+          selectedList={selectedList}
+          hideSearch={hideSearch}
+          allowFilter
+          filterCategory={filterCategory}
+          setFilterCategory={setFilterCategory}
+          hideDelete
+          customBarButtons={
+            <>
+              <button
+                type="button"
+                onClick={saveChanges}
+                title="Save Changes"
+                className="p-2 rounded-md bg-primary-blue text-white flex items-center gap-2 text-base"
+              >
+                <BookMarkIcon className="h-5 w-5" />
+                Save
+              </button>
+              {/* <button
               type="button"
               onClick={insertMany}
               title="Choose all"
               className="p-2 rounded-md bg-primary-blue text-white"
-            >
+              >
               <PlusIcon />
-            </button> */}
-          </>
-        }
-        columns={() => [
-          { header: "name", accessorKey: "name" },
-          { header: "product_sku", accessorKey: "product_sku" },
-        ]}
-        selectedColumn={selectedColumn}
-        setSelectedColumn={setSelectedColumn}
-      />
+              </button> */}
+            </>
+          }
+          columns={() => [
+            { header: "name", accessorKey: "name" },
+            { header: "product_sku", accessorKey: "product_sku" },
+          ]}
+          selectedColumn={selectedColumn}
+          setSelectedColumn={setSelectedColumn}
+        />
+      )}
       <Table containerClassName="rounded-none">
         <TableHead>
           <TableRow>

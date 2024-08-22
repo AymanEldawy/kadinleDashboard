@@ -105,6 +105,7 @@ import ProductsSlider from "../Pages/Tables/ProductsSlider";
 import ProductsSLidersForm from "../Pages/StandAlone/ProductsSLidersForm";
 import SupplierProducts from "../Pages/StandAlone/SupplierProducts";
 import Chunks from "../Pages/Tables/Chunks";
+import MoveCategory from "../Pages/StandAlone/MoveCategory";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -371,6 +372,11 @@ const authProtectedRoutes = [
     path: "/select-products",
     component: <SelectProduct />,
     allowedRoles: ["*"],
+  },
+  {
+    path: "/change-category",
+    component: <MoveCategory />,
+    allowedRoles: ["admin", "superadmin"],
   },
   {
     path: "/upload-sheet",

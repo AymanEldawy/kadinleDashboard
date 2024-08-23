@@ -1,4 +1,5 @@
 import React from "react";
+import Select from "react-select";
 
 const SelectField = ({
   label,
@@ -29,6 +30,10 @@ const SelectField = ({
     }
     return isUnique;
   });
+
+console.log(value, '---v');
+
+  
   return (
     <div
       className={`flex flex-col ${containerClassName}`}
@@ -48,40 +53,24 @@ const SelectField = ({
           )}
         </label>
       ) : null}
-      <select
+      <Select
         menuPlacement="auto"
         menuPortalTarget={document?.body}
         styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-        className={`border rounded p-1 ${className}  ${
-          error ? "border-red-200 text-red-500" : ""
-        }`}
+        getOptionLabel={(option) => {
+          console.log(option, keyLabel);
+
+          return keyLabel === "full_name"
+            ? option?.first_name + " " + option?.last_name
+            : option[keyLabel] || option?.id;
+        }}
+        getOptionValue={(option) => option[keyValue]}
+        // components={{ Option: ({ innerProps }) => <option></option> }}
+        options={uniqueList}
+        required={required}
         onChange={onChange}
         value={value}
-        name={name}
-        required={required}
-        // {...field}
-      >
-        {!hideText ? (
-          <option value={null}>
-            {firstOptionText ? firstOptionText : "Choose..."}
-          </option>
-        ) : null}
-        {list?.length
-          ? uniqueList?.map((item, index) => {
-              return (
-                <option
-                  key={`${item[keyValue]}-${name}`}
-                  className="p-1"
-                  value={item[keyValue]}
-                >
-                  {keyLabel === "full_name"
-                    ? item?.first_name + " " + item?.last_name
-                    : item[keyLabel] || item?.id}
-                </option>
-              );
-            })
-          : null}
-      </select>
+      />
       {error ? (
         <p className="bg-red-200 mt-2 rounded text-sm text-red-500 px-2 py-1">
           {error}

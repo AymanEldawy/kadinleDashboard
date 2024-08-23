@@ -115,11 +115,11 @@ const TableForm = ({
                           name={field?.name}
                           required={field?.required}
                           keyValue={field?.refId}
-                          onChange={(e) => {
+                          onChange={(option) => {
                             handelChangeField(
                               index + 1,
                               field?.name,
-                              e.target.value
+                              option[field?.refId || "id"]
                             );
                           }}
                         />

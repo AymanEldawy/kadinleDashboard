@@ -118,8 +118,8 @@ const AddProductVariantsIncreasable = ({
               keyValue={"color_id"}
               required
               className="flex-1 w-full"
-              onChange={(e) =>
-                handelChangeTopField("color_id", e.target.value, itemKey)
+              onChange={(option) =>
+                handelChangeTopField("color_id", option?.color_id, itemKey)
               }
             />
             <SelectField
@@ -130,8 +130,8 @@ const AddProductVariantsIncreasable = ({
               keyValue={"size_id"}
               required
               className="flex-1 w-full"
-              onChange={(e) =>
-                handelChangeTopField("size_id", e.target.value, itemKey)
+              onChange={(option) =>
+                handelChangeTopField("size_id", option?.size_id, itemKey)
               }
             />
             <InputField
@@ -200,7 +200,10 @@ const AddProductVariantsIncreasable = ({
                 <div className="flex gap-4">
                   {allValues?.[itemKey]?.oldMedia?.map((img) => {
                     return (
-                      <div key={img?.id} className="border p-[2px] bg-white dark:bg-bgmaindark rounded-sm shadow relative">
+                      <div
+                        key={img?.id}
+                        className="border p-[2px] bg-white dark:bg-bgmaindark rounded-sm shadow relative"
+                      >
                         <button
                           onClick={() => handleDeleteImage(itemKey, img?.id)}
                           className="bg-gray-600 text-white h-4 w-4 absolute top-2 left-2 z-10 rounded-full flex items-center justify-center"
@@ -290,10 +293,10 @@ const AddProductVariantsIncreasable = ({
                       }
                       keyValue={"size_id"}
                       required
-                      onChange={(e) =>
+                      onChange={(option) =>
                         handelChangeSubField(
                           "size_id",
-                          e.target.value,
+                          option?.size_id,
                           itemKey,
                           item
                         )

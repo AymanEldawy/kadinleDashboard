@@ -207,7 +207,7 @@ const EmailSender = () => {
             keyLabel="subject"
             keyValue="number"
             list={listOfTemplates}
-            onChange={(e) => setTemplate(e.target.value)}
+            onChange={(option) => setTemplate(option?.number)}
           />
         )}
         <SelectField
@@ -218,7 +218,7 @@ const EmailSender = () => {
           keyLabel="name"
           keyValue="name"
           list={[{ name: "ar" }, { name: "tr" }, { name: "en" }]}
-          onChange={(e) => setLanguage(e.target.value)}
+          onChange={(option) => setLanguage(option?.name)}
         />
       </div>
 

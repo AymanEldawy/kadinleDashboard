@@ -213,10 +213,10 @@ export const FormIncreasable = ({
                         keyValue={field?.refId || "id"}
                         name={field?.name}
                         required={field?.required}
-                        onChange={(e) =>
+                        onChange={(option) =>
                           handelChangeField(
                             field?.name,
-                            e.target.value,
+                            option[field?.refId || "id"],
                             field?.required,
                             item
                           )

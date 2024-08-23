@@ -120,10 +120,10 @@ export const AddStockIncreasable = ({
                 list={!!getCachedList ? getCachedList("warehouse") : []}
                 keyValue={"id"}
                 required
-                onChange={(e) =>
+                onChange={(option) =>
                   handelChangeWarehouseField(
                     "warehouse_id",
-                    e.target.value,
+                    option?.id,
                     itemKey,
                     subItemKey,
                     item

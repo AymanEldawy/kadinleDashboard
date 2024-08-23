@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 import { useQuery } from "@tanstack/react-query";
 import { getCategoryChildren, getOnlyParentCategory } from "../../Api/data";
+import Select from "react-select";
 
 export const CategoryMultiFilter = ({ filterCategory, setFilterCategory }) => {
   const { defaultLanguage } = useGlobalOptions();
@@ -37,15 +38,16 @@ export const CategoryMultiFilter = ({ filterCategory, setFilterCategory }) => {
     <div className="flex items-center gap-4 flex-wrap">
       {Object.entries(listCategories)?.map(([key, value]) => {
         return (
-          <select
-            className="border p-2 rounded-md"
+          <Select
             value={listFilter[key]}
-            onChange={(e) => {
+            onChange={(selected) => {
               let value =
-                e.target.value === "" ? listFilter[key - 1] : e.target.value;
+                selected?.category_id === ""
+                  ? listFilter[key - 1]
+                  : selected?.category_id;
               setFilterCategory(value);
               getCategoriesChildren(value, key + 1);
-              if (key == 1) {
+              if (+key === 1) {
                 setListFilter({
                   1: value,
                 });
@@ -55,32 +57,27 @@ export const CategoryMultiFilter = ({ filterCategory, setFilterCategory }) => {
               } else {
                 setListFilter((props) => ({
                   ...props,
-                  [key]: e.target.value,
+                  [key]: value,
                 }));
               }
             }}
-          >
-            {value?.length ? (
-              <>
-                <option selected>Select category</option>
-                {value
-                  ?.sort((a, b) =>
-                    a?.category_content
-                      ?.at(0)
-                      ?.title.localeCompare(b?.category_content?.at(0)?.title)
-                  )
-                  ?.map((category) => (
-                    <option value={category?.id}>
-                      {category?.category_content?.at(0)?.title}
-                    </option>
-                  ))}
-              </>
-            ) : (
-              <option disabled selected>
-                Empty list
-              </option>
+            getOptionLabel={(option) => {
+              console.log(option, '0');
+
+              return option?.category_content?.at(0)?.title;
+            }}
+            getOptionValue={(option) => {
+              console.log(option, '0');
+
+              return option?.id;
+            }}
+            // components={{ Option: ({ innerProps }) => <option></option> }}
+            options={value?.sort((a, b) =>
+              a?.category_content
+                ?.at(0)
+                ?.title.localeCompare(b?.category_content?.at(0)?.title)
             )}
-          </select>
+          />
         );
       })}
     </div>

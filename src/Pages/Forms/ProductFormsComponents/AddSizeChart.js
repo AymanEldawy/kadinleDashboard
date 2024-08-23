@@ -123,7 +123,7 @@ const AddSizeChart = ({
               keyValue={"id"}
               keyLabel="number"
               required
-              onChange={(e) => onSelectChart(item, e.target.value)}
+              onChange={(option) => onSelectChart(item, option?.id)}
             />
             {!!selectedChart?.[item] ? (
               <BlockPaper>

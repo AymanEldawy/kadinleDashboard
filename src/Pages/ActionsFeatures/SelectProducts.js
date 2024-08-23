@@ -118,7 +118,9 @@ const SelectProduct = ({ tableName }) => {
             label={`${tableName}_id`}
             list={listContent}
             keyValue={tableName !== "sale" && `${tableName}_id`}
-            onChange={(e) => setId(e.target.value)}
+            onChange={(option) =>
+              setId(option[tableName !== "sale" && `${tableName}_id`])
+            }
           />
         )}
         <span className="flex gap-2 font-medium items-center ">

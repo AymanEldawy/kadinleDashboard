@@ -152,7 +152,7 @@ const SingleUser = () => {
             label={"title"}
             value={title}
             list={types?.filter(type => type?.number !== userData?.type?.number)}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(option) => setTitle(option?.id)}
             keyLabel="title"
           />
           <Button onClick={updateRole} title="Save" />

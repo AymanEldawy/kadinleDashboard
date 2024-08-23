@@ -24,9 +24,9 @@ export const CollectionConnectFields = ({
           { id: 3, name: "Outer Link" },
         ]}
         name={"type"}
-        onChange={(e) => {
-          handelChangeField("type", +e.target.value);
-          if (+e.target.value === 0) {
+        onChange={(option) => {
+          handelChangeField("type", +option?.id);
+          if (+option?.id === 0) {
             handelChangeField("link", "");
           }
         }}
@@ -38,9 +38,9 @@ export const CollectionConnectFields = ({
           label="link"
           list={!!getCachedList ? getCachedList("category_content") : []}
           keyLabel={"title"}
-          keyValue={"id"}
+          keyValue={"category_id"}
           name="link"
-          onChange={(e) => handelChangeField("link", e.target.value)}
+          onChange={(option) => handelChangeField("link", option?.category_id)}
         />
       ) : values?.type === 2 || values?.type === 3 ? (
         <InputField

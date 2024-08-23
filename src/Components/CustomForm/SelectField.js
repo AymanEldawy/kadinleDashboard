@@ -20,20 +20,18 @@ const SelectField = ({
   labelClassName,
   ...field
 }) => {
-  const uniqueObjectsSet = new Set();
+  // const uniqueObjectsSet = new Set();
 
-  // Filter the array and only keep objects with unique 'id' values
-  const uniqueList = list?.filter((obj) => {
-    const isUnique = !uniqueObjectsSet.has(obj?.[keyLabel]);
-    if (isUnique) {
-      uniqueObjectsSet.add(obj?.[keyLabel]);
-    }
-    return isUnique;
-  });
+  // // Filter the array and only keep objects with unique 'id' values
+  // const uniqueList = list?.filter((obj) => {
+  //   const isUnique = !uniqueObjectsSet.has(obj?.[keyLabel]);
+  //   if (isUnique) {
+  //     uniqueObjectsSet.add(obj?.[keyLabel]);
+  //   }
+  //   return isUnique;
+  // });
+  console.log(value, "-vs");
 
-console.log(value, '---v');
-
-  
   return (
     <div
       className={`flex flex-col ${containerClassName}`}
@@ -58,18 +56,16 @@ console.log(value, '---v');
         menuPortalTarget={document?.body}
         styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
         getOptionLabel={(option) => {
-          console.log(option, keyLabel);
-
           return keyLabel === "full_name"
             ? option?.first_name + " " + option?.last_name
             : option[keyLabel] || option?.id;
         }}
         getOptionValue={(option) => option[keyValue]}
         // components={{ Option: ({ innerProps }) => <option></option> }}
-        options={uniqueList}
+        options={list}
         required={required}
         onChange={onChange}
-        value={value}
+        value={list?.find((c) => c?.[keyValue] == value)}
       />
       {error ? (
         <p className="bg-red-200 mt-2 rounded text-sm text-red-500 px-2 py-1">

@@ -223,7 +223,7 @@ const SuperForm = ({
 
                             handelChangeField(
                               field?.name,
-                              value,
+                              value[field?.refId || 'id'],
                               field?.required
                             );
                             // setSupplierId(value?.id);

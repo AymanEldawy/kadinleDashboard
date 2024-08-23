@@ -49,6 +49,9 @@ const SelectField = ({
         </label>
       ) : null}
       <select
+        menuPlacement="auto"
+        menuPortalTarget={document?.body}
+        styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
         className={`border rounded p-1 ${className}  ${
           error ? "border-red-200 text-red-500" : ""
         }`}

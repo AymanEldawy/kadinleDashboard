@@ -14,6 +14,7 @@ import RadioField from "./RadioField";
 import SelectField from "./SelectField";
 import UploadFile from "./UploadFile";
 import { CollectionConnectFields } from "./CollectionConnectFields";
+import Select from "react-select";
 
 let CACHED_TABLE = {};
 
@@ -181,28 +182,76 @@ const SuperForm = ({
                   );
                 } else if (field?.key === "radio") {
                 } else if (field?.key === "ref") {
+                  console.log(field, "----s");
+
                   return (
-                    <SelectField
-                      index={i}
-                      value={values?.[field?.name]}
-                      // defaultValue={values?.[field?.name]}
-                      label={field?.name}
-                      list={
-                        !!getCachedList ? getCachedList(field?.tableName) : []
-                      }
-                      keyLabel={field?.refName || "name"}
-                      keyValue={field?.refId || "id"}
-                      name={field?.name}
-                      readonly={field?.readonly}
-                      required={field?.required}
-                      onChange={(e) =>
-                        handelChangeField(
-                          field?.name,
-                          e.target.value,
-                          field?.required
-                        )
-                      }
-                    />
+                    <>
+                      <div className={`flex flex-col w-full`}>
+                        {field?.name ? (
+                          <label
+                            htmlFor={field?.name}
+                            className={`overflow-hidden text-ellipsis flex items-center gap-1 text-sm font-normal mb-1 capitalize`}
+                          >
+                            {field?.name}{" "}
+                            {field?.required ? (
+                              <span className="text-red-500 font-semibold">
+                                *
+                              </span>
+                            ) : (
+                              ""
+                            )}
+                          </label>
+                        ) : null}
+                        <Select
+                          className=""
+                          menuPlacement="auto"
+                          menuPortalTarget={document?.body}
+                          styles={{
+                            menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                          }}
+                          options={
+                            !!getCachedList
+                              ? getCachedList(field?.tableName)
+                              : []
+                          }
+                          getOptionLabel={(data) =>
+                            data[field?.refName || "name"]
+                          }
+                          getOptionValue={(data) => data[field?.refId || "id"]}
+                          onChange={(value) => {
+                            console.log(value);
+
+                            handelChangeField(
+                              field?.name,
+                              value,
+                              field?.required
+                            );
+                            // setSupplierId(value?.id);
+                          }}
+                        />
+                      </div>
+                      {/* <SelectField
+                        index={i}
+                        value={values?.[field?.name]}
+                        // defaultValue={values?.[field?.name]}
+                        label={field?.name}
+                        list={
+                          !!getCachedList ? getCachedList(field?.tableName) : []
+                        }
+                        keyLabel={field?.refName || "name"}
+                        keyValue={field?.refId || "id"}
+                        name={field?.name}
+                        readonly={field?.readonly}
+                        required={field?.required}
+                        onChange={(e) =>
+                          handelChangeField(
+                            field?.name,
+                            e.target.value,
+                            field?.required
+                          )
+                        }
+                      /> */}
+                    </>
                   );
                 } else if (field?.key === "radio") {
                   return (

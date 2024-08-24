@@ -42,9 +42,9 @@ export const CategoryMultiFilter = ({ filterCategory, setFilterCategory }) => {
             value={listFilter[key]}
             onChange={(selected) => {
               let value =
-                selected?.category_id === ""
+                selected?.id === ""
                   ? listFilter[key - 1]
-                  : selected?.category_id;
+                  : selected?.id;
               setFilterCategory(value);
               getCategoriesChildren(value, key + 1);
               if (+key === 1) {
@@ -62,13 +62,9 @@ export const CategoryMultiFilter = ({ filterCategory, setFilterCategory }) => {
               }
             }}
             getOptionLabel={(option) => {
-              console.log(option, '0');
-
               return option?.category_content?.at(0)?.title;
             }}
             getOptionValue={(option) => {
-              console.log(option, '0');
-
               return option?.id;
             }}
             // components={{ Option: ({ innerProps }) => <option></option> }}

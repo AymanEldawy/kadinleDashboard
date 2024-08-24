@@ -119,8 +119,6 @@ export const globalGetData = async ({
     };
   }
 
-  console.log(start, end);
-
   if (!ignoredFilterColumns?.includes(searchKey)) {
     query.range(start, end);
   }
@@ -178,7 +176,6 @@ export const getLogs = async (page, pageSize, additionalData) => {
 export const getCategories = async (page, pageSize, additionalData) => {
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
-  console.log("🚀 ~ getCategories ~ additionalData:", additionalData);
 
   const query = supabase
     .from("category")
@@ -268,7 +265,10 @@ export const getOrders = async (page, pageSize, additionalData) => {
         query.ilike(`category_content.quantity`, `%${searchValue}%`);
         break;
       case "order_status":
-        query.ilike(`order_status.order_status_content.status`, `%${searchValue}%`);
+        query.ilike(
+          `order_status.order_status_content.status`,
+          `%${searchValue}%`
+        );
         break;
       default:
         query.eq(searchKey, searchValue);
@@ -1669,6 +1669,23 @@ export const getCategoriesList = async (language_id, value) => {
     .from("category_content")
     .select("title, category_id, language_id")
     .eq("language_id", language_id)
-    .ilike("title", `%${value}%`);    
+    .ilike("title", `%${value}%`);
   return response?.data;
 };
+
+export const getSuppliersList = async () => {
+  const { data, error } = await supabase
+    .from("product")
+    .select("id, supplier_id");
+
+  let hash = {};
+  for (const supplier of data) {
+    hash[supplier?.supplier_id] = supplier;
+  }
+
+  return Object.values(hash);
+};
+
+export const getSupplierData = async () => {};
+
+// Extract and log the unique supplier IDs

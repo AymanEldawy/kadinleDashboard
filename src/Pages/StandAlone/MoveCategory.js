@@ -14,6 +14,7 @@ import SearchCategoryField from "../../Components/CustomForm/SearchCategoryField
 import Select from "react-select";
 import { useUpdate } from "../../hooks/useUpdate";
 import { toast } from "react-toastify";
+import { getSuppliersList } from "../../Api/data";
 
 const MoveCategory = () => {
   let name = "products_slider";
@@ -29,6 +30,15 @@ const MoveCategory = () => {
 
   const [newCategoriesList, setNewCategoryList] = useState({});
   const [newCategory, setNewCategory] = useState("");
+
+  const { data: suppliers } = useQuery({
+    queryKey: ["list", "suppliers"],
+    queryFn: async () => {
+      const data = await getSuppliersList();
+      console.log("🚀 ~ queryFn: ~ response:", data)
+      return data;
+    },
+  });
 
   const { isLoading, refetch, data } = useQuery({
     queryKey: [
@@ -58,7 +68,6 @@ const MoveCategory = () => {
   });
 
   const onSelectRow = (e) => {
-    console.log("🚀 ~ onSelectRow ~ e:", e);
     let value = e.target.value;
     if (e.target.checked) {
       setSelectedList((prev) => ({
@@ -129,15 +138,11 @@ const MoveCategory = () => {
         <div className="flex gap-4 items-center font-medium text-lg text-gray-700">
           <Select
             className="max-w-[150px]"
-            options={[
-              { name: "Supplier 77", id: "77" },
-              { name: "Supplier 22", id: "22" },
-              { name: "Supplier 11", id: "11" },
-            ]}
-            getOptionLabel={({ name }) => name}
-            getOptionValue={({ id }) => id}
+            options={suppliers}
+            getOptionLabel={({ supplier_id }) => supplier_id}
+            getOptionValue={({ supplier_id }) => supplier_id}
             onChange={(value) => {
-              setSupplierId(value?.id);
+              setSupplierId(value?.supplier_id);
             }}
           />
           <span>

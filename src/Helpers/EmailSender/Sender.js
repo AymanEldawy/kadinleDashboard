@@ -196,5 +196,3 @@ export const sendMail = async (message, emailList, subject) => {
     return response;
   }
 };
-
-sendMail('testing', ['aymaneldawy04@gmail.com'], 'testing email')

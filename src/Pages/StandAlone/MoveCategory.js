@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useFetch } from "../../hooks/useFetch";
-import { useParams } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
@@ -210,8 +210,8 @@ const MoveCategory = () => {
                 onChange={onSelectRow}
               />
             </div>
-            <div className="p-2 flex-[2]">
-              <div className="flex gap-2">
+            <div className="p-2 flex-[2] hover:text-blue-500 hover:bg-gray-100 hover:shadow">
+              <Link className="flex gap-2" to={`https://kadinle.com/product/${product?.product_sku}`} target="_blank">
                 <img
                   src={product?.product_image?.at(0)?.image}
                   alt=""
@@ -221,7 +221,7 @@ const MoveCategory = () => {
                   <li>product sku: {product?.product_sku}</li>
                   <li>{product?.product_content?.at(0)?.name}</li>
                 </ul>
-              </div>
+              </Link>
             </div>
             <div className="p-2 flex-1">
               <ul>

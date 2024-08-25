@@ -61,7 +61,7 @@ const XMLImport = () => {
   console.log("valuesData", valuesData);
   const [fileData, setFileData] = useState({
     language_id: "",
-    supplier_id: "",
+    seller_file_id: "",
     url: "",
     template_name: "",
   });
@@ -338,13 +338,13 @@ const XMLImport = () => {
                 />
                 {/* <InputField label="language_id" containerClassName="w-full" /> */}
                 <InputField
-                  label="supplier_id"
+                  label="seller_file_id"
                   containerClassName="w-full"
                   required
                   onChange={(e) => {
                     setFileData({
                       ...fileData,
-                      supplier_id: e.target.value,
+                      seller_file_id: e.target.value,
                     });
                   }}
                 />

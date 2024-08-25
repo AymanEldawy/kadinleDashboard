@@ -226,7 +226,7 @@ const MoveCategory = () => {
             <div className="p-2 flex-1">
               <ul>
                 <li>Supplier sku: {product?.seller_sku}</li>
-                <li>Supplier id: {product?.supplier_id}</li>
+                <li>Supplier id: {product?.seller_file_id}</li>
               </ul>
             </div>
             <div className="p-2 flex-1">

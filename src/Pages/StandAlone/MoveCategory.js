@@ -139,10 +139,10 @@ const MoveCategory = () => {
           <Select
             className="max-w-[150px]"
             options={suppliers}
-            getOptionLabel={({ supplier_id }) => supplier_id}
-            getOptionValue={({ supplier_id }) => supplier_id}
+            getOptionLabel={({ seller_file_id }) => seller_file_id}
+            getOptionValue={({ seller_file_id }) => seller_file_id}
             onChange={(value) => {
-              setSupplierId(value?.supplier_id);
+              setSupplierId(value?.seller_file_id);
             }}
           />
           <span>
@@ -226,7 +226,7 @@ const MoveCategory = () => {
             <div className="p-2 flex-1">
               <ul>
                 <li>Supplier sku: {product?.seller_sku}</li>
-                <li>Supplier id: {product?.supplier_id}</li>
+                <li>Supplier id: {product?.seller_file_id}</li>
               </ul>
             </div>
             <div className="p-2 flex-1">

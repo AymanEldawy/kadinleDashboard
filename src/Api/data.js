@@ -550,7 +550,7 @@ export const getProducts = async (page, pageSize, additionalData) => {
   }
 
   if (additionalData?.supplierId) {
-    query.eq("supplier_id", additionalData?.supplierId);
+    query.eq("seller_file_id", additionalData?.supplierId);
   }
 
   if (searchValue) {
@@ -1005,7 +1005,7 @@ export const getSupplierAttachment = async (id) => {
   return await supabase
     .from(`supplier_attachment`)
     .select("*")
-    .eq("supplier_id", id);
+    .eq("seller_file_id", id);
 };
 
 export const getSuppliers = async (page, pageSize, additionalData) => {
@@ -1632,7 +1632,7 @@ export const getSupplierProducts = async (page, pageSize, additionalData) => {
     .from("product")
     .select(
       `
-    supplier_id, seller_sku, product_sku, id,
+    seller_file_id, seller_sku, product_sku, id,
     category(category_content(name:title, language_id)),
     brand(name),
     product_content(name, language_id),
@@ -1648,7 +1648,7 @@ export const getSupplierProducts = async (page, pageSize, additionalData) => {
   }
 
   if (additionalData?.supplierId) {
-    query.eq("supplier_id", additionalData?.supplierId);
+    query.eq("seller_file_id", additionalData?.supplierId);
   }
 
   return globalGetData({
@@ -1676,11 +1676,11 @@ export const getCategoriesList = async (language_id, value) => {
 export const getSuppliersList = async () => {
   const { data, error } = await supabase
     .from("product")
-    .select("id, supplier_id");
+    .select("id, seller_file_id");
 
   let hash = {};
   for (const supplier of data) {
-    hash[supplier?.supplier_id] = supplier;
+    hash[supplier?.seller_file_id] = supplier;
   }
 
   return Object.values(hash);

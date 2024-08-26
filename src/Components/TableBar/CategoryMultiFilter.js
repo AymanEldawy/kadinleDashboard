@@ -39,7 +39,7 @@ export const CategoryMultiFilter = ({ filterCategory, setFilterCategory }) => {
       {Object.entries(listCategories)?.map(([key, value]) => {
         return (
           <Select
-            value={listFilter[key]}
+            value={value?.find((c) => c?.category_id === listFilter[key])}
             onChange={(selected) => {
               let value =
                 selected?.id === ""

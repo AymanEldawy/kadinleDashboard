@@ -17,6 +17,10 @@ import Pagination from "../../Components/Supplier/Pagination";
 import Loading from "../../Components/Loading/Loading";
 import Variant from "../../Components/Supplier/Variant";
 import KadinlePrice from "../../Components/Supplier/KadinlePrice";
+import ColorsDetails from "../../Components/Supplier/ColorsDetails";
+import SizesDetails from "../../Components/Supplier/SizesDetails";
+import StockDetails from "../../Components/Supplier/StockDetails";
+import Percentage from "../../Components/Supplier/Percentage";
 
 const SupplierProducts = () => {
   // const DATA = [
@@ -66,6 +70,8 @@ const SupplierProducts = () => {
   const originalDataRef = useRef([]);
   const [data, setData] = useState([]);
   // console.log("data", data);
+  const [error, setError] = useState();
+  console.log("error", error);
   const [showVariant, setShowVariant] = useState([]);
   // console.log("showVariant", showVariant);
   const [columnFilters, setColumnFilters] = useState([
@@ -75,20 +81,29 @@ const SupplierProducts = () => {
     // }
   ]);
   const [selectedStatus, setSelectedStatus] = useState("");
-  const getSuppliersProduct = useCallback(async (userId) => {
-    const products = await supabase.from("product").select(
-      `*,
-      product_content(*),
-      product_image(*),
-      product_variant(*)`
-    );
-    return products;
+  const getSuppliersProduct = useCallback(async () => {
+    // const products = await supabase.from("product").select(
+    //   `*,
+    //   product_content(*),
+    //   product_image(*),
+    //   product_variant(*)`
+    // );
+    let { data, error } = await supabase.rpc("get_products_with_variants", {
+      param_lang_id: "c1a063e3-8f21-4526-8302-453b705ed27d",
+      param_category_id: null,
+      param_seller_file_id: 74,
+      param_offset: 0,
+      param_limit: 2,
+    });
+    setError(error);
+    return data;
   }, []);
 
   useEffect(() => {
     if (data.length > 0) {
+      // console.log("data from variant", data);
       const initialVariants = data.map((item) => ({
-        id: item.id,
+        id: item?.product_sku,
         show: false,
       }));
       setShowVariant(initialVariants);
@@ -97,7 +112,8 @@ const SupplierProducts = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const suppliersProduct = (await getSuppliersProduct(11002)).data;
+      const suppliersProduct = await getSuppliersProduct();
+      // console.log("suppliersProduct", suppliersProduct);
       originalDataRef.current = suppliersProduct;
       setData(suppliersProduct);
     };
@@ -132,29 +148,35 @@ const SupplierProducts = () => {
     {
       accessorKey: "category",
       header: "category",
-      cell: (props) => <p>{props.getValue()}</p>,
+      cell: (props) => (
+        <p className="text-center text-[13px]">{props.getValue()}</p>
+      ),
     },
     {
       accessorKey: "color",
       header: "color",
-      cell: (props) => <p>{props.getValue()}</p>,
+      cell: (props) => (
+        <ColorsDetails product={props.row.original} showVariant={showVariant} />
+      ),
     },
     {
       accessorKey: "size",
       header: "size",
-      // cell: (props) => <EditableField initial={props.getValue()} />,
+      cell: (props) => (
+        <SizesDetails product={props.row.original} showVariant={showVariant} />
+      ),
     },
     {
       accessorKey: "stock",
       header: "stock",
-      // cell: (props) => <EditableField initial={props.getValue()} />,
+      cell: (props) => (
+        <StockDetails product={props.row.original} showVariant={showVariant} />
+      ),
     },
     {
       accessorKey: "variant",
       header: "variant",
-      cell: (props) => (
-        <Variant product={props.row.original} showVariant={showVariant} />
-      ),
+      cell: (props) => <Variant product={props.row.original} />,
     },
     {
       accessorKey: "brand",
@@ -176,7 +198,9 @@ const SupplierProducts = () => {
     {
       accessorKey: "percentage",
       header: "percentage",
-      cell: (props) => <p>{props.getValue()}</p>,
+      cell: (props) => (
+        <Percentage product={props.row.original} showVariant={showVariant} />
+      ),
     },
     {
       accessorKey: "supplier",
@@ -227,7 +251,7 @@ const SupplierProducts = () => {
           />
         </div>
       </div>
-      {data.length > 0 ? (
+      {data?.length > 0 ? (
         <>
           <div className="overflow-x-auto">
             <table className="table-auto w-full border border-gray-300 rounded-md">
@@ -240,18 +264,10 @@ const SupplierProducts = () => {
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        className={`px-4 py-4 text-center relative`}
+                        className="px-4 py-4 text-center relative border border-gray-300"
                         style={{ width: header.getSize() }}
                       >
                         {header.column.columnDef.header}
-                        {/* {header.column.getCanSort() && (
-                        <button
-                          onClick={header.column.getToggleSortingHandler()}
-                          className="rotate-90 mx-3 hidden group-hover:inline-block absolute right-2 lg:right-8"
-                        >
-                          ⇆
-                        </button>
-                      )} */}
                         <div className="absolute -left-1 top-4">
                           {
                             {
@@ -263,7 +279,7 @@ const SupplierProducts = () => {
                         <div
                           onMouseDown={header.getResizeHandler()}
                           onTouchStart={header.getResizeHandler()}
-                          className={`absolute flex items-center right-0 top-0 bottom-0 h-full cursor-col-resize px-1.5 select-none invisible group-hover:visible`}
+                          className="absolute flex items-center right-0 top-0 bottom-0 h-full cursor-col-resize px-1.5 select-none invisible group-hover:visible"
                         >
                           &#x2502;
                         </div>
@@ -274,9 +290,15 @@ const SupplierProducts = () => {
               </thead>
               <tbody>
                 {table.getRowModel().rows.map((row) => (
-                  <tr key={row.id} className="odd:bg-white even:bg-[#e9edf1]">
+                  <tr
+                    key={row.id}
+                    className="odd:bg-white even:bg-[#e9edf1] border-t border-gray-300"
+                  >
                     {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="pl-6 pr-4 py-2 text-start">
+                      <td
+                        key={cell.id}
+                        className="py-2 text-start border-r border-gray-300"
+                      >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()

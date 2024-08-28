@@ -2,6 +2,9 @@ import React, { useMemo } from "react";
 
 const StockDetails = ({ product, showVariant }) => {
 //   console.log("product from stock", product);
+const totalStock = product?.variants.reduce((acc, variant) => {
+  return acc + variant.stock.stock;
+}, 0);
   let show = useMemo(
     () =>
       showVariant?.find((variant) => variant?.id === product?.product_sku)
@@ -10,7 +13,7 @@ const StockDetails = ({ product, showVariant }) => {
   );
   return (
     <div>
-      <div className="h-[60px]"></div>
+      <div className="h-[60px] flex justify-center items-center"><span>{totalStock}</span></div>
       {show && (
         <div>
           <hr className="w-full" />

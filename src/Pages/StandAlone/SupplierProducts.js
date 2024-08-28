@@ -21,6 +21,7 @@ import ColorsDetails from "../../Components/Supplier/ColorsDetails";
 import SizesDetails from "../../Components/Supplier/SizesDetails";
 import StockDetails from "../../Components/Supplier/StockDetails";
 import Percentage from "../../Components/Supplier/Percentage";
+import SupplierPrice from "../../Components/Supplier/SupplierPrice";
 
 const SupplierProducts = () => {
   // const DATA = [
@@ -148,9 +149,7 @@ const SupplierProducts = () => {
     {
       accessorKey: "category",
       header: "category",
-      cell: (props) => (
-        <p className="text-center text-[13px]">{props.getValue()}</p>
-      ),
+      cell: (props) => <div className="text-center">{props.getValue()}</div>,
     },
     {
       accessorKey: "color",
@@ -186,7 +185,9 @@ const SupplierProducts = () => {
     {
       accessorKey: "supplier price",
       header: "supplier price",
-      // cell: (props) => <EditableField initial={props.getValue()} />,
+      cell: (props) => (
+        <SupplierPrice product={props.row.original} showVariant={showVariant} />
+      ),
     },
     {
       accessorKey: "kadinle price",
@@ -254,62 +255,86 @@ const SupplierProducts = () => {
       {data?.length > 0 ? (
         <>
           <div className="overflow-x-auto">
-            <table className="table-auto w-full border border-gray-300 rounded-md">
-              <thead>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr
-                    key={headerGroup.id}
-                    className="bg-gray-200 text-gray-700 font-medium text-xs leading-4 tracking-wider group"
-                  >
-                    {headerGroup.headers.map((header) => (
-                      <th
-                        key={header.id}
-                        className="px-4 py-4 text-center relative border border-gray-300"
-                        style={{ width: header.getSize() }}
-                      >
-                        {header.column.columnDef.header}
-                        <div className="absolute -left-1 top-4">
-                          {
-                            {
-                              asc: "🔼",
-                              desc: "🔽",
-                            }[header.column.getIsSorted()]
-                          }
-                        </div>
-                        <div
-                          onMouseDown={header.getResizeHandler()}
-                          onTouchStart={header.getResizeHandler()}
-                          className="absolute flex items-center right-0 top-0 bottom-0 h-full cursor-col-resize px-1.5 select-none invisible group-hover:visible"
+            <div className="min-w-full">
+              <table className="table-auto border border-gray-300 rounded-md">
+                <thead>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <tr
+                      key={headerGroup.id}
+                      className="bg-gray-200 text-gray-700 font-medium text-xs leading-4 tracking-wider group"
+                    >
+                      {headerGroup.headers.map((header, index) => (
+                        <th
+                          key={header.id}
+                          className={`px-4 py-4 text-center relative border border-gray-300 ${
+                            index === 0 ? "sticky left-0 bg-gray-200 z-10" : ""
+                          }`}
+                          style={{
+                            minWidth: header.getSize() + 1,
+                            width: header.getSize(),
+                          
+                            // borderRight:
+                            //   index === 0 ? "1px solid gray" : "1px solid black",
+                          }}
                         >
-                          &#x2502;
-                        </div>
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className="odd:bg-white even:bg-[#e9edf1] border-t border-gray-300"
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="py-2 text-start border-r border-gray-300"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                          {header.column.columnDef.header}
+                          <div className="absolute -left-1 top-4">
+                            {
+                              {
+                                asc: "🔼",
+                                desc: "🔽",
+                              }[header.column.getIsSorted()]
+                            }
+                          </div>
+                          <div
+                            onMouseDown={header.getResizeHandler()}
+                            onTouchStart={header.getResizeHandler()}
+                            className="absolute flex items-center right-0 top-0 bottom-0 h-full cursor-col-resize px-1.5 select-none invisible group-hover:visible"
+                          >
+                            &#x2502;
+                          </div>
+                        </th>
+                      ))}
+                    </tr>
+                  ))}
+                </thead>
+                <tbody>
+                  {table.getRowModel().rows.map((row, rowIndex) => (
+                    <tr
+                      key={row.id}
+                      className="odd:bg-white even:bg-[#e9edf1] border-t border-gray-300"
+                    >
+                      {row.getVisibleCells().map((cell, index) => (
+                        <td
+                          key={cell.id}
+                          className={`py-2 text-start border-r border-gray-300 ${
+                            index === 0
+                              ? `sticky left-0 z-10 ${
+                                  rowIndex % 2 === 0
+                                    ? "bg-white"
+                                    : "bg-[#e9edf1]"
+                                }`
+                              : ""
+                          }`}
+                          style={{
+                            minWidth: cell.column.getSize(),
+                            // borderRight:
+                            //   index === 0 ? "1px solid gray" : "none",
+                          }}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
+
           <div className="m-4">
             <Pagination
               pageIndex={table.getState().pagination.pageIndex}

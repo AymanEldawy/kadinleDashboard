@@ -1,10 +1,40 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import NextArrow from "../icons/NextArrow";
 import CopyButton from "./CopyButton";
 
 const ProductDetails = ({ product, showVariant, setShowVariant }) => {
   // console.log("product", product);
   const baseURL = "https://kadinle.com/en/product/";
+
+    const [visibleLength, setVisibleLength] = useState(20); // Initial length of visible characters
+    const linkRef = useRef(null);
+
+
+  useEffect(() => {
+    const updateVisibleLength = () => {
+      if (linkRef.current) {
+        const containerWidth = linkRef.current.clientWidth;
+        // Estimate character width. Adjust based on your font and design
+        const charWidth = 7.2;
+        const maxLength = Math.floor(containerWidth / charWidth);
+        setVisibleLength(maxLength);
+      }
+    };
+
+    // Create a ResizeObserver to monitor size changes
+    const resizeObserver = new ResizeObserver(updateVisibleLength);
+    if (linkRef.current) {
+      resizeObserver.observe(linkRef.current);
+    }
+
+    // Initial update
+    updateVisibleLength();
+
+    // Clean up the ResizeObserver on component unmount
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   let show = useMemo(
     () =>
@@ -15,7 +45,7 @@ const ProductDetails = ({ product, showVariant, setShowVariant }) => {
 
   // console.log("show",typeof show);
   return (
-    <div className="flex flex-col space-y-4 pl-6">
+    <div className="flex flex-col space-y-4 pl-6 ">
       <div className="flex w-full space-x-2 relative ">
         {/* <img
           width={50}
@@ -24,16 +54,17 @@ const ProductDetails = ({ product, showVariant, setShowVariant }) => {
           src={product?.product_image[0]?.image}
           alt="product"
         /> */}
-        <div className="text-[12px] pl-2 flex flex-col space-y-1">
+        <div className="text-[12px] pl-2 flex flex-col space-y-1 w-full">
           <a
             href={`${baseURL}${product?.product_sku}`}
-            className="font-semibold underline truncate"
+            className="font-semibold underline truncate w-full"
             title={product?.name}
             target="_blank"
             rel="noopener noreferrer"
+            ref={linkRef}
           >
-            {product?.name?.length > 20
-              ? `${product?.name?.slice(0, 20)}...`
+            {product?.name?.length > visibleLength
+              ? `${product?.name?.slice(0, visibleLength)}...`
               : product?.name}
           </a>
           <p>

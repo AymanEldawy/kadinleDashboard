@@ -2,6 +2,12 @@ import React, { useMemo } from 'react'
 
 const Percentage = ({ product, showVariant }) => {
   //   console.log("product from stock", product);
+    const minPer = Math.min(
+      ...(product?.variants?.map((variant) => variant.percentage) || [])
+    );
+    const maxPer = Math.max(
+      ...(product?.variants?.map((variant) => variant.percentage) || [])
+    );
   let show = useMemo(
     () =>
       showVariant?.find((variant) => variant?.id === product?.product_sku)
@@ -10,7 +16,11 @@ const Percentage = ({ product, showVariant }) => {
   );
   return (
     <div>
-      <div className="h-[60px]"></div>
+      <div className="h-[60px] flex justify-center items-center gap-2">
+        <div>{minPer} </div>
+        <div>/</div>
+        <div> {maxPer}</div>
+      </div>
       {show && (
         <div>
           <hr className="w-full" />

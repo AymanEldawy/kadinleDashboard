@@ -1,20 +1,37 @@
 import React, { useMemo } from 'react'
 
 const ColorsDetails = ({ product, showVariant }) => {
-    // console.log("product from colors", product);
-      let show = useMemo(
-        () =>
-          showVariant?.find((variant) => variant?.id === product?.product_sku)
-            ?.show,
-        [product?.product_sku, showVariant]
-      );
+  // console.log("product from colors", product);
+  let show = useMemo(
+    () =>
+      showVariant?.find((variant) => variant?.id === product?.product_sku)
+        ?.show,
+    [product?.product_sku, showVariant]
+  );
+
+  // Array to store unique colors
+  const uniqueColors = [];
+
+  // Loop through each variant
+  product?.variants.forEach((variant) => {
+    variant.colors.forEach((colorObj) => {
+      // Get the color name
+      const colorName = Object.values(colorObj)[0];
+      // Add the color if it's not already in the array
+      if (!uniqueColors.includes(colorName)) {
+        uniqueColors.push(colorName);
+      }
+    });
+  });
+
+  // console.log(uniqueColors); 
   return (
     <div>
-        <div className='h-[60px]'>
-             
-        </div>
+      <div className="h-[60px] flex justify-center items-center">
+        <span>{uniqueColors}</span>
+      </div>
       {show && (
-        <div >
+        <div>
           <hr className="w-full" />
           {product?.variants?.map((variant) => (
             <>
@@ -25,7 +42,6 @@ const ColorsDetails = ({ product, showVariant }) => {
                     return <div key={index}>{value}</div>;
                   })}
                 </div>
-             
               </div>
               <hr className="w-full" />
             </>

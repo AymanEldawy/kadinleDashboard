@@ -82,7 +82,7 @@ const DynamicList = ({
       return response?.data;
     },
   });
-
+  
   const table = useReactTable({
     columns: columns({
       hideAction,

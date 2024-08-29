@@ -1625,9 +1625,6 @@ export const getCategoryChildrenIDS = async (parent_id) => {
 // };
 
 export const getSupplierProducts = async (page, pageSize, additionalData) => {
-  let searchKey = additionalData?.search?.key;
-  let searchValue = additionalData?.search?.value;
-
   const query = supabase
     .from("product")
     .select(
@@ -1651,17 +1648,10 @@ export const getSupplierProducts = async (page, pageSize, additionalData) => {
     query.eq("seller_file_id", additionalData?.supplierId);
   }
 
-  return globalGetData({
-    page,
-    pageSize,
-    additionalData,
-    query,
-    // ignoredFilterColumns: ["category", "name", "description", "brand"],
-    ignoredFilterColumns: [],
-    filterFn: (product) =>
-      product?.product_content?.length &&
-      product?.category?.category_content?.length,
-  });
+  let start = (page - 1) * pageSize;
+  let end = page * pageSize - 1;
+
+  return await query.range(start, end);
 };
 
 export const getCategoriesList = async (language_id, value) => {

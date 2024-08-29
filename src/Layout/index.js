@@ -38,7 +38,7 @@ const Layout = ({ children }) => {
           {location?.pathname === '/login' ? null :
             <Sidebar open={open} setOpen={setOpen} />
           }
-          <div className="w-full">
+          <div className="w-full dark:bg-[#2d2d2d]">
             {location?.pathname === '/login' ? null :
               <Header
                 open={open}

@@ -15,14 +15,17 @@ import Select from "react-select";
 import { useUpdate } from "../../hooks/useUpdate";
 import { toast } from "react-toastify";
 import { getSuppliersList } from "../../Api/data";
+import { ChevronIcon } from "../../Helpers/Icons";
+import ReactPaginate from "react-paginate";
 
 const MoveCategory = () => {
   let name = "products_slider";
   const { defaultLanguage } = useGlobalOptions();
-  const { updateItem, upsertItem } = useUpdate();
+  const { upsertItem } = useUpdate();
   const [selectedList, setSelectedList] = useState({});
   const [supplierId, setSupplierId] = useState("");
   const [category, setCategory] = useState("");
+  const [pageCount, setPageCount] = useState(0);
   const [pagination, setPagination] = useState({
     pageSize: 50,
     pageIndex: 0,
@@ -35,37 +38,69 @@ const MoveCategory = () => {
     queryKey: ["list", "suppliers"],
     queryFn: async () => {
       const data = await getSuppliersList();
-      console.log("🚀 ~ queryFn: ~ response:", data)
+      console.log("🚀 ~ queryFn: ~ response:", data);
       return data;
     },
   });
 
-  const { isLoading, refetch, data } = useQuery({
-    queryKey: [
-      "product",
-      "supplier",
-      defaultLanguage?.id,
-      category,
-      supplierId,
-    ],
-    queryFn: async () => {
+  const fetchProducts = async (
+    pageIndex,
+    pageSize,
+    languageId,
+    category,
+    supplierId
+  ) => {
+    try {
       const response = await getTableDataWithPagination(
         "supplier_products",
-        pagination?.pageIndex + 1,
-        pagination?.pageSize,
+        pageIndex + 1, // Assuming pageIndex is zero-based and API expects 1-based
+        pageSize,
         {
-          languageId: defaultLanguage?.id,
+          languageId,
           filter: category === "Select category" ? "" : category,
-          supplierId: supplierId,
+          supplierId,
         }
       );
+      setPageCount(Math.ceil(response?.count / parseInt(pagination?.pageSize)));
 
       return {
         count: response?.count,
         products: response?.data,
       };
-    },
+    } catch (error) {
+      // Handle errors as needed
+      throw new Error("Failed to fetch products");
+    }
+  };
+
+  const { isLoading, refetch, data } = useQuery({
+    queryKey: [
+      "product",
+      defaultLanguage?.id,
+      category,
+      supplierId,
+      pagination.pageSize,
+      pagination.pageIndex,
+    ],
+    queryFn: () =>
+      fetchProducts(
+        pagination.pageIndex,
+        pagination.pageSize,
+        defaultLanguage?.id,
+        category,
+        supplierId
+      ),
+    keepPreviousData: true, // Optional: keeps old data while fetching new data
+    staleTime: 0, // O
   });
+
+  const handlePageClick = (event) => {
+    console.log("🚀 ~ handlePageClick ~ event:", event);
+    setPagination((prev) => ({
+      ...prev,
+      pageIndex: event,
+    }));
+  };
 
   const onSelectRow = (e) => {
     let value = e.target.value;
@@ -183,7 +218,30 @@ const MoveCategory = () => {
         </div>
       </div>
 
-      <div className="border-y flex items-center bg-gray-200">
+      <ReactPaginate
+        breakLabel="..."
+        nextLabel={
+          <span className="flex scale-75 ltr:rotate-180 rtl:-rotate-180">
+            <ChevronIcon />
+          </span>
+        }
+        onPageChange={({ selected }) => handlePageClick(selected)}
+        pageRangeDisplayed={5}
+        pageCount={pageCount}
+        // forcePage={itemOffset}
+        previousLabel={
+          <span className="flex scale-75 rtl:rotate-180">
+            <ChevronIcon />
+          </span>
+        }
+        renderOnZeroPageCount={null}
+        className="pagination flex  dark:text-white justify-end border-t  gap-6 items-center shadow p-3 bg-white dark:bg-bgmaindark"
+        activeClassName="bg-blue-500 p-1 px-2 rounded text-sm text-white"
+        previousClassName="ltr:rotate-90 rtl:-rotate-90 rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
+        nextClassName="ltr:rotate-90 rtl:-rotate-90 rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
+        disabledClassName="text-gray-200 dark:text-gray-600"
+      />
+      <div className="border-y flex items-center bg-gray-200 dark:text-white dark:bg-[#2d2d2d] dark:border-[#343333]">
         <div className="p-2 w-[50px]">
           <input type="checkbox" className="h-5 w-5" onChange={onSelectAll} />
         </div>
@@ -197,7 +255,7 @@ const MoveCategory = () => {
         let isSelected = selectedList?.[product?.id];
         return (
           <div
-            className={`border-y flex items-center ${
+            className={`border-y flex items-center dark:border-[#343333]  dark:text-white ${
               isSelected ? "bg-gray-100" : ""
             }`}
           >
@@ -211,7 +269,11 @@ const MoveCategory = () => {
               />
             </div>
             <div className="p-2 flex-[2] hover:text-blue-500 hover:bg-gray-100 hover:shadow">
-              <Link className="flex gap-2" to={`https://kadinle.com/product/${product?.product_sku}`} target="_blank">
+              <Link
+                className="flex gap-2"
+                to={`https://kadinle.com/product/${product?.product_sku}`}
+                target="_blank"
+              >
                 <img
                   src={product?.product_image?.at(0)?.image}
                   alt=""
@@ -270,6 +332,32 @@ const MoveCategory = () => {
           </div>
         );
       })}
+
+      <div>
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel={
+            <span className="flex  scale-75 ltr:rotate-180 rtl:-rotate-180">
+              <ChevronIcon />
+            </span>
+          }
+          onPageChange={({ selected }) => handlePageClick(selected)}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          // forcePage={itemOffset}
+          previousLabel={
+            <span className="flex scale-75 rtl:rotate-180">
+              <ChevronIcon />
+            </span>
+          }
+          renderOnZeroPageCount={null}
+          className="pagination flex  dark:text-white justify-end gap-6 items-center shadow p-3 bg-white dark:bg-bgmaindark"
+          activeClassName="bg-blue-500 p-1 px-2 rounded text-sm text-white"
+          previousClassName="ltr:rotate-90 rtl:-rotate-90 rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
+          nextClassName="ltr:rotate-90 rtl:-rotate-90 rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
+          disabledClassName="text-gray-200 dark:text-gray-600"
+        />
+      </div>
     </BlockPaper>
   );
 };

@@ -109,7 +109,7 @@ const fetches = {
     getHomeSliders("home_sliders", page, pageSize, additionalData),
   definitions: (page, pageSize, additionalData) =>
     getHomeSliders("definitions", page, pageSize, additionalData),
-  supplier_products: getSupplierProducts
+  supplier_products: getSupplierProducts,
 };
 
 export const getTableDataWithPagination = async (
@@ -118,18 +118,13 @@ export const getTableDataWithPagination = async (
   pageSize,
   additionalData
 ) => {
-  console.log(
-    table,
-
-    page,
-    pageSize,
-    additionalData,
-    "----"
-  );
+  console.log(table, page, pageSize, additionalData, "----");
 
   if (table && fetches.hasOwnProperty(table)) {
     const fetchData = fetches[table];
     const response = await fetchData(page, pageSize, additionalData);
+    console.log(response, "--------tes");
+
     return response;
   } else {
     const response = normalFetchWithPagination(
@@ -138,6 +133,8 @@ export const getTableDataWithPagination = async (
       pageSize,
       additionalData
     );
+    console.log(response, "--------tes");
+
     return response;
   }
 };
@@ -147,6 +144,7 @@ export const getTableData = async (table, additionalData) => {
     table?.indexOf("_content") !== -1
       ? await contentFilterFetch(table, additionalData)
       : await normalFetch(table, additionalData);
+
   return response;
 };
 

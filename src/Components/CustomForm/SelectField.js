@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import Select from "react-select";
+import { ThemeContext } from "../../Context/ThemeContext";
 
 const SelectField = ({
   label,
@@ -20,6 +21,8 @@ const SelectField = ({
   labelClassName,
   ...field
 }) => {
+  const { theme: webTheme } = useContext(ThemeContext);
+
   // const uniqueObjectsSet = new Set();
 
   // // Filter the array and only keep objects with unique 'id' values

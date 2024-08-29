@@ -1,42 +1,71 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import NextArrow from "../icons/NextArrow";
 import CopyButton from "./CopyButton";
 
-const ProductDetails = ({
-  product,
-  showVariant,
-  setShowVariant,
-}) => {
-  //   console.log("product", product);
+const ProductDetails = ({ product, showVariant, setShowVariant }) => {
+  // console.log("product", product);
   const baseURL = "https://kadinle.com/en/product/";
 
+    const [visibleLength, setVisibleLength] = useState(20); // Initial length of visible characters
+    const linkRef = useRef(null);
+
+
+  useEffect(() => {
+    const updateVisibleLength = () => {
+      if (linkRef.current) {
+        const containerWidth = linkRef.current.clientWidth;
+        // Estimate character width. Adjust based on your font and design
+        const charWidth = 7.2;
+        const maxLength = Math.floor(containerWidth / charWidth);
+        setVisibleLength(maxLength);
+      }
+    };
+
+    // Create a ResizeObserver to monitor size changes
+    const resizeObserver = new ResizeObserver(updateVisibleLength);
+    if (linkRef.current) {
+      resizeObserver.observe(linkRef.current);
+    }
+
+    // Initial update
+    updateVisibleLength();
+
+    // Clean up the ResizeObserver on component unmount
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   let show = useMemo(
-    () => showVariant?.find((variant) => variant.id === product?.id)?.show,
-    [product?.id, showVariant]
+    () =>
+      showVariant?.find((variant) => variant?.id === product?.product_sku)
+        ?.show,
+    [product?.product_sku, showVariant]
   );
 
   // console.log("show",typeof show);
   return (
-    <div className="flex flex-col space-y-4">
-      <div className="flex w-full space-x-2 relative">
-        <img
+    <div className="flex flex-col space-y-4 pl-6 ">
+      <div className="flex w-full space-x-2 relative ">
+        {/* <img
           width={50}
           height={100}
           className="object-cover"
           src={product?.product_image[0]?.image}
           alt="product"
-        />
-        <div className="text-[12px] pl-2 flex flex-col space-y-1">
+        /> */}
+        <div className="text-[12px] pl-2 flex flex-col space-y-1 w-full">
           <a
             href={`${baseURL}${product?.product_sku}`}
-            className="font-semibold underline truncate"
-            title={product?.product_content[0]?.name}
+            className="font-semibold underline truncate w-full"
+            title={product?.name}
             target="_blank"
             rel="noopener noreferrer"
+            ref={linkRef}
           >
-            {product?.product_content[0]?.name?.length > 20
-              ? `${product?.product_content[0]?.name?.slice(0, 20)}...`
-              : product?.product_content[0]?.name}
+            {product?.name?.length > visibleLength
+              ? `${product?.name?.slice(0, visibleLength)}...`
+              : product?.name}
           </a>
           <p>
             product sku:{" "}
@@ -49,8 +78,8 @@ const ProductDetails = ({
         <button
           onClick={() => {
             setShowVariant((prevVariants) =>
-              prevVariants.map((variant) =>
-                variant.id === product.id
+              prevVariants?.map((variant) =>
+                variant?.id === product?.product_sku
                   ? { ...variant, show: !variant.show }
                   : variant
               )
@@ -67,15 +96,16 @@ const ProductDetails = ({
       </div>
       {show && (
         <div>
-          <hr className="" />
-          {product?.product_variant?.map((variant) => (
+          <hr className="w-full" />
+          {product?.variants?.map((variant) => (
             <>
               <div className="h-28 lg:h-24 text-[12px] ml-3 flex flex-col justify-center">
                 <div className="flex space-x-2 items-center">
                   <div className="font-semibold">Colors:</div>
-                  <div className=" text-pink-500">pink</div>
-                  <div className="text-green-500">green</div>
-                  <div className="text-blue-500">blue</div>
+                  {variant?.colors?.map((colorObj, index) => {
+                    const [key, value] = Object.entries(colorObj)[index];
+                    return <div key={index}>{value}</div>;
+                  })}
                 </div>
                 <p className="">
                   <span className="font-semibold">variant sku: </span>
@@ -84,12 +114,16 @@ const ProductDetails = ({
                 </p>
                 <p className="">
                   <span className="font-semibold">barcode: </span>
-                  <span className="mr-1">{product?.barcode}</span>
-                  <CopyButton textToCopy={product?.barcode}></CopyButton>
+                  <span className="mr-1">
+                    {product?.barcode ? product?.barcode : 123456789}
+                  </span>
+                  <CopyButton
+                    textToCopy={product?.barcode ? product?.barcode : 123456789}
+                  ></CopyButton>
                 </p>
                 {/* <hr /> */}
               </div>
-              <hr className="" />
+              <hr className="w-full" />
             </>
           ))}
         </div>

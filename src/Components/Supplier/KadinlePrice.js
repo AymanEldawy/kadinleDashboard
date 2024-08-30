@@ -1,8 +1,13 @@
 import { useMemo, useState } from "react";
-import Popup from "./Popup";
 
-const KadinlePrice = ({ product, showVariant }) => {
+const KadinlePrice = ({
+  product,
+  showVariant,
+  selectedCurrency,
+  getFormatPrice,
+}) => {
   // const [isPopupVisible, setIsPopupVisible] = useState(false);
+  // console.log("product from kadinle", product);
   let show = useMemo(
     () =>
       showVariant?.find((variant) => variant?.id === product?.product_sku)
@@ -10,12 +15,12 @@ const KadinlePrice = ({ product, showVariant }) => {
     [product?.product_sku, showVariant]
   );
 
-    const minPrice = Math.min(
-      ...(product?.variants?.map((variant) => variant.price) || [])
-    );
-    const maxPrice = Math.max(
-      ...(product?.variants?.map((variant) => variant.price) || [])
-    );
+  const minPrice = Math.min(
+    ...(product?.variants?.map((variant) => variant.price) || [])
+  );
+  const maxPrice = Math.max(
+    ...(product?.variants?.map((variant) => variant.price) || [])
+  );
 
   return (
     <>
@@ -38,9 +43,11 @@ const KadinlePrice = ({ product, showVariant }) => {
         
          </div> */}
         <div className="h-[60px] flex justify-center items-center gap-2">
-          <div>{minPrice} </div>
+          <div>{getFormatPrice(minPrice, selectedCurrency)}</div>
           <div>/</div>
-          <div> {maxPrice}</div>
+          <div>
+            {getFormatPrice(maxPrice, selectedCurrency)}
+          </div>
         </div>
         {show && (
           <div className="text-center w-full">
@@ -51,10 +58,14 @@ const KadinlePrice = ({ product, showVariant }) => {
                   // onClick={() => setIsPopupVisible(true)}
                   className="h-28 lg:h-24 text-[12px] ml-3 flex items-center  space-x-1 relative"
                 >
-                  <div className="absolute left-0-0 h-6 w-12 border border-gray-400 text-gray rounded-md" />
+                  <div className="absolute left-0-0 h-6 w-16 border border-gray-400 text-gray rounded-md" />
                   <div className="">
-                    <span className="font-semibold">{variant?.price}</span>
-                    {/* <span>$</span> */}
+                    <span className="font-semibold">
+                      {getFormatPrice(variant?.price, selectedCurrency)[0]}
+                    </span>
+                    <span className="ml-1">
+                      {getFormatPrice(variant?.price, selectedCurrency)[1]}
+                    </span>
                   </div>
                 </div>
                 <hr className="hr-line w-full" />

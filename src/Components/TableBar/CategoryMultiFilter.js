@@ -35,16 +35,15 @@ export const CategoryMultiFilter = ({ filterCategory, setFilterCategory }) => {
   });
 
   return (
-    <div className="flex items-center gap-4 flex-wrap">
+    <div className="flex items-center gap-4">
       {Object.entries(listCategories)?.map(([key, value]) => {
         return (
           <Select
+          className="w-full"
             value={value?.find((c) => c?.category_id === listFilter[key])}
             onChange={(selected) => {
               let value =
-                selected?.id === ""
-                  ? listFilter[key - 1]
-                  : selected?.id;
+                selected?.id === "" ? listFilter[key - 1] : selected?.id;
               setFilterCategory(value);
               getCategoriesChildren(value, key + 1);
               if (+key === 1) {

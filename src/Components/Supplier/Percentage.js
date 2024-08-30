@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+import SupplierLine from './SupplierLine';
 
 const Percentage = ({ product, showVariant }) => {
   //   console.log("product from stock", product);
@@ -16,14 +17,14 @@ const Percentage = ({ product, showVariant }) => {
   );
   return (
     <div>
-      <div className="h-[60px] flex justify-center items-center gap-2">
+      <div className="product-hight flex justify-center items-center gap-2">
         <div>{minPer} </div>
         <div>/</div>
         <div> {maxPer}</div>
       </div>
       {show && (
         <div>
-          <hr className="hr-line w-full" />
+          <SupplierLine/>
           {product?.variants?.map((variant) => (
             <>
               <div className="h-28 lg:h-24 text-[12px] flex flex-col justify-center">
@@ -31,7 +32,7 @@ const Percentage = ({ product, showVariant }) => {
                   <span>{variant?.percentage}</span>
                 </div>
               </div>
-              <hr className="hr-line w-full" />
+              <SupplierLine/>
             </>
           ))}
         </div>

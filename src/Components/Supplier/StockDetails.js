@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import SupplierLine from "./SupplierLine";
 
 const StockDetails = ({ product, showVariant }) => {
 //   console.log("product from stock", product);
@@ -13,10 +14,12 @@ const totalStock = product?.variants.reduce((acc, variant) => {
   );
   return (
     <div>
-      <div className="h-[60px] flex justify-center items-center"><span>{totalStock}</span></div>
+      <div className="product-hight flex justify-center items-center">
+        <span>{totalStock}</span>
+      </div>
       {show && (
         <div>
-          <hr className="hr-line w-full" />
+          <SupplierLine />
           {product?.variants?.map((variant) => (
             <>
               <div className="h-28 lg:h-24 text-[12px] flex flex-col justify-center">
@@ -24,7 +27,7 @@ const totalStock = product?.variants.reduce((acc, variant) => {
                   <span>{variant?.stock?.stock}</span>
                 </div>
               </div>
-              <hr className="hr-line w-full" />
+              <SupplierLine />
             </>
           ))}
         </div>

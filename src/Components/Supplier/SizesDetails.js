@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import SupplierLine from "./SupplierLine";
 
 const SizesDetails = ({ product, showVariant }) => {
   const [visibleItems, setVisibleItems] = useState(1); // Number of initially visible items
@@ -47,7 +48,7 @@ const SizesDetails = ({ product, showVariant }) => {
     <div>
       <div
         ref={containerRef}
-        className="h-[60px] flex justify-center items-center overflow-hidden"
+        className="product-hight flex justify-center items-center overflow-hidden"
       >
         <span>
           {uniqueSizes.slice(0, visibleItems).join(", ")}
@@ -56,7 +57,7 @@ const SizesDetails = ({ product, showVariant }) => {
       </div>
       {show && (
         <div>
-          <hr className="hr-line w-full" />
+          <SupplierLine />
           {product?.variants?.map((variant) => (
             <>
               <div className="h-28 lg:h-24 text-[12px] flex flex-col justify-center">
@@ -72,7 +73,7 @@ const SizesDetails = ({ product, showVariant }) => {
                   })}
                 </div>
               </div>
-              <hr className="hr-line w-full" />
+              <SupplierLine />
             </>
           ))}
         </div>

@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+import SupplierLine from './SupplierLine';
 
 const ColorsDetails = ({ product, showVariant }) => {
   // console.log("product from colors", product);
@@ -27,12 +28,12 @@ const ColorsDetails = ({ product, showVariant }) => {
   // console.log(uniqueColors); 
   return (
     <div>
-      <div className="h-[60px] flex justify-center items-center">
+      <div className="product-hight flex justify-center items-center">
         <span>{uniqueColors}</span>
       </div>
       {show && (
         <div>
-          <hr className="hr-line w-full" />
+          <SupplierLine />
           {product?.variants?.map((variant) => (
             <>
               <div className="h-28 lg:h-24 text-[12px] flex flex-col justify-center">
@@ -43,7 +44,7 @@ const ColorsDetails = ({ product, showVariant }) => {
                   })}
                 </div>
               </div>
-              <hr className="hr-line w-full" />
+              <SupplierLine />
             </>
           ))}
         </div>

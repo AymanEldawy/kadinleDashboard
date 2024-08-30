@@ -41,7 +41,7 @@ const Pagination = ({ pageIndex, pageCount, goToPage }) => {
           <button
             onClick={() => handleClick(1)}
             className={`px-2 py-1${
-              pageIndex === 0 ? "bg-black text-white rounded-sm" : ""
+              pageIndex === 0 ? "bg-[#144479] text-white rounded-sm" : ""
             }`}
           >
             1
@@ -54,7 +54,7 @@ const Pagination = ({ pageIndex, pageCount, goToPage }) => {
           key={page}
           onClick={() => handleClick(page)}
           className={`px-2 py-1 ${
-            pageIndex + 1 === page ? "bg-black text-white rounded-sm" : ""
+            pageIndex + 1 === page ? "bg-[#144479] text-white rounded-sm" : ""
           }`}
         >
           {page}
@@ -66,7 +66,7 @@ const Pagination = ({ pageIndex, pageCount, goToPage }) => {
           <button
             onClick={() => handleClick(pageCount)}
             className={`px-2 py-1 ${
-              pageIndex + 1 === pageCount ? "bg-black text-white" : ""
+              pageIndex + 1 === pageCount ? "bg-[#144479] text-white" : ""
             }`}
           >
             {pageCount}

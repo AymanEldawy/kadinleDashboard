@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import SupplierLine from "./SupplierLine";
+import Popup from "./Popup";
 
 const KadinlePrice = ({
   product,
@@ -6,8 +8,11 @@ const KadinlePrice = ({
   selectedCurrency,
   getFormatPrice,
 }) => {
-  // const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [variantId, setVariantId] = useState("");
   // console.log("product from kadinle", product);
+
   let show = useMemo(
     () =>
       showVariant?.find((variant) => variant?.id === product?.product_sku)
@@ -24,11 +29,18 @@ const KadinlePrice = ({
 
   return (
     <>
-      {/* <Popup
+      <Popup
         isVisible={isPopupVisible}
         onClose={() => setIsPopupVisible(false)}
-        productPrice={product?.price}
-      /> */}
+        product={product}
+        variantId={variantId}
+        // setUpdateItem={setUpdateItem}
+        // updateAllData={updateAllData}
+        productPrice={getFormatPrice(
+          product?.variants[index]?.purchase_price,
+          selectedCurrency
+        )}
+      />
 
       <div>
         {/* <div className="text-[12px]  !h-[80px] flex flex-col justify-center items-center space-y-2">
@@ -42,21 +54,24 @@ const KadinlePrice = ({
 
         
          </div> */}
-        <div className="h-[60px] flex justify-center items-center gap-2">
+        <div className="product-hight flex justify-center items-center gap-2">
           <div>{getFormatPrice(minPrice, selectedCurrency)}</div>
           <div>/</div>
-          <div>
-            {getFormatPrice(maxPrice, selectedCurrency)}
-          </div>
+          <div>{getFormatPrice(maxPrice, selectedCurrency)}</div>
         </div>
         {show && (
           <div className="text-center w-full">
-            <hr className="hr-line w-full" />
+            <SupplierLine />
             {product?.variants?.map((variant) => (
               <>
                 <div
-                  // onClick={() => setIsPopupVisible(true)}
-                  className="h-28 lg:h-24 text-[12px] ml-3 flex items-center  space-x-1 relative"
+                  onClick={() => {
+                    // setIndex(index);
+                    // console.log("clicked");
+                    setVariantId(variant.id);
+                    setIsPopupVisible(true);
+                  }}
+                  className="cursor-pointer h-28 lg:h-24 text-[12px] ml-3 flex items-center  space-x-1 relative"
                 >
                   <div className="absolute left-0-0 h-6 w-16 border border-gray-400 text-gray rounded-md" />
                   <div className="">
@@ -68,7 +83,7 @@ const KadinlePrice = ({
                     </span>
                   </div>
                 </div>
-                <hr className="hr-line w-full" />
+                <SupplierLine />
               </>
             ))}
           </div>

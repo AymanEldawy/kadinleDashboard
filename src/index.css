@@ -88,18 +88,18 @@ body::backdrop {
   box-shadow: -4px 0 6px rgba(0, 0, 0, 0.1); /* يمكنك تعديل القيم حسب الحاجة */
 }
 
-.hr-line {
-  background: #aeaeae;
+/* .hr-line {
+  background: #cacbce !important;
   height: 1px;
-}
+} */
 
 
 .border-gray-300 .hr-line {
   background: #9790901c;
   height: 2px;
 }
-=======
+
 .product-hight{
   @apply h-[80px]
 }
->>>>>>> 6c7c21d5b10fd5a0fc3773aee0d3fab36f98dfe5
+

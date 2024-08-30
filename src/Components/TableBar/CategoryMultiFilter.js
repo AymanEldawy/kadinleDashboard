@@ -40,10 +40,11 @@ export const CategoryMultiFilter = ({
   });
 
   return (
-    <div className="flex items-center gap-4 flex-wrap">
+    <div className="flex items-center gap-4">
       {Object.entries(listCategories)?.map(([key, value]) => {
         return (
           <Select
+          className="w-full"
             value={value?.find((c) => c?.category_id === listFilter[key])}
             onChange={(selected) => {
               let value =

@@ -23,7 +23,8 @@ import StockDetails from "../../Components/Supplier/StockDetails";
 import Percentage from "../../Components/Supplier/Percentage";
 import SupplierPrice from "../../Components/Supplier/SupplierPrice";
 import CurrencyDropdown from "../../Components/Supplier/CurrencyDropdown";
-
+import {CategoryMultiFilter} from "../../Components/TableBar/CategoryMultiFilter";
+// border color #cacbce
 const SupplierProducts = () => {
   // const DATA = [
   //   {
@@ -84,6 +85,7 @@ const SupplierProducts = () => {
   ]);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [currencyData, setCurrencyData] = useState([]);
+  const [filterCategory, setFilterCategory] = useState(null)
   // console.log("currencyData", currencyData);
   // const [formatedPrice, setFormatedPrice] = useState(null);
   // console.log("formatedPrice",formatedPrice);
@@ -100,6 +102,10 @@ const SupplierProducts = () => {
     setError(error);
     return data;
   }, []);
+
+
+ console.log("filterCategory", filterCategory);
+
 
   const getCurrencyData = async () =>
     await supabase.from("currency").select("*");
@@ -260,7 +266,7 @@ const SupplierProducts = () => {
   return (
     <BlockPaper title="Products Supplier">
       <div className="flex justify-between items-center">
-        <div className="flex">
+        {/* <div className="flex">
           <Filters
             columnFilters={columnFilters}
             setColumnFilters={setColumnFilters}
@@ -274,16 +280,20 @@ const SupplierProducts = () => {
             selectedStatus={selectedStatus}
             setSelectedStatus={setSelectedStatus}
           />
+        </div> */}
+        <div className="z-50 flex-1">
+          <CategoryMultiFilter
+            filterCategory={filterCategory}
+            setFilterCategory={setFilterCategory}
+          />
         </div>
-        <div className="mb-4">
-          {currencyData?.data?.length > 0 && selectedCurrency ? (
+        <div className="mb-1">
+          {currencyData?.data?.length > 0 && selectedCurrency && (
             <CurrencyDropdown
               data={currencyData?.data}
               selectedCurrency={selectedCurrency}
               setSelectedCurrency={setSelectedCurrency}
             />
-          ) : (
-            <Loading />
           )}
         </div>
 
@@ -297,6 +307,7 @@ const SupplierProducts = () => {
           />
         </div>
       </div>
+
       {data?.length > 0 ? (
         <>
           <div className="overflow-x-auto">
@@ -312,7 +323,7 @@ const SupplierProducts = () => {
                         <th
                           key={header.id}
                           className={`px-4 py-4 text-center relative border border-gray-300 ${
-                            index === 0 ? "sticky left-0 bg-gray-200 z-10" : ""
+                            index === 0 ? "sticky left-0 bg-gray-200 z-10 !min-w-[250px]" : ""
                           }`}
                           style={{
                             minWidth: header.getSize() + 1,

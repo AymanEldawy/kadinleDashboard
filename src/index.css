@@ -98,3 +98,8 @@ body::backdrop {
   background: #9790901c;
   height: 2px;
 }
+=======
+.product-hight{
+  @apply h-[80px]
+}
+>>>>>>> 6c7c21d5b10fd5a0fc3773aee0d3fab36f98dfe5

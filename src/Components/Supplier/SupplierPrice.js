@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Popup from "./Popup";
 import { useUpdate } from "../../hooks/useUpdate";
+import SupplierLine from "./SupplierLine";
 
 const SupplierPrice = ({
   product,
@@ -26,22 +27,27 @@ const SupplierPrice = ({
   );
 
   // example of updated data
-  const updateAllData = product?.variants.map((variant) => ({
-    product_id: variant.id,
-    color_id: variant.colors[0],
-    price: 8,
-    percentage: Math.round(variant?.percentage * 100),
-  }));
+  // const updateAllData = product?.variants.map((variant) => (
 
+  //   {
+  //     ...variant,
+  //   product_id: variant.id,
+  //   price: 8,
+  //   percentage: Math.round(variant?.percentage * 100),
+  // }));
+  const updateAllData = {
+    id: "0505c18a-7b17-4a49-a045-68099f60faa2",
+    price: 8,
+    percentage: 50,
+  };
   // console.log("updateAllData", updateAllData);
   const updateSingleItem = async () => {
     // await upsertItem("product_variant", data);
   };
 
-
   return (
     <>
-      <Popup
+      {/* <Popup
         isVisible={isPopupVisible}
         onClose={() => setIsPopupVisible(false)}
         setUpdateItem={setUpdateItem}
@@ -52,7 +58,7 @@ const SupplierPrice = ({
             selectedCurrency
           )[0]
         }
-      />
+      /> */}
 
       <div>
         {/* <div className="text-[12px]  !h-[80px] flex flex-col justify-center items-center space-y-2">
@@ -66,14 +72,14 @@ const SupplierPrice = ({
 
         
          </div> */}
-        <div className="h-[60px] flex justify-center items-center gap-2">
+        <div className="product-hight flex justify-center items-center gap-2">
           <div>{getFormatPrice(minPrice, selectedCurrency)}</div>
           <div>/</div>
           <div>{getFormatPrice(maxPrice, selectedCurrency)}</div>
         </div>
         {show && (
           <div className="text-center w-full">
-            <hr className="hr-line w-full" />
+            <SupplierLine/>
             {product?.variants?.map((variant, index) => (
               <>
                 <div
@@ -103,7 +109,7 @@ const SupplierPrice = ({
                     </span>
                   </div>
                 </div>
-                <hr className="hr-line w-full" />
+                <SupplierLine/>
               </>
             ))}
           </div>

@@ -4,7 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { getCategoryChildren, getOnlyParentCategory } from "../../Api/data";
 import Select from "react-select";
 
-export const CategoryMultiFilter = ({ filterCategory, setFilterCategory }) => {
+export const CategoryMultiFilter = ({
+  filterCategory,
+  setFilterCategory,
+  outerChange,
+  name
+}) => {
   const { defaultLanguage } = useGlobalOptions();
   const [listFilter, setListFilter] = useState({});
   const [listCategories, setListCategories] = useState({});
@@ -20,7 +25,7 @@ export const CategoryMultiFilter = ({ filterCategory, setFilterCategory }) => {
   };
 
   const { data } = useQuery({
-    queryKey: ["category", "parent", defaultLanguage?.id],
+    queryKey: ["category", "parent", defaultLanguage?.id, name],
     keepPreviousData: true,
     queryFn: async () => {
       const category = await getOnlyParentCategory(defaultLanguage?.id);
@@ -42,10 +47,9 @@ export const CategoryMultiFilter = ({ filterCategory, setFilterCategory }) => {
             value={value?.find((c) => c?.category_id === listFilter[key])}
             onChange={(selected) => {
               let value =
-                selected?.id === ""
-                  ? listFilter[key - 1]
-                  : selected?.id;
+                selected?.id === "" ? listFilter[key - 1] : selected?.id;
               setFilterCategory(value);
+              outerChange && outerChange(selected);
               getCategoriesChildren(value, key + 1);
               if (+key === 1) {
                 setListFilter({

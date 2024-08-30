@@ -15,13 +15,18 @@ import Select from "react-select";
 import { useUpdate } from "../../hooks/useUpdate";
 import { toast } from "react-toastify";
 import { getSuppliersList } from "../../Api/data";
-import { ChevronIcon } from "../../Helpers/Icons";
+import { ChevronIcon, TrashIcon } from "../../Helpers/Icons";
 import ReactPaginate from "react-paginate";
+import { useDelete } from "../../hooks/useDelete";
+import ConfirmModal from "../../Components/ConfirmModal/ConfirmModal";
 
 const MoveCategory = () => {
   let name = "products_slider";
   const { defaultLanguage } = useGlobalOptions();
-  const { upsertItem } = useUpdate();
+  const { upsertItem, updateItem } = useUpdate();
+  const { deleteItem: onDelete } = useDelete();
+  const [isProgress, setIsProgress] = useState(false);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
   const [selectedList, setSelectedList] = useState({});
   const [supplierId, setSupplierId] = useState("");
   const [category, setCategory] = useState("");
@@ -32,13 +37,12 @@ const MoveCategory = () => {
   });
 
   const [newCategoriesList, setNewCategoryList] = useState({});
-  const [newCategory, setNewCategory] = useState("");
+  const [newCategory, setNewCategory] = useState(null);
 
   const { data: suppliers } = useQuery({
     queryKey: ["list", "suppliers"],
     queryFn: async () => {
       const data = await getSuppliersList();
-      console.log("🚀 ~ queryFn: ~ response:", data);
       return data;
     },
   });
@@ -95,7 +99,6 @@ const MoveCategory = () => {
   });
 
   const handlePageClick = (event) => {
-    console.log("🚀 ~ handlePageClick ~ event:", event);
     setPagination((prev) => ({
       ...prev,
       pageIndex: event,
@@ -129,236 +132,298 @@ const MoveCategory = () => {
   };
 
   const handleMoveAll = async () => {
+    setIsProgress(true);
     let list = Object.keys(selectedList);
     let bulk = [];
+    let response = null;
     for (const id of list) {
-      bulk.push({
+      // bulk.push({
+      //   id,
+      //   category_id: newCategory?.category_id,
+      // });
+      response = await updateItem("product", {
         id,
         category_id: newCategory?.category_id,
       });
     }
 
-    const response = await upsertItem("product", bulk);
+    // const response = await upsertItem("product", bulk);
     if (response?.error) {
-      toast.success(`Failed to update category for selected products`);
+      toast.error(`Failed to update category for selected products`);
     } else {
       toast.success(`Successfully update category for selected products`);
     }
+    setIsProgress(false);
   };
 
   const onMoveOne = async (productId, productSku) => {
+    setIsProgress(true);
+    console.log(
+      newCategoriesList?.[productId],
+      "newCategoriesList?.[productId]"
+    );
+
     const response = await updateProductCategory(
       productId,
       newCategoriesList?.[productId]
     );
     if (response?.error) {
-      toast.success(`Failed to update category for product ${productSku}`);
+      toast.error(`Failed to update category for product ${productSku}`);
     } else {
       toast.success(`Successfully update category for product ${productSku}`);
     }
+    setIsProgress(false);
   };
 
   const updateProductCategory = async (id, category_id) => {
-    return await upsertItem("product", {
+    return await updateItem("product", {
       id,
       category_id,
     });
   };
 
-  return (
-    <BlockPaper
-      headerClassName="flex items-center justify-between"
-      title={"Changing Category"}
-      contentBar={
-        <div className="flex gap-4 items-center font-medium text-lg text-gray-700">
-          <Select
-            className="max-w-[150px]"
-            options={suppliers}
-            getOptionLabel={({ seller_file_id }) => seller_file_id}
-            getOptionValue={({ seller_file_id }) => seller_file_id}
-            onChange={(value) => {
-              setSupplierId(value?.seller_file_id);
-            }}
-          />
-          <span>
-            Supplier id:{" "}
-            <span className="bg-gray-100 rounded-md px-2 py-1 border border-gray-200">
-              {supplierId}
-            </span>{" "}
-          </span>
-          |
-          <span>
-            Total Products:{" "}
-            <span className="bg-gray-100 rounded-md px-2 py-1 border border-gray-200">
-              {data?.count}
-            </span>
-          </span>
-        </div>
-      }
-    >
-      <div className="my-4 flex items-center gap-4">
-        <CategoryMultiFilter
-          filterCategory={category}
-          setFilterCategory={setCategory}
-        />
-        <div className="flex items-center gap-2 ">
-          Move To:{" "}
-          <SearchCategoryField
-            value={newCategory}
-            onChange={(value) => {
-              setNewCategory(value);
-            }}
-          />
-          <Button
-            disabled={!newCategory || !Object.keys(selectedList)?.length}
-            onClick={handleMoveAll}
-            classes=""
-            title="Save All"
-          />
-        </div>
-      </div>
+  const deleteSelectedProducts = async () => {
+    setIsProgress(true);
+    const response = await onDelete("product", Object.keys(selectedList));
+    if (response?.error) {
+      toast.error(`Failed to deleted products`);
+    } else {
+      toast.success(`Successfully deleted products`);
+    }
+    setSelectedList({});
+    setIsProgress(false);
+    setOpenConfirmation(false);
+  };
 
-      <ReactPaginate
-        breakLabel="..."
-        nextLabel={
-          <span className="flex scale-75 ltr:rotate-180 rtl:-rotate-180">
-            <ChevronIcon />
-          </span>
-        }
-        onPageChange={({ selected }) => handlePageClick(selected)}
-        pageRangeDisplayed={5}
-        pageCount={pageCount}
-        // forcePage={itemOffset}
-        previousLabel={
-          <span className="flex scale-75 rtl:rotate-180">
-            <ChevronIcon />
-          </span>
-        }
-        renderOnZeroPageCount={null}
-        className="pagination flex  dark:text-white justify-end border-t  gap-6 items-center shadow p-3 bg-white dark:bg-bgmaindark"
-        activeClassName="bg-blue-500 p-1 px-2 rounded text-sm text-white"
-        previousClassName="ltr:rotate-90 rtl:-rotate-90 rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
-        nextClassName="ltr:rotate-90 rtl:-rotate-90 rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
-        disabledClassName="text-gray-200 dark:text-gray-600"
+  return (
+    <>
+      <ConfirmModal
+        onConfirm={deleteSelectedProducts}
+        open={openConfirmation}
+        setOpen={setOpenConfirmation}
       />
-      <div className="border-y flex items-center bg-gray-200 dark:text-white dark:bg-[#2d2d2d] dark:border-[#343333]">
-        <div className="p-2 w-[50px]">
-          <input type="checkbox" className="h-5 w-5" onChange={onSelectAll} />
-        </div>
-        <div className="p-2 flex-[2]">Product</div>
-        <div className="p-2 flex-1">Supplier</div>
-        <div className="p-2 flex-1">Category</div>
-        <div className="p-2 flex-1">New Category</div>
-        <div className="p-2 flex-1">Actions</div>
-      </div>
-      {data?.products?.map((product) => {
-        let isSelected = selectedList?.[product?.id];
-        return (
-          <div
-            className={`border-y flex items-center dark:border-[#343333]  dark:text-white ${
-              isSelected ? "bg-gray-100" : ""
-            }`}
-          >
+      <div className="relative">
+        {isProgress ? (
+          <div className="absolute top-0 left-0 w-full h-full z-10 flex pt-36 text-primary-blue bg-[#ffffff81] justify-center text-4xl dark:bg-[#00000021]">
+            <svg
+              class="animate-spin h-9 w-9 mr-3 bg-primary-blue rounded-md"
+              viewBox="0 0 24 24"
+            ></svg>
+            Processing...
+          </div>
+        ) : null}
+        <BlockPaper
+          headerClassName="flex items-center justify-between"
+          title={"Changing Category"}
+          contentBar={
+            <div className="flex gap-4 items-center font-medium text-lg text-gray-700">
+              <Select
+                className="max-w-[150px]"
+                options={suppliers}
+                getOptionLabel={({ seller_file_id }) => seller_file_id}
+                getOptionValue={({ seller_file_id }) => seller_file_id}
+                onChange={(value) => {
+                  setSupplierId(value?.seller_file_id);
+                }}
+              />
+              <span>
+                Supplier id:{" "}
+                <span className="bg-gray-100 rounded-md px-2 py-1 border border-gray-200">
+                  {supplierId}
+                </span>{" "}
+              </span>
+              |
+              <span>
+                Total Products:{" "}
+                <span className="bg-gray-100 rounded-md px-2 py-1 border border-gray-200">
+                  {data?.count}
+                </span>
+              </span>
+            </div>
+          }
+        >
+          <div className="my-4 flex items-center gap-4">
+            <CategoryMultiFilter
+              name={"change category"}
+              filterCategory={category}
+              setFilterCategory={setCategory}
+            />
+            <div className="flex items-center gap-2">
+              Move To:{" "}
+              <CategoryMultiFilter
+                name={"select category"}
+                setFilterCategory={() => {}}
+                filterCategory={newCategory}
+                outerChange={(value) => setNewCategory(value)}
+              />
+              <Button
+                disabled={!newCategory || !Object.keys(selectedList)?.length}
+                onClick={handleMoveAll}
+                classes=""
+                title="Save All"
+              />
+            </div>
+            <button
+              onClick={() => setOpenConfirmation(true)}
+              disabled={!Object.keys(selectedList)?.length}
+              className="ml-auto disabled:bg-red-200 disabled:cursor-not-allowed bg-red-500 hover:bg-red-700 p-2 rounded-md"
+            >
+              <TrashIcon className="text-white h-6 w-6" />
+            </button>
+          </div>
+
+          <div className="flex justify-between items-center  dark:text-white border-t  shadow p-3 bg-white dark:bg-bgmaindark">
+            <p>Selected Products: <span className="font-extrabold text-lg">{Object.keys(selectedList)?.length}</span> </p>
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel={
+                <span className="flex scale-75 ltr:rotate-180 rtl:-rotate-180">
+                  <ChevronIcon />
+                </span>
+              }
+              onPageChange={({ selected }) => handlePageClick(selected)}
+              pageRangeDisplayed={5}
+              pageCount={pageCount}
+              // forcePage={itemOffset}
+              previousLabel={
+                <span className="flex scale-75 rtl:rotate-180">
+                  <ChevronIcon />
+                </span>
+              }
+              renderOnZeroPageCount={null}
+              className="pagination flex gap-6 items-center"
+              activeClassName="bg-blue-500 p-1 px-2 rounded text-sm text-white"
+              previousClassName="ltr:rotate-90 rtl:-rotate-90 rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
+              nextClassName="ltr:rotate-90 rtl:-rotate-90 rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
+              disabledClassName="text-gray-200 dark:text-gray-600"
+            />
+          </div>
+
+          <div className="border-y flex items-center bg-gray-200 dark:text-white dark:bg-[#2d2d2d] dark:border-[#343333]">
             <div className="p-2 w-[50px]">
               <input
                 type="checkbox"
-                checked={isSelected}
-                value={product?.id}
                 className="h-5 w-5"
-                onChange={onSelectRow}
+                onChange={onSelectAll}
               />
             </div>
-            <div className="p-2 flex-[2] hover:text-blue-500 hover:bg-gray-100 hover:shadow">
-              <Link
-                className="flex gap-2"
-                to={`https://kadinle.com/product/${product?.product_sku}`}
-                target="_blank"
-              >
-                <img
-                  src={product?.product_image?.at(0)?.image}
-                  alt=""
-                  className="w-20 h-20 object-contain"
-                />
-                <ul className="capitalize font-medium text-sm">
-                  <li>product sku: {product?.product_sku}</li>
-                  <li>{product?.product_content?.at(0)?.name}</li>
-                </ul>
-              </Link>
-            </div>
-            <div className="p-2 flex-1">
-              <ul>
-                <li>Supplier sku: {product?.seller_sku}</li>
-                <li>Supplier id: {product?.seller_file_id}</li>
-              </ul>
-            </div>
-            <div className="p-2 flex-1">
-              <span className="bg-orange-500 text-white px-2 py-1 text-sm rounded-md">
-                {product?.category?.category_content?.at(0)?.name}
-              </span>
-            </div>
-            <div className="p-2 flex-1">
-              {isSelected ? (
-                <>
-                  {newCategory ? (
-                    <span className="text-green-500 border border-green-500 px-2 py-1 rounded-md">
-                      {newCategory?.title}
-                    </span>
-                  ) : (
-                    <span className="text-red-500 border border-red-500 px-2 py-1 rounded-md">
-                      Non-category
-                    </span>
-                  )}
-                </>
-              ) : (
-                <SearchCategoryField
-                  value={newCategoriesList?.[product?.id]}
-                  onChange={(value) => {
-                    setNewCategoryList((prev) => ({
-                      ...prev,
-                      [product?.id]: value.category_id,
-                    }));
-                  }}
-                />
-              )}
-            </div>
-            <div className="p-2 flex-1">
-              <Button
-                onClick={() => onMoveOne(product?.id, product?.product_sku)}
-                classes=""
-                title="Save"
-                disabled={isSelected || !newCategoriesList?.[product?.id]}
-              />
-            </div>
+            <div className="p-2 flex-[2]">Product</div>
+            <div className="p-2 flex-1">Supplier</div>
+            <div className="p-2 flex-1">Category</div>
+            <div className="p-2 flex-1">New Category</div>
+            <div className="p-2 flex-1">Actions</div>
           </div>
-        );
-      })}
+          {data?.products?.map((product) => {
+            let isSelected = selectedList?.[product?.id];
+            return (
+              <div
+                className={`border-y flex items-center dark:border-[#343333]  dark:text-white ${
+                  isSelected ? "bg-gray-100" : ""
+                }`}
+              >
+                <div className="p-2 w-[50px]">
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    value={product?.id}
+                    className="h-5 w-5"
+                    onChange={onSelectRow}
+                  />
+                </div>
+                <div className="p-2 flex-[2] hover:text-blue-500 hover:bg-gray-100 hover:shadow">
+                  <Link
+                    className="flex gap-2"
+                    to={`https://kadinle.com/product/${product?.product_sku}`}
+                    target="_blank"
+                  >
+                    <img
+                      src={product?.product_image?.at(0)?.image}
+                      alt=""
+                      className="w-20 h-20 object-contain"
+                    />
+                    <ul className="capitalize font-medium text-sm">
+                      <li>product sku: {product?.product_sku}</li>
+                      <li>{product?.product_content?.at(0)?.name}</li>
+                    </ul>
+                  </Link>
+                </div>
+                <div className="p-2 flex-1">
+                  <ul>
+                    <li>Supplier sku: {product?.seller_sku}</li>
+                    <li>Supplier id: {product?.seller_file_id}</li>
+                  </ul>
+                </div>
+                <div className="p-2 flex-1">
+                  <span className="bg-orange-500 text-white px-2 py-1 text-sm rounded-md">
+                    {product?.category?.category_content?.at(0)?.name}
+                  </span>
+                </div>
+                <div className="p-2 flex-1">
+                  {isSelected ? (
+                    <>
+                      {newCategory ? (
+                        <span className="text-green-500 border border-green-500 px-2 py-1 rounded-md">
+                          {newCategory?.category_content?.at(0)?.title}
+                        </span>
+                      ) : (
+                        <span className="text-red-500 border border-red-500 px-2 py-1 rounded-md">
+                          Non-category
+                        </span>
+                      )}
+                    </>
+                  ) : (
+                    <SearchCategoryField
+                      value={newCategoriesList?.[product?.id]}
+                      onChange={(value) => {
+                        setNewCategoryList((prev) => ({
+                          ...prev,
+                          [product?.id]: value.category_id,
+                        }));
+                      }}
+                    />
+                  )}
+                </div>
+                <div className="p-2 flex-1">
+                  <Button
+                    onClick={() => onMoveOne(product?.id, product?.product_sku)}
+                    classes=""
+                    title="Save"
+                    disabled={isSelected || !newCategoriesList?.[product?.id]}
+                  />
+                </div>
+              </div>
+            );
+          })}
 
-      <div>
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel={
-            <span className="flex  scale-75 ltr:rotate-180 rtl:-rotate-180">
-              <ChevronIcon />
-            </span>
-          }
-          onPageChange={({ selected }) => handlePageClick(selected)}
-          pageRangeDisplayed={5}
-          pageCount={pageCount}
-          // forcePage={itemOffset}
-          previousLabel={
-            <span className="flex scale-75 rtl:rotate-180">
-              <ChevronIcon />
-            </span>
-          }
-          renderOnZeroPageCount={null}
-          className="pagination flex  dark:text-white justify-end gap-6 items-center shadow p-3 bg-white dark:bg-bgmaindark"
-          activeClassName="bg-blue-500 p-1 px-2 rounded text-sm text-white"
-          previousClassName="ltr:rotate-90 rtl:-rotate-90 rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
-          nextClassName="ltr:rotate-90 rtl:-rotate-90 rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
-          disabledClassName="text-gray-200 dark:text-gray-600"
-        />
+          <div className="flex justify-between items-center  dark:text-white border-t  shadow p-3 bg-white dark:bg-bgmaindark">
+            <p>Selected Products: <span className="font-extrabold text-lg">{Object.keys(selectedList)?.length}</span> </p>
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel={
+                <span className="flex  scale-75 ltr:rotate-180 rtl:-rotate-180">
+                  <ChevronIcon />
+                </span>
+              }
+              onPageChange={({ selected }) => handlePageClick(selected)}
+              pageRangeDisplayed={5}
+              pageCount={pageCount}
+              // forcePage={itemOffset}
+              previousLabel={
+                <span className="flex scale-75 rtl:rotate-180">
+                  <ChevronIcon />
+                </span>
+              }
+              renderOnZeroPageCount={null}
+              className="pagination flex  gap-6 items-center"
+              activeClassName="bg-blue-500 p-1 px-2 rounded text-sm text-white"
+              previousClassName="ltr:rotate-90 rtl:-rotate-90 rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
+              nextClassName="ltr:rotate-90 rtl:-rotate-90 rounded-md dark:bg-borderdark dark:text-gray-50 text-gray-500 bg-gray-100 shadow px-1"
+              disabledClassName="text-gray-200 dark:text-gray-600"
+            />
+          </div>
+        </BlockPaper>
       </div>
-    </BlockPaper>
+    </>
   );
 };
 

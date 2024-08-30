@@ -1,6 +1,6 @@
 import React from "react";
 
-const TrashIcon = () => {
+const TrashIcon = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -9,6 +9,7 @@ const TrashIcon = () => {
       strokeWidth={1.5}
       stroke="currentColor"
       className="w-4 h-4"
+      {...props}
     >
       <path
         strokeLinecap="round"

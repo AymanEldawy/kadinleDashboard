@@ -93,3 +93,8 @@ body::backdrop {
   height: 1px;
 }
 
+
+.border-gray-300 .hr-line {
+  background: #9790901c;
+  height: 2px;
+}

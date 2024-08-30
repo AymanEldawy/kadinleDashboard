@@ -45,15 +45,15 @@ const ProductDetails = ({ product, showVariant, setShowVariant }) => {
 
   // console.log("show",typeof show);
   return (
-    <div className="flex flex-col space-y-4 pl-6 ">
+    <div className="flex flex-col space-y-4 pl-6 min-w-[220px]">
       <div className="flex w-full space-x-2 relative ">
-        {/* <img
+        <img
           width={50}
           height={100}
           className="object-cover"
-          src={product?.product_image[0]?.image}
+          src={product?.image}
           alt="product"
-        /> */}
+        />
         <div className="text-[12px] pl-2 flex flex-col space-y-1 w-full">
           <a
             href={`${baseURL}${product?.product_sku}`}

@@ -6,7 +6,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import EditableField from "../../Components/Supplier/EditableField";
 import Filters from "../../Components/Supplier/Filters";
@@ -22,6 +22,7 @@ import SizesDetails from "../../Components/Supplier/SizesDetails";
 import StockDetails from "../../Components/Supplier/StockDetails";
 import Percentage from "../../Components/Supplier/Percentage";
 import SupplierPrice from "../../Components/Supplier/SupplierPrice";
+import CurrencyDropdown from "../../Components/Supplier/CurrencyDropdown";
 
 const SupplierProducts = () => {
   // const DATA = [
@@ -82,13 +83,13 @@ const SupplierProducts = () => {
     // }
   ]);
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [currencyData, setCurrencyData] = useState([]);
+  // console.log("currencyData", currencyData);
+  // const [formatedPrice, setFormatedPrice] = useState(null);
+  // console.log("formatedPrice",formatedPrice);
+
+  const [selectedCurrency, setSelectedCurrency] = useState(null);
   const getSuppliersProduct = useCallback(async () => {
-    // const products = await supabase.from("product").select(
-    //   `*,
-    //   product_content(*),
-    //   product_image(*),
-    //   product_variant(*)`
-    // );
     let { data, error } = await supabase.rpc("get_products_with_variants", {
       param_lang_id: "c1a063e3-8f21-4526-8302-453b705ed27d",
       param_category_id: null,
@@ -100,6 +101,17 @@ const SupplierProducts = () => {
     return data;
   }, []);
 
+  const getCurrencyData = async () =>
+    await supabase.from("currency").select("*");
+
+  const getFormatPrice = useMemo(() => {
+    return (price, currency) => {
+      let calculatePrice = (price * currency?.rate).toFixed(2);
+      if (!calculatePrice || isNaN(calculatePrice)) calculatePrice = price;
+      return [calculatePrice, currency?.short_code];
+    };
+  }, []);
+  
   useEffect(() => {
     if (data.length > 0) {
       // console.log("data from variant", data);
@@ -114,13 +126,24 @@ const SupplierProducts = () => {
   useEffect(() => {
     const fetchData = async () => {
       const suppliersProduct = await getSuppliersProduct();
-      // console.log("suppliersProduct", suppliersProduct);
+      const currency = await getCurrencyData();
       originalDataRef.current = suppliersProduct;
+      setCurrencyData(currency);
       setData(suppliersProduct);
     };
 
     fetchData();
-  }, [getSuppliersProduct]);
+  }, []);
+
+  useEffect(() => {
+    if (currencyData?.data) {
+      const defaultCurrency = currencyData.data.find(
+        (currency) => currency.name === "United States Dollar"
+      );
+      setSelectedCurrency(defaultCurrency || null);
+    }
+  }, [currencyData]);
+
   const STATUSES = [
     "product",
     "category",
@@ -186,14 +209,24 @@ const SupplierProducts = () => {
       accessorKey: "supplier price",
       header: "supplier price",
       cell: (props) => (
-        <SupplierPrice product={props.row.original} showVariant={showVariant} />
+        <SupplierPrice
+          product={props.row.original}
+          showVariant={showVariant}
+          selectedCurrency={selectedCurrency}
+          getFormatPrice={getFormatPrice}
+        />
       ),
     },
     {
       accessorKey: "kadinle price",
       header: "kadinle price",
       cell: (props) => (
-        <KadinlePrice product={props.row.original} showVariant={showVariant} />
+        <KadinlePrice
+          product={props.row.original}
+          showVariant={showVariant}
+          selectedCurrency={selectedCurrency}
+          getFormatPrice={getFormatPrice}
+        />
       ),
     },
     {
@@ -242,6 +275,18 @@ const SupplierProducts = () => {
             setSelectedStatus={setSelectedStatus}
           />
         </div>
+        <div className="mb-4">
+          {currencyData?.data?.length > 0 && selectedCurrency ? (
+            <CurrencyDropdown
+              data={currencyData?.data}
+              selectedCurrency={selectedCurrency}
+              setSelectedCurrency={setSelectedCurrency}
+            />
+          ) : (
+            <Loading />
+          )}
+        </div>
+
         <div className="m-4 max-sm:hidden">
           <Pagination
             pageIndex={table.getState().pagination.pageIndex}
@@ -272,7 +317,7 @@ const SupplierProducts = () => {
                           style={{
                             minWidth: header.getSize() + 1,
                             width: header.getSize(),
-                          
+
                             // borderRight:
                             //   index === 0 ? "1px solid gray" : "1px solid black",
                           }}

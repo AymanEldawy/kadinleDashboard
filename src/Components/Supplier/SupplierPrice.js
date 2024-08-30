@@ -1,10 +1,16 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Popup from "./Popup";
+import { useUpdate } from "../../hooks/useUpdate";
 
-const SupplierPrice = ({ product, showVariant }) => {
+const SupplierPrice = ({
+  product,
+  showVariant,
+  selectedCurrency,
+  getFormatPrice,
+}) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [index, setIndex] = useState(0);
-
+  const [updateItem, setUpdateItem] = useState(null);
   const minPrice = Math.min(
     ...(product?.variants?.map((variant) => variant.purchase_price) || [])
   );
@@ -19,12 +25,33 @@ const SupplierPrice = ({ product, showVariant }) => {
     [product?.product_sku, showVariant]
   );
 
+  // example of updated data
+  const updateAllData = product?.variants.map((variant) => ({
+    product_id: variant.id,
+    color_id: variant.colors[0],
+    price: 8,
+    percentage: Math.round(variant?.percentage * 100),
+  }));
+
+  // console.log("updateAllData", updateAllData);
+  const updateSingleItem = async () => {
+    // await upsertItem("product_variant", data);
+  };
+
+
   return (
     <>
       <Popup
         isVisible={isPopupVisible}
         onClose={() => setIsPopupVisible(false)}
-        productPrice={product?.variants[index]?.purchase_price}
+        setUpdateItem={setUpdateItem}
+        updateAllData={updateAllData}
+        productPrice={
+          getFormatPrice(
+            product?.variants[index]?.purchase_price,
+            selectedCurrency
+          )[0]
+        }
       />
 
       <div>
@@ -40,9 +67,9 @@ const SupplierPrice = ({ product, showVariant }) => {
         
          </div> */}
         <div className="h-[60px] flex justify-center items-center gap-2">
-          <div>{minPrice} </div>
+          <div>{getFormatPrice(minPrice, selectedCurrency)}</div>
           <div>/</div>
-          <div> {maxPrice}</div>
+          <div>{getFormatPrice(maxPrice, selectedCurrency)}</div>
         </div>
         {show && (
           <div className="text-center w-full">
@@ -56,12 +83,24 @@ const SupplierPrice = ({ product, showVariant }) => {
                   }}
                   className="cursor-pointer h-28 lg:h-24 text-[12px] ml-3 flex items-center  space-x-1 relative"
                 >
-                  <div className="absolute left-0-0 h-6 w-12 border border-gray-400 text-gray rounded-md" />
+                  <div className="absolute left-0-0 h-6 w-16 border border-gray-400 text-gray rounded-md" />
                   <div className="">
                     <span className="font-semibold">
-                      {variant?.purchase_price}{" "}
+                      {
+                        getFormatPrice(
+                          variant?.purchase_price,
+                          selectedCurrency
+                        )[0]
+                      }
                     </span>
-                    {/* <span>$</span> */}
+                    <span className="ml-1">
+                      {
+                        getFormatPrice(
+                          variant?.purchase_price,
+                          selectedCurrency
+                        )[1]
+                      }
+                    </span>
                   </div>
                 </div>
                 <hr className="" />

@@ -16,7 +16,7 @@ const totalStock = product?.variants.reduce((acc, variant) => {
       <div className="h-[60px] flex justify-center items-center"><span>{totalStock}</span></div>
       {show && (
         <div>
-          <hr className="w-full" />
+          <hr className="hr-line w-full" />
           {product?.variants?.map((variant) => (
             <>
               <div className="h-28 lg:h-24 text-[12px] flex flex-col justify-center">
@@ -24,7 +24,7 @@ const totalStock = product?.variants.reduce((acc, variant) => {
                   <span>{variant?.stock?.stock}</span>
                 </div>
               </div>
-              <hr className="w-full" />
+              <hr className="hr-line w-full" />
             </>
           ))}
         </div>

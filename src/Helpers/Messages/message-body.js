@@ -38,7 +38,7 @@ export const messageBody = (message) => `
             <figure style="width: 30px !important; height: 35px !important">
               <img
                 src="http://66.29.142.115/dresses.png"
-                class=""
+                className=""
                 style="
                   fill: #f457b0 !important;
                   width: 100% !important;
@@ -173,7 +173,7 @@ export const messageBody = (message) => `
             </h4>
             <div style="padding-bottom: 16px">
               <a
-                class="social"
+                className="social"
                 style="
                   display: inline-block;
                   margin-left: 10px;
@@ -190,7 +190,7 @@ export const messageBody = (message) => `
                 />
               </a>
               <a
-                class="social"
+                className="social"
                 style="
                   display: inline-block;
                   margin-left: 10px;
@@ -207,7 +207,7 @@ export const messageBody = (message) => `
                 />
               </a>
               <a
-                class="social"
+                className="social"
                 style="
                   display: inline-block;
                   margin-left: 10px;
@@ -242,7 +242,7 @@ export const messageBody = (message) => `
             </h4>
             <div style="padding-bottom: 16px">
               <a
-                class="social"
+                className="social"
                 style="
                   color: rgb(57, 57, 57) !important;
                   display: inline-block;
@@ -259,7 +259,7 @@ export const messageBody = (message) => `
                 />
               </a>
               <a
-                class="social"
+                className="social"
                 style="
                   color: rgb(57, 57, 57) !important;
                   display: inline-block;
@@ -276,7 +276,7 @@ export const messageBody = (message) => `
                 />
               </a>
               <a
-                class="social"
+                className="social"
                 style="
                   color: rgb(57, 57, 57) !important;
                   display: inline-block;
@@ -291,7 +291,7 @@ export const messageBody = (message) => `
                   alt="instagram"
               /></a>
               <a
-                class="social"
+                className="social"
                 style="
                   color: rgb(57, 57, 57) !important;
                   display: inline-block;
@@ -381,7 +381,7 @@ export const messageBody = (message) => `
                 font-size: 16px;
               "
             >
-              <b class="red" style="color: #f457b0 !important">KADINLE STORE</b>
+              <b className="red" style="color: #f457b0 !important">KADINLE STORE</b>
               <b> © 2022 ALL RIGHTS RESERVED.</b>
             </p>
           </td>

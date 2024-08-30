@@ -88,3 +88,8 @@ body::backdrop {
   box-shadow: -4px 0 6px rgba(0, 0, 0, 0.1); /* يمكنك تعديل القيم حسب الحاجة */
 }
 
+.hr-line {
+  background: #aeaeae;
+  height: 1px;
+}
+

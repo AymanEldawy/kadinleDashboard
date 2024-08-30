@@ -23,7 +23,7 @@ const Percentage = ({ product, showVariant }) => {
       </div>
       {show && (
         <div>
-          <hr className="w-full" />
+          <hr className="hr-line w-full" />
           {product?.variants?.map((variant) => (
             <>
               <div className="h-28 lg:h-24 text-[12px] flex flex-col justify-center">
@@ -31,7 +31,7 @@ const Percentage = ({ product, showVariant }) => {
                   <span>{variant?.percentage}</span>
                 </div>
               </div>
-              <hr className="w-full" />
+              <hr className="hr-line w-full" />
             </>
           ))}
         </div>

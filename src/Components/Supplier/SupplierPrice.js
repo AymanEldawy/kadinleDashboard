@@ -46,7 +46,7 @@ const SupplierPrice = ({ product, showVariant }) => {
         </div>
         {show && (
           <div className="text-center w-full">
-            <hr className="" />
+            <hr className="hr-line w-full" />
             {product?.variants?.map((variant, index) => (
               <>
                 <div
@@ -64,7 +64,7 @@ const SupplierPrice = ({ product, showVariant }) => {
                     {/* <span>$</span> */}
                   </div>
                 </div>
-                <hr className="" />
+                <hr className="hr-line w-full" />
               </>
             ))}
           </div>

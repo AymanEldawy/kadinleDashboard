@@ -6,9 +6,8 @@ const ProductDetails = ({ product, showVariant, setShowVariant }) => {
   // console.log("product", product);
   const baseURL = "https://kadinle.com/en/product/";
 
-    const [visibleLength, setVisibleLength] = useState(20); // Initial length of visible characters
-    const linkRef = useRef(null);
-
+  const [visibleLength, setVisibleLength] = useState(20); // Initial length of visible characters
+  const linkRef = useRef(null);
 
   useEffect(() => {
     const updateVisibleLength = () => {
@@ -46,35 +45,35 @@ const ProductDetails = ({ product, showVariant, setShowVariant }) => {
   // console.log("show",typeof show);
   return (
     <div className="flex flex-col space-y-4 pl-6 ">
-      <div className="flex w-full space-x-2 relative ">
-        {/* <img
-          width={50}
-          height={100}
-          className="object-cover"
-          src={product?.product_image[0]?.image}
-          alt="product"
-        /> */}
-        <div className="text-[12px] pl-2 flex flex-col space-y-1 w-full">
-          <a
-            href={`${baseURL}${product?.product_sku}`}
-            className="font-semibold underline truncate w-full"
-            title={product?.name}
-            target="_blank"
-            rel="noopener noreferrer"
-            ref={linkRef}
-          >
-            {product?.name?.length > visibleLength
-              ? `${product?.name?.slice(0, visibleLength)}...`
-              : product?.name}
-          </a>
-          <p>
-            product sku:{" "}
-            <span>
-              {product?.product_sku}{" "}
-              <CopyButton textToCopy={product?.product_sku}></CopyButton>
-            </span>
-          </p>
-        </div>
+      <div className="flex w-full space-x-2 relative  hover:bg-gray-100">
+        <a
+          href={`${baseURL}${product?.product_sku}`}
+          className="text-[12px] pl-2 flex gap-2 w-full"
+          title={product?.name}
+          target="_blank"
+          rel="noopener noreferrer"
+          ref={linkRef}
+        >
+          <img
+            src={product?.image}
+            alt={product?.name}
+            className="h-16 w-12 object-cover"
+          />
+          <div className="flex flex-col space-y-1 flex-1">
+            <h3 className="font-semibold underline truncate w-full">
+              {product?.name?.length > visibleLength
+                ? `${product?.name?.slice(0, visibleLength)}...`
+                : product?.name}
+            </h3>
+            <p>
+              product sku:{" "}
+              <span>
+                {product?.product_sku}{" "}
+                <CopyButton textToCopy={product?.product_sku}></CopyButton>
+              </span>
+            </p>
+          </div>
+        </a>
         <button
           onClick={() => {
             setShowVariant((prevVariants) =>
@@ -96,7 +95,7 @@ const ProductDetails = ({ product, showVariant, setShowVariant }) => {
       </div>
       {show && (
         <div>
-          <hr className="w-full" />
+          <hr className="hr-line w-full" />
           {product?.variants?.map((variant) => (
             <>
               <div className="h-28 lg:h-24 text-[12px] ml-3 flex flex-col justify-center">
@@ -123,7 +122,7 @@ const ProductDetails = ({ product, showVariant, setShowVariant }) => {
                 </p>
                 {/* <hr /> */}
               </div>
-              <hr className="w-full" />
+              <hr className="hr-line w-full" />
             </>
           ))}
         </div>

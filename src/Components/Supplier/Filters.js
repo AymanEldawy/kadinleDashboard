@@ -42,7 +42,7 @@ const Filters = ({
   };
   console.log("data filtered: ", data);
   return (
-    <div class="bg-gray-100 rounded-l-md p-2 flex items-center w-[200px] mb-3">
+    <div className="bg-gray-100 rounded-l-md p-2 flex items-center w-[200px] mb-3">
       <SearchIcon />
       <input
         type="text"

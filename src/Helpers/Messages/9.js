@@ -27,7 +27,7 @@ export const msg9 = (lang) => `
 
       <p>
         <a
-          class="but"
+          className="but"
           href=""
           style="
             background-color: #fffffe !important;

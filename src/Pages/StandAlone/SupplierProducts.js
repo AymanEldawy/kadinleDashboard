@@ -6,7 +6,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import EditableField from "../../Components/Supplier/EditableField";
 import Filters from "../../Components/Supplier/Filters";
@@ -23,52 +29,9 @@ import StockDetails from "../../Components/Supplier/StockDetails";
 import Percentage from "../../Components/Supplier/Percentage";
 import SupplierPrice from "../../Components/Supplier/SupplierPrice";
 import CurrencyDropdown from "../../Components/Supplier/CurrencyDropdown";
-import {CategoryMultiFilter} from "../../Components/TableBar/CategoryMultiFilter";
+import { CategoryMultiFilter } from "../../Components/TableBar/CategoryMultiFilter";
 // border color #cacbce
 const SupplierProducts = () => {
-  // const DATA = [
-  //   {
-  //     one: "Product 1",
-  //     two: "Supplier 1",
-  //     three: "2022-01-01",
-  //     percentage: "100",
-  //     price: "10",
-  //     six: "5",
-  //   },
-  //   {
-  //     one: "Product 2",
-  //     two: "Supplier 2",
-  //     three: "2022-02-01",
-  //     percentage: "150",
-  //     price: "20",
-  //     six: "10",
-  //   },
-  //   {
-  //     one: "Product 3",
-  //     two: "Supplier 3",
-  //     three: "2022-03-01",
-  //     percentage: "200",
-  //     price: "25",
-  //     six: "15",
-  //   },
-  //   {
-  //     one: "Product 4",
-  //     two: "Supplier 4",
-  //     three: "2022-04-01",
-  //     percentage: "120",
-  //     price: "20",
-  //     six: "10",
-  //   },
-  //   {
-  //     one: "Product 5",
-  //     two: "Supplier 5",
-  //     three: "2022-05-01",
-  //     percentage: "170",
-  //     price: "25",
-  //     six: "15",
-  //   },
-  // ];
-
   // states
   const originalDataRef = useRef([]);
   const [data, setData] = useState([]);
@@ -77,20 +40,36 @@ const SupplierProducts = () => {
   console.log("error", error);
   const [showVariant, setShowVariant] = useState([]);
   // console.log("showVariant", showVariant);
-  const [columnFilters, setColumnFilters] = useState([
-    // {
-    //   id: "one",
-    //   value:"Add"
-    // }
-  ]);
+  const [columnFilters, setColumnFilters] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [currencyData, setCurrencyData] = useState([]);
-  const [filterCategory, setFilterCategory] = useState(null)
-  // console.log("currencyData", currencyData);
-  // const [formatedPrice, setFormatedPrice] = useState(null);
-  // console.log("formatedPrice",formatedPrice);
+  const [filterCategory, setFilterCategory] = useState(null);
 
-  const [selectedCurrency, setSelectedCurrency] = useState(null);
+  const [selectedCurrency, setSelectedCurrency] = useState(() => {
+    // Retrieve the stored value from localStorage when the page loads for the first time
+    const savedCurrency = localStorage.getItem("selectedCurrency");
+    return savedCurrency ? JSON.parse(savedCurrency) : null;
+  });
+
+  useEffect(() => {
+    // Check if there is a value in localStorage
+    const storedCurrency = localStorage.getItem("selectedCurrency");
+
+    if (!storedCurrency && currencyData?.data) {
+      // If no value is stored, set the default currency
+      const defaultCurrency = currencyData.data.find(
+        (currency) => currency.name === "United States Dollar"
+      );
+      setSelectedCurrency(defaultCurrency || null);
+    } else if (selectedCurrency !== null) {
+      // If selectedCurrency is set, store it in localStorage
+      localStorage.setItem(
+        "selectedCurrency",
+        JSON.stringify(selectedCurrency)
+      );
+    }
+  }, [currencyData, selectedCurrency]);
+
   const getSuppliersProduct = useCallback(async () => {
     let { data, error } = await supabase.rpc("get_products_with_variants", {
       param_lang_id: "c1a063e3-8f21-4526-8302-453b705ed27d",
@@ -103,9 +82,7 @@ const SupplierProducts = () => {
     return data;
   }, []);
 
-
- console.log("filterCategory", filterCategory);
-
+  console.log("filterCategory", filterCategory);
 
   const getCurrencyData = async () =>
     await supabase.from("currency").select("*");
@@ -117,7 +94,7 @@ const SupplierProducts = () => {
       return [calculatePrice, currency?.short_code];
     };
   }, []);
-  
+
   useEffect(() => {
     if (data.length > 0) {
       // console.log("data from variant", data);
@@ -140,15 +117,6 @@ const SupplierProducts = () => {
 
     fetchData();
   }, []);
-
-  useEffect(() => {
-    if (currencyData?.data) {
-      const defaultCurrency = currencyData.data.find(
-        (currency) => currency.name === "United States Dollar"
-      );
-      setSelectedCurrency(defaultCurrency || null);
-    }
-  }, [currencyData]);
 
   const STATUSES = [
     "product",
@@ -232,6 +200,7 @@ const SupplierProducts = () => {
           showVariant={showVariant}
           selectedCurrency={selectedCurrency}
           getFormatPrice={getFormatPrice}
+          currencyData={currencyData?.data}
         />
       ),
     },
@@ -261,8 +230,7 @@ const SupplierProducts = () => {
     getPaginationRowModel: getPaginationRowModel(),
     columnResizeMode: "onChange",
   });
-  // console.log("table", table.getHeaderGroups());
-  // console.log("columnFilters", columnFilters);
+
   return (
     <BlockPaper title="Products Supplier">
       <div className="flex justify-between items-center">
@@ -281,7 +249,7 @@ const SupplierProducts = () => {
             setSelectedStatus={setSelectedStatus}
           />
         </div> */}
-        <div className="z-50 flex-1">
+        <div className="z-50 flex-1 max-w-[50%]">
           <CategoryMultiFilter
             filterCategory={filterCategory}
             setFilterCategory={setFilterCategory}
@@ -323,7 +291,9 @@ const SupplierProducts = () => {
                         <th
                           key={header.id}
                           className={`px-4 py-4 text-center relative border border-gray-300 ${
-                            index === 0 ? "sticky left-0 bg-gray-200 z-10 !min-w-[250px]" : ""
+                            index === 0
+                              ? "sticky left-0 bg-gray-200 z-10 !min-w-[250px]"
+                              : ""
                           }`}
                           style={{
                             minWidth: header.getSize() + 1,

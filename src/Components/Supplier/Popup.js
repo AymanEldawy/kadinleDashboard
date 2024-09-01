@@ -5,23 +5,35 @@ import { toast } from "react-toastify";
 const Popup = ({
   isVisible,
   onClose,
-  productPrice,
+  // productPrice,
   updateAllData,
   product,
   variantId,
+  getFormatPrice,
+  selectedCurrency,
+  index
 }) => {
+
+  const productPrice= getFormatPrice(
+    product?.variants[index]?.price,
+    selectedCurrency
+  )
+  console.log("productPrice", productPrice[0]);
+  const { updateItem } = useUpdate();
   // console.log("isVisible", isVisible);
-  const [price, setPrice] = useState(productPrice[0]);
+  const [price, setPrice] = useState(null);
+  const [dollarPrice, setDollarPrice] = useState(null);
+  console.log("dollarPrice", dollarPrice);
+  console.log("price", price);
   const [applyToAll, setApplyToAll] = useState(false);
   const inputRef = useRef(null);
 
   const updateSingleProduct = {
     id: variantId,
-    price: price,
+    price: dollarPrice,
     // percentage: Math.round(variant?.percentage * 100),
   };
 
-  const { updateItem } = useUpdate();
   const updateList = async () => {
     const response = await updateItem("product_variant", updateSingleProduct);
     if (response?.error) {
@@ -29,10 +41,19 @@ const Popup = ({
       console.log("error", response.error);
     } else {
       toast.success(`Successfully update product for selected products`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     }
   };
-  // updateList();
-  console.log("updateAllData", updateAllData);
+
+  useEffect(()=>{
+    setPrice(productPrice[0])
+  },[productPrice[0]])
+  useEffect(()=>{
+    setDollarPrice((price/(selectedCurrency.rate)).toFixed(2))
+  },[price, selectedCurrency.rate])
+  // console.log("updateAllData", updateAllData);
   useEffect(() => {
     if (isVisible && inputRef.current) {
       inputRef.current.select();
@@ -47,48 +68,58 @@ const Popup = ({
     }
   };
 
+  const handleOnChange = (e) => {
+    return setPrice(e.target.value);
+  };
   return (
     <>
-      <div
-        id="overlay"
-        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-        onClick={handleOverlayClick}
-      >
-        <div className="relative bg-white p-4 rounded shadow-lg z-60">
-          <div className="flex gap-2 items-center justify-center mb-3">
-            <input
-              ref={inputRef}
-              type="text"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="border border-gray-300 rounded p-2 w-full flex-[2]"
-            />
-            <button
-              onClick={() => {
-                // Handle update logic here
-                updateList();
-                onClose();
-                window.location.reload(); // Refresh the page
-              }}
-              className="bg-blue-500 text-white rounded hover:text-blue-500 hover:bg-white border border-blue-500 p-2 w-full flex-1"
-            >
-              Apply
-            </button>
-          </div>
-          <div className="flex items-center mb-2">
-            <input
-              type="checkbox"
-              id="applyToAll"
-              checked={applyToAll}
-              onChange={(e) => setApplyToAll(e.target.checked)}
-              className="mr-2"
-            />
-            <label htmlFor="applyToAll" className="text-sm">
-              Apply to all variants
-            </label>
+      {price && (
+        <div
+          id="overlay"
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+          onClick={handleOverlayClick}
+        >
+          <div className="relative bg-white p-4 rounded shadow-lg z-60">
+            <div className="flex gap-2 items-center justify-center mb-3">
+              <div className="relative">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={price}
+                  onChange={handleOnChange}
+                  className="border border-gray-300 rounded p-2 w-full flex-[2]"
+                />
+                <span className="absolute top-2 right-3">
+                  {productPrice[1]}
+                </span>
+              </div>
+              <button
+                onClick={() => {
+                  // Handle update logic here
+                  updateList();
+                  onClose();
+                  // window.location.reload(); // Refresh the page
+                }}
+                className="bg-blue-500 text-white rounded hover:text-blue-500 hover:bg-white border border-blue-500 p-2 w-full flex-1"
+              >
+                Apply
+              </button>
+            </div>
+            <div className="flex items-center mb-2">
+              <input
+                type="checkbox"
+                id="applyToAll"
+                checked={applyToAll}
+                onChange={(e) => setApplyToAll(e.target.checked)}
+                className="mr-2"
+              />
+              <label htmlFor="applyToAll" className="text-sm">
+                Apply to all variants
+              </label>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

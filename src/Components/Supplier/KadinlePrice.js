@@ -9,7 +9,8 @@ const KadinlePrice = ({
   getFormatPrice,
 }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(null);
+  console.log("index", index);
   const [variantId, setVariantId] = useState("");
   // console.log("product from kadinle", product);
 
@@ -34,12 +35,15 @@ const KadinlePrice = ({
         onClose={() => setIsPopupVisible(false)}
         product={product}
         variantId={variantId}
+        getFormatPrice={getFormatPrice}
+        selectedCurrency={selectedCurrency}
+        index={index}
         // setUpdateItem={setUpdateItem}
         // updateAllData={updateAllData}
-        productPrice={getFormatPrice(
-          product?.variants[index]?.purchase_price,
-          selectedCurrency
-        )}
+        // productPrice={getFormatPrice(
+        //   product?.variants[index]?.price,
+        //   selectedCurrency
+        // )}
       />
 
       <div>
@@ -62,11 +66,11 @@ const KadinlePrice = ({
         {show && (
           <div className="text-center w-full">
             <SupplierLine />
-            {product?.variants?.map((variant) => (
+            {product?.variants?.map((variant, inx) => (
               <>
                 <div
                   onClick={() => {
-                    // setIndex(index);
+                    setIndex(inx);
                     // console.log("clicked");
                     setVariantId(variant.id);
                     setIsPopupVisible(true);

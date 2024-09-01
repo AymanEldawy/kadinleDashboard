@@ -87,7 +87,7 @@ const SupplierPrice = ({
                     setIndex(index);
                     setIsPopupVisible(true);
                   }}
-                  className="cursor-pointer h-28 lg:h-24 text-[12px] ml-3 flex items-center  space-x-1 relative"
+                  className=" h-28 lg:h-24 text-[12px] ml-3 flex items-center  space-x-1 relative"
                 >
                   <div className="absolute left-0-0 h-6 w-16 border border-gray-400 text-gray rounded-md" />
                   <div className="">

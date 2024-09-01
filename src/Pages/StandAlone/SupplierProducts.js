@@ -35,7 +35,7 @@ const SupplierProducts = () => {
   // states
   const originalDataRef = useRef([]);
   const [data, setData] = useState([]);
-  // console.log("data", data);
+  console.log("data", data);
   const [error, setError] = useState();
   console.log("error", error);
   const [showVariant, setShowVariant] = useState([]);
@@ -44,12 +44,21 @@ const SupplierProducts = () => {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [currencyData, setCurrencyData] = useState([]);
   const [filterCategory, setFilterCategory] = useState(null);
-
+  const [updateProductsIdArr, setUpdateProductsIdArr] = useState(null);
+  // console.log("updateProductsIdArr", updateProductsIdArr);
   const [selectedCurrency, setSelectedCurrency] = useState(() => {
     // Retrieve the stored value from localStorage when the page loads for the first time
     const savedCurrency = localStorage.getItem("selectedCurrency");
     return savedCurrency ? JSON.parse(savedCurrency) : null;
   });
+
+
+  useEffect(() => {
+    // Clear localStorage when the component mounts
+    localStorage.removeItem("mainChecked");
+    localStorage.removeItem("checkedStates");
+     localStorage.removeItem("updateProductsIdArr");
+  }, []); 
 
   useEffect(() => {
     // Check if there is a value in localStorage

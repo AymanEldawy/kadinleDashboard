@@ -40,6 +40,12 @@ const SupplierProducts = () => {
   console.log("error", error);
   const [showVariant, setShowVariant] = useState([]);
   // console.log("showVariant", showVariant);
+  const [dataCount, setDataCount] = useState(1);
+  console.log("dataCount", dataCount);
+  const [itemsPerPage, setItemsPerPage] = useState(50);
+  // console.log("itemsPerPage", itemsPerPage);
+  const [offset, setOffset] = useState(0);
+  console.log("offset", offset);
   const [columnFilters, setColumnFilters] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [currencyData, setCurrencyData] = useState([]);
@@ -52,13 +58,15 @@ const SupplierProducts = () => {
     return savedCurrency ? JSON.parse(savedCurrency) : null;
   });
 
+  const numberOfPages = Math.ceil(dataCount / itemsPerPage);
 
+  console.log("numberOfPages", numberOfPages);
   useEffect(() => {
     // Clear localStorage when the component mounts
     localStorage.removeItem("mainChecked");
     localStorage.removeItem("checkedStates");
-     localStorage.removeItem("updateProductsIdArr");
-  }, []); 
+    localStorage.removeItem("updateProductsIdArr");
+  }, []);
 
   useEffect(() => {
     // Check if there is a value in localStorage
@@ -84,14 +92,14 @@ const SupplierProducts = () => {
       param_lang_id: "c1a063e3-8f21-4526-8302-453b705ed27d",
       param_category_id: null,
       param_seller_file_id: 74,
-      param_offset: 0,
-      param_limit: 2,
+      param_offset: offset,
+      param_limit: itemsPerPage,
     });
     setError(error);
     return data;
-  }, []);
+  }, [itemsPerPage, offset]);
 
-  console.log("filterCategory", filterCategory);
+  // console.log("filterCategory", filterCategory);
 
   const getCurrencyData = async () =>
     await supabase.from("currency").select("*");
@@ -121,11 +129,12 @@ const SupplierProducts = () => {
       const currency = await getCurrencyData();
       originalDataRef.current = suppliersProduct;
       setCurrencyData(currency);
-      setData(suppliersProduct);
+      setData(suppliersProduct?.products);
+      setDataCount(suppliersProduct?.count);
     };
 
     fetchData();
-  }, []);
+  }, [getSuppliersProduct, offset]);
 
   const STATUSES = [
     "product",
@@ -140,92 +149,103 @@ const SupplierProducts = () => {
     "percentage",
     "supplier",
   ];
-  const columns = [
-    {
-      accessorKey: "product",
-      header: "product",
-      cell: (props) => (
-        <ProductDetails
-          product={props.row.original}
-          showVariant={showVariant}
-          setShowVariant={setShowVariant}
-        />
-      ),
-    },
-    {
-      accessorKey: "category",
-      header: "category",
-      cell: (props) => <div className="text-center">{props.getValue()}</div>,
-    },
-    {
-      accessorKey: "color",
-      header: "color",
-      cell: (props) => (
-        <ColorsDetails product={props.row.original} showVariant={showVariant} />
-      ),
-    },
-    {
-      accessorKey: "size",
-      header: "size",
-      cell: (props) => (
-        <SizesDetails product={props.row.original} showVariant={showVariant} />
-      ),
-    },
-    {
-      accessorKey: "stock",
-      header: "stock",
-      cell: (props) => (
-        <StockDetails product={props.row.original} showVariant={showVariant} />
-      ),
-    },
-    {
-      accessorKey: "variant",
-      header: "variant",
-      cell: (props) => <Variant product={props.row.original} />,
-    },
-    {
-      accessorKey: "brand",
-      header: "brand",
-      cell: (props) => <p>{props.getValue()}</p>,
-    },
-    {
-      accessorKey: "supplier price",
-      header: "supplier price",
-      cell: (props) => (
-        <SupplierPrice
-          product={props.row.original}
-          showVariant={showVariant}
-          selectedCurrency={selectedCurrency}
-          getFormatPrice={getFormatPrice}
-        />
-      ),
-    },
-    {
-      accessorKey: "kadinle price",
-      header: "kadinle price",
-      cell: (props) => (
-        <KadinlePrice
-          product={props.row.original}
-          showVariant={showVariant}
-          selectedCurrency={selectedCurrency}
-          getFormatPrice={getFormatPrice}
-          currencyData={currencyData?.data}
-        />
-      ),
-    },
-    {
-      accessorKey: "percentage",
-      header: "percentage",
-      cell: (props) => (
-        <Percentage product={props.row.original} showVariant={showVariant} />
-      ),
-    },
-    {
-      accessorKey: "supplier",
-      header: "supplier",
-      cell: (props) => <p>{props.getValue()}</p>,
-    },
-  ];
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: "product",
+        header: "product",
+        cell: (props) => (
+          <ProductDetails
+            product={props.row.original}
+            showVariant={showVariant}
+            setShowVariant={setShowVariant}
+          />
+        ),
+      },
+      {
+        accessorKey: "category",
+        header: "category",
+        cell: (props) => <div className="text-center">{props.getValue()}</div>,
+      },
+      {
+        accessorKey: "color",
+        header: "color",
+        cell: (props) => (
+          <ColorsDetails
+            product={props.row.original}
+            showVariant={showVariant}
+          />
+        ),
+      },
+      {
+        accessorKey: "size",
+        header: "size",
+        cell: (props) => (
+          <SizesDetails
+            product={props.row.original}
+            showVariant={showVariant}
+          />
+        ),
+      },
+      {
+        accessorKey: "stock",
+        header: "stock",
+        cell: (props) => (
+          <StockDetails
+            product={props.row.original}
+            showVariant={showVariant}
+          />
+        ),
+      },
+      {
+        accessorKey: "variant",
+        header: "variant",
+        cell: (props) => <Variant product={props.row.original} />,
+      },
+      {
+        accessorKey: "brand",
+        header: "brand",
+        cell: (props) => <p>{props.getValue()}</p>,
+      },
+      {
+        accessorKey: "supplier price",
+        header: "supplier price",
+        cell: (props) => (
+          <SupplierPrice
+            product={props.row.original}
+            showVariant={showVariant}
+            selectedCurrency={selectedCurrency}
+            getFormatPrice={getFormatPrice}
+          />
+        ),
+      },
+      {
+        accessorKey: "kadinle price",
+        header: "kadinle price",
+        cell: (props) => (
+          <KadinlePrice
+            product={props.row.original}
+            showVariant={showVariant}
+            selectedCurrency={selectedCurrency}
+            getFormatPrice={getFormatPrice}
+            currencyData={currencyData?.data}
+          />
+        ),
+      },
+      {
+        accessorKey: "percentage",
+        header: "percentage",
+        cell: (props) => (
+          <Percentage product={props.row.original} showVariant={showVariant} />
+        ),
+      },
+      {
+        accessorKey: "supplier",
+        header: "supplier",
+        cell: (props) => <p>{props.getValue()}</p>,
+      },
+    ]
+  );
 
   const table = useReactTable({
     data,
@@ -240,9 +260,22 @@ const SupplierProducts = () => {
     columnResizeMode: "onChange",
   });
 
+  // Items per page
+  useEffect(() => {
+    table.setPageSize(itemsPerPage || 50);
+  }, [itemsPerPage]);
+
+  // pageIndex in localStorage
+  useEffect(() => {
+    const pageIndex = table.getState().pagination.pageIndex;
+    localStorage.setItem("pageIndex", pageIndex);
+  }, [table.getState().pagination.pageIndex]);
+
+  const initialPageIndex = Number(localStorage.getItem("pageIndex")) || 0;
+  // console.log("table", table.getRowModel());
   return (
     <BlockPaper title="Products Supplier">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center gap-3">
         {/* <div className="flex">
           <Filters
             columnFilters={columnFilters}
@@ -274,10 +307,27 @@ const SupplierProducts = () => {
           )}
         </div>
 
+        <div className="flex items-center gap-2">
+          <span className="text-gray-700">Items per page:</span>{" "}
+          <select
+            value={itemsPerPage}
+            onChange={(e) => setItemsPerPage(Number(e.target.value))}
+            className="px-2 py-1 rounded border border-gray-300 bg-white text-gray-800"
+          >
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+            <option value={150}>150</option>
+            <option value={200}>200</option>
+          </select>
+        </div>
+
         <div className="m-4 max-sm:hidden">
           <Pagination
-            pageIndex={table.getState().pagination.pageIndex}
-            pageCount={table.getPageCount()}
+            // numberOfPages={numberOfPages}
+            pageIndex={initialPageIndex}
+            // pageCount={table.getPageCount()}
+            setOffset={setOffset}
+            pageCount={numberOfPages}
             goToPage={(page) => {
               table.setPageIndex(page);
             }}
@@ -333,6 +383,11 @@ const SupplierProducts = () => {
                     </tr>
                   ))}
                 </thead>
+                {table.getRowModel().rows.length > 0 ? null : (
+                  <div className="w-full h-[50px] flex justify-center items-center">
+                    <Loading/>
+                  </div>
+                )}
                 <tbody>
                   {table.getRowModel().rows.map((row, rowIndex) => (
                     <tr

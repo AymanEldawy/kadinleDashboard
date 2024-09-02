@@ -60,7 +60,7 @@ const SupplierPrice = ({
         }
       /> */}
 
-      <div>
+      <div className="min-w-[200px]">
         {/* <div className="text-[12px]  !h-[80px] flex flex-col justify-center items-center space-y-2">
            <div
              className="flex items-center space-x-1 cursor-pointer border border-gray-400 pr-6 pl-2 py-1 text-gray rounded-md min-w-[70px]"
@@ -79,7 +79,7 @@ const SupplierPrice = ({
         </div>
         {show && (
           <div className="text-center w-full">
-            <SupplierLine/>
+            <SupplierLine />
             {product?.variants?.map((variant, index) => (
               <>
                 <div
@@ -109,7 +109,7 @@ const SupplierPrice = ({
                     </span>
                   </div>
                 </div>
-                <SupplierLine/>
+                <SupplierLine />
               </>
             ))}
           </div>

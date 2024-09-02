@@ -10,7 +10,7 @@ const KadinlePrice = ({
 }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [index, setIndex] = useState(null);
-  console.log("index", index);
+  // console.log("index", index);
   const [variantId, setVariantId] = useState("");
   // console.log("product from kadinle", product);
 
@@ -46,7 +46,7 @@ const KadinlePrice = ({
         // )}
       />
 
-      <div>
+      <div className="min-w-[200px]">
         {/* <div className="text-[12px]  !h-[80px] flex flex-col justify-center items-center space-y-2">
            <div
              className="flex items-center space-x-1 cursor-pointer border border-gray-400 pr-6 pl-2 py-1 text-gray rounded-md min-w-[70px]"

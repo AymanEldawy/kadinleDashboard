@@ -1,7 +1,7 @@
 import React from "react";
 import NextArrow from "../icons/NextArrow";
 
-const Pagination = ({ pageIndex, pageCount, goToPage }) => {
+const Pagination = ({ pageIndex, pageCount, goToPage, setOffset }) => {
   const pageNumbers = [];
   for (let i = 1; i <= pageCount; i++) {
     pageNumbers.push(i);
@@ -9,6 +9,7 @@ const Pagination = ({ pageIndex, pageCount, goToPage }) => {
 
   const handleClick = (page) => {
     goToPage(page - 1);
+    setOffset(50 * (page - 1));
   };
 
   const getVisiblePages = () => {

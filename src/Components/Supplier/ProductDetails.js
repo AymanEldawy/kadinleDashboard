@@ -17,10 +17,10 @@ const ProductDetails = ({ product, showVariant, setShowVariant }) => {
     product?.variants?.map(() => false);
 
   const [updateProductsIdArr, setUpdateProductsIdArr] = useState([]);
-  console.log("updateProductsIdArr", updateProductsIdArr);
+  // console.log("updateProductsIdArr", updateProductsIdArr);
   const [mainChecked, setMainChecked] = useState(initialMainChecked);
   const [checkedStates, setCheckedStates] = useState(initialCheckedStates);
-  console.log("checkedStates", checkedStates);
+  // console.log("checkedStates", checkedStates);
   const [index, setIndex] = useState(null);
   const [visibleLength, setVisibleLength] = useState(20); // Initial length of visible characters
   const linkRef = useRef(null);

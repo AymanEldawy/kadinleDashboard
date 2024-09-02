@@ -13,11 +13,11 @@ const Popup = ({
   selectedCurrency,
   index,
 }) => {
-  console.log("product", product);
+  // console.log("product", product);
   const updateProductsIdArr =
     JSON.parse(localStorage.getItem("updateProductsIdArr")) || [];
 
-  console.log("updatePro", updateProductsIdArr);
+  // console.log("updatePro", updateProductsIdArr);
   const productPrice = getFormatPrice(
     product?.variants[index]?.price,
     selectedCurrency

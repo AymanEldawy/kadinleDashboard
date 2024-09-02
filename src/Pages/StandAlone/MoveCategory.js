@@ -19,6 +19,7 @@ import { ChevronIcon, TrashIcon } from "../../Helpers/Icons";
 import ReactPaginate from "react-paginate";
 import { useDelete } from "../../hooks/useDelete";
 import ConfirmModal from "../../Components/ConfirmModal/ConfirmModal";
+import { LoadingProcess } from "../../Components/Global/LoadingProcess";
 
 const MoveCategory = () => {
   let name = "products_slider";
@@ -203,15 +204,7 @@ const MoveCategory = () => {
         setOpen={setOpenConfirmation}
       />
       <div className="relative">
-        {isProgress ? (
-          <div className="absolute top-0 left-0 w-full h-full z-10 flex pt-36 text-primary-blue bg-[#ffffff81] justify-center text-4xl dark:bg-[#00000021]">
-            <svg
-              class="animate-spin h-9 w-9 mr-3 bg-primary-blue rounded-md"
-              viewBox="0 0 24 24"
-            ></svg>
-            Processing...
-          </div>
-        ) : null}
+        {isProgress ? <LoadingProcess /> : null}
         <BlockPaper
           headerClassName="flex items-center justify-between"
           title={"Changing Category"}
@@ -273,7 +266,12 @@ const MoveCategory = () => {
           </div>
 
           <div className="flex justify-between items-center  dark:text-white border-t  shadow p-3 bg-white dark:bg-bgmaindark">
-            <p>Selected Products: <span className="font-extrabold text-lg">{Object.keys(selectedList)?.length}</span> </p>
+            <p>
+              Selected Products:{" "}
+              <span className="font-extrabold text-lg">
+                {Object.keys(selectedList)?.length}
+              </span>{" "}
+            </p>
             <ReactPaginate
               breakLabel="..."
               nextLabel={
@@ -396,7 +394,12 @@ const MoveCategory = () => {
           })}
 
           <div className="flex justify-between items-center  dark:text-white border-t  shadow p-3 bg-white dark:bg-bgmaindark">
-            <p>Selected Products: <span className="font-extrabold text-lg">{Object.keys(selectedList)?.length}</span> </p>
+            <p>
+              Selected Products:{" "}
+              <span className="font-extrabold text-lg">
+                {Object.keys(selectedList)?.length}
+              </span>{" "}
+            </p>
             <ReactPaginate
               breakLabel="..."
               nextLabel={

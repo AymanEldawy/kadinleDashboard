@@ -131,7 +131,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    generateForm();
+    // generateForm();
     getTotalEarningsHandler();
     getOrdersCountHandler();
     getCustomersCountHandler();

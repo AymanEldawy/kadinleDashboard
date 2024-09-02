@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { FullImage } from "./../../Components/Global/FullImage/FullImage";
 import { UserInfo } from "../../Components/Global/UserInfo/UserInfo";
 import { EyeIcon, SlashEyeIcon } from "../Icons";
+import { refreshPrices } from "../../Api/data";
+import { useGlobalOptions } from "../../Context/GlobalOptions";
+import { RefreshChunksBtn } from "../../Components/RefreshChunksBtn";
 
 const combine_address = () => [
   {
@@ -116,7 +119,7 @@ const combine_brand = () => [
   },
 ];
 
-const combine_chunks= () => [
+const combine_chunks = () => [
   {
     id: "select",
     size: 20,
@@ -158,16 +161,20 @@ const combine_chunks= () => [
   {
     accessorKey: "actions",
     header: "actions",
-    cell: ({ row }) => (
-      <Link
-        to={`/update/chunks/${row?.original?.id}`}
-        className="text-blue-500 hover:underline"
-      >
-        Edit
-      </Link>
-    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex gap-4 items-center">
+          <Link
+            to={`/update/chunks/${row?.original?.id}`}
+            className="text-blue-500 hover:underline"
+          >
+            Edit
+          </Link>
+          <RefreshChunksBtn item={row?.original} />
+        </div>
+      );
+    },
   },
- 
 ];
 
 const combine_bulk_alert = () => [
@@ -254,7 +261,7 @@ const combine_category = () => [
       );
     },
   },
-  
+
   { accessorKey: "numeric", header: "numeric" },
   {
     accessorKey: "title",
@@ -284,7 +291,6 @@ const combine_category = () => [
       );
     },
   },
- 
 
   {
     accessorKey: "description",
@@ -3330,6 +3336,6 @@ const COMBINE_DB_API = {
   combine_bill_report,
   combine_order_report,
   combine_washing_instructions,
-  combine_chunks
+  combine_chunks,
 };
 export default COMBINE_DB_API;

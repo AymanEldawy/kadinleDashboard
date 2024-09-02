@@ -1,3 +1,4 @@
+import { getFormatPrice } from "../Helpers/functions";
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
 
 let CURRENT_SEARCH_DATA = [];
@@ -1677,5 +1678,49 @@ export const getSuppliersList = async () => {
 };
 
 export const getSupplierData = async () => {};
+export const refreshPrices = async (item) => {
+  const currency = await supabase.from("currency").select().eq("code", "TRY");
+  const response = await supabase
+    .from("product_variant")
+    .select("*")
+    .gte(
+      "purchase_price",
+      getFormatPrice(item?.min_price, currency?.data?.at(0))
+    )
+    .lte(
+      "purchase_price",
+      getFormatPrice(item?.max_price, currency?.data?.at(0))
+    )
+
+  // for (const variant of response?.data) {
+  //   await supabase.from("product_variant").upsert({
+  //     ...variant,
+  //     price: item?.percentage * variant?.purchase_price,
+  //     percentage: item?.percentage,
+  //   });
+  // }
+
+  const batchSize = 200;
+  const variants = response?.data || [];
+
+  for (let i = 0; i < variants.length; i += batchSize) {
+    const batch = variants.slice(i, i + batchSize).map((variant) => ({
+      ...variant,
+      price: item?.percentage * variant?.purchase_price,
+      percentage: item?.percentage,
+    }));
+
+    const { data, error } = await supabase
+      .from("product_variant")
+      .upsert(batch);
+
+    if (error) {
+      console.error("Error upserting batch:", error);
+    } else {
+      console.log("Batch upsert successful:", data);
+    }
+  }
+  return response;
+};
 
 // Extract and log the unique supplier IDs

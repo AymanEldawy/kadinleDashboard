@@ -61,36 +61,8 @@ export function TicketIdGen() {
   return firstId + "-" + secondId + "-" + thirdId;
 }
 
-export const generateForm = () => {
-  const list = [
-    "fabric_information",
-    "environment",
-    "style",
-    "package",
-    "sleeve_type",
-    "waist",
-    "belt_condition",
-    "pocket",
-    "leg_type",
-    "closure_type",
-    "thickness",
-    "printing_technique",
-    "embroidery_type",
-    "washing_instructions",
-  ];
-
-  let c = "";
-  for (const item of list) {
-    c += ` {
-      name: "${item}_id",
-      type: "uuid",
-      key: "ref",
-      // required: true,
-      tableName: "${item}_content",
-      refId: "${item}_id",
-    },
-  `;
-  }
-};
-
-generateForm()
+export function getFormatPrice(price, currency) {
+  let calculatePrice = (price / currency?.rate).toFixed(2);
+  if (!calculatePrice || isNaN(calculatePrice)) calculatePrice = price;
+  return calculatePrice;
+}

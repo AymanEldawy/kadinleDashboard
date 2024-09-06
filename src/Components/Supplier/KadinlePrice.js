@@ -1,13 +1,22 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import SupplierLine from "./SupplierLine";
 import Popup from "./Popup";
 
 const KadinlePrice = ({
   product,
-  showVariant,
   selectedCurrency,
   getFormatPrice,
+ showVariant,
 }) => {
+  // console.log("clicked", clicked);
+  // const showVariant = useRef(JSON.parse(localStorage.getItem("showVariant")));
+  // useEffect(() => {
+  //   const savedValue = localStorage.getItem("showVariant");
+  //   if (savedValue) {
+  //     setShowVariant(JSON.parse(savedValue));
+  //   }
+  // }, []);
+  // console.log("price showVariant", showVariant);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [index, setIndex] = useState(null);
   // console.log("index", index);

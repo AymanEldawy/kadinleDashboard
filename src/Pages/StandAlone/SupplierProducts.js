@@ -30,26 +30,33 @@ import Percentage from "../../Components/Supplier/Percentage";
 import SupplierPrice from "../../Components/Supplier/SupplierPrice";
 import CurrencyDropdown from "../../Components/Supplier/CurrencyDropdown";
 import { CategoryMultiFilter } from "../../Components/TableBar/CategoryMultiFilter";
+import { useGlobalOptions } from "../../Context/GlobalOptions";
 // border color #cacbce
 const SupplierProducts = () => {
+  const { defaultLanguage } = useGlobalOptions();
   // states
   const originalDataRef = useRef([]);
+  const [loading, setLoading] = useState(false);
+  const [clicked, setClicked] = useState(true)
+  
+  // console.log("loading", loading);
   const [data, setData] = useState([]);
-  console.log("data", data);
+  // console.log("data", data);
   const [error, setError] = useState();
-  console.log("error", error);
+  // console.log("error", error);
   const [showVariant, setShowVariant] = useState([]);
-  // console.log("showVariant", showVariant);
+  console.log("showVariant", showVariant);
   const [dataCount, setDataCount] = useState(1);
-  console.log("dataCount", dataCount);
+  // console.log("dataCount", dataCount);
   const [itemsPerPage, setItemsPerPage] = useState(50);
   // console.log("itemsPerPage", itemsPerPage);
   const [offset, setOffset] = useState(0);
-  console.log("offset", offset);
+  // console.log("offset", offset);
   const [columnFilters, setColumnFilters] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [currencyData, setCurrencyData] = useState([]);
   const [filterCategory, setFilterCategory] = useState(null);
+  console.log("filterCategory", filterCategory);
   const [updateProductsIdArr, setUpdateProductsIdArr] = useState(null);
   // console.log("updateProductsIdArr", updateProductsIdArr);
   const [selectedCurrency, setSelectedCurrency] = useState(() => {
@@ -89,15 +96,15 @@ const SupplierProducts = () => {
 
   const getSuppliersProduct = useCallback(async () => {
     let { data, error } = await supabase.rpc("get_products_with_variants", {
-      param_lang_id: "c1a063e3-8f21-4526-8302-453b705ed27d",
-      param_category_id: null,
+      param_lang_id: defaultLanguage?.id,
+      param_category_id: filterCategory,
       param_seller_file_id: 74,
       param_offset: offset,
       param_limit: itemsPerPage,
     });
     setError(error);
     return data;
-  }, [itemsPerPage, offset]);
+  }, [defaultLanguage?.id, filterCategory, itemsPerPage, offset]);
 
   // console.log("filterCategory", filterCategory);
 
@@ -112,29 +119,33 @@ const SupplierProducts = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (data.length > 0) {
-      // console.log("data from variant", data);
-      const initialVariants = data.map((item) => ({
-        id: item?.product_sku,
-        show: false,
-      }));
-      setShowVariant(initialVariants);
-    }
-  }, [data]);
-
+  
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const suppliersProduct = await getSuppliersProduct();
       const currency = await getCurrencyData();
       originalDataRef.current = suppliersProduct;
       setCurrencyData(currency);
-      setData(suppliersProduct?.products);
+      setData(suppliersProduct?.products ? suppliersProduct?.products : []);
       setDataCount(suppliersProduct?.count);
+
+      setLoading(false);
     };
 
     fetchData();
   }, [getSuppliersProduct, offset]);
+
+    useEffect(() => {
+      if (data.length > 0) {
+        // console.log("data from variant", data);
+        const initialVariants = data.map((item) => ({
+          id: item?.product_sku,
+          show: false,
+        }));
+        setShowVariant(initialVariants);
+      }
+    }, [data]);
 
   const STATUSES = [
     "product",
@@ -149,103 +160,93 @@ const SupplierProducts = () => {
     "percentage",
     "supplier",
   ];
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: "product",
-        header: "product",
-        cell: (props) => (
-          <ProductDetails
-            product={props.row.original}
-            showVariant={showVariant}
-            setShowVariant={setShowVariant}
-          />
-        ),
-      },
-      {
-        accessorKey: "category",
-        header: "category",
-        cell: (props) => <div className="text-center">{props.getValue()}</div>,
-      },
-      {
-        accessorKey: "color",
-        header: "color",
-        cell: (props) => (
-          <ColorsDetails
-            product={props.row.original}
-            showVariant={showVariant}
-          />
-        ),
-      },
-      {
-        accessorKey: "size",
-        header: "size",
-        cell: (props) => (
-          <SizesDetails
-            product={props.row.original}
-            showVariant={showVariant}
-          />
-        ),
-      },
-      {
-        accessorKey: "stock",
-        header: "stock",
-        cell: (props) => (
-          <StockDetails
-            product={props.row.original}
-            showVariant={showVariant}
-          />
-        ),
-      },
-      {
-        accessorKey: "variant",
-        header: "variant",
-        cell: (props) => <Variant product={props.row.original} />,
-      },
-      {
-        accessorKey: "brand",
-        header: "brand",
-        cell: (props) => <p>{props.getValue()}</p>,
-      },
-      {
-        accessorKey: "supplier price",
-        header: "supplier price",
-        cell: (props) => (
-          <SupplierPrice
-            product={props.row.original}
-            showVariant={showVariant}
-            selectedCurrency={selectedCurrency}
-            getFormatPrice={getFormatPrice}
-          />
-        ),
-      },
-      {
-        accessorKey: "kadinle price",
-        header: "kadinle price",
-        cell: (props) => (
-          <KadinlePrice
-            product={props.row.original}
-            showVariant={showVariant}
-            selectedCurrency={selectedCurrency}
-            getFormatPrice={getFormatPrice}
-            currencyData={currencyData?.data}
-          />
-        ),
-      },
-      {
-        accessorKey: "percentage",
-        header: "percentage",
-        cell: (props) => (
-          <Percentage product={props.row.original} showVariant={showVariant} />
-        ),
-      },
-      {
-        accessorKey: "supplier",
-        header: "supplier",
-        cell: (props) => <p>{props.getValue()}</p>,
-      },
-    ]
-  );
+  const columns = useMemo(() => [
+    {
+      accessorKey: "product",
+      header: "product",
+      cell: (props) => (
+        <ProductDetails
+          product={props.row.original}
+          showVariant={showVariant}
+          setShowVariant={setShowVariant}
+          setClicked={setClicked}
+        />
+      ),
+    },
+    {
+      accessorKey: "category",
+      header: "category",
+      cell: (props) => <div className="text-center">{props.getValue()}</div>,
+    },
+    {
+      accessorKey: "color",
+      header: "color",
+      cell: (props) => (
+        <ColorsDetails product={props.row.original} showVariant={showVariant} />
+      ),
+    },
+    {
+      accessorKey: "size",
+      header: "size",
+      cell: (props) => (
+        <SizesDetails product={props.row.original} showVariant={showVariant} />
+      ),
+    },
+    {
+      accessorKey: "stock",
+      header: "stock",
+      cell: (props) => (
+        <StockDetails product={props.row.original} showVariant={showVariant} />
+      ),
+    },
+    {
+      accessorKey: "variant",
+      header: "variant",
+      cell: (props) => <Variant product={props.row.original} />,
+    },
+    {
+      accessorKey: "brand",
+      header: "brand",
+      cell: (props) => <p>{props.getValue()}</p>,
+    },
+    {
+      accessorKey: "supplier price",
+      header: "supplier price",
+      cell: (props) => (
+        <SupplierPrice
+          product={props.row.original}
+          showVariant={showVariant}
+          selectedCurrency={selectedCurrency}
+          getFormatPrice={getFormatPrice}
+        />
+      ),
+    },
+    {
+      accessorKey: "kadinle price",
+      header: "kadinle price",
+      cell: (props) => (
+        <KadinlePrice
+          product={props.row.original}
+          showVariant={showVariant}
+          selectedCurrency={selectedCurrency}
+          getFormatPrice={getFormatPrice}
+          currencyData={currencyData?.data}
+        />
+      ),
+    },
+    {
+      accessorKey: "percentage",
+      header: "percentage",
+      cell: (props) => (
+        <Percentage product={props.row.original} showVariant={showVariant} />
+      ),
+    },
+    {
+      accessorKey: "supplier",
+      header: "supplier",
+      cell: (props) => <p>{props.getValue()}</p>,
+    },
+  ]);
 
   const table = useReactTable({
     data,
@@ -291,7 +292,7 @@ const SupplierProducts = () => {
             setSelectedStatus={setSelectedStatus}
           />
         </div> */}
-        <div className="z-50 flex-1 max-w-[50%]">
+        <div className="z-50 flex-1 max-w-fit">
           <CategoryMultiFilter
             filterCategory={filterCategory}
             setFilterCategory={setFilterCategory}
@@ -335,106 +336,115 @@ const SupplierProducts = () => {
         </div>
       </div>
 
-      {data?.length > 0 ? (
-        <>
-          <div className="overflow-x-auto">
-            <div className="min-w-full">
-              <table className="table-auto border border-gray-300 rounded-md">
-                <thead>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <tr
-                      key={headerGroup.id}
-                      className="bg-gray-200 text-gray-700 font-medium text-xs leading-4 tracking-wider group"
-                    >
-                      {headerGroup.headers.map((header, index) => (
-                        <th
-                          key={header.id}
-                          className={`px-4 py-4 text-center relative border border-gray-300 ${
-                            index === 0
-                              ? "sticky left-0 bg-gray-200 z-10 !min-w-[250px]"
-                              : ""
-                          }`}
-                          style={{
-                            minWidth: header.getSize() + 1,
-                            width: header.getSize(),
+      {!loading ? (
+        data?.length > 0 ? (
+          <>
+            <div className="overflow-x-auto">
+              <div className="min-w-full">
+                <table className="table-auto border border-gray-300 rounded-md">
+                  <thead>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                      <tr
+                        key={headerGroup.id}
+                        className="bg-gray-200 text-gray-700 font-medium text-xs leading-4 tracking-wider group"
+                      >
+                        {headerGroup.headers.map((header, index) => (
+                          <th
+                            key={header.id}
+                            className={`px-4 py-4 text-center relative border border-gray-300 ${
+                              index === 0
+                                ? "sticky left-0 bg-gray-200 z-10 !min-w-[250px]"
+                                : ""
+                            }`}
+                            style={{
+                              minWidth: header.getSize() + 1,
+                              width: header.getSize(),
 
-                            // borderRight:
-                            //   index === 0 ? "1px solid gray" : "1px solid black",
-                          }}
-                        >
-                          {header.column.columnDef.header}
-                          <div className="absolute -left-1 top-4">
-                            {
-                              {
-                                asc: "🔼",
-                                desc: "🔽",
-                              }[header.column.getIsSorted()]
-                            }
-                          </div>
-                          <div
-                            onMouseDown={header.getResizeHandler()}
-                            onTouchStart={header.getResizeHandler()}
-                            className="absolute flex items-center right-0 top-0 bottom-0 h-full cursor-col-resize px-1.5 select-none invisible group-hover:visible"
+                              // borderRight:
+                              //   index === 0 ? "1px solid gray" : "1px solid black",
+                            }}
                           >
-                            &#x2502;
-                          </div>
-                        </th>
-                      ))}
-                    </tr>
-                  ))}
-                </thead>
-                {table.getRowModel().rows.length > 0 ? null : (
-                  <div className="w-full h-[50px] flex justify-center items-center">
-                    <Loading/>
-                  </div>
-                )}
-                <tbody>
-                  {table.getRowModel().rows.map((row, rowIndex) => (
-                    <tr
-                      key={row.id}
-                      className="odd:bg-white even:bg-[#e9edf1] border-t border-gray-300"
-                    >
-                      {row.getVisibleCells().map((cell, index) => (
-                        <td
-                          key={cell.id}
-                          className={`py-2 text-start border-r border-gray-300 ${
-                            index === 0
-                              ? `sticky left-0 z-10 ${
-                                  rowIndex % 2 === 0
-                                    ? "bg-white"
-                                    : "bg-[#e9edf1]"
-                                }`
-                              : ""
-                          }`}
-                          style={{
-                            minWidth: cell.column.getSize(),
-                            // borderRight:
-                            //   index === 0 ? "1px solid gray" : "none",
-                          }}
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                            {header.column.columnDef.header}
+                            <div className="absolute -left-1 top-4">
+                              {
+                                {
+                                  asc: "🔼",
+                                  desc: "🔽",
+                                }[header.column.getIsSorted()]
+                              }
+                            </div>
+                            <div
+                              onMouseDown={header.getResizeHandler()}
+                              onTouchStart={header.getResizeHandler()}
+                              className="absolute flex items-center right-0 top-0 bottom-0 h-full cursor-col-resize px-1.5 select-none invisible group-hover:visible"
+                            >
+                              &#x2502;
+                            </div>
+                          </th>
+                        ))}
+                      </tr>
+                    ))}
+                  </thead>
+                  {table.getRowModel().rows.length > 0 ? null : (
+                    <div className="w-full h-[50px] flex justify-center items-center">
+                      <Loading />
+                    </div>
+                  )}
+                  <tbody>
+                    {table.getRowModel().rows.map((row, rowIndex) => (
+                      <tr
+                        key={row.id}
+                        className="odd:bg-white even:bg-[#e9edf1] border-t border-gray-300"
+                      >
+                        {row.getVisibleCells().map((cell, index) => (
+                          <td
+                            key={cell.id}
+                            className={`py-2 text-start border-r border-gray-300 ${
+                              index === 0
+                                ? `sticky left-0 z-10 ${
+                                    rowIndex % 2 === 0
+                                      ? "bg-white"
+                                      : "bg-[#e9edf1]"
+                                  }`
+                                : ""
+                            }`}
+                            style={{
+                              minWidth: cell.column.getSize(),
+                              // borderRight:
+                              //   index === 0 ? "1px solid gray" : "none",
+                            }}
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
 
-          <div className="m-4">
-            <Pagination
-              pageIndex={table.getState().pagination.pageIndex}
-              pageCount={table.getPageCount()}
-              goToPage={(page) => {
-                table.setPageIndex(page);
-              }}
-            />
+            <div className="m-4">
+              <Pagination
+                // numberOfPages={numberOfPages}
+                pageIndex={initialPageIndex}
+                // pageCount={table.getPageCount()}
+                setOffset={setOffset}
+                pageCount={numberOfPages}
+                goToPage={(page) => {
+                  table.setPageIndex(page);
+                }}
+              />
+            </div>
+          </>
+        ) : (
+          <div className="w-full text-center pt-9 h-[150px]">
+            There is no products
           </div>
-        </>
+        )
       ) : (
         <Loading />
       )}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, memo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useUpdate } from "../../hooks/useUpdate";
 import { toast } from "react-toastify";
 
@@ -153,4 +153,4 @@ const Popup = ({
   );
 };
 
-export default memo(Popup);
+export default Popup;

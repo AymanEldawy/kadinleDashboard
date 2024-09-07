@@ -80,8 +80,8 @@ const Popup = ({
     setPrice(productPrice[0]);
   }, [productPrice[0]]);
   useEffect(() => {
-    setDollarPrice(price / selectedCurrency.rate);
-  }, [price, selectedCurrency.rate]);
+    setDollarPrice(price / selectedCurrency?.rate);
+  }, [price, selectedCurrency?.rate]);
   // console.log("updateAllData", updateAllData);
   useEffect(() => {
     if (isVisible && inputRef.current) {

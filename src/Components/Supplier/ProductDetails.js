@@ -1,10 +1,25 @@
-import React, { memo, useEffect, useMemo, useRef, useState, useCallback } from "react";
+import React, {
+  memo,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
 import NextArrow from "../icons/NextArrow";
 import CopyButton from "./CopyButton";
 import SupplierLine from "./SupplierLine";
 import Checkbox from "./Checkbox";
 
-const ProductDetails = ({ product, setClicked, showVariant, setShowVariant }) => {
+const ProductDetails = ({
+  product,
+  setClicked,
+  showVariant,
+  setShowVariant,
+  checkedSku,
+  setCheckedSku,
+}) => {
+  // console.log(product);
   const baseURL = "https://kadinle.com/en/product/";
 
   const initialMainChecked = useMemo(
@@ -12,13 +27,19 @@ const ProductDetails = ({ product, setClicked, showVariant, setShowVariant }) =>
     []
   );
   const initialCheckedStates = useMemo(
-    () => JSON.parse(localStorage.getItem("checkedStates")) || (product?.variants ? product.variants.map(() => false) : []),
+    () =>
+      JSON.parse(localStorage.getItem("checkedStates")) ||
+      (product?.variants ? product.variants.map(() => false) : []),
     [product?.variants]
   );
 
+  // const initialCheckedSku =
+  //   JSON.parse(localStorage.getItem("initialCheckedSku")) || [];
   const [updateProductsIdArr, setUpdateProductsIdArr] = useState([]);
   const [mainChecked, setMainChecked] = useState(initialMainChecked);
   const [checkedStates, setCheckedStates] = useState(initialCheckedStates);
+
+  // console.log("checkedSku", checkedSku);
   const [visibleLength, setVisibleLength] = useState(20);
   const linkRef = useRef(null);
 
@@ -45,7 +66,9 @@ const ProductDetails = ({ product, setClicked, showVariant, setShowVariant }) =>
   }, []);
 
   let show = useMemo(
-    () => showVariant?.find((variant) => variant?.id === product?.product_sku)?.show || false,
+    () =>
+      showVariant?.find((variant) => variant?.id === product?.product_sku)
+        ?.show || false,
     [product?.product_sku, showVariant]
   );
 
@@ -61,7 +84,8 @@ const ProductDetails = ({ product, setClicked, showVariant, setShowVariant }) =>
       .filter((id) => id != null);
 
     setUpdateProductsIdArr((prevArr) => {
-      const storedArray = JSON.parse(localStorage.getItem("updateProductsIdArr")) || [];
+      const storedArray =
+        JSON.parse(localStorage.getItem("updateProductsIdArr")) || [];
       const newArray = [...new Set([...storedArray, ...updatedArray])];
 
       localStorage.setItem("updateProductsIdArr", JSON.stringify(newArray));
@@ -70,42 +94,90 @@ const ProductDetails = ({ product, setClicked, showVariant, setShowVariant }) =>
   }, [checkedStates, product?.variants]);
 
   useEffect(() => {
+    localStorage.setItem("checkedSku", JSON.stringify(checkedSku));
+  }, [checkedSku]);
+
+  useEffect(() => {
     localStorage.setItem("mainChecked", JSON.stringify(mainChecked));
     localStorage.setItem("checkedStates", JSON.stringify(checkedStates));
   }, [mainChecked, checkedStates]);
 
-  const handleMainCheckboxChange = useCallback((e) => {
-    e.stopPropagation();
-    const newMainChecked = !mainChecked;
-    setMainChecked(newMainChecked);
-    setCheckedStates(checkedStates.map(() => newMainChecked));
-
-    if (!newMainChecked && product?.variants?.length) {
-      const variantIds = product.variants.map((variant) => variant.id);
-      const updatedArray = updateProductsIdArr.filter(
-        (element) => !variantIds.includes(element)
+  useEffect(()=>{
+      setCheckedStates(
+        checkedStates.map(() => checkedSku.includes(product?.product_sku))
       );
-      localStorage.setItem("updateProductsIdArr", JSON.stringify(updatedArray));
-    }
-  }, [mainChecked, checkedStates, product?.variants, updateProductsIdArr]);
+  },[checkedSku, product?.product_sku])
 
-  const handleChildCheckboxChange = useCallback((index, id) => {
-    const newCheckedStates = [...checkedStates];
-    newCheckedStates[index] = !newCheckedStates[index];
-    setCheckedStates(newCheckedStates);
-    if (newCheckedStates.every((checked) => checked)) {
-      setMainChecked(true);
-    } else {
-      setMainChecked(false);
-      if (updateProductsIdArr.includes(id)) {
-        const updatedArray = updateProductsIdArr.filter(
-          (element) => element !== id
-        );
-        localStorage.setItem("updateProductsIdArr", JSON.stringify(updatedArray));
+  // const handleMainCheckboxChange = useCallback(
+  //   (e) => {
+  //     e.stopPropagation();
+
+  //     const newMainChecked = !mainChecked;
+  //     setMainChecked(newMainChecked);
+  //     setCheckedStates(checkedStates.map(() => newMainChecked));
+
+  //     // Handle updateProductsIdArr logic
+  //     if (!newMainChecked && product?.variants?.length) {
+  //       const variantIds = product.variants.map((variant) => variant.id);
+  //       const updatedArray = updateProductsIdArr.filter(
+  //         (element) => !variantIds.includes(element)
+  //       );
+  //       localStorage.setItem(
+  //         "updateProductsIdArr",
+  //         JSON.stringify(updatedArray)
+  //       );
+  //     }
+  //   },
+  //   [mainChecked, checkedStates, product, updateProductsIdArr]
+  // );
+
+  const handleChildCheckboxChange = useCallback(
+    (index, id) => {
+      const newCheckedStates = [...checkedStates];
+      newCheckedStates[index] = !newCheckedStates[index];
+      setCheckedStates(newCheckedStates);
+      if (newCheckedStates.every((checked) => checked)) {
+        setMainChecked(true);
+      } else {
+        setMainChecked(false);
+        if (updateProductsIdArr.includes(id)) {
+          const updatedArray = updateProductsIdArr.filter(
+            (element) => element !== id
+          );
+          localStorage.setItem(
+            "updateProductsIdArr",
+            JSON.stringify(updatedArray)
+          );
+        }
       }
-    }
-  }, [checkedStates, updateProductsIdArr]);
+    },
+    [checkedStates, updateProductsIdArr]
+  );
 
+    const handleMainCheckboxChange = useCallback(() => {
+      // Toggle product?.product_sku in checkedSku array
+      setCheckedSku((prevCheckedSku) => {
+        // console.log("Before update:", prevCheckedSku);
+
+        if (prevCheckedSku.includes(product?.product_sku)) {
+          const updatedSku = prevCheckedSku.filter(
+            (sku) => sku !== product.product_sku
+          );
+          // console.log("Updated checkedSku (removed):", updatedSku);
+          return updatedSku;
+        } else {
+          const updatedSku = [...prevCheckedSku, product?.product_sku];
+          // console.log("Updated checkedSku (added):", updatedSku);
+          return updatedSku;
+        }
+      });
+
+      const newMainChecked = checkedSku.includes(product?.product_sku);
+      setMainChecked(newMainChecked);
+
+      console.log("checkedStates", checkedStates);
+    }, [checkedSku, checkedStates, product.product_sku, setCheckedSku]);
+    
   const handleShowVariants = useCallback(() => {
     setClicked((pre) => !pre);
     setShowVariant((prevVariants) =>
@@ -117,10 +189,17 @@ const ProductDetails = ({ product, setClicked, showVariant, setShowVariant }) =>
     );
   }, [setClicked, setShowVariant, product?.product_sku]);
 
+  // console.log(
+  //   "product?.product_sku",
+  //   checkedSku.includes(product?.product_sku)
+  // );
   return (
     <div className="flex flex-col space-y-4 pl-6 pr-1">
       <div className="flex w-full space-x-2 relative">
-        <Checkbox checked={mainChecked} onChange={handleMainCheckboxChange} />
+        <Checkbox
+          checked={checkedSku.includes(product?.product_sku) ? true : false}
+          onChange={handleMainCheckboxChange}
+        />
         <a
           href={`${baseURL}${product?.product_sku}`}
           title={product?.name}
@@ -156,7 +235,6 @@ const ProductDetails = ({ product, setClicked, showVariant, setShowVariant }) =>
             </span>
           </p>
         </div>
-
         <button
           onClick={handleShowVariants}
           className="absolute -left-7 top-0 bottom-0 font-bold"

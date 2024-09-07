@@ -37,14 +37,15 @@ const SupplierProducts = () => {
   // states
   const originalDataRef = useRef([]);
   const [loading, setLoading] = useState(false);
-  const [clicked, setClicked] = useState(true)
-  
+  const [clicked, setClicked] = useState(true);
+
   // console.log("loading", loading);
   const [data, setData] = useState([]);
   // console.log("data", data);
   const [error, setError] = useState();
   // console.log("error", error);
   const [showVariant, setShowVariant] = useState([]);
+  const [checkedSku, setCheckedSku] = useState([]);
   console.log("showVariant", showVariant);
   const [dataCount, setDataCount] = useState(1);
   // console.log("dataCount", dataCount);
@@ -73,6 +74,7 @@ const SupplierProducts = () => {
     localStorage.removeItem("mainChecked");
     localStorage.removeItem("checkedStates");
     localStorage.removeItem("updateProductsIdArr");
+    localStorage.removeItem("checkedSku");
   }, []);
 
   useEffect(() => {
@@ -119,7 +121,6 @@ const SupplierProducts = () => {
     };
   }, []);
 
-  
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -136,16 +137,16 @@ const SupplierProducts = () => {
     fetchData();
   }, [getSuppliersProduct, offset]);
 
-    useEffect(() => {
-      if (data.length > 0) {
-        // console.log("data from variant", data);
-        const initialVariants = data.map((item) => ({
-          id: item?.product_sku,
-          show: false,
-        }));
-        setShowVariant(initialVariants);
-      }
-    }, [data]);
+  useEffect(() => {
+    if (data.length > 0) {
+      // console.log("data from variant", data);
+      const initialVariants = data.map((item) => ({
+        id: item?.product_sku,
+        show: false,
+      }));
+      setShowVariant(initialVariants);
+    }
+  }, [data]);
 
   const STATUSES = [
     "product",
@@ -170,6 +171,8 @@ const SupplierProducts = () => {
           showVariant={showVariant}
           setShowVariant={setShowVariant}
           setClicked={setClicked}
+          checkedSku={checkedSku}
+          setCheckedSku={setCheckedSku}
         />
       ),
     },

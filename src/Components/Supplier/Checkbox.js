@@ -1,8 +1,8 @@
 import React from "react";
 
-const Checkbox = ({ checked, onChange }) => {
+const Checkbox = ({ checked, onChange, onClick }) => {
   return (
-    <label className="inline-flex items-center cursor-pointer">
+    <label className="inline-flex items-center cursor-pointer" onClick={onClick}>
       <input
         type="checkbox"
         checked={checked}

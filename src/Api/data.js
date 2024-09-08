@@ -1698,7 +1698,7 @@ export const refreshPrices = async (item) => {
   for (let i = 0; i < variants.length; i += batchSize) {
     const batch = variants.slice(i, i + batchSize).map((variant) => ({
       ...variant,
-      price: (item?.percentage / 100) * variant?.purchase_price,
+      price: ((item?.percentage / 100) * variant?.purchase_price) + variant?.purchase_price,
       percentage: item?.percentage,
     }));
 

@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react'
-import SupplierLine from './SupplierLine';
+import React, { useMemo } from "react";
+import SupplierLine from "./SupplierLine";
 
 const ColorsDetails = ({ product, showVariant }) => {
   // console.log("product from colors", product);
@@ -9,6 +9,18 @@ const ColorsDetails = ({ product, showVariant }) => {
         ?.show,
     [product?.product_sku, showVariant]
   );
+
+  const combineColors = useMemo(() => {
+    let hash = {};
+    for (const variant of product?.variants) {
+      let colorHex = Object.keys(variant?.colors?.at(0));
+      let colorContent = Object.values(variant?.colors?.at(0));
+      console.log("🚀 ~ combineColors ~ colorContent:", colorContent);
+      hash[colorHex[0]] = colorContent[0];
+    }
+
+    return hash;
+  }, [product?.variants]);
 
   // Array to store unique colors
   const uniqueColors = [];
@@ -25,11 +37,15 @@ const ColorsDetails = ({ product, showVariant }) => {
     });
   });
 
-  // console.log(uniqueColors); 
+  // console.log(uniqueColors);
   return (
     <div>
-      <div className="product-hight flex justify-center items-center">
-        <span>{uniqueColors}</span>
+      <div className="product-hight flex justify-center items-center text-xs">
+        {Object?.entries(combineColors)?.map(([hex, content]) => (
+          <span className="px-1" style={{ color: hex, textShadow: '0 1px 1px #000' }}>
+            {content}
+          </span>
+        ))}
       </div>
       {show && (
         <div>
@@ -53,4 +69,4 @@ const ColorsDetails = ({ product, showVariant }) => {
   );
 };
 
-export default ColorsDetails
+export default ColorsDetails;

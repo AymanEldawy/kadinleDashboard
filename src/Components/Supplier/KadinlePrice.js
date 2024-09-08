@@ -8,17 +8,6 @@ const KadinlePrice = ({
   getFormatPrice,
  showVariant,
 }) => {
-  console.log(product,'----v');
-  
-  // console.log("clicked", clicked);
-  // const showVariant = useRef(JSON.parse(localStorage.getItem("showVariant")));
-  // useEffect(() => {
-  //   const savedValue = localStorage.getItem("showVariant");
-  //   if (savedValue) {
-  //     setShowVariant(JSON.parse(savedValue));
-  //   }
-  // }, []);
-  // console.log("price showVariant", showVariant);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [index, setIndex] = useState(null);
   // console.log("index", index);

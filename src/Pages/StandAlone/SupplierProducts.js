@@ -14,9 +14,8 @@ import React, {
   useState,
 } from "react";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
-import EditableField from "../../Components/Supplier/EditableField";
-import Filters from "../../Components/Supplier/Filters";
-import FilterPopover from "../../Components/Supplier/FilterPopover";
+import { getSuppliersList } from "../../Api/data";
+import Select from "react-select";
 import { supabase } from "../../Helpers/SupabaseConfig/SupabaseConfig";
 import ProductDetails from "../../Components/Supplier/ProductDetails";
 import Pagination from "../../Components/Supplier/Pagination";
@@ -31,6 +30,7 @@ import SupplierPrice from "../../Components/Supplier/SupplierPrice";
 import CurrencyDropdown from "../../Components/Supplier/CurrencyDropdown";
 import { CategoryMultiFilter } from "../../Components/TableBar/CategoryMultiFilter";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
+import { useQuery } from "@tanstack/react-query";
 // border color #cacbce
 const SupplierProducts = () => {
   const { defaultLanguage } = useGlobalOptions();
@@ -39,36 +39,36 @@ const SupplierProducts = () => {
   const [loading, setLoading] = useState(false);
   const [clicked, setClicked] = useState(true);
 
-  // console.log("loading", loading);
   const [data, setData] = useState([]);
-  // console.log("data", data);
   const [error, setError] = useState();
-  // console.log("error", error);
   const [showVariant, setShowVariant] = useState([]);
   const [checkedSku, setCheckedSku] = useState([]);
-  console.log("showVariant", showVariant);
   const [dataCount, setDataCount] = useState(1);
-  // console.log("dataCount", dataCount);
   const [itemsPerPage, setItemsPerPage] = useState(50);
-  // console.log("itemsPerPage", itemsPerPage);
   const [offset, setOffset] = useState(0);
-  // console.log("offset", offset);
   const [columnFilters, setColumnFilters] = useState([]);
+  const [supplierId, setSupplierId] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [currencyData, setCurrencyData] = useState([]);
   const [filterCategory, setFilterCategory] = useState(null);
-  console.log("filterCategory", filterCategory);
   const [updateProductsIdArr, setUpdateProductsIdArr] = useState(null);
-  // console.log("updateProductsIdArr", updateProductsIdArr);
   const [selectedCurrency, setSelectedCurrency] = useState(() => {
     // Retrieve the stored value from localStorage when the page loads for the first time
     const savedCurrency = localStorage.getItem("selectedCurrency");
-    return savedCurrency ? JSON.parse(savedCurrency) : null;
+    return savedCurrency && savedCurrency !== "undefined"
+      ? JSON.parse(savedCurrency)
+      : null;
   });
 
+  const { data: suppliers } = useQuery({
+    queryKey: ["list", "suppliers"],
+    queryFn: async () => {
+      const data = await getSuppliersList();
+      return data;
+    },
+  });
   const numberOfPages = Math.ceil(dataCount / itemsPerPage);
 
-  console.log("numberOfPages", numberOfPages);
   useEffect(() => {
     // Clear localStorage when the component mounts
     localStorage.removeItem("mainChecked");
@@ -100,23 +100,19 @@ const SupplierProducts = () => {
     let { data, error } = await supabase.rpc("get_products_with_variants", {
       param_lang_id: defaultLanguage?.id,
       param_category_id: filterCategory,
-      param_seller_file_id: 74,
+      param_seller_file_id: supplierId || suppliers?.at(0)?.seller_file_id,
       param_offset: offset,
       param_limit: itemsPerPage,
     });
     setError(error);
     return data;
-  }, [defaultLanguage?.id, filterCategory, itemsPerPage, offset]);
-
-  // console.log("filterCategory", filterCategory);
+  }, [defaultLanguage?.id, filterCategory, itemsPerPage, offset, supplierId]);
 
   const getCurrencyData = async () =>
     await supabase.from("currency").select("*");
 
   const getFormatPrice = useMemo(() => {
     return (price, currency) => {
-      console.log(price, currency, "------");
-
       let calculatePrice = (price * currency?.rate).toFixed(2);
       if (!calculatePrice || isNaN(calculatePrice)) calculatePrice = price;
       return [calculatePrice, currency?.short_code];
@@ -141,7 +137,6 @@ const SupplierProducts = () => {
 
   useEffect(() => {
     if (data.length > 0) {
-      // console.log("data from variant", data);
       const initialVariants = data.map((item) => ({
         id: item?.product_sku,
         show: false,
@@ -264,11 +259,12 @@ const SupplierProducts = () => {
     localStorage.setItem("pageIndex", pageIndex);
   }, [table.getState().pagination.pageIndex]);
 
+  console.log(currencyData, "currencyData");
+
   const initialPageIndex = Number(localStorage.getItem("pageIndex")) || 0;
-  // console.log("table", table.getRowModel());
   return (
     <BlockPaper title="Products Supplier">
-      <div className="flex gap-4 items-center gap-3">
+      <div className="flex gap-4 items-center flex-wrap">
         {/* <div className="flex">
           <Filters
             columnFilters={columnFilters}
@@ -284,20 +280,39 @@ const SupplierProducts = () => {
             setSelectedStatus={setSelectedStatus}
           />
         </div> */}
-        <div className="z-50 flex-1 max-w-fit">
-          <CategoryMultiFilter
-            filterCategory={filterCategory}
-            setFilterCategory={setFilterCategory}
+        <div className="flex items-center gap-2">
+          <span className="font-medium">Supplier id</span>
+          <Select
+            menuPlacement="auto"
+            menuPortalTarget={document?.body}
+            styles={{
+              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+            }}
+            placeholder="Select supplier"
+            className=""
+            options={suppliers}
+            getOptionLabel={({ seller_file_id }) => seller_file_id}
+            getOptionValue={({ seller_file_id }) => seller_file_id}
+            onChange={(value) => {
+              setSupplierId(value?.seller_file_id);
+            }}
           />
         </div>
-        <div className="mb-1">
-          {currencyData?.data?.length > 0 && selectedCurrency && (
+        <div className="flex items-center gap-2">
+          <span className="font-medium">Currency</span>
+          {currencyData?.data?.length > 0 && (
             <CurrencyDropdown
               data={currencyData?.data}
               selectedCurrency={selectedCurrency}
               setSelectedCurrency={setSelectedCurrency}
             />
           )}
+        </div>
+        <div className="z-50 flex-1 max-w-fit">
+          <CategoryMultiFilter
+            filterCategory={filterCategory}
+            setFilterCategory={setFilterCategory}
+          />
         </div>
 
         <div className="flex items-center gap-2">

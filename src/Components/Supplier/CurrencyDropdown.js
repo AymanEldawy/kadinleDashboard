@@ -1,32 +1,32 @@
 import React, { useState } from "react";
+import Select from "react-select";
 
 const CurrencyDropdown = ({ data, selectedCurrency, setSelectedCurrency }) => {
-  const handleSelect = (event) => {
-    const selectedName = event.target.value;
-    const selectedObject = data.find(
-      (currency) => currency.name === selectedName
-    );
-    setSelectedCurrency(selectedObject);
-    localStorage.setItem("selectedCurrency", JSON.stringify(selectedObject));
+  const handleSelect = (value) => {
+    setSelectedCurrency(value);
+    localStorage.setItem("selectedCurrency", JSON.stringify(value));
   };
+  
 
   return (
     <div>
-      <select
-        id="currency"
-        value={selectedCurrency ? selectedCurrency.name : ""}
-        onChange={handleSelect}
-        className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
-      >
-        <option value="" disabled>
-          Select a Currency
-        </option>
-        {data?.map((currency) => (
-          <option key={currency?.id} value={currency?.name}>
-            {currency?.name}
-          </option>
-        ))}
-      </select>
+      <Select
+        menuPlacement="auto"
+        menuPortalTarget={document?.body}
+        styles={{
+          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+        }}
+        placeholder="Select Currency"
+        className=""
+        options={data}
+        getOptionLabel={({ name }) => name}
+        getOptionValue={({ id }) => id}
+        value={selectedCurrency}
+        onChange={(value) => {
+          console.log("🚀 ~ CurrencyDropdown ~ value:", value)
+          handleSelect(value);
+        }}
+      />
     </div>
   );
 };

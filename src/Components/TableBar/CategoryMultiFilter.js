@@ -44,6 +44,11 @@ export const CategoryMultiFilter = ({
       {Object.entries(listCategories)?.map(([key, value]) => {
         return (
           <Select
+            menuPlacement="auto"
+            menuPortalTarget={document?.body}
+            styles={{
+              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+            }}
             className="w-full min-w-[180px]"
             value={value?.find((c) => c?.category_id === listFilter[key])}
             onChange={(selected) => {

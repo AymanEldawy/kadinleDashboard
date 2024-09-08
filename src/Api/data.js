@@ -1690,23 +1690,15 @@ export const refreshPrices = async (item) => {
     .lte(
       "purchase_price",
       getFormatPrice(item?.max_price, currency?.data?.at(0))
-    )
-
-  // for (const variant of response?.data) {
-  //   await supabase.from("product_variant").upsert({
-  //     ...variant,
-  //     price: item?.percentage * variant?.purchase_price,
-  //     percentage: item?.percentage,
-  //   });
-  // }
-
+    );
+    
   const batchSize = 200;
   const variants = response?.data || [];
 
   for (let i = 0; i < variants.length; i += batchSize) {
     const batch = variants.slice(i, i + batchSize).map((variant) => ({
       ...variant,
-      price: item?.percentage * variant?.purchase_price,
+      price: (item?.percentage / 100) * variant?.purchase_price,
       percentage: item?.percentage,
     }));
 

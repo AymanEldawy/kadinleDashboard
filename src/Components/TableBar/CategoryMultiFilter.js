@@ -8,7 +8,7 @@ export const CategoryMultiFilter = ({
   filterCategory,
   setFilterCategory,
   outerChange,
-  name
+  name,
 }) => {
   const { defaultLanguage } = useGlobalOptions();
   const [listFilter, setListFilter] = useState({});
@@ -44,7 +44,7 @@ export const CategoryMultiFilter = ({
       {Object.entries(listCategories)?.map(([key, value]) => {
         return (
           <Select
-          className="w-full"
+            className="w-full min-w-[180px]"
             value={value?.find((c) => c?.category_id === listFilter[key])}
             onChange={(selected) => {
               let value =

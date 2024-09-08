@@ -115,6 +115,8 @@ const SupplierProducts = () => {
 
   const getFormatPrice = useMemo(() => {
     return (price, currency) => {
+      console.log(price, currency, "------");
+
       let calculatePrice = (price * currency?.rate).toFixed(2);
       if (!calculatePrice || isNaN(calculatePrice)) calculatePrice = price;
       return [calculatePrice, currency?.short_code];
@@ -148,19 +150,6 @@ const SupplierProducts = () => {
     }
   }, [data]);
 
-  const STATUSES = [
-    "product",
-    "category",
-    "color",
-    "size",
-    "stock",
-    "variant",
-    "brand",
-    "supplier price",
-    "kadinle price",
-    "percentage",
-    "supplier",
-  ];
   const columns = useMemo(() => [
     {
       accessorKey: "product",
@@ -279,7 +268,7 @@ const SupplierProducts = () => {
   // console.log("table", table.getRowModel());
   return (
     <BlockPaper title="Products Supplier">
-      <div className="flex justify-between items-center gap-3">
+      <div className="flex gap-4 items-center gap-3">
         {/* <div className="flex">
           <Filters
             columnFilters={columnFilters}
@@ -312,20 +301,19 @@ const SupplierProducts = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-gray-700">Items per page:</span>{" "}
           <select
             value={itemsPerPage}
             onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className="px-2 py-1 rounded border border-gray-300 bg-white text-gray-800"
+            className="p-[6px] rounded border border-gray-300 bg-white text-gray-800"
           >
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-            <option value={150}>150</option>
-            <option value={200}>200</option>
+            <option value={50}> Items per page: 50</option>
+            <option value={100}> Items per page: 100</option>
+            <option value={150}> Items per page: 150</option>
+            <option value={200}> Items per page: 200</option>
           </select>
         </div>
 
-        <div className="m-4 max-sm:hidden">
+        <div className="m-4 max-sm:hidden ml-auto">
           <Pagination
             // numberOfPages={numberOfPages}
             pageIndex={initialPageIndex}
@@ -345,11 +333,11 @@ const SupplierProducts = () => {
             <div className="overflow-x-auto">
               <div className="min-w-full">
                 <table className="table-auto border border-gray-300 rounded-md">
-                  <thead>
+                  <thead className="sticky top-0">
                     {table.getHeaderGroups().map((headerGroup) => (
                       <tr
                         key={headerGroup.id}
-                        className="bg-gray-200 text-gray-700 font-medium text-xs leading-4 tracking-wider group"
+                        className="bg-gray-200 capitalize text-gray-700 font-medium text-base leading-4 tracking-wider group"
                       >
                         {headerGroup.headers.map((header, index) => (
                           <th
@@ -430,7 +418,7 @@ const SupplierProducts = () => {
               </div>
             </div>
 
-            <div className="m-4">
+            <div className="max-sm:hidden ml-auto w-full mt-4 flex justify-end">
               <Pagination
                 // numberOfPages={numberOfPages}
                 pageIndex={initialPageIndex}

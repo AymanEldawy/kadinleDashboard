@@ -1,19 +1,17 @@
 import React, { useState } from "react";
 
-const CurrencyDropdown = ({ data, selectedCurrency, setSelectedCurrency }) => { 
-  
-console.log("selectedCurrency", selectedCurrency);
+const CurrencyDropdown = ({ data, selectedCurrency, setSelectedCurrency }) => {
   const handleSelect = (event) => {
     const selectedName = event.target.value;
     const selectedObject = data.find(
       (currency) => currency.name === selectedName
     );
     setSelectedCurrency(selectedObject);
+    localStorage.setItem("selectedCurrency", JSON.stringify(selectedObject));
   };
 
   return (
     <div>
-     
       <select
         id="currency"
         value={selectedCurrency ? selectedCurrency.name : ""}
@@ -29,7 +27,6 @@ console.log("selectedCurrency", selectedCurrency);
           </option>
         ))}
       </select>
-  
     </div>
   );
 };

@@ -8,6 +8,8 @@ const KadinlePrice = ({
   getFormatPrice,
  showVariant,
 }) => {
+  console.log(product,'----v');
+  
   // console.log("clicked", clicked);
   // const showVariant = useRef(JSON.parse(localStorage.getItem("showVariant")));
   // useEffect(() => {

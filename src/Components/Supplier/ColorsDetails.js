@@ -40,9 +40,9 @@ const ColorsDetails = ({ product, showVariant }) => {
   // console.log(uniqueColors);
   return (
     <div>
-      <div className="product-hight flex justify-center items-center text-xs">
+      <div className="product-hight flex justify-center items-center text-sm ">
         {Object?.entries(combineColors)?.map(([hex, content]) => (
-          <span className="px-1" style={{ color: hex, textShadow: '0 1px 1px #000' }}>
+          <span className="px-1">
             {content}
           </span>
         ))}

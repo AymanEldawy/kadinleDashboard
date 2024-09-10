@@ -204,7 +204,7 @@ const MoveCategory = () => {
         setOpen={setOpenConfirmation}
       />
       <div className="relative">
-        {isProgress ? <LoadingProcess /> : null}
+        {isProgress && openConfirmation ? <LoadingProcess /> : null}
         <BlockPaper
           headerClassName="flex items-center justify-between"
           title={"Changing Category"}

@@ -95,8 +95,8 @@ const MoveCategory = () => {
         category,
         supplierId
       ),
-    keepPreviousData: true, // Optional: keeps old data while fetching new data
-    staleTime: 0, // O
+    // keepPreviousData: true, // Optional: keeps old data while fetching new data
+    // staleTime: 0, // O
   });
 
   const handlePageClick = (event) => {

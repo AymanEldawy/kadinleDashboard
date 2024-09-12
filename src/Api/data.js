@@ -1634,6 +1634,7 @@ export const getSupplierProducts = async (page, pageSize, additionalData) => {
     category(category_content(name:title, language_id)),
     brand(name),
     product_content(name, language_id),
+    product_variant(id),
     product_image(image)
     `,
       { count: "exact" }

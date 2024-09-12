@@ -17,6 +17,7 @@ import Cookies from "js-cookie";
 const Login = () => {
   const { setRefresh, setUser } = useGlobalOptions();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -61,6 +62,7 @@ const Login = () => {
 
   const handelSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true)
 
     if (!Object.keys(errors)?.length) {
       const response = await login(values?.email, values?.password);
@@ -79,6 +81,7 @@ const Login = () => {
         }, 3000);
       }
     }
+    setIsLoading(false)
   };
   return (
     <div
@@ -123,7 +126,7 @@ const Login = () => {
                   : null
               }
             />
-            <Button classes="mt-8 block w-full text-green-500" title="Login" />
+            <Button loading={isLoading}  classes="mt-8 block w-full text-green-500" title="Login" />
           </div>
       </form>
     </div>

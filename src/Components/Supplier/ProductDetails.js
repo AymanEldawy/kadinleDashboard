@@ -201,7 +201,7 @@ const ProductDetails = ({
           onChange={handleMainCheckboxChange}
         />
         <a
-          href={`${baseURL}${product?.product_sku}`}
+          href={`${baseURL}${product?.variants?.at(0)?.id}`}
           title={product?.name}
           target="_blank"
           rel="noopener noreferrer"
@@ -215,7 +215,7 @@ const ProductDetails = ({
         </a>
         <div className="flex flex-col space-y-1 flex-1 text-[13px]">
           <a
-            href={`${baseURL}${product?.product_sku}`}
+            href={`${baseURL}${product?.variants?.at(0)?.id}`}
             title={product?.name}
             target="_blank"
             rel="noopener noreferrer"

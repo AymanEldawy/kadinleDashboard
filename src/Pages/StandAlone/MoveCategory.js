@@ -196,6 +196,9 @@ const MoveCategory = () => {
     setOpenConfirmation(false);
   };
 
+  console.log('var', data);
+  
+
   return (
     <>
       <ConfirmModal
@@ -331,7 +334,7 @@ const MoveCategory = () => {
                 <div className="p-2 flex-[2] hover:text-blue-500 hover:bg-gray-100 hover:shadow">
                   <Link
                     className="flex gap-2"
-                    to={`https://kadinle.com/product/${product?.product_sku}`}
+                    to={`https://kadinle.com/product/${product?.product_variant?.at(0)?.id}`}
                     target="_blank"
                   >
                     <img

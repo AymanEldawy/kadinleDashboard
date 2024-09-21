@@ -470,7 +470,9 @@ const offer = [
   { name: "created_at", type: "date" },
   { name: "numerical", type: "number" },
   { name: "display_home", key: "checkbox" },
+  { name: "icon", type: "text", key: "image", required: true },
   { name: "is_banner", key: "checkbox" },
+
 ];
 export const offer_content = [
   { name: "id", type: "uuid" },

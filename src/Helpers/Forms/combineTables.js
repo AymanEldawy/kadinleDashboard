@@ -1171,6 +1171,7 @@ const combine_offer = () => [
     accessorKey: "name",
     header: "name",
     cell: ({ row }) => {
+      console.log("🚀 ~ row:", row?.original)
       return (
         <Link
           to={`/update/offer/${row?.original?.id}`}
@@ -1201,7 +1202,26 @@ const combine_offer = () => [
       );
     },
   },
+  {
+    accessorKey: "icon",
+    header: "icon",
+    cell: ({ getValue }) => {
+      return <FullImage src={getValue()} alt={"offer icon"} />;
+    },
+  },
   { accessorKey: "display_home", header: "display_home" },
+  {
+    accessorKey: "actions",
+    header: "actions",
+    cell: ({ row }) => (
+      <Link
+        to={`/update/offer/${row?.original?.id}`}
+        className="text-blue-500 hover:underline"
+      >
+        Edit
+      </Link>
+    ),
+  },
 ];
 
 const combine_offer_product = () => [

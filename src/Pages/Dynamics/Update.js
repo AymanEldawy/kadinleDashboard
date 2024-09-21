@@ -9,6 +9,7 @@ import {
   handleUploadCategoryVideo,
   handleUploadCollectionImage,
   handleUploadColorImage,
+  handleUploadOfferIcon,
   handleUploadOfferImage,
   handleUploadPartnerImage,
   handleUploadReviewerImage,
@@ -111,6 +112,14 @@ const Update = () => {
       }
 
       const response = await updateItem(tableName, values);
+
+      if (
+        tableName === "offer" &&
+        typeof values?.icon === "object"
+      ) {
+        await handleUploadOfferIcon(values?.icon, values?.id);
+      }
+
       if (
         tableName === "category" &&
         values?.banner_video &&

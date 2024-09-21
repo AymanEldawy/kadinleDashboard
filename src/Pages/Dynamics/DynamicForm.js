@@ -11,6 +11,7 @@ import {
   handleUploadCategoryVideo,
   handleUploadCollectionImage,
   handleUploadColorImage,
+  handleUploadOfferIcon,
   handleUploadOfferImage,
   handleUploadPartnerImage,
   handleUploadReviewerImage,
@@ -43,6 +44,8 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
     let loading = toast.loading("Please wait...");
     if (SUPABASE_TABLE_NAME === "home_reviews") {
       await handleUploadReviewerImage(values);
+    } else if (SUPABASE_TABLE_NAME === "offer") {
+      await handleUploadPartnerImage(values);
     } else if (SUPABASE_TABLE_NAME === "partner") {
       await handleUploadPartnerImage(values);
     } else if (SUPABASE_TABLE_NAME === "user") {
@@ -70,6 +73,13 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
               banner_video: values?.banner_video,
             });
           }
+          if (
+            SUPABASE_TABLE_NAME === "offer" &&
+            typeof values?.icon === "object"
+          ) {
+            await handleUploadOfferIcon(values?.icon, itemId);
+          }
+
           if (
             SUPABASE_TABLE_NAME === "category" &&
             typeof values?.image === "object"
@@ -158,7 +168,10 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
   return (
     <>
       <div className="my-2">
-        <button onClick={() => navigate(-1)} className="flex gap-2 items-center border border-blue-500 text-blue-500 hover:text-white hover:bg-blue-500 duration-300 px-3 py-1 text-sm rounded-md">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex gap-2 items-center border border-blue-500 text-blue-500 hover:text-white hover:bg-blue-500 duration-300 px-3 py-1 text-sm rounded-md"
+        >
           <ChevronIcon className="rotate-90 w-4 h-4" /> Back
         </button>
       </div>

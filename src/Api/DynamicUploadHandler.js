@@ -18,7 +18,7 @@ export const handleUploadCategoryImages = async (
   let theFileWebContent = item?.web_image;
   let theFileMobileContent = item?.mobile_image;
   const webPath =
-    typeof theFileWebContent === "object" && theFileWebContent !== '{}'
+    typeof theFileWebContent === "object" && theFileWebContent !== "{}"
       ? await uploadCategoryImage({
           categoryId: itemId,
           langName: CACHE_LANGUAGES[item?.language_id],
@@ -51,10 +51,24 @@ export const handleUploadCategoryImages = async (
     });
 };
 
+export const handleUploadOfferIcon = async (icon, itemId) => {
+  if (typeof icon === "object" && icon !== "{}") {
+    const offerIcon = await uploadOfferImage({
+      offerId: itemId,
+      langName: "global",
+      file: icon,
+    });
+    await updateItem(`offer`, {
+      icon: offerIcon?.url,
+      id: itemId,
+    });
+  }
+};
+
 export const handleUploadOfferImage = async (item, itemId, CACHE_LANGUAGES) => {
   let theFileWebContent = item?.media;
   const media =
-    typeof theFileWebContent === "object" && theFileWebContent !== '{}'
+    typeof theFileWebContent === "object" && theFileWebContent !== "{}"
       ? await uploadOfferImage({
           offerId: itemId,
           langName: CACHE_LANGUAGES[item?.language_id],
@@ -81,7 +95,7 @@ export const handleUploadCollectionImage = async (
 ) => {
   let theFileWebContent = item?.image;
   const image =
-    typeof theFileWebContent === "object" && theFileWebContent !== '{}'
+    typeof theFileWebContent === "object" && theFileWebContent !== "{}"
       ? await uploadCollectionImage({
           collectionId: itemId,
           langName: CACHE_LANGUAGES[item?.language_id],
@@ -103,7 +117,7 @@ export const handleUploadCollectionImage = async (
 export const handleUploadColorImage = async (item) => {
   let theFileWebContent = item?.image;
   const image =
-    typeof theFileWebContent === "object" && theFileWebContent !== '{}'
+    typeof theFileWebContent === "object" && theFileWebContent !== "{}"
       ? await uploadColorImage({
           colorId: item?.id,
           file: theFileWebContent,
@@ -118,7 +132,7 @@ export const handleUploadColorImage = async (item) => {
 export const handleUploadPartnerImage = async (item) => {
   let theFileWebContent = item?.image;
   const image =
-    typeof theFileWebContent === "object" && theFileWebContent !== '{}'
+    typeof theFileWebContent === "object" && theFileWebContent !== "{}"
       ? await globalUploadImage({
           name: item?.name,
           file: theFileWebContent,
@@ -138,7 +152,7 @@ export const handleUploadPartnerImage = async (item) => {
 export const handleUploadReviewerImage = async (item) => {
   let theFileWebContent = item?.image;
   const image =
-    typeof theFileWebContent === "object" && theFileWebContent !== '{}'
+    typeof theFileWebContent === "object" && theFileWebContent !== "{}"
       ? await globalUploadImage({
           name: item?.name,
           file: theFileWebContent,
@@ -159,7 +173,7 @@ export const handleUploadAvatarImage = async (item) => {
   let theFileWebContent = item?.profile_img;
 
   const image =
-    typeof theFileWebContent === "object" && theFileWebContent !== '{}'
+    typeof theFileWebContent === "object" && theFileWebContent !== "{}"
       ? await uploadAvatarImage({
           userId: item?.id,
           file: theFileWebContent,
@@ -174,7 +188,7 @@ export const handleUploadAvatarImage = async (item) => {
 export const handleUploadCategoryVideo = async (item) => {
   let theFileWebContent = item?.banner_video;
   const media =
-    typeof theFileWebContent === "object" && theFileWebContent !== '{}'
+    typeof theFileWebContent === "object" && theFileWebContent !== "{}"
       ? await uploadCategoryMedia({
           id: item?.id,
           file: theFileWebContent,
@@ -192,7 +206,7 @@ export const handleUploadCategoryVideo = async (item) => {
 export const handleUploadCategoryImage = async (item) => {
   let theFileWebContent = item?.image;
   const media =
-    typeof theFileWebContent === "object" && theFileWebContent !== '{}'
+    typeof theFileWebContent === "object" && theFileWebContent !== "{}"
       ? await uploadCategoryMedia({
           id: item?.id,
           file: theFileWebContent,
@@ -210,14 +224,13 @@ export const handleUploadCategoryImage = async (item) => {
 export const handleUploadSlider = async (item, key, folder = "slider") => {
   let theFileWebContent = item?.[key];
   const image =
-    typeof theFileWebContent === "object" || theFileWebContent !== '{}'
+    typeof theFileWebContent === "object" || theFileWebContent !== "{}"
       ? await globalUploadImage({
           name: folder,
           file: theFileWebContent,
           action: "uploadSlider",
         })
       : item?.[key];
-
 
   return image?.url || item?.[key];
 };

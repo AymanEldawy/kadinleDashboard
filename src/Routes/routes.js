@@ -106,6 +106,7 @@ import ProductsSLidersForm from "../Pages/StandAlone/ProductsSLidersForm";
 import SupplierProducts from "../Pages/StandAlone/SupplierProducts";
 import Chunks from "../Pages/Tables/Chunks";
 import MoveCategory from "../Pages/StandAlone/MoveCategory";
+import CategoriesBanner from "../Pages/StandAlone/CategoriesBanner";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -437,6 +438,11 @@ const authProtectedRoutes = [
   {
     path: "/supplier-request",
     component: <SupplierRequest />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/categories-banner",
+    component: <CategoriesBanner />,
     allowedRoles: ["admin", "superadmin"],
   },
 

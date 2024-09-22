@@ -1665,10 +1665,18 @@ export const getCategoriesList = async (language_id, value) => {
   return response?.data;
 };
 
+export const getCategoriesBanner = async (languageId) => {
+  return await supabase
+    .from("categories_banner")
+    .select(`*, category(id, image, category_content(title))`)
+    .eq('category.category_content.language_id', languageId)
+
+};
+
 export const getSuppliersList = async () => {
   const { data, error } = await supabase
     .from("product")
-    .select("id, seller_file_id");
+    .select("id, seller_file_id")
 
   let hash = {};
   for (const supplier of data) {
@@ -1692,14 +1700,16 @@ export const refreshPrices = async (item) => {
       "purchase_price",
       getFormatPrice(item?.max_price, currency?.data?.at(0))
     );
-    
+
   const batchSize = 200;
   const variants = response?.data || [];
 
   for (let i = 0; i < variants.length; i += batchSize) {
     const batch = variants.slice(i, i + batchSize).map((variant) => ({
       ...variant,
-      price: ((item?.percentage / 100) * variant?.purchase_price) + variant?.purchase_price,
+      price:
+        (item?.percentage / 100) * variant?.purchase_price +
+        variant?.purchase_price,
       percentage: item?.percentage,
     }));
 

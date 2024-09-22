@@ -394,7 +394,13 @@ export const menuData = [
         key: "change-category",
         icon: <RoundedArrowsIcon className="h-6 w-6" />,
         path: "/change-category",
-        name: "change-category",
+        name: "change category",
+      },
+      {
+        key: "categories-Banner",
+        icon: <TagsIcon className="h-6 w-6" />,
+        path: "/categories-Banner",
+        name: "categories Banner",
       },
       {
         key: "chunks",

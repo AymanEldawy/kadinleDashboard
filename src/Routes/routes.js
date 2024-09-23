@@ -107,6 +107,8 @@ import SupplierProducts from "../Pages/StandAlone/SupplierProducts";
 import Chunks from "../Pages/Tables/Chunks";
 import MoveCategory from "../Pages/StandAlone/MoveCategory";
 import CategoriesBanner from "../Pages/StandAlone/CategoriesBanner";
+import Weights from "../Pages/Tables/Weights";
+import AddWeights from "../Pages/Forms/AddWeights";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -367,6 +369,8 @@ const authProtectedRoutes = [
   },
   { path: "/add-chunks", component: <AddChunks />, allowedRoles: ["admin", "superadmin"] },
   { path: "/chunks", component: <Chunks />, allowedRoles: ["admin", "superadmin"] },
+  { path: "/add-weights", component: <AddWeights />, allowedRoles: ["admin", "superadmin"] },
+  { path: "/weights", component: <Weights />, allowedRoles: ["admin", "superadmin"] },
   { path: "/logs", component: <Logs />, allowedRoles: ["*"] },
   { path: "/rooms/:id", component: <ChatRoom />, allowedRoles: ["*"] },
   {

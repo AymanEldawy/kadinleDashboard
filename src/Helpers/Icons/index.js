@@ -13,6 +13,7 @@ export { default as BriefcaseIcon } from "./BriefcaseIcon";
 export { default as ToolsIcon } from "./ToolsIcon";
 export { default as BanknoteIcon } from "./BanknoteIcon";
 export { default as BuildingIcon } from "./BuildingIcon";
+export { default as WeightIcon } from "./WeightIcon";
 export { default as GearIcon } from "./GearIcon";
 export { default as PuzzleIcon } from "./PuzzleIcon";
 export { default as FullScreenIcon } from "./FullScreenIcon";

@@ -1669,14 +1669,13 @@ export const getCategoriesBanner = async (languageId) => {
   return await supabase
     .from("categories_banner")
     .select(`*, category(id, image, category_content(title))`)
-    .eq('category.category_content.language_id', languageId)
-
+    .eq("category.category_content.language_id", languageId);
 };
 
 export const getSuppliersList = async () => {
   const { data, error } = await supabase
     .from("product")
-    .select("id, seller_file_id")
+    .select("id, seller_file_id");
 
   let hash = {};
   for (const supplier of data) {
@@ -1687,6 +1686,7 @@ export const getSuppliersList = async () => {
 };
 
 export const getSupplierData = async () => {};
+
 export const refreshPrices = async (item) => {
   const currency = await supabase.from("currency").select().eq("code", "TRY");
   const response = await supabase
@@ -1726,4 +1726,40 @@ export const refreshPrices = async (item) => {
   return response;
 };
 
+export const refreshWeights = async (item) => {
+  const products = await supabase
+    .from("product")
+    .select()
+    .eq("category_id", item?.category_id);
+  const ids = products?.data?.map((c) => c?.id);
+  const variants = await supabase
+    .from("product_variant")
+    .select()
+    .in("product_id", ids);
+
+  const variantsData = [];
+
+  for (const variant of variants?.data) {
+    if (variant?.weight) continue;
+
+    variantsData.push({
+      ...variant,
+      weight: item?.gram / 1000,
+    });
+  }
+
+  const batchSize = 500;
+
+  let response = null;
+
+  for (let i = 0; i < variantsData.length; i += batchSize) {
+    const batch = variantsData.slice(i, i + batchSize);
+    response = await supabase.from("product_variant").upsert(batch);
+  }
+
+  return {
+    length: variantsData?.length,
+    ...response,
+  };
+};
 // Extract and log the unique supplier IDs

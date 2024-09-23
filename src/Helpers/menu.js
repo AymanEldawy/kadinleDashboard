@@ -1,12 +1,14 @@
 import {
-  ArrowPathIcon, BanknotesIcon,
+  ArrowPathIcon,
+  BanknotesIcon,
   BookMarkIcon,
   BookOpenIcon,
   BoxClose,
   BoxIcon,
   BoxIn,
   BoxReturn,
-  BrandIcon, BulkIcon,
+  BrandIcon,
+  BulkIcon,
   CardIcon,
   ChartContentIcon,
   ChartIcon,
@@ -18,26 +20,31 @@ import {
   ExclamationTriangleIcon,
   FireIcon,
   GearIcon,
-  HomeIcon, MapIcon,
+  HomeIcon,
+  MapIcon,
   MessageIcon,
   NewsIcon,
   PackageIcon,
   PaletteIcon,
-  ProductIcon, RulerIcon, SenderIcon,
+  ProductIcon,
+  RulerIcon,
+  SenderIcon,
   SparklesIcon,
   StarIcon,
   StoreIcon,
   TagsIcon,
-  TimeIcon, TrunkIcon,
+  TimeIcon,
+  TrunkIcon,
   UploadIcon,
   UserGroupIcon,
   UserIcon,
   UsersPlusIcon,
-  WorldIcon
+  WeightIcon,
+  WorldIcon,
 } from "./Icons";
 import ChipsIcon from "./Icons/ChipsIcon";
 import FlashIcon from "./Icons/FlashIcon";
-import GalleryIcon from './Icons/GalleryIcon';
+import GalleryIcon from "./Icons/GalleryIcon";
 import MinusIcon from "./Icons/MinusIcon";
 import RoundedArrowsIcon from "./Icons/RoundedArrowsIcon";
 
@@ -351,18 +358,6 @@ export const menuData = [
         path: "/partners",
         name: "Partners",
       },
-      {
-        key: "suppliers",
-        icon: <UserGroupIcon />,
-        path: "/suppliers",
-        name: "Suppliers",
-      },
-      {
-        key: "suppliers-request",
-        icon: <UsersPlusIcon />,
-        path: "/supplier-request",
-        name: "Suppliers request",
-      },
     ],
   },
 
@@ -386,15 +381,56 @@ export const menuData = [
     ],
   },
   {
-    key: "actions",
-    icon: <GearIcon />,
-    groupTitle: "Actions",
+    key: "Suppliers",
+    groupTitle: "Suppliers",
     groupList: [
+      {
+        key: "suppliers",
+        icon: <UserGroupIcon />,
+        path: "/suppliers",
+        name: "Suppliers",
+      },
+      {
+        path: "/products-supplier",
+        icon: <GalleryIcon />,
+        name: "Products supplier",
+      },
+      {
+        key: "suppliers-request",
+        icon: <UsersPlusIcon />,
+        path: "/supplier-request",
+        name: "Suppliers request",
+      },
       {
         key: "change-category",
         icon: <RoundedArrowsIcon className="h-6 w-6" />,
         path: "/change-category",
         name: "change category",
+      },
+
+      {
+        key: "chunks",
+        icon: <ChipsIcon className="h-6 w-6" />,
+        path: "/chunks",
+        name: "Chunks",
+      },
+      {
+        key: "weights",
+        icon: <WeightIcon className="h-6 w-6" />,
+        path: "/weights",
+        name: "weights",
+      },
+    ],
+  },
+  {
+    key: "actions",
+    icon: <GearIcon />,
+    groupTitle: "Actions",
+    groupList: [
+      {
+        path: "/xml-import",
+        icon: <UploadIcon />,
+        name: "XML Import",
       },
       {
         key: "categories-Banner",
@@ -403,10 +439,20 @@ export const menuData = [
         name: "categories Banner",
       },
       {
-        key: "chunks",
-        icon: <ChipsIcon className="h-6 w-6" />,
-        path: "/chunks",
-        name: "Chunks",
+        path: "/products-slider",
+        icon: <GalleryIcon />,
+        name: "Products slider",
+      },
+      {
+        path: "/home-sections",
+        icon: <HomeIcon />,
+        name: "Home Sections",
+      },
+    
+      {
+        path: "/home-slider",
+        icon: <GalleryIcon />,
+        name: "Home slider",
       },
       {
         key: "logs",
@@ -424,31 +470,7 @@ export const menuData = [
         icon: <UploadIcon />,
         name: "Upload XLS Sheets",
       },
-      {
-        path: "/home-sections",
-        icon: <HomeIcon />,
-        name: "Home Sections",
-      },
-      {
-        path: "/products-slider",
-        icon: <GalleryIcon />,
-        name: "Products slider",
-      },
-      {
-        path: "/home-slider",
-        icon: <GalleryIcon />,
-        name: "Home slider",
-      },
-      {
-        path: "/products-supplier",
-        icon: <GalleryIcon />,
-        name: "Products supplier",
-      },
-      {
-        path: "/xml-import",
-        icon: <UploadIcon />,
-        name: "XML Import",
-      },
+
       { path: "/send-email", icon: <SenderIcon />, name: "send newsLetter" },
     ],
   },

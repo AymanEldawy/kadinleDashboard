@@ -52,7 +52,7 @@ const category = [
 const category_content = [
   { name: "id", type: "uuid" },
   { name: "title", type: "text", required: true },
-  { name: "short_title", type: "text", },
+  { name: "short_title", type: "text" },
   { name: "description", type: "text" },
   {
     name: "category_id",
@@ -443,7 +443,6 @@ const logs = [
   { name: "table_name", type: "text" },
 ];
 
-
 const news = [
   { name: "id", type: "uuid" },
   // { name: "created_at", type: "date" },
@@ -465,6 +464,21 @@ const newsletter = [
 const newsletter_subscription = [
   { name: "email", type: "email", required: true },
 ];
+
+const weights = [
+  { name: "category_sku", type: "text" },
+  {
+    name: "category_id",
+    type: "uuid",
+    key: "ref",
+    required: true,
+    tableName: "category_content",
+    refId: "category_id",
+    refName: "title",
+  },
+  { name: "gram", key: "number" },
+];
+
 const offer = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date" },
@@ -472,8 +486,8 @@ const offer = [
   { name: "display_home", key: "checkbox" },
   { name: "icon", type: "text", key: "image", required: true },
   { name: "is_banner", key: "checkbox" },
-
 ];
+
 export const offer_content = [
   { name: "id", type: "uuid" },
   {
@@ -1409,6 +1423,7 @@ const DB_API = {
   less_than_content,
   definitions,
   definitions_content,
-  chunks
+  chunks,
+  weights,
 };
 export default DB_API;

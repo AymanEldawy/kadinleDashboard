@@ -5,6 +5,7 @@ import { EyeIcon, SlashEyeIcon } from "../Icons";
 import { refreshPrices } from "../../Api/data";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 import { RefreshChunksBtn } from "../../Components/RefreshChunksBtn";
+import { RefreshWeightsBtn } from "../../Components/RefreshWeightsBtn";
 
 const combine_address = () => [
   {
@@ -116,6 +117,62 @@ const combine_brand = () => [
         Edit
       </Link>
     ),
+  },
+];
+
+const combine_Weights = () => [
+  {
+    id: "select",
+    size: 20,
+    header: ({ table }) => (
+      <input
+        type="checkbox"
+        className="h-5 w-5"
+        {...{
+          checked: table?.getIsAllRowsSelected(),
+          // indeterminate: table?.getIsSomeRowsSelected(),
+          onChange: table?.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <input
+          type="checkbox"
+          className="h-5 w-5"
+          {...{
+            checked: row?.getIsSelected(),
+            disabled: !row?.getCanSelect(),
+            // indeterminate: row?.getIsSomeSelected(),
+            onChange: row?.getToggleSelectedHandler(),
+          }}
+        />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "created_at",
+    header: "created_at",
+    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
+  },
+  { accessorKey: "category_sku", header: "category_sku" },
+  { accessorKey: "gram", header: "gram" },
+  {
+    accessorKey: "actions",
+    header: "actions",
+    cell: ({ row }) => {
+      return (
+        <div className="flex gap-4 items-center">
+          <Link
+            to={`/update/weights/${row?.original?.id}`}
+            className="text-blue-500 hover:underline"
+          >
+            Edit
+          </Link>
+          <RefreshWeightsBtn item={row?.original} />
+        </div>
+      );
+    },
   },
 ];
 
@@ -3357,5 +3414,6 @@ const COMBINE_DB_API = {
   combine_order_report,
   combine_washing_instructions,
   combine_chunks,
+  combine_Weights
 };
 export default COMBINE_DB_API;

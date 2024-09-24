@@ -235,7 +235,7 @@ export const getOrders = async (page, pageSize, additionalData) => {
       address(country(name), name:city),
       warehouse_from(name),
       coupon(name:code),
-      order_content(quantity, product_variant(id, sku,product(price, barcode, discount, product_content(name)))),
+      order_content(quantity, product_variant(id, variant_sku,price, barcode, discount, product(product_sku, product_content(name), product_image(image)))),
       order_status(numerical, status_content:order_status_content(order_status:status, language_id))
    `,
       { count: "exact" }
@@ -260,7 +260,7 @@ export const getOrders = async (page, pageSize, additionalData) => {
         query.ilike(`${searchKey}.name`, `%${searchValue}%`);
         break;
       case "variant":
-        query.ilike(`order_content.product_variant.sku`, `%${searchValue}%`);
+        query.ilike(`order_content.product_variant.variant_sku`, `%${searchValue}%`);
         break;
       case "quantity":
         query.ilike(`category_content.quantity`, `%${searchValue}%`);

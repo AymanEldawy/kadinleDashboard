@@ -6,40 +6,37 @@ import React, {
   useState,
   useCallback,
 } from "react";
+import Checkbox from "../Supplier/Checkbox";
 import NextArrow from "../icons/NextArrow";
-import CopyButton from "./CopyButton";
-import SupplierLine from "./SupplierLine";
-import Checkbox from "./Checkbox";
+import SupplierLine from "../Supplier/SupplierLine";
 
-const ProductDetails = ({
-  product,
+
+const WarehouseFrom = ({
+  order,
   setClicked,
   showVariant,
   setShowVariant,
-  checkedSku,
-  setCheckedSku,
+  checkedId,
+  setCheckedId,
 }) => {
-  // console.log(product);
+//   console.log("order from warehouse", order);
   const baseURL = "https://kadinle.com/en/product/";
 
   const initialMainChecked = useMemo(
-    () => JSON.parse(localStorage.getItem("mainChecked")) || false,
+    () => JSON.parse(localStorage.getItem("mainCheckedOrder")) || false,
     []
   );
   const initialCheckedStates = useMemo(
     () =>
-      JSON.parse(localStorage.getItem("checkedStates")) ||
-      (product?.variants ? product.variants.map(() => false) : []),
-    [product?.variants]
+      JSON.parse(localStorage.getItem("checkedStatesOrder")) ||
+      (order?.order_content ? order.order_content.map(() => false) : []),
+    [order?.order_content]
   );
-  
-  // const initialCheckedSku =
-  //   JSON.parse(localStorage.getItem("initialCheckedSku")) || [];
-  const [updateProductsIdArr, setUpdateProductsIdArr] = useState([]);
+
+  const [updateOrdersIdArr, setUpdateOrdersIdArr] = useState([]);
   const [mainChecked, setMainChecked] = useState(initialMainChecked);
   const [checkedStates, setCheckedStates] = useState(initialCheckedStates);
 
-  // console.log("checkedSku", checkedSku);
   const [visibleLength, setVisibleLength] = useState(20);
   const linkRef = useRef(null);
 
@@ -67,69 +64,43 @@ const ProductDetails = ({
 
   let show = useMemo(
     () =>
-      showVariant?.find((variant) => variant?.id === product?.product_sku)
-        ?.show || false,
-    [product?.product_sku, showVariant]
+      showVariant?.find((variant) => variant?.id === order?.id)?.show || false,
+    [order?.product_sku, showVariant]
   );
 
   useEffect(() => {
-    if (!product?.variants) return;
+    if (!order?.order_content) return;
 
     const trueCheckedIndices = checkedStates
       ?.map((checked, index) => (checked ? index : null))
       .filter((index) => index !== null);
 
     const updatedArray = trueCheckedIndices
-      ?.map((element) => product?.variants[element]?.id)
+      ?.map((element) => order?.order_content[element]?.id)
       .filter((id) => id != null);
 
-    setUpdateProductsIdArr((prevArr) => {
+    setUpdateOrdersIdArr((prevArr) => {
       const storedArray =
-        JSON.parse(localStorage.getItem("updateProductsIdArr")) || [];
+        JSON.parse(localStorage.getItem("updateOrdersIdArr")) || [];
       const newArray = [...new Set([...storedArray, ...updatedArray])];
 
-      localStorage.setItem("updateProductsIdArr", JSON.stringify(newArray));
+      localStorage.setItem("updateOrdersIdArr", JSON.stringify(newArray));
       return newArray;
     });
-  }, [checkedStates, product?.variants]);
+  }, [checkedStates, order?.order_content]);
 
   useEffect(() => {
-    localStorage.setItem("checkedSku", JSON.stringify(checkedSku));
-  }, [checkedSku]);
+    localStorage.setItem("checkedId", JSON.stringify(checkedId));
+  }, [checkedId]);
 
   useEffect(() => {
-    localStorage.setItem("mainChecked", JSON.stringify(mainChecked));
-    localStorage.setItem("checkedStates", JSON.stringify(checkedStates));
+    localStorage.setItem("mainCheckedOrder", JSON.stringify(mainChecked));
+    localStorage.setItem("checkedStatesOrder", JSON.stringify(checkedStates));
   }, [mainChecked, checkedStates]);
 
-  useEffect(()=>{
-      setCheckedStates(
-        checkedStates.map(() => checkedSku.includes(product?.product_sku))
-      );
-  },[checkedSku, product?.product_sku])
-
-  // const handleMainCheckboxChange = useCallback(
-  //   (e) => {
-  //     e.stopPropagation();
-
-  //     const newMainChecked = !mainChecked;
-  //     setMainChecked(newMainChecked);
-  //     setCheckedStates(checkedStates.map(() => newMainChecked));
-
-  //     // Handle updateProductsIdArr logic
-  //     if (!newMainChecked && product?.variants?.length) {
-  //       const variantIds = product.variants.map((variant) => variant.id);
-  //       const updatedArray = updateProductsIdArr.filter(
-  //         (element) => !variantIds.includes(element)
-  //       );
-  //       localStorage.setItem(
-  //         "updateProductsIdArr",
-  //         JSON.stringify(updatedArray)
-  //       );
-  //     }
-  //   },
-  //   [mainChecked, checkedStates, product, updateProductsIdArr]
-  // );
+  useEffect(() => {
+    setCheckedStates(checkedStates.map(() => checkedId.includes(order?.id)));
+  }, [checkedId, order?.id]);
 
   const handleChildCheckboxChange = useCallback(
     (index, id) => {
@@ -140,100 +111,89 @@ const ProductDetails = ({
         setMainChecked(true);
       } else {
         setMainChecked(false);
-        if (updateProductsIdArr.includes(id)) {
-          const updatedArray = updateProductsIdArr.filter(
+        if (updateOrdersIdArr.includes(id)) {
+          const updatedArray = updateOrdersIdArr.filter(
             (element) => element !== id
           );
           localStorage.setItem(
-            "updateProductsIdArr",
+            "updateOrdersIdArr",
             JSON.stringify(updatedArray)
           );
         }
       }
     },
-    [checkedStates, updateProductsIdArr]
+    [checkedStates, updateOrdersIdArr]
   );
 
-    const handleMainCheckboxChange = useCallback(() => {
-      // Toggle product?.product_sku in checkedSku array
-      setCheckedSku((prevCheckedSku) => {
-        // console.log("Before update:", prevCheckedSku);
+  const handleMainCheckboxChange = useCallback(() => {
+    setCheckedId((prevCheckedId) => {
+      if (prevCheckedId.includes(order?.id)) {
+        const updatedId = prevCheckedId.filter((id) => id !== order?.id);
 
-        if (prevCheckedSku.includes(product?.product_sku)) {
-          const updatedSku = prevCheckedSku.filter(
-            (sku) => sku !== product.product_sku
-          );
-          // console.log("Updated checkedSku (removed):", updatedSku);
-          return updatedSku;
-        } else {
-          const updatedSku = [...prevCheckedSku, product?.product_sku];
-          // console.log("Updated checkedSku (added):", updatedSku);
-          return updatedSku;
-        }
-      });
+        return updatedId;
+      } else {
+        const updatedId = [...prevCheckedId, order?.id];
+        return updatedId;
+      }
+    });
 
-      const newMainChecked = checkedSku.includes(product?.product_sku);
-      setMainChecked(newMainChecked);
+    const newMainChecked = checkedId.includes(order?.id);
+    setMainChecked(newMainChecked);
+  }, [checkedId, checkedStates, order?.id, setCheckedId]);
 
-      console.log("checkedStates", checkedStates);
-    }, [checkedSku, checkedStates, product.product_sku, setCheckedSku]);
-    
   const handleShowVariants = useCallback(() => {
     setClicked((pre) => !pre);
     setShowVariant((prevVariants) =>
       prevVariants?.map((variant) =>
-        variant?.id === product?.product_sku
+        variant?.id === order?.id
           ? { ...variant, show: !variant.show }
           : variant
       )
     );
-  }, [setClicked, setShowVariant, product?.product_sku]);
+  }, [setClicked, setShowVariant, order?.id]);
 
-  // console.log(
-  //   "product?.product_sku",
-  //   checkedSku.includes(product?.product_sku)
-  // );
+
   return (
     <div className="flex flex-col space-y-4 pl-6 pr-1">
       <div className="flex w-full space-x-2 relative">
         <Checkbox
-          checked={checkedSku.includes(product?.product_sku) ? true : false}
+          checked={checkedId.includes(order?.id) ? true : false}
           onChange={handleMainCheckboxChange}
         />
         <a
-          href={`${baseURL}${product?.variants?.at(0)?.id}`}
-          title={product?.name}
+          href={`${baseURL}${order?.order_content?.at(0)?.id}`}
+          title={order?.warehouse_from}
           target="_blank"
           rel="noopener noreferrer"
           ref={linkRef}
         >
-          <img
-            src={product?.image}
-            alt={product?.name}
+          {/* <img
+            src={order?.image}
+            alt={order?.name}
             className="h-16 w-12 object-cover"
-          />
+          /> */}
         </a>
         <div className="flex flex-col space-y-1 flex-1 text-[13px]">
-          <a
-            href={`${baseURL}${product?.variants?.at(0)?.id}`}
-            title={product?.name}
+          <div
+            href=""
+            title={order?.warehouse_from}
             target="_blank"
             rel="noopener noreferrer"
             ref={linkRef}
           >
             <h3 className="font-semibold underline truncate">
-              {product?.name?.length > visibleLength
-                ? `${product?.name?.slice(0, visibleLength)}...`
-                : product?.name}
+              {order?.warehouse_from?.length > visibleLength
+                ? `${order?.warehouse_from?.slice(0, visibleLength)}...`
+                : order?.warehouse_from}
             </h3>
-          </a>
-          <p>
+          </div>
+          {/* <p>
             product sku:{" "}
             <span>
               {product?.product_sku}{" "}
               <CopyButton textToCopy={product?.product_sku} />
             </span>
-          </p>
+          </p> */}
         </div>
         <button
           onClick={handleShowVariants}
@@ -249,7 +209,7 @@ const ProductDetails = ({
       {show && (
         <div>
           <SupplierLine />
-          {product?.variants?.map((variant, index) => (
+          {order?.order_content?.map((variant, index) => (
             <div key={variant?.id}>
               <div className="h-28 lg:h-24 text-[12px] ml-3 flex flex-col justify-center relative">
                 <div className="absolute -left-6">
@@ -260,19 +220,18 @@ const ProductDetails = ({
                     }
                   />
                 </div>
-                <div className="flex space-x-2 items-center">
+                {/* <div className="flex space-x-2 items-center">
                   <div className="font-semibold">Colors:</div>
                   {variant?.colors?.map((colorObj, idx) => {
                     const [key, value] = Object.entries(colorObj)[0];
                     return <div key={idx}>{value}</div>;
                   })}
-                </div>
+                </div> */}
                 <p>
-                  <span className="font-semibold">variant sku: </span>
-                  <span className="mr-1">{variant?.variant_sku}</span>
-                  <CopyButton textToCopy={variant?.variant_sku} />
+                  <span className="font-semibold">quantity: </span>
+                  <span className="mr-1">{variant?.quantity}</span>
                 </p>
-                <p>
+                {/* <p>
                   <span className="font-semibold">barcode: </span>
                   <span className="mr-1">
                     {product?.barcode ? product?.barcode : 123456789}
@@ -280,7 +239,7 @@ const ProductDetails = ({
                   <CopyButton
                     textToCopy={product?.barcode ? product?.barcode : 123456789}
                   />
-                </p>
+                </p> */}
               </div>
               <SupplierLine />
             </div>
@@ -291,4 +250,4 @@ const ProductDetails = ({
   );
 };
 
-export default memo(ProductDetails);
+export default memo(WarehouseFrom);

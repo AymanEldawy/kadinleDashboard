@@ -31,6 +31,9 @@ import CurrencyDropdown from "../../Components/Supplier/CurrencyDropdown";
 import { CategoryMultiFilter } from "../../Components/TableBar/CategoryMultiFilter";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 import { useQuery } from "@tanstack/react-query";
+import Brand from "../../Components/Supplier/Brand";
+import ProductCategory from "../../Components/Supplier/ProductCategory";
+import ProductSupplier from "../../Components/Supplier/ProductSupplier";
 // border color #cacbce
 const SupplierProducts = () => {
   const { defaultLanguage } = useGlobalOptions();
@@ -40,7 +43,9 @@ const SupplierProducts = () => {
   const [clicked, setClicked] = useState(true);
 
   const [data, setData] = useState([]);
+  console.log("data: ", data);
   const [error, setError] = useState();
+  console.log("error: ", error);
   const [showVariant, setShowVariant] = useState([]);
   const [checkedSku, setCheckedSku] = useState([]);
   const [dataCount, setDataCount] = useState(1);
@@ -69,6 +74,7 @@ const SupplierProducts = () => {
   });
   const numberOfPages = Math.ceil(dataCount / itemsPerPage);
 
+  // console.log("suppliers", suppliers);
   useEffect(() => {
     // Clear localStorage when the component mounts
     localStorage.removeItem("mainChecked");
@@ -100,13 +106,21 @@ const SupplierProducts = () => {
     let { data, error } = await supabase.rpc("get_products_with_variants", {
       param_lang_id: defaultLanguage?.id,
       param_category_id: filterCategory,
-      param_seller_file_id: supplierId || suppliers?.at(0)?.seller_file_id,
+      param_seller_file_id:
+        +supplierId["seller_file_id"] || suppliers?.at(0)?.seller_file_id,
       param_offset: offset,
       param_limit: itemsPerPage,
     });
     setError(error);
     return data;
-  }, [defaultLanguage?.id, filterCategory, itemsPerPage, offset, supplierId]);
+  }, [
+    defaultLanguage?.id,
+    filterCategory,
+    itemsPerPage,
+    offset,
+    supplierId,
+    suppliers,
+  ]);
 
   const getCurrencyData = async () =>
     await supabase.from("currency").select("*");
@@ -163,7 +177,7 @@ const SupplierProducts = () => {
     {
       accessorKey: "category",
       header: "category",
-      cell: (props) => <div className="text-center">{props.getValue()}</div>,
+      cell: (props) => <ProductCategory product={props.row.original} />,
     },
     {
       accessorKey: "color",
@@ -194,7 +208,7 @@ const SupplierProducts = () => {
     {
       accessorKey: "brand",
       header: "brand",
-      cell: (props) => <p>{props.getValue()}</p>,
+      cell: (props) => <Brand product={props.row.original} />,
     },
     {
       accessorKey: "supplier price",
@@ -231,7 +245,7 @@ const SupplierProducts = () => {
     {
       accessorKey: "supplier",
       header: "supplier",
-      cell: (props) => <p>{props.getValue()}</p>,
+      cell: (props) => <ProductSupplier product={props.row.original} />,
     },
   ]);
 
@@ -294,7 +308,7 @@ const SupplierProducts = () => {
             getOptionLabel={({ seller_file_id }) => seller_file_id}
             getOptionValue={({ seller_file_id }) => seller_file_id}
             onChange={(value) => {
-              setSupplierId(value?.seller_file_id);
+              setSupplierId(value);
             }}
           />
         </div>
@@ -349,14 +363,14 @@ const SupplierProducts = () => {
               <div className="min-w-full">
                 <table className="table-auto border border-gray-300 rounded-md">
                   <thead className="sticky top-0">
-                    {table.getHeaderGroups().map((headerGroup) => (
+                    {table?.getHeaderGroups().map((headerGroup) => (
                       <tr
-                        key={headerGroup.id}
+                        key={headerGroup?.id}
                         className="bg-gray-200 capitalize text-gray-700 font-medium text-base leading-4 tracking-wider group"
                       >
-                        {headerGroup.headers.map((header, index) => (
+                        {headerGroup?.headers?.map((header, index) => (
                           <th
-                            key={header.id}
+                            key={header?.id}
                             className={`px-4 py-4 text-center relative border border-gray-300 ${
                               index === 0
                                 ? "sticky left-0 bg-gray-200 z-10 !min-w-[250px]"

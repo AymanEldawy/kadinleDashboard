@@ -15,6 +15,7 @@ import Loading from "../../Components/Loading/Loading";
 import Pagination from "../../Components/Supplier/Pagination";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 import OrderStatus from "../../Components/Orders/OrderStatus";
+import OrderUser from "../../Components/Orders/OrderUser";
 
 const Orders = () => {
   const { defaultLanguage } = useGlobalOptions();
@@ -47,7 +48,7 @@ const Orders = () => {
     // Clear localStorage when the component mounts
     localStorage.removeItem("mainCheckedOrder");
     localStorage.removeItem("checkedStatesOrder");
-    // localStorage.removeItem("updateProductsIdArr");
+    localStorage.removeItem("updateOrdersIdArr");
     localStorage.removeItem("checkedIdOrder");
   }, []);
 
@@ -128,6 +129,11 @@ const Orders = () => {
         </p>
       ),
     },
+    {
+      accessorKey: "user",
+      header: "user",
+      cell: (props) => <OrderUser order={props.row.original} />,
+    },
   ];
 
   const table = useReactTable({
@@ -165,9 +171,6 @@ const Orders = () => {
                             style={{
                               minWidth: header.getSize() + 1,
                               width: header.getSize(),
-
-                              // borderRight:
-                              //   index === 0 ? "1px solid gray" : "1px solid black",
                             }}
                           >
                             {header.column.columnDef.header}
@@ -216,8 +219,6 @@ const Orders = () => {
                             }`}
                             style={{
                               minWidth: cell.column.getSize(),
-                              // borderRight:
-                              //   index === 0 ? "1px solid gray" : "none",
                             }}
                           >
                             {flexRender(

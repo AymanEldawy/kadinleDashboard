@@ -26,6 +26,7 @@ const WarehouseFrom = ({
     () => JSON.parse(localStorage.getItem("mainCheckedOrder")) || false,
     []
   );
+
   const initialCheckedStates = useMemo(
     () =>
       JSON.parse(localStorage.getItem("checkedStatesOrder")) ||
@@ -35,6 +36,7 @@ const WarehouseFrom = ({
 
   const [updateOrdersIdArr, setUpdateOrdersIdArr] = useState([]);
   const [mainChecked, setMainChecked] = useState(initialMainChecked);
+  console.log("out side mainChecked", mainChecked);
   const [checkedStates, setCheckedStates] = useState(initialCheckedStates);
 
   const [visibleLength, setVisibleLength] = useState(20);
@@ -65,7 +67,7 @@ const WarehouseFrom = ({
   let show = useMemo(
     () =>
       showVariant?.find((variant) => variant?.id === order?.id)?.show || false,
-    [order?.product_sku, showVariant]
+    [order?.id, showVariant]
   );
 
   useEffect(() => {
@@ -93,10 +95,6 @@ const WarehouseFrom = ({
     localStorage.setItem("checkedId", JSON.stringify(checkedId));
   }, [checkedId]);
 
-  useEffect(() => {
-    localStorage.setItem("mainCheckedOrder", JSON.stringify(mainChecked));
-    localStorage.setItem("checkedStatesOrder", JSON.stringify(checkedStates));
-  }, [mainChecked, checkedStates]);
 
   useEffect(() => {
     setCheckedStates(checkedStates.map(() => checkedId.includes(order?.id)));
@@ -107,8 +105,11 @@ const WarehouseFrom = ({
       const newCheckedStates = [...checkedStates];
       newCheckedStates[index] = !newCheckedStates[index];
       setCheckedStates(newCheckedStates);
+      console.log("newCheckedStates", newCheckedStates);
       if (newCheckedStates.every((checked) => checked)) {
+        
         setMainChecked(true);
+        console.log("mainChecked", mainChecked);
       } else {
         setMainChecked(false);
         if (updateOrdersIdArr.includes(id)) {
@@ -122,7 +123,7 @@ const WarehouseFrom = ({
         }
       }
     },
-    [checkedStates, updateOrdersIdArr]
+    [checkedStates]
   );
 
   const handleMainCheckboxChange = useCallback(() => {
@@ -139,7 +140,7 @@ const WarehouseFrom = ({
 
     const newMainChecked = checkedId.includes(order?.id);
     setMainChecked(newMainChecked);
-  }, [checkedId, checkedStates, order?.id, setCheckedId]);
+  }, [checkedId, order?.id, setCheckedId]);
 
   const handleShowVariants = useCallback(() => {
     setClicked((pre) => !pre);

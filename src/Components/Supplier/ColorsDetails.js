@@ -15,7 +15,7 @@ const ColorsDetails = ({ product, showVariant }) => {
     for (const variant of product?.variants) {
       let colorHex = Object.keys(variant?.colors?.at(0));
       let colorContent = Object.values(variant?.colors?.at(0));
-      console.log("🚀 ~ combineColors ~ colorContent:", colorContent);
+      // console.log("🚀 ~ combineColors ~ colorContent:", colorContent);
       hash[colorHex[0]] = colorContent[0];
     }
 

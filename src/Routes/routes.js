@@ -109,6 +109,7 @@ import MoveCategory from "../Pages/StandAlone/MoveCategory";
 import CategoriesBanner from "../Pages/StandAlone/CategoriesBanner";
 import Weights from "../Pages/Tables/Weights";
 import AddWeights from "../Pages/Forms/AddWeights";
+import CategoryTree from "../Pages/StandAlone/CategoryTree";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -156,6 +157,7 @@ const authProtectedRoutes = [
   // **** Group Feature paths ****
   { path: "/color", component: <Colors />, allowedRoles: ["*"] },
   { path: "/category", component: <Categories />, allowedRoles: ["*"] },
+  { path: "/category-tree", component: <CategoryTree />, allowedRoles: ["*"] },
   { path: "/size", component: <Sizes />, allowedRoles: ["*"] },
   // {
   //   path: "/product-features",

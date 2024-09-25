@@ -7,6 +7,7 @@ export { default as FilterIcon } from "./FilterIcon";
 export { default as TrashIcon } from "./TrashIcon";
 export { default as SlashEyeIcon } from "./SlashEyeIcon";
 export { default as PlusIcon } from "./PlusIcon";
+export { default as TreeIcon } from "./TreeIcon";
 export { default as UserIcon } from "./UserIcon";
 export { default as UsersPlusIcon } from "./UsersPlusIcon";
 export { default as BriefcaseIcon } from "./BriefcaseIcon";

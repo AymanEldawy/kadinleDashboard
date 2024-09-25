@@ -1,4 +1,4 @@
-import { getFormatPrice } from "../Helpers/functions";
+import { buildTree, getFormatPrice } from "../Helpers/functions";
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
 
 let CURRENT_SEARCH_DATA = [];
@@ -260,7 +260,10 @@ export const getOrders = async (page, pageSize, additionalData) => {
         query.ilike(`${searchKey}.name`, `%${searchValue}%`);
         break;
       case "variant":
-        query.ilike(`order_content.product_variant.variant_sku`, `%${searchValue}%`);
+        query.ilike(
+          `order_content.product_variant.variant_sku`,
+          `%${searchValue}%`
+        );
         break;
       case "quantity":
         query.ilike(`category_content.quantity`, `%${searchValue}%`);
@@ -1762,4 +1765,11 @@ export const refreshWeights = async (item) => {
     ...response,
   };
 };
-// Extract and log the unique supplier IDs
+
+export const getCategoryTree = async () => {
+  const categories = await supabase
+    .from("category")
+    .select(`*, category_content(*)`);
+
+  return buildTree(categories?.data);
+};

@@ -66,3 +66,23 @@ export function getFormatPrice(price, currency) {
   if (!calculatePrice || isNaN(calculatePrice)) calculatePrice = price;
   return calculatePrice;
 }
+
+
+export function buildTree(items) {
+  const map = {};
+  const roots = [];
+
+  items.forEach(item => {
+    map[item.id] = { ...item, children: [] };
+  });
+
+  items.forEach(item => {
+    if (item.parent_id === null) {
+      roots.push(map[item.id]);
+    } else {
+      map[item.parent_id].children.push(map[item.id]);
+    }
+  });
+
+  return roots;
+}

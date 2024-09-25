@@ -34,6 +34,7 @@ import {
   StoreIcon,
   TagsIcon,
   TimeIcon,
+  TreeIcon,
   TrunkIcon,
   UploadIcon,
   UserGroupIcon,
@@ -121,6 +122,12 @@ export const menuData = [
         name: "categories",
         icon: <TagsIcon />,
         path: "/category",
+      },
+      {
+        key: "Category Tree",
+        name: "Category Tree",
+        icon: <TreeIcon />,
+        path: "/category-tree",
       },
       {
         key: "Colors",

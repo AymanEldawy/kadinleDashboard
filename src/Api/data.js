@@ -683,6 +683,8 @@ export const getOffers = async (page, pageSize, additionalData) => {
 };
 
 export const getCollections = async (page, pageSize, additionalData) => {
+  console.log('called ffs');
+  
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
@@ -1743,7 +1745,7 @@ export const refreshWeights = async (item) => {
   const variantsData = [];
 
   for (const variant of variants?.data) {
-    if (variant?.weight) continue;
+    // if (variant?.weight) continue;
 
     variantsData.push({
       ...variant,

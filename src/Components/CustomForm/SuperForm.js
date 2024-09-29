@@ -50,8 +50,8 @@ const SuperForm = ({
   }, [initialFields, defaultLanguage]);
 
   async function checkRefTable(fields) {
-    setLoading(true);
     if (!fields?.length) return;
+    setLoading(true);
     for (const field of fields) {
       if (field.key === "ref") {
         const response = await getTableData(field?.tableName, {

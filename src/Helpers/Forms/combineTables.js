@@ -2,8 +2,6 @@ import { Link } from "react-router-dom";
 import { FullImage } from "./../../Components/Global/FullImage/FullImage";
 import { UserInfo } from "../../Components/Global/UserInfo/UserInfo";
 import { EyeIcon, SlashEyeIcon } from "../Icons";
-import { refreshPrices } from "../../Api/data";
-import { useGlobalOptions } from "../../Context/GlobalOptions";
 import { RefreshChunksBtn } from "../../Components/RefreshChunksBtn";
 import { RefreshWeightsBtn } from "../../Components/RefreshWeightsBtn";
 
@@ -3128,7 +3126,7 @@ export const combine_definitions = () => [
     cell: ({ row }) => {
       return (
         <FullImage
-          src={row.original?.definitions_content?.at?.(0)?.mobile_image}
+          src={row.original?.definitions_content?.at?.(0)?.image}
           alt={"image"}
         />
       );

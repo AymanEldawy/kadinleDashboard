@@ -43,11 +43,11 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
     let response = null;
     let loading = toast.loading("Please wait...");
     if (SUPABASE_TABLE_NAME === "home_reviews") {
-      await handleUploadReviewerImage(values);
+      response = await handleUploadReviewerImage(values);
     } else if (SUPABASE_TABLE_NAME === "offer") {
-      await handleUploadPartnerImage(values);
+      response = await handleUploadPartnerImage(values);
     } else if (SUPABASE_TABLE_NAME === "partner") {
-      await handleUploadPartnerImage(values);
+      response = await handleUploadPartnerImage(values);
     } else if (SUPABASE_TABLE_NAME === "user") {
       response = await signup(values);
       if (values?.profile_img) {
@@ -143,9 +143,12 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
               }
             }
           }
+          console.log(response, '-2222ressssss');
         }
       }
     }
+    console.log(response, '-ressssss');
+    
     if (!response?.error) {
       setValues({});
       setContentValues({});
@@ -155,7 +158,7 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
         isLoading: false,
         autoClose: 2000,
       });
-      navigate(-1);
+      // navigate(-1);
     } else {
       toast.update(loading, {
         render: "Oops! failed to added new",

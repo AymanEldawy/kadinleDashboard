@@ -223,6 +223,7 @@ export const handleUploadCategoryImage = async (item) => {
 
 export const handleUploadSlider = async (item, key, folder = "slider") => {
   let theFileWebContent = item?.[key];
+  console.log("🚀 ~ handleUploadSlider ~ theFileWebContent:", theFileWebContent)
   const image =
     typeof theFileWebContent === "object" || theFileWebContent !== "{}"
       ? await globalUploadImage({

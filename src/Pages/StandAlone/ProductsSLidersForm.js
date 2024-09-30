@@ -12,7 +12,7 @@ import { useParams } from "react-router-dom";
 
 let CACHE_SLIDERS = {};
 
-const ProductsSLidersForm = () => {
+const ProductsSLidersForm = ({ layout }) => {
   let name = "products_slider";
   const { getData } = useFetch();
   const params = useParams();
@@ -24,8 +24,9 @@ const ProductsSLidersForm = () => {
   const { isLoading, refetch } = useQuery({
     queryKey: [name],
     queryFn: async () => {
+      if (layout !== "update") return;
       const response = await getData(name, params?.id);
-      let data = response?.at(0)
+      let data = response?.at(0);
       setValues(data);
       if (data?.products_sku?.length) {
         let hash = {};

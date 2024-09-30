@@ -361,7 +361,7 @@ const authProtectedRoutes = [
   },
   {
     path: "/update-products-slider/:id",
-    component: <ProductsSLidersForm />,
+    component: <ProductsSLidersForm layout="update" />,
     allowedRoles: ["*"],
   },
   {
@@ -369,10 +369,26 @@ const authProtectedRoutes = [
     component: <ProductsSlider />,
     allowedRoles: ["*"],
   },
-  { path: "/add-chunks", component: <AddChunks />, allowedRoles: ["admin", "superadmin"] },
-  { path: "/chunks", component: <Chunks />, allowedRoles: ["admin", "superadmin"] },
-  { path: "/add-weights", component: <AddWeights />, allowedRoles: ["admin", "superadmin"] },
-  { path: "/weights", component: <Weights />, allowedRoles: ["admin", "superadmin"] },
+  {
+    path: "/add-chunks",
+    component: <AddChunks />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/chunks",
+    component: <Chunks />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/add-weights",
+    component: <AddWeights />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/weights",
+    component: <Weights />,
+    allowedRoles: ["admin", "superadmin"],
+  },
   { path: "/logs", component: <Logs />, allowedRoles: ["*"] },
   { path: "/rooms/:id", component: <ChatRoom />, allowedRoles: ["*"] },
   {
@@ -411,8 +427,8 @@ const authProtectedRoutes = [
     allowedRoles: ["admin", "superadmin"],
   },
   {
-    path:"/products-supplier",
-    component: <SupplierProducts/>,
+    path: "/products-supplier",
+    component: <SupplierProducts />,
     allowedRoles: ["admin", "superadmin"],
   },
   {

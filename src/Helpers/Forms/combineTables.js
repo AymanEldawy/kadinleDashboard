@@ -3124,6 +3124,7 @@ export const combine_definitions = () => [
     accessorKey: "image",
     header: "image",
     cell: ({ row }) => {
+      console.log("🚀 ~ row:", row, row.original?.definitions_content?.at?.(0)?.image)
       return (
         <FullImage
           src={row.original?.definitions_content?.at?.(0)?.image}

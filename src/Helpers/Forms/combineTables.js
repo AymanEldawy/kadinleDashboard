@@ -609,6 +609,20 @@ const combine_collection = () => [
   },
 
   {
+    accessorKey: "sku",
+    header: "sku",
+    cell: ({ getValue }) => {
+      return (
+        <Link
+          to={`/update/collection/${getValue()}`}
+          className="text-blue-500 hover:underline"
+        >
+          {getValue()}
+        </Link>
+      );
+    },
+  },
+  {
     accessorKey: "name",
     header: "name",
     cell: ({ row }) => {
@@ -648,6 +662,18 @@ const combine_collection = () => [
     accessorKey: "display_home",
     header: "display_home",
     cell: ({ getValue }) => <span>{getValue() ? "YES" : "No"}</span>,
+  },
+  {
+    accessorKey: "actions",
+    header: "actions",
+    cell: ({ row }) => (
+      <Link
+        to={`/update/collection/${row?.original?.id}`}
+        className="text-blue-500 hover:underline"
+      >
+        Edit
+      </Link>
+    ),
   },
 ];
 const combine_color = () => [

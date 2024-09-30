@@ -170,7 +170,20 @@ const collar_content = [
 const collection = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date" },
+  { name: "sku", type: "number" },
   { name: "collection_connect", key: "collection_connect" },
+  { name: "display_home", key: "checkbox" },
+];
+const collection_content = [
+  { name: "id", type: "uuid" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
   {
     name: "category_id",
     key: "ref",
@@ -179,28 +192,7 @@ const collection = [
     refName: "title",
     hide_in_add_form: true,
   },
-  { name: "display_home", key: "checkbox" },
-];
-const collection_content = [
-  { name: "id", type: "uuid" },
-  { name: "created_at", type: "date", hide_in_add_form: true },
-  {
-    name: "collection_id",
-    type: "uuid",
-    key: "ref",
-    tableName: "collection_content",
-    refId: "collection_id",
-    hide_in_add_form: true,
-    required: true,
-  },
-  {
-    name: "language_id",
-    required: true,
-    type: "uuid",
-    key: "ref",
-    tableName: "language",
-  },
-  { name: "name", type: "text", required: true },
+  { name: "name", type: "text" },
   { name: "description", type: "text" },
   { name: "image", type: "text", key: "image" },
 ];

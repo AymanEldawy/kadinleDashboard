@@ -379,6 +379,22 @@ const combine_category = () => [
     },
   },
   {
+    accessorKey: "mobile_banner",
+    header: "mobile_banner",
+    cell: ({ row }) => {
+      let content = row?.original?.category_content?.at(0);
+      return <FullImage src={content?.mobile_banner} alt={content?.title} />;
+    },
+  },
+  {
+    accessorKey: "web_banner",
+    header: "web_banner",
+    cell: ({ row }) => {
+      let content = row?.original?.category_content?.at(0);
+      return <FullImage src={content?.web_banner} alt={content?.title} />;
+    },
+  },
+  {
     accessorKey: "display_homepage",
     header: "display_homepage",
     cell: ({ getValue }) => <span>{getValue() ? "YES" : "NO"}</span>,

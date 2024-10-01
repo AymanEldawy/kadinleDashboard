@@ -218,12 +218,17 @@ const SuperForm = ({
                             data[field?.refName || "name"]
                           }
                           getOptionValue={(data) => data[field?.refId || "id"]}
+                          value={getCachedList(field?.tableName)?.find(
+                            (c) =>
+                              c?.[field?.refId || "id"] ===
+                              values[field?.refId || "id"]
+                          )}
                           onChange={(value) => {
                             console.log(value);
 
                             handelChangeField(
                               field?.name,
-                              value[field?.refId || 'id'],
+                              value[field?.refId || "id"],
                               field?.required
                             );
                             // setSupplierId(value?.id);

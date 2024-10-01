@@ -43,10 +43,10 @@ const category = [
     refName: "title",
     refId: "category_id",
   },
-  { name: "display_homepage", key: "checkbox" },
   { name: "numeric", type: "text" },
   { name: "banner_video", type: "text", key: "image" },
   { label: "icon", name: "image", type: "text", key: "image" },
+  { name: "display_homepage", key: "checkbox" },
 ];
 
 const category_content = [
@@ -73,6 +73,8 @@ const category_content = [
   },
   { name: "mobile_image", type: "text", key: "image" },
   { name: "web_image", type: "text", key: "image" },
+  { name: "mobile_banner", type: "text", key: "image" },
+  { name: "web_banner", type: "text", key: "image" },
 ];
 
 const chart = [

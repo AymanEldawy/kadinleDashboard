@@ -10,35 +10,46 @@ import {
   uploadReviewerImage,
 } from "./upload";
 
+const getImage = async (item, itemId, CACHE_LANGUAGES, file, type) => {
+  const path =
+    typeof file === "object" && file !== "{}"
+      ? await uploadCategoryImage({
+          categoryId: itemId,
+          langName: CACHE_LANGUAGES[item?.language_id],
+          file,
+          type,
+        })
+      : item?.[type];
+  if (path?.url) item[type] = path?.url;
+};
+
 export const handleUploadCategoryImages = async (
   item,
   itemId,
   CACHE_LANGUAGES
 ) => {
-  let theFileWebContent = item?.web_image;
-  let theFileMobileContent = item?.mobile_image;
-  const webPath =
-    typeof theFileWebContent === "object" && theFileWebContent !== "{}"
-      ? await uploadCategoryImage({
-          categoryId: itemId,
-          langName: CACHE_LANGUAGES[item?.language_id],
-          file: theFileWebContent,
-          type: "web",
-        })
-      : item?.web_image;
-  if (webPath?.url) item.web_image = webPath?.url;
-
-  const mobilePath =
-    typeof theFileMobileContent === "object"
-      ? await uploadCategoryImage({
-          categoryId: itemId,
-          langName: CACHE_LANGUAGES[item?.language_id],
-          file: theFileMobileContent,
-          type: "mobile",
-        })
-      : item?.mobile_image;
-
-  if (mobilePath?.url) item.mobile_image = mobilePath?.url;
+  await getImage(item, itemId, CACHE_LANGUAGES, item?.web_image, "web_image");
+  await getImage(
+    item,
+    itemId,
+    CACHE_LANGUAGES,
+    item?.mobile_image,
+    "mobile_image"
+  );
+  await getImage(
+    item,
+    itemId,
+    CACHE_LANGUAGES,
+    item?.mobile_banner,
+    "mobile_banner"
+  );
+  await getImage(
+    item,
+    itemId,
+    CACHE_LANGUAGES,
+    item?.web_banner,
+    "web_banner"
+  );
   if (!item?.id)
     await addNewItem(`category_content`, {
       ...item,
@@ -47,7 +58,6 @@ export const handleUploadCategoryImages = async (
   else
     await updateItem(`category_content`, {
       ...item,
-      // category_id: itemId,
     });
 };
 
@@ -223,7 +233,6 @@ export const handleUploadCategoryImage = async (item) => {
 
 export const handleUploadSlider = async (item, key, folder = "slider") => {
   let theFileWebContent = item?.[key];
-  console.log("🚀 ~ handleUploadSlider ~ theFileWebContent:", theFileWebContent)
   const image =
     typeof theFileWebContent === "object" || theFileWebContent !== "{}"
       ? await globalUploadImage({

@@ -118,12 +118,10 @@ export const getTableDataWithPagination = async (
   pageSize,
   additionalData
 ) => {
-  console.log(table, page, pageSize, additionalData, "----");
 
   if (table && fetches.hasOwnProperty(table)) {
     const fetchData = fetches[table];
     const response = await fetchData(page, pageSize, additionalData);
-    console.log(response, "--------tes");
 
     return response;
   } else {
@@ -133,7 +131,6 @@ export const getTableDataWithPagination = async (
       pageSize,
       additionalData
     );
-    console.log(response, "--------tes");
 
     return response;
   }

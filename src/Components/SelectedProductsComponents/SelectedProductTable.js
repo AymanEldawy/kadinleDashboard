@@ -24,6 +24,7 @@ import { TableBar } from "../TableBar/TableBar";
 import { Link } from "react-router-dom";
 import { getRowsById, removeItemsFrom } from "../../Api/globalActions";
 import { toast } from "react-toastify";
+import { FullImage } from "../Global/FullImage/FullImage";
 
 export const SelectedProductTable = ({
   selectedList,
@@ -35,7 +36,7 @@ export const SelectedProductTable = ({
   id,
   hideSearch,
   deleteProductIds,
-  hideTableBar
+  hideTableBar,
 }) => {
   const { defaultLanguage, defaultRegion } = useGlobalOptions();
   const { getDataWithPagination } = useFetch();
@@ -320,6 +321,10 @@ export const SelectedProductTable = ({
                   {product?.product_sku}
                 </TableCol>
                 <TableCol classes={`!py-4 border`}>
+                  <FullImage
+                    src={product?.product_image?.at(0)?.image}
+                    alt={"image"}
+                  />
                   {product?.product_content?.[0]?.name}
                 </TableCol>
                 <TableCol classes={`!py-4 border`}>

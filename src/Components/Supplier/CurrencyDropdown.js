@@ -23,7 +23,6 @@ const CurrencyDropdown = ({ data, selectedCurrency, setSelectedCurrency }) => {
         getOptionValue={({ id }) => id}
         value={selectedCurrency}
         onChange={(value) => {
-          console.log("🚀 ~ CurrencyDropdown ~ value:", value)
           handleSelect(value);
         }}
       />

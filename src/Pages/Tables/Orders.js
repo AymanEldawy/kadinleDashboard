@@ -20,9 +20,7 @@ import OrderUser from "../../Components/Orders/OrderUser";
 const Orders = () => {
   const { defaultLanguage } = useGlobalOptions();
   const [data, setData] = useState([]);
-  console.log("orders page", data);
   const [loading, setLoading] = useState(false);
-  // console.log("loading", loading);
   const [showVariant, setShowVariant] = useState([]);
   const [clicked, setClicked] = useState(true);
   const [checkedId, setCheckedId] = useState([]);

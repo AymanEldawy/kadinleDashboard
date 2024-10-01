@@ -10,9 +10,7 @@ const KadinlePrice = ({
 }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [index, setIndex] = useState(null);
-  // console.log("index", index);
   const [variantId, setVariantId] = useState("");
-  // console.log("product from kadinle", product);
 
   let show = useMemo(
     () =>
@@ -71,7 +69,6 @@ const KadinlePrice = ({
                 <div
                   onClick={() => {
                     setIndex(inx);
-                    // console.log("clicked");
                     setVariantId(variant.id);
                     setIsPopupVisible(true);
                   }}

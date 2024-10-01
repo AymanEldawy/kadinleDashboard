@@ -143,11 +143,9 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
               }
             }
           }
-          console.log(response, '-2222ressssss');
         }
       }
     }
-    console.log(response, '-ressssss');
     
     if (!response?.error) {
       setValues({});

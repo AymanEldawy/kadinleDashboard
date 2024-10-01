@@ -1268,7 +1268,6 @@ const combine_offer = () => [
     accessorKey: "name",
     header: "name",
     cell: ({ row }) => {
-      console.log("🚀 ~ row:", row?.original)
       return (
         <Link
           to={`/update/offer/${row?.original?.id}`}
@@ -1428,7 +1427,6 @@ const combine_order_short = () => [
   //   accessorKey: "variant",
   //   header: "variant",
   //   cell: ({ getValue, row }) => {
-  //     console.log(getValue(), row.original);
   //   },
   // },
   { accessorKey: "price", header: "price" },
@@ -1709,7 +1707,18 @@ const combine_product = () => [
 ];
 const combine_collection_product = () => [
   { accessorKey: "product_sku", header: "product_sku" },
-  { accessorKey: "name", header: "name" },
+  {
+    accessorKey: "name",
+    header: "name",
+    cell: ({ row }) => {
+      return (
+        <FullImage
+          src={row.original?.product_image?.at(0)?.image}
+          alt={"image"}
+        />
+      );
+    },
+  },
   { accessorKey: "category", header: "category" },
   { accessorKey: "barcode", header: "barcode" },
 ];
@@ -3166,7 +3175,10 @@ export const combine_definitions = () => [
     accessorKey: "image",
     header: "image",
     cell: ({ row }) => {
-      console.log("🚀 ~ row:", row, row.original?.definitions_content?.at?.(0)?.image)
+        "🚀 ~ row:",
+        row,
+        row.original?.definitions_content?.at?.(0)?.image
+      );
       return (
         <FullImage
           src={row.original?.definitions_content?.at?.(0)?.image}
@@ -3455,6 +3467,6 @@ const COMBINE_DB_API = {
   combine_order_report,
   combine_washing_instructions,
   combine_chunks,
-  combine_Weights
+  combine_Weights,
 };
 export default COMBINE_DB_API;

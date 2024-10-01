@@ -537,8 +537,8 @@ export const getProducts = async (page, pageSize, additionalData) => {
       *,
       category(category_content(*, name:title, language_id, language(id, name))),
       brand(name),
-      product_content(*,language_id, language(id, name)))
-      product_image
+      product_image(image),
+      product_content(*,language_id, language(id, name))),
       
    `,
       { count: "exact" }

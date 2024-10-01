@@ -2,10 +2,9 @@ import React, { useMemo } from "react";
 import SupplierLine from "./SupplierLine";
 
 const StockDetails = ({ product, showVariant }) => {
-//   console.log("product from stock", product);
-const totalStock = product?.variants.reduce((acc, variant) => {
-  return acc + variant.stock.stock;
-}, 0);
+  const totalStock = product?.variants.reduce((acc, variant) => {
+    return acc + variant.stock.stock;
+  }, 0);
   let show = useMemo(
     () =>
       showVariant?.find((variant) => variant?.id === product?.product_sku)

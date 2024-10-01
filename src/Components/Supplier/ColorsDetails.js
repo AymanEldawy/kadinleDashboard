@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import SupplierLine from "./SupplierLine";
 
 const ColorsDetails = ({ product, showVariant }) => {
-  // console.log("product from colors", product);
   let show = useMemo(
     () =>
       showVariant?.find((variant) => variant?.id === product?.product_sku)
@@ -15,7 +14,6 @@ const ColorsDetails = ({ product, showVariant }) => {
     for (const variant of product?.variants) {
       let colorHex = Object.keys(variant?.colors?.at(0));
       let colorContent = Object.values(variant?.colors?.at(0));
-      // console.log("🚀 ~ combineColors ~ colorContent:", colorContent);
       hash[colorHex[0]] = colorContent[0];
     }
 
@@ -37,7 +35,6 @@ const ColorsDetails = ({ product, showVariant }) => {
     });
   });
 
-  // console.log(uniqueColors);
   return (
     <div>
       <div className="product-hight flex justify-center items-center text-sm ">

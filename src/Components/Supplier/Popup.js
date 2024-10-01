@@ -13,22 +13,16 @@ const Popup = ({
   selectedCurrency,
   index,
 }) => {
-  // console.log("product", product);
   const updateProductsIdArr =
     JSON.parse(localStorage.getItem("updateProductsIdArr")) || [];
 
-  // console.log("updatePro", updateProductsIdArr);
   const productPrice = getFormatPrice(
     product?.variants[index]?.price,
     selectedCurrency
   );
-  // console.log("productPrice", productPrice[0]);.
   const { updateItem } = useUpdate();
-  // console.log("isVisible", isVisible);
   const [price, setPrice] = useState(null);
   const [dollarPrice, setDollarPrice] = useState(null);
-  // console.log("dollarPrice", dollarPrice);
-  // console.log("price", price);
   const [applyToAll, setApplyToAll] = useState(false);
   const inputRef = useRef(null);
 
@@ -66,7 +60,6 @@ const Popup = ({
       const response = await updateItem("product_variant", updateSingleProduct);
       if (response?.error) {
         toast.error(`Failed to update the product`);
-        console.log("error", response.error);
       } else {
         toast.success(`Successfully update the product`);
         setTimeout(() => {
@@ -82,7 +75,6 @@ const Popup = ({
   useEffect(() => {
     setDollarPrice(price / selectedCurrency?.rate);
   }, [price, selectedCurrency?.rate]);
-  // console.log("updateAllData", updateAllData);
   useEffect(() => {
     if (isVisible && inputRef.current) {
       inputRef.current.select();

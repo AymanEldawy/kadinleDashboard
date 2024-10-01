@@ -100,7 +100,6 @@ const DynamicList = ({
     onRowSelectionChange: setRowSelection,
     columnResizeMode: "onChange",
     onPaginationChange: (v) => {
-      console.log("🚀 ~ v:", v);
       setPagination(v);
       return {};
     },

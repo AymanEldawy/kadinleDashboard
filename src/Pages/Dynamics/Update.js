@@ -161,14 +161,12 @@ const Update = () => {
               "mobile_image",
               tableName
             );
-            console.log("----", web_image, mobile_image);
             if (item?.id) {
               const res = await updateItem(`${tableName}_content`, {
                 ...item,
                 web_image,
                 mobile_image,
               });
-              console.log("🚀 ~ onSubmit ~ res:", res);
             } else {
               await addItem(`${tableName}_content`, {
                 ...item,

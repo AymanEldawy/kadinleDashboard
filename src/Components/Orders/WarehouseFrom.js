@@ -19,7 +19,6 @@ const WarehouseFrom = ({
   checkedId,
   setCheckedId,
 }) => {
-//   console.log("order from warehouse", order);
   const baseURL = "https://kadinle.com/en/product/";
 
   const initialMainChecked = useMemo(
@@ -36,7 +35,6 @@ const WarehouseFrom = ({
 
   const [updateOrdersIdArr, setUpdateOrdersIdArr] = useState([]);
   const [mainChecked, setMainChecked] = useState(initialMainChecked);
-  console.log("out side mainChecked", mainChecked);
   const [checkedStates, setCheckedStates] = useState(initialCheckedStates);
 
   const [visibleLength, setVisibleLength] = useState(20);
@@ -105,11 +103,9 @@ const WarehouseFrom = ({
       const newCheckedStates = [...checkedStates];
       newCheckedStates[index] = !newCheckedStates[index];
       setCheckedStates(newCheckedStates);
-      console.log("newCheckedStates", newCheckedStates);
       if (newCheckedStates.every((checked) => checked)) {
         
         setMainChecked(true);
-        console.log("mainChecked", mainChecked);
       } else {
         setMainChecked(false);
         if (updateOrdersIdArr.includes(id)) {

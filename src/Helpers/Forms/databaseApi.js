@@ -118,17 +118,18 @@ export const chart_data = [
     type: "uuid",
     key: "ref",
     tableName: "chart",
+    refId: "id",
     required: true,
-    hide_in_add_form: true,
+    refName: 'number'
   },
   {
-    name: "product_id",
+    name: "chart_group_id",
     type: "uuid",
     key: "ref",
-    tableName: "product_content",
-    refId: "product_id",
+    tableName: "chart_group",
+    refId: "id",
     required: true,
-    hide_in_add_form: true,
+    refName: 'group_name'
   },
   {
     name: "size_id",

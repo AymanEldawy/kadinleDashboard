@@ -1,29 +1,26 @@
-import React, { useState } from "react";
-import { useUpdate } from "../../hooks/useUpdate";
+import React, { useEffect, useState } from "react";
 import { CategoryMultiFilter } from "../TableBar/CategoryMultiFilter";
 import { Button } from "../Global/Button";
 import { CategoryInfo } from "./CategoryInfo";
 import { LoadingProcess } from "../Global/LoadingProcess";
+import { toast } from "react-toastify";
 
 export const CategoryFallbackForm = ({
-  category,
   onClickCancel,
   CACHE_CATEGORIES,
+  oldCategories,
+  updateCategory,
+  name
 }) => {
-  console.log("🚀 ~ category:", category)
-  const { updateItem } = useUpdate();
+  console.log("🚀 ~ oldCategories:", oldCategories)
   const [categoryId, setCategoryId] = useState(null);
-  const [categories, setCategories] = useState(category?.fallback_ids || []);
+  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const updateCategory = async () => {
-    setIsLoading(true);
-    await updateItem("category", {
-      id: category?.id,
-      fallback_ids: categories,
-    });
-    setIsLoading(false);
-  };
+  useEffect(()=> {
+    if(oldCategories?.length)
+      setCategories(oldCategories)
+  }, [oldCategories])
 
   const addNewCategory = () => {
     setCategories((prev) => [...prev, categoryId]);
@@ -34,10 +31,21 @@ export const CategoryFallbackForm = ({
     setCategories((prev) => prev?.filter((c) => c !== categoryId));
   };
 
+  const handleUpdateCategory = async () => {
+    setIsLoading(true);
+    const res = await updateCategory(categories);
+    if(res?.error) {
+      toast.error('Failed to save data')
+    } else {
+      toast.success('Successfully save data')
+    }
+    setIsLoading(false);
+  };
+
   return (
     <div>
       {isLoading ? <LoadingProcess /> : null}
-      <CategoryInfo category={category} categories={categories} />
+      <CategoryInfo name={name} categories={categories} />
       <p className="mb-2">Selected new category</p>
       <div className="flex gap-2">
         <CategoryMultiFilter
@@ -81,7 +89,7 @@ export const CategoryFallbackForm = ({
         <Button
           title="Save Categories"
           classes="text-xs capitalize whitespace-nowrap"
-          onClick={updateCategory}
+          onClick={handleUpdateCategory}
           disabled={isLoading || !categories?.length}
         />
       </div>

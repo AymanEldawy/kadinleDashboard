@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 
 const Variant = ({ product }) => {
   return (

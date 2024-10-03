@@ -461,6 +461,68 @@ const combine_chart = () => [
     ),
   },
 ];
+
+const combine_chart_group = () => [
+  {
+    id: "select",
+    size: 20,
+    header: ({ table }) => (
+      <input
+        type="checkbox"
+        className="h-5 w-5"
+        {...{
+          checked: table?.getIsAllRowsSelected(),
+          // indeterminate: table?.getIsSomeRowsSelected(),
+          onChange: table?.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <input
+          type="checkbox"
+          className="h-5 w-5"
+          {...{
+            checked: row?.getIsSelected(),
+            disabled: !row?.getCanSelect(),
+            // indeterminate: row?.getIsSomeSelected(),
+            onChange: row?.getToggleSelectedHandler(),
+          }}
+        />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "group_name",
+    header: "group_name",
+    cell: ({ row, getValue }) => (
+      <Link
+        to={`/chart-group-form/${row?.original?.id}`}
+        className="text-blue-500 hover:underline capitalize"
+      >
+        {getValue()}
+      </Link>
+    ),
+  },
+  {
+    accessorKey: "categories group",
+    header: "categories group",
+    cell: ({ row }) => <span>{row?.original?.chart_group?.name}</span>,
+  },
+  {
+    accessorKey: "actions",
+    header: "actions",
+    cell: ({ row }) => (
+      <Link
+        to={`/chart-group-form/${row?.original?.id}`}
+        className="text-blue-500 hover:underline"
+      >
+        Edit
+      </Link>
+    ),
+  },
+];
+
 const combine_chart_content = () => [
   {
     id: "select",
@@ -562,9 +624,26 @@ const combine_chart_data = () => [
     ),
   },
 
-  { accessorKey: "chart", header: "chart" },
-  { accessorKey: "product", header: "product" },
-  { accessorKey: "size", header: "size" },
+  {
+    accessorKey: "chart",
+    header: "chart",
+    cell: ({ row }) => {
+      return <span className="font-medium whitespace-nowrap capitalize">{row?.original?.chart?.chart_content?.at(0)?.name}</span>;
+    },
+  },
+  {
+    accessorKey: "group_name",
+    header: "group_name",
+    cell: ({ row }) => {
+      return <span className="font-medium whitespace-nowrap capitalize">{row?.original?.chart_group?.group_name}</span>;
+    },
+  },
+  { accessorKey: "size", header: "size",
+    cell: ({ row }) => {
+      return <span className="font-medium whitespace-nowrap capitalize">{row?.original?.size?.size_content?.at(0)?.name}</span>;
+    }
+
+   },
   { accessorKey: "column1", header: "column1" },
   { accessorKey: "column2", header: "column2" },
   { accessorKey: "column3", header: "column3" },
@@ -1268,7 +1347,7 @@ const combine_offer = () => [
     accessorKey: "name",
     header: "name",
     cell: ({ row }) => {
-      console.log("🚀 ~ row:", row?.original)
+      console.log("🚀 ~ row:", row?.original);
       return (
         <Link
           to={`/update/offer/${row?.original?.id}`}
@@ -3166,7 +3245,11 @@ export const combine_definitions = () => [
     accessorKey: "image",
     header: "image",
     cell: ({ row }) => {
-      console.log("🚀 ~ row:", row, row.original?.definitions_content?.at?.(0)?.image)
+      console.log(
+        "🚀 ~ row:",
+        row,
+        row.original?.definitions_content?.at?.(0)?.image
+      );
       return (
         <FullImage
           src={row.original?.definitions_content?.at?.(0)?.image}
@@ -3392,6 +3475,7 @@ const products_slider = () => [
 const COMBINE_DB_API = {
   products_slider,
   home_sliders,
+  combine_chart_group,
   combine_less_than,
   combine_definitions,
   supplier_request,
@@ -3455,6 +3539,6 @@ const COMBINE_DB_API = {
   combine_order_report,
   combine_washing_instructions,
   combine_chunks,
-  combine_Weights
+  combine_Weights,
 };
 export default COMBINE_DB_API;

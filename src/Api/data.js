@@ -923,6 +923,7 @@ export const getChartContent = async (page, pageSize, additionalData) => {
 };
 
 export const getChartData = async (page, pageSize, additionalData) => {
+  console.log("🚀 ~ getChartData ~ additionalData:", additionalData)
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
@@ -932,23 +933,18 @@ export const getChartData = async (page, pageSize, additionalData) => {
       `
     *,
     chart(chart_content(id, name, language_id)),
-    product (id, product_content (name, language_id )),
-    size (id, size_content (size_id, name, region_id ))
-    
+    size (id, size_content (size_id, name, region_id )),
+    chart_group(*)
      `,
       { count: "exact" }
     )
     .eq("size.size_content.region_id", additionalData?.regionId)
     .eq("chart.chart_content.language_id", additionalData?.languageId)
-    .eq("product.product_content.language_id", additionalData?.languageId);
 
   if (searchValue) {
     switch (searchKey) {
       case "chart":
         query.ilike(`chart.chart_content.name`, `%${searchValue}%`);
-        break;
-      case "product":
-        query.ilike(`product.product_content.name`, `%${searchValue}%`);
         break;
       case "size":
         query.ilike(`size.size_content.name`, `%${searchValue}%`);
@@ -963,11 +959,10 @@ export const getChartData = async (page, pageSize, additionalData) => {
     pageSize,
     additionalData,
     query,
-    ignoredFilterColumns: ["chart", "product", "size"],
+    ignoredFilterColumns: ["chart", "size"],
     filterFn: (f) => {
       return (
         f?.chart?.chart_content?.name === searchValue ||
-        f?.product?.product_content?.name === searchValue ||
         f?.size?.size_content?.name === searchValue
       );
     },
@@ -1777,8 +1772,8 @@ export const getProductEndingStock = async () => {
   const { data: products } = await supabase
     .from("product")
     .select(`*, product_variant(*, stock(*))`)
-    // .eq('product_variant.stock.stock', 0)
-    .gt("product_variant.stock.stock", 1)
+    .eq('product_variant.stock.stock', 0)
+    // .gt("product_variant.stock.stock", 1)
     .is("display", true)
     .limit(100);
 };

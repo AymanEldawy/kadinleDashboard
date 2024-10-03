@@ -180,6 +180,7 @@ export const menuData = [
         icon: <ChartContentIcon />,
         name: "Chart",
       },
+      { path: "/chart-group", icon: <ChartIcon />, name: " Chart group" },
       { path: "/chart-data", icon: <ChartIcon />, name: " Chart data" },
     ],
   },

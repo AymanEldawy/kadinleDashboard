@@ -112,6 +112,8 @@ import AddWeights from "../Pages/Forms/AddWeights";
 import CategoryTree from "../Pages/StandAlone/CategoryTree";
 import ProductsStatus from "../Pages/StandAlone/ProductsStatus";
 import CategoryFallback from "../Pages/StandAlone/CategoryFallback";
+import ChartGroup from "../Pages/StandAlone/ChartGroup";
+import ChartGroupTable from "../Pages/Tables/ChartGroupTable";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -201,10 +203,12 @@ const authProtectedRoutes = [
     allowedRoles: ["*"],
   },
   { path: "/add-chart-data", component: <AddChartData />, allowedRoles: ["*"] },
+  { path: "/chart-group-from", component: <ChartGroup />, allowedRoles: ["*"] },
+  { path: "/chart-group-form/:id", component: <ChartGroup />, allowedRoles: ["*"] },
 
   // **** Group Chart paths ****
   { path: "/chart", component: <ChartContent />, allowedRoles: ["*"] },
-  // { path: "/chart-content", component: <ChartContent />, allowedRoles: ["*"] },
+  { path: "/chart-group", component: <ChartGroupTable />, allowedRoles: ["*"] },
   { path: "/chart-data", component: <ChartData />, allowedRoles: ["*"] },
 
   // **** Group News add paths ****

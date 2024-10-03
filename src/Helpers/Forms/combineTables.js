@@ -505,9 +505,9 @@ const combine_chart_group = () => [
     ),
   },
   {
-    accessorKey: "categories group",
-    header: "categories group",
-    cell: ({ row }) => <span>{row?.original?.chart_group?.name}</span>,
+    accessorKey: "chart_group_ids",
+    header: "categories group count",
+    cell: ({ getValue }) => <span>{getValue()?.length} Categories</span>,
   },
   {
     accessorKey: "actions",

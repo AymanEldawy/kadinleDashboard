@@ -1,18 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useCallback, useState } from "react";
 
-import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { useQuery } from "@tanstack/react-query";
 import { getCategoryTree } from "../../Api/data";
-import {
-  EditIcon,
-  FolderEmptyIcon,
-  FolderMinusIcon,
-  FolderPlusIcon,
-  TrashIcon,
-} from "../../Helpers/Icons";
-import { CategoryTreeItem } from "../../Components/CategoryTreeItem/CategoryTreeItem";
+import { CategoryTreeItem } from "../../Components/CategoryComponents/CategoryTreeItem";
 
 const CategoryTree = () => {
   const [selectedList, setSelectedList] = useState({});

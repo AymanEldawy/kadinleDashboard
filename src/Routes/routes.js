@@ -110,6 +110,8 @@ import CategoriesBanner from "../Pages/StandAlone/CategoriesBanner";
 import Weights from "../Pages/Tables/Weights";
 import AddWeights from "../Pages/Forms/AddWeights";
 import CategoryTree from "../Pages/StandAlone/CategoryTree";
+import ProductsStatus from "../Pages/StandAlone/ProductsStatus";
+import CategoryFallback from "../Pages/StandAlone/CategoryFallback";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -147,6 +149,7 @@ const authProtectedRoutes = [
 
   // **** Group Content paths ****
   { path: "/products", component: <Products />, allowedRoles: ["*"] },
+  { path: "/products-status", component: <ProductsStatus />, allowedRoles: ["*"] },
   { path: "/brand", component: <Brands />, allowedRoles: ["*"] },
   { path: "/stocks", component: <Stocks />, allowedRoles: ["*"] },
 
@@ -157,6 +160,7 @@ const authProtectedRoutes = [
   // **** Group Feature paths ****
   { path: "/color", component: <Colors />, allowedRoles: ["*"] },
   { path: "/category", component: <Categories />, allowedRoles: ["*"] },
+  { path: "/category-fallback", component: <CategoryFallback />, allowedRoles: ["*"] },
   { path: "/category-tree", component: <CategoryTree />, allowedRoles: ["*"] },
   { path: "/size", component: <Sizes />, allowedRoles: ["*"] },
   // {

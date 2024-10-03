@@ -28,6 +28,7 @@ export const CategoryMultiFilter = ({
     queryKey: ["category", "parent", defaultLanguage?.id, name],
     keepPreviousData: true,
     queryFn: async () => {
+      if (!defaultLanguage?.id) return;
       const category = await getOnlyParentCategory(defaultLanguage?.id);
       setListCategories({
         1: category?.data,

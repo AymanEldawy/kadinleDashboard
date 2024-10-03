@@ -683,8 +683,7 @@ export const getOffers = async (page, pageSize, additionalData) => {
 };
 
 export const getCollections = async (page, pageSize, additionalData) => {
-  console.log('called ffs');
-  
+
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
@@ -1723,9 +1722,7 @@ export const refreshPrices = async (item) => {
       .upsert(batch);
 
     if (error) {
-      console.error("Error upserting batch:", error);
     } else {
-      console.log("Batch upsert successful:", data);
     }
   }
   return response;
@@ -1774,4 +1771,36 @@ export const getCategoryTree = async () => {
     .select(`*, category_content(*)`);
 
   return buildTree(categories?.data);
+};
+
+export const getProductEndingStock = async () => {
+  const { data: products } = await supabase
+    .from("product")
+    .select(`*, product_variant(*, stock(*))`)
+    // .eq('product_variant.stock.stock', 0)
+    .gt("product_variant.stock.stock", 1)
+    .is("display", true)
+    .limit(100);
+};
+
+export const getTableDataWithContent = async (table, id) => {
+  const query = supabase.from(table).select(`*, ${table}_content(*)`);
+
+  if (id) query.eq("id", id);
+
+  return await query;
+};
+
+export const getCacheCategory = async (language_id) => {
+  const query = await supabase
+    .from("category_content")
+    .select(`category_id, language_id, title`)
+    .eq("language_id", language_id);
+
+  let hash = {};
+  for (const cate of query?.data) {
+    hash[cate?.category_id] = cate?.title;
+  }
+  
+  return hash;
 };

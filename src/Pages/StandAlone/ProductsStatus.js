@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 import { useUpdate } from "../../hooks/useUpdate";
 import { useQuery } from "@tanstack/react-query";
-import { getProductEndingStock } from "../../Api/data";
+import {
+  get_out_of_stock_products,
+  getProductEndingStock,
+} from "../../Api/data";
 import { Link } from "react-router-dom";
 
 const ProductsStatus = () => {
@@ -21,13 +24,14 @@ const ProductsStatus = () => {
   const { data } = useQuery({
     queryKey: ["stocked", "products"],
     queryFn: async () => {
-      const data = await getProductEndingStock();
+      if (!defaultLanguage?.id) return;
+      const data = await get_out_of_stock_products(defaultLanguage?.id, 100, 0);
       return data;
     },
   });
 
   console.log(data, "products");
-  
+
   const onSelectRow = (e) => {
     let value = e.target.value;
     if (e.target.checked) {

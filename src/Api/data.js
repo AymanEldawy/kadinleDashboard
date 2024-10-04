@@ -683,7 +683,6 @@ export const getOffers = async (page, pageSize, additionalData) => {
 };
 
 export const getCollections = async (page, pageSize, additionalData) => {
-
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
@@ -923,7 +922,7 @@ export const getChartContent = async (page, pageSize, additionalData) => {
 };
 
 export const getChartData = async (page, pageSize, additionalData) => {
-  console.log("🚀 ~ getChartData ~ additionalData:", additionalData)
+  console.log("🚀 ~ getChartData ~ additionalData:", additionalData);
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
@@ -939,7 +938,7 @@ export const getChartData = async (page, pageSize, additionalData) => {
       { count: "exact" }
     )
     .eq("size.size_content.region_id", additionalData?.regionId)
-    .eq("chart.chart_content.language_id", additionalData?.languageId)
+    .eq("chart.chart_content.language_id", additionalData?.languageId);
 
   if (searchValue) {
     switch (searchKey) {
@@ -1772,7 +1771,7 @@ export const getProductEndingStock = async () => {
   const { data: products } = await supabase
     .from("product")
     .select(`*, product_variant(*, stock(*))`)
-    .eq('product_variant.stock.stock', 0)
+    .eq("product_variant.stock.stock", 0)
     // .gt("product_variant.stock.stock", 1)
     .is("display", true)
     .limit(100);
@@ -1796,6 +1795,32 @@ export const getCacheCategory = async (language_id) => {
   for (const cate of query?.data) {
     hash[cate?.category_id] = cate?.title;
   }
-  
+
   return hash;
+};
+
+export const getCategorySearch = async (language_id, key, value) => {
+  const query = supabase
+    .from("category")
+    .select(`numeric,id,category_content(language_id, title)`)
+    .eq("category_content.language_id", language_id);
+
+  if (key === 1) {
+    query.eq("numeric", value);
+  } else if (key === 2) {
+    query.ilike(`category_content.title`, `%${value}%`);
+  }
+  return await query;
+};
+
+export const get_out_of_stock_products = async (
+  param_lang_id,
+  param_limit,
+  param_offset
+) => {
+  return await supabase.rpc("get_out_of_stock_products", {
+    param_lang_id,
+    param_limit,
+    param_offset,
+  });
 };

@@ -1,7 +1,7 @@
 
 const Brand = ({product}) => {
   return (
-    <div className="text-center">{product?.brand}</div>
+    <div className="text-center">{product?.brand?.name}</div>
   )
 }
 

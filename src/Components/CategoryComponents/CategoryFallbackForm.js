@@ -12,7 +12,6 @@ export const CategoryFallbackForm = ({
   updateCategory,
   name
 }) => {
-  console.log("🚀 ~ oldCategories:", oldCategories)
   const [categoryId, setCategoryId] = useState(null);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,6 +40,7 @@ export const CategoryFallbackForm = ({
     }
     setIsLoading(false);
   };
+console.log(categories,'categories');
 
   return (
     <div>

@@ -24,7 +24,7 @@ const ChartGroup = () => {
   const { data: chartGroup } = useQuery({
     queryKey: ["chart_group", params?.id, defaultLanguage?.id],
     queryFn: async () => {
-      if (!defaultLanguage?.id) return;
+      if (!defaultLanguage?.id || !params.id) return;
 
       const data = await getData("chart_group", params.id);
       setGroup_name(data?.at(0)?.group_name);

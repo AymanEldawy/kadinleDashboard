@@ -8,6 +8,7 @@ import {
 } from "../../Api/data";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
+import { CategoryFilter } from "./CategoryFilter";
 
 export const CategoryMultiFilter = ({
   filterCategory,
@@ -15,6 +16,14 @@ export const CategoryMultiFilter = ({
   outerChange,
   name,
 }) => {
+  return (
+    <CategoryFilter
+      filterCategory={filterCategory}
+      setFilterCategory={setFilterCategory}
+      outerChange={outerChange}
+      name={name}
+    />
+  );
   const [key, setKey] = useState(1);
   const { defaultLanguage } = useGlobalOptions();
   const queryClient = new QueryClient();
@@ -35,7 +44,11 @@ export const CategoryMultiFilter = ({
         queryKey: ["category", "search", defaultLanguage?.id, key, value],
         queryFn: async () => {
           if (!defaultLanguage?.id) return;
-          const category = await getCategorySearch(defaultLanguage?.id, key, value);
+          const category = await getCategorySearch(
+            defaultLanguage?.id,
+            key,
+            value
+          );
           return category?.data;
         },
       });
@@ -57,10 +70,20 @@ export const CategoryMultiFilter = ({
           { label: "title", value: 2 },
         ]}
       /> */}
-      <button className={`p-2 bg-gray-100 ${key === 1 ? '!bg-orange-500 text-white' : ''}`}onClick={() => setKey(1)}>
+      <button
+        className={`p-2 bg-gray-100 ${
+          key === 1 ? "!bg-orange-500 text-white" : ""
+        }`}
+        onClick={() => setKey(1)}
+      >
         Sku
       </button>
-      <button className={`p-2 bg-gray-100 ${key === 2 ? '!bg-orange-500 text-white' : ''}`}onClick={() => setKey(2)}>
+      <button
+        className={`p-2 bg-gray-100 ${
+          key === 2 ? "!bg-orange-500 text-white" : ""
+        }`}
+        onClick={() => setKey(2)}
+      >
         Title
       </button>
       <AsyncSelect

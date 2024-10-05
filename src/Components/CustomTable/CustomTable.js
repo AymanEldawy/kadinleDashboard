@@ -47,9 +47,10 @@ const CustomTable = ({
   setPagination,
   pageCount,
   pagination,
+  outerSelectedId,
 }) => {
-  console.log(data, "-da");
-
+  console.log(rowSelection);
+  
   const { t } = useTranslation();
   const { lang } = useContext(LanguageContext);
   const [currentItems, setCurrentItems] = useState([]);
@@ -76,8 +77,9 @@ const CustomTable = ({
     onRowSelectionChange: setRowSelection,
     columnResizeMode: "onChange",
     getRowId: (row, relativeIndex, parent) => {
-      // console.log(row, parent, relativeIndex);
+      if (!!outerSelectedId) return outerSelectedId(row, relativeIndex, parent);
       return row?.id;
+      // console.log(row, parent, relativeIndex);
     },
     onPaginationChange: (v) => {
       setPagination(v);

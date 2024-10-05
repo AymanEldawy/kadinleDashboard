@@ -118,7 +118,6 @@ export const getTableDataWithPagination = async (
   pageSize,
   additionalData
 ) => {
-
   if (table && fetches.hasOwnProperty(table)) {
     const fetchData = fetches[table];
     const response = await fetchData(page, pageSize, additionalData);
@@ -245,6 +244,11 @@ export const removeItemsFrom = async (table, additionalData) => {
 // update items
 export const upsertTheItem = async (table, item) => {
   const response = await supabase.from(table).upsert(item);
+  return response;
+};
+// update items
+export const updateManyItems = async (table, item, key, values) => {
+  const response = await supabase.from(table).update(item).in(key, values);
   return response;
 };
 

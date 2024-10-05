@@ -3608,65 +3608,6 @@ const products_slider = () => [
   { accessorKey: "display_home", header: "display_home" },
 ];
 
-const combine_product_stocked = () => [
-  {
-    id: "select",
-    size: 20,
-    minSize: 50,
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        className="h-5 w-5"
-        {...{
-          checked: table?.getIsAllRowsSelected(),
-          // indeterminate: table?.getIsSomeRowsSelected(),
-          onChange: table?.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          className="h-5 w-5"
-          {...{
-            checked: row?.getIsSelected(),
-            disabled: !row?.getCanSelect(),
-            // indeterminate: row?.getIsSomeSelected(),
-            onChange: row?.getToggleSelectedHandler(),
-          }}
-        />
-      </div>
-    ),
-  },
-  {
-    accessorKey: "product",
-    header: "product",
-    cell: ({ row }) => (
-      <ProductInfo
-        image={row?.original?.product?.image}
-        product_sku={row?.original?.product?.product_sku}
-        name={row?.original?.content?.name}
-        variant_id={row?.original?.product?.variants?.variant_id}
-        nameClassName="text-xs text-blue-500 whitespace-nowrap text-ellipsis overflow-hidden max-w-[300px]"
-      />
-    ),
-  },
-  {
-    accessorKey: "display",
-    header: "display",
-    cell: ({ getValue }) => {
-      return <span>{getValue() ? 'YES' : 'No'}</span>;
-    },
-  },
-  {
-    accessorKey: "Actions",
-    header: "Actions",
-    cell: ({ row }) => {
-      return <ProductToggleView product={row?.original?.product} />;
-    },
-  },
-];
 
 const COMBINE_DB_API = {
   products_slider,
@@ -3736,6 +3677,5 @@ const COMBINE_DB_API = {
   combine_washing_instructions,
   combine_chunks,
   combine_Weights,
-  combine_product_stocked,
 };
 export default COMBINE_DB_API;

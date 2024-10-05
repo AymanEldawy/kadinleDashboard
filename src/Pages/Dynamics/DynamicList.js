@@ -17,6 +17,7 @@ const DynamicList = ({
   selectedList,
   hideBar,
   hideAction,
+  outerSelectedId,
   hideDelete,
   customBarButtons,
   additionalData,
@@ -123,6 +124,7 @@ const DynamicList = ({
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
           hideAction={hideAction}
+          outerSelectedId={outerSelectedId}
         />
 
         {/* <SuperTable

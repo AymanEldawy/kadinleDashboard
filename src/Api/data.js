@@ -389,7 +389,7 @@ export const getReturnRequests = async (page, pageSize, additionalData) => {
       `
       *,
       return_status(return_status_content(*, name:status)),
-      product_variant(id, sku,product_id, product(product_content(product_id, name, language_id))),
+      product_variant(id, variant_sku,product_id, product(product_content(product_id, name, language_id))),
       order(*, name:order_number)),
       return_reason(*,return_reason_content(*))
    `,
@@ -1106,7 +1106,7 @@ export const getStocks = async (page, pageSize, additionalData) => {
     `
     *,
     warehouse(name),
-    product_variant(id, sku)
+    product_variant(id, variant_sku)
   `,
     { count: "exact" }
   );
@@ -1117,7 +1117,7 @@ export const getStocks = async (page, pageSize, additionalData) => {
         query.ilike(`warehouse.name`, `%${searchValue}%`);
         break;
       case "variant":
-        query.eq(`product_variant.sku`, `%${searchValue}%`);
+        query.eq(`product_variant.variant_sku`, `%${searchValue}%`);
         break;
       default:
         query.eq(searchKey, searchValue);
@@ -1285,7 +1285,7 @@ export const getUsersCart = async (page, pageSize, additionalData) => {
     .select(
       `
     *,
-    product_variant(id, sku,product_id, product(product_content(product_id, name, language_id)))
+    product_variant(id, variant_sku,product_id, product(product_content(product_id, name, language_id)))
     `,
       { count: "exact" }
     )

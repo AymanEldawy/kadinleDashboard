@@ -22,7 +22,8 @@ const DynamicLayout = ({
   additionalData,
   headerClassName,
   openDrawerMore,
-  setOpenDrawerMore
+  setOpenDrawerMore,
+  outerSelectedId
 }) => {
   const [selectedList, setSelectedList] = useState({});
   
@@ -63,6 +64,7 @@ const DynamicLayout = ({
         additionalData={additionalData}
         openDrawerMore={openDrawerMore}
         setOpenDrawerMore={setOpenDrawerMore}
+        outerSelectedId={outerSelectedId}
       />
     </BlockPaper>
   );

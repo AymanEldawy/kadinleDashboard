@@ -1885,15 +1885,12 @@ const combine_collection_product = () => [
     accessorKey: "action",
     header: "action",
     cell: ({ row }) => (
-      <div>
-        <Link
-          to={`/products/update/product/${row?.original?.id}`}
-          className="hover:translate-x-1 transition-transform rounded-2xl px-2 p-1 bg-primary-blue text-white w-fit whitespace-nowrap"
-        >
-          edit
-          <EyeIcon className=" w-4 h-4" />
-        </Link>
-      </div>
+      <Link
+        to={`/products/update/product/${row?.original?.id}`}
+        className="hover:translate-x-1 transition-transform rounded-2xl flex items-center gap-2 px-2 p-1 bg-primary-blue text-white w-fit whitespace-nowrap"
+      >
+        <EyeIcon className=" w-4 h-4" />
+      </Link>
     ),
   },
 ];
@@ -3607,7 +3604,6 @@ const products_slider = () => [
   },
   { accessorKey: "display_home", header: "display_home" },
 ];
-
 
 const COMBINE_DB_API = {
   products_slider,

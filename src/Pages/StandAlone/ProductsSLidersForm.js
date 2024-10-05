@@ -18,7 +18,7 @@ const ProductsSLidersForm = ({ layout }) => {
   const params = useParams();
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
-  const [selectedList, setSelectedList] = useState({});
+  const [rowSelection, setRowSelection] = useState([]);
   const [productsLength, setProductLength] = useState(0);
 
   const { isLoading, refetch } = useQuery({
@@ -27,13 +27,15 @@ const ProductsSLidersForm = ({ layout }) => {
       if (layout !== "update") return;
       const response = await getData(name, params?.id);
       let data = response?.at(0);
+      console.log("🚀 ~ queryFn: ~ data:", data)
       setValues(data);
       if (data?.products_sku?.length) {
         let hash = {};
         for (const item of data?.products_sku) {
-          hash[item] = item;
+          hash[item] = true;
         }
-        setSelectedList(hash);
+        setRowSelection(hash);
+        setProductLength(data?.products_sku?.length)
       }
     },
   });
@@ -99,7 +101,7 @@ const ProductsSLidersForm = ({ layout }) => {
   return (
     <BlockPaper
       title={"Products slider"}
-      contentBar={<span>Selected products {productsLength}</span>}
+      contentBar={<span>Selected products {Object.keys(rowSelection)?.length}</span>}
     >
       <div className="flex gap-4 items-center mb-4">
         <InputField
@@ -120,13 +122,13 @@ const ProductsSLidersForm = ({ layout }) => {
           }
         />
       </div>
+
       <SelectedProductTable
-        setProductLength={setProductLength}
         insertMany={onSubmit}
         tableName={"products slider"}
-        selectedList={selectedList}
-        setSelectedList={setSelectedList}
-        // hideSearch
+        rowSelection={rowSelection}
+        setRowSelection={setRowSelection}
+        layout="slider"
       />
     </BlockPaper>
   );

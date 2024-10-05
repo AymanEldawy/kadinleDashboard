@@ -1824,3 +1824,16 @@ export const get_out_of_stock_products = async (
     param_offset,
   });
 };
+
+
+export const hidden_available_products = async (
+  param_lang_id,
+  param_limit,
+  param_offset
+) => {
+  return await supabase.rpc("hidden_available_products", {
+    param_lang_id,
+    param_limit,
+    param_offset,
+  });
+};

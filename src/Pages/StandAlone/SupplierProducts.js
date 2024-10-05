@@ -304,6 +304,7 @@ const SupplierProducts = () => {
             }}
             placeholder="Select supplier"
             className=""
+            value={suppliers?.find(c => c?.seller_file_id === suppliers?.at(0)?.seller_file_id)}
             options={suppliers}
             getOptionLabel={({ seller_file_id }) => seller_file_id}
             getOptionValue={({ seller_file_id }) => seller_file_id}

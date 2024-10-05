@@ -4,121 +4,96 @@ import { useUpdate } from "../../hooks/useUpdate";
 import { useQuery } from "@tanstack/react-query";
 import {
   get_out_of_stock_products,
-  getProductEndingStock,
+  hidden_available_products,
 } from "../../Api/data";
-import { Link } from "react-router-dom";
+import CustomTable from "../../Components/CustomTable/CustomTable";
+import COMBINE_DB_API from "../../Helpers/Forms/combineTables";
+import { Button } from "../../Components/Global/Button";
+import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 
 const ProductsStatus = () => {
   const { defaultLanguage } = useGlobalOptions();
   const { upsertItem, updateItem } = useUpdate();
   const [tab, setTab] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
   const [selectedList, setSelectedList] = useState({});
-
+  const [rowSelection, setRowSelection] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [pagination, setPagination] = useState({
     pageSize: 50,
     pageIndex: 0,
   });
 
-  const { data } = useQuery({
-    queryKey: ["stocked", "products"],
+  const columns = COMBINE_DB_API.combine_product_stocked;
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["stocked", "products", defaultLanguage?.id, tab],
     queryFn: async () => {
       if (!defaultLanguage?.id) return;
-      const data = await get_out_of_stock_products(defaultLanguage?.id, 100, 0);
-      return data;
+
+      const response =
+        tab === 1
+          ? await get_out_of_stock_products(defaultLanguage?.id, 100, 0)
+          : await hidden_available_products(defaultLanguage?.id, 100, 0);
+      return response?.data?.products;
     },
   });
 
-  console.log(data, "products");
-
-  const onSelectRow = (e) => {
-    let value = e.target.value;
-    if (e.target.checked) {
-      setSelectedList((prev) => ({
-        ...prev,
-        [value]: true,
-      }));
-    } else {
-      const list = selectedList;
-      delete list[e.target.value];
-      setSelectedList({ ...list });
-    }
-  };
-
-  const onSelectAll = (e) => {
-    if (e.target.checked) {
-      let hash = {};
-      for (const product of data?.products) {
-        hash[product?.id] = true;
-      }
-      setSelectedList(hash);
-    } else {
-      setSelectedList({});
-    }
-  };
+  const handleHideAll = async () => {
+    // const response = await handleHideProducts()
+  }
+  const handleShowAll = async () => {
+    // const response = await handleShowProducts()
+  }
 
   return (
-    <div>
-      <div>
-        <button className="" onClick={() => setTab(1)}>
-          Stocked Products
-        </button>
-        <button className="" onClick={() => setTab(2)}>
-          Unstocked Products
-        </button>
-      </div>
-      <div className="border-y flex items-center bg-gray-200 dark:text-white dark:bg-[#2d2d2d] dark:border-[#343333]">
-        <div className="p-2 w-[50px]">
-          <input type="checkbox" className="h-5 w-5" onChange={onSelectAll} />
-        </div>
-        <div className="p-2 flex-[2]">Product</div>
-        <div className="p-2 flex-1">Supplier</div>
-        <div className="p-2 flex-1">Category</div>
-        <div className="p-2 flex-1">New Category</div>
-        <div className="p-2 flex-1">Actions</div>
-      </div>
-      {data?.products?.map((product) => {
-        let isSelected = selectedList?.[product?.id];
-        return (
-          <div
-            className={`border-y flex items-center dark:border-[#343333]  dark:text-white ${
-              isSelected ? "bg-gray-100" : ""
+    <BlockPaper title="Products display">
+      <div className="flex items-center gap-4 justify-between border-b pb-4">
+        <div className="flex items-center gap-4">
+          <Button
+            classes={`whitespace-nowrap !w-fit ${
+              tab === 1 ? "" : "!bg-gray-200 !text-gray-500"
             }`}
-          >
-            <div className="p-2 w-[50px]">
-              <input
-                type="checkbox"
-                checked={isSelected}
-                value={product?.id}
-                className="h-5 w-5"
-                onChange={onSelectRow}
-              />
-            </div>
-            <div className="p-2 flex-[2] hover:text-blue-500 hover:bg-gray-100 hover:shadow">
-              <Link
-                className="flex gap-2"
-                to={`https://kadinle.com/product/${
-                  product?.product_variant?.at(0)?.id
-                }`}
-                target="_blank"
-              >
-                <img
-                  src={product?.product_image?.at(0)?.image}
-                  alt=""
-                  className="w-20 h-20 object-contain"
-                />
-                <ul className="capitalize font-medium text-sm">
-                  <li>product sku: {product?.product_sku}</li>
-                  <li>{product?.product_content?.at(0)?.name}</li>
-                </ul>
-              </Link>
-            </div>
-            <div className="p-2 flex-1"></div>
-          </div>
-        );
-      })}
-    </div>
+            title="Stocked Products"
+            onClick={() => setTab(1)}
+          />
+          <Button
+            classes={`whitespace-nowrap !w-fit ${
+              tab === 2 ? "" : "!bg-gray-200 !text-gray-500"
+            }`}
+            title="Unstocked Products"
+            onClick={() => setTab(2)}
+          />
+        </div>
+        <div className="flex items-center gap-4">
+          {tab === 1 ? (
+            <Button
+              classes={`whitespace-nowrap !w-fit bg-red-500`}
+              title={`Hide Selected Products (${Object.keys(rowSelection)?.length})`}
+              onClick={handleHideAll}
+              disabled={!Object.keys(rowSelection)?.length}
+            />
+          ) : (
+            <Button
+              classes={`whitespace-nowrap !w-fit bg-green-500`}
+              title={`Show Selected Products (${Object.keys(rowSelection)?.length})`}
+              onClick={handleShowAll}
+              disabled={!Object.keys(rowSelection)?.length}
+            />
+          )}
+        </div>
+      </div>
+      <CustomTable
+        columns={columns}
+        tableName={"product"}
+        isLoading={isLoading}
+        data={data}
+        pageCount={pageCount}
+        pagination={pagination}
+        setPagination={setPagination}
+        rowSelection={rowSelection}
+        setRowSelection={setRowSelection}
+      />
+    </BlockPaper>
   );
 };
 

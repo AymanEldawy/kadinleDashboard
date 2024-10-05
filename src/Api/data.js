@@ -1637,6 +1637,7 @@ export const getSupplierProducts = async (page, pageSize, additionalData) => {
     `,
       { count: "exact" }
     )
+    .eq("product_content.language_id", additionalData?.languageId)
     .eq("category.category_content.language_id", additionalData?.languageId);
 
   if (additionalData?.filter) {

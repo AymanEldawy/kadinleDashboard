@@ -1642,7 +1642,9 @@ export const getSupplierProducts = async (page, pageSize, additionalData) => {
 
   if (additionalData?.filter) {
     const categories = await getCategoryChildrenIDS(additionalData?.filter);
-    query.in("category_id", [...categories, additionalData?.filter]);
+    console.log("🚀 ~ getSupplierProducts ~ categories:", categories);
+    // query.in("category_id", [...categories, additionalData?.filter]);
+    query.eq("category_id", additionalData?.filter);
   }
 
   if (additionalData?.supplierId) {
@@ -1825,7 +1827,6 @@ export const get_out_of_stock_products = async (
     param_offset,
   });
 };
-
 
 export const hidden_available_products = async (
   param_lang_id,

@@ -494,8 +494,8 @@ export const offer_content = [
     tableName: "language",
   },
   { name: "name", type: "text", required: true },
-  { name: "description", type: "text", required: true },
-  { name: "media", type: "text", key: "image", required: true },
+  { name: "description", type: "text" },
+  { name: "media", type: "text", key: "image" },
   {
     name: "offer_id",
     type: "uuid",

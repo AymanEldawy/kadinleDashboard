@@ -1423,7 +1423,18 @@ const combine_offer = () => [
       return <FullImage src={getValue()} alt={"offer icon"} />;
     },
   },
-  { accessorKey: "hex", header: "hex" },
+  {
+    accessorKey: "hex",
+    header: "hex",
+    cell: ({ getValue }) => (
+      <span
+        className="h-10 w-10 block rounded-full"
+        style={{
+          background: getValue(),
+        }}
+      />
+    ),
+  },
   { accessorKey: "display_home", header: "display_home" },
   {
     accessorKey: "actions",

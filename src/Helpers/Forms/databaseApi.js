@@ -478,7 +478,7 @@ const offer = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date" },
   { name: "numerical", type: "number" },
-  { name: "hex", type: "text", key: "image" },
+  { name: "hex", type: "color", },
   { name: "icon", type: "text", key: "image", required: true },
   { name: "display_home", key: "checkbox" },
   { name: "is_banner", key: "checkbox" },

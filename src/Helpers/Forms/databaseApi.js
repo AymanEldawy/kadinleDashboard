@@ -120,7 +120,7 @@ export const chart_data = [
     tableName: "chart",
     refId: "id",
     required: true,
-    refName: 'number'
+    refName: "number",
   },
   {
     name: "chart_group_id",
@@ -129,7 +129,7 @@ export const chart_data = [
     tableName: "chart_group",
     refId: "id",
     required: true,
-    refName: 'group_name'
+    refName: "group_name",
   },
   {
     name: "size_id",
@@ -478,8 +478,9 @@ const offer = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date" },
   { name: "numerical", type: "number" },
-  { name: "display_home", key: "checkbox" },
+  { name: "hex", type: "text", key: "image" },
   { name: "icon", type: "text", key: "image", required: true },
+  { name: "display_home", key: "checkbox" },
   { name: "is_banner", key: "checkbox" },
 ];
 

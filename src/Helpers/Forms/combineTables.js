@@ -1435,7 +1435,19 @@ const combine_offer = () => [
       />
     ),
   },
-  { accessorKey: "display_home", header: "display_home" },
+  {
+    accessorKey: "display_home",
+    header: "display_home",
+    cell: ({ getValue }) => (
+      <span
+        className={`px-8 py-1 rounded-md ${
+          getValue() ? "bg-green-500 text-white" : "bg-red-500 text-white"
+        }`}
+      >
+        {getValue() ? "Yes" : "No"}
+      </span>
+    ),
+  },
   {
     accessorKey: "actions",
     header: "actions",

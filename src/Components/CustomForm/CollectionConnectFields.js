@@ -22,6 +22,7 @@ export const CollectionConnectFields = ({
           { id: 1, name: "Category" },
           { id: 2, name: "Inner Link" },
           { id: 3, name: "Outer Link" },
+          { id: 4, name: "Slider text" },
         ]}
         name={"type"}
         onChange={(option) => {

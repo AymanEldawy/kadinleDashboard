@@ -12,7 +12,7 @@ const OrderUser = ({ order }) => {
         <h2>{`${order?.user?.first_name} ${order?.user?.last_name}`}</h2>
         <div className="flex justify-center items-center gap-1">
             <p className="text-blue-700">{order?.user?.email}</p>
-            <CopyButton textToCopy={order?.user?.email}/>
+            {/* <CopyButton textToCopy={order?.user?.email}/> */}
         </div>
       </div>
     </div>

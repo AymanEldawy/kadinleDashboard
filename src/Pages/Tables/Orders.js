@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { getRecentOrders } from "../../Api/statictes";
+import { getOrderData, getRecentOrders } from "../../Api/statictes";
 import {
   flexRender,
   getCoreRowModel,
@@ -14,7 +14,6 @@ import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import Loading from "../../Components/Loading/Loading";
 import Pagination from "../../Components/Supplier/Pagination";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
-import OrderStatus from "../../Components/Orders/OrderStatus";
 import OrderUser from "../../Components/Orders/OrderUser";
 
 const Orders = () => {
@@ -27,7 +26,12 @@ const Orders = () => {
   const [clicked, setClicked] = useState(true);
   const [checkedId, setCheckedId] = useState([]);
 
-  const initialPageIndex = Number(localStorage.getItem("pageIndex")) || 0;
+  const languageID = JSON.parse(
+    localStorage.getItem("KADINLE_DEFAULT_LANGUAGE")
+  )?.id;
+  console.log("languageID", languageID);
+
+  // const initialPageIndex = Number(localStorage.getItem("pageIndex")) || 0;
   const options = {
     year: "numeric",
     month: "long",
@@ -39,8 +43,9 @@ const Orders = () => {
 
   const getOrders = async () => {
     setLoading(true);
-    const response = await getRecentOrders();
-    setData(response.data);
+    // const response = await getRecentOrders();
+    const response = await getOrderData(languageID);
+    setData(response?.data?.orders);
     setLoading(false);
   };
 
@@ -59,7 +64,7 @@ const Orders = () => {
   useEffect(() => {
     if (data.length > 0) {
       const initialVariants = data.map((item) => ({
-        id: item?.id,
+        id: item?.order?.order_id,
         show: false,
       }));
       setShowVariant(initialVariants);
@@ -81,19 +86,19 @@ const Orders = () => {
         />
       ),
     },
+    // {
+    //   accessorKey: "created_at",
+    //   header: "created at",
+    //   cell: (props) => (
+    //     <p className="min-w-[320px] text-center">
+    //       <span className="">
+    //         {new Date(props.getValue()).toLocaleDateString("en-US", options)}
+    //       </span>
+    //     </p>
+    //   ),
+    // },
     {
-      accessorKey: "created_at",
-      header: "created at",
-      cell: (props) => (
-        <p className="min-w-[320px] text-center">
-          <span className="">
-            {new Date(props.getValue()).toLocaleDateString("en-US", options)}
-          </span>
-        </p>
-      ),
-    },
-    {
-      accessorKey: "order_number",
+      accessorKey: "order.order_number",
       header: "order number",
       cell: (props) => (
         <p className="text-center">
@@ -102,17 +107,16 @@ const Orders = () => {
       ),
     },
     {
-      accessorKey: "order_status",
+      accessorKey: "order.status",
       header: "order status",
       cell: (props) => (
-        <OrderStatus
-          order={props.row.original}
-          defaultLanguage={defaultLanguage}
-        />
+        <p className="text-center min-w-[200px]">
+          <span className="">{props.getValue()}</span>
+        </p>
       ),
     },
     {
-      accessorKey: "price",
+      accessorKey: "order.price",
       header: "price",
       cell: (props) => (
         <p className="text-center">
@@ -121,7 +125,7 @@ const Orders = () => {
       ),
     },
     {
-      accessorKey: "shipping_date",
+      accessorKey: "order.shipping_date",
       header: "shipping date",
       cell: (props) => (
         <p className="text-center">

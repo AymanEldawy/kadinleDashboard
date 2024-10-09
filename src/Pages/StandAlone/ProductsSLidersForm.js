@@ -9,6 +9,7 @@ import InputField from "../../Components/CustomForm/InputField";
 import CheckboxField from "../../Components/CustomForm/CheckboxField";
 import { SelectedProductTable } from "../../Components/SelectedProductsComponents/SelectedProductTable";
 import { useParams } from "react-router-dom";
+import { CategoryMultiFilter } from "../../Components/TableBar/CategoryMultiFilter";
 
 let CACHE_SLIDERS = {};
 
@@ -27,7 +28,7 @@ const ProductsSLidersForm = ({ layout }) => {
       if (layout !== "update") return;
       const response = await getData(name, params?.id);
       let data = response?.at(0);
-      console.log("🚀 ~ queryFn: ~ data:", data)
+      console.log("🚀 ~ queryFn: ~ data:", data);
       setValues(data);
       if (data?.products_sku?.length) {
         let hash = {};
@@ -35,7 +36,7 @@ const ProductsSLidersForm = ({ layout }) => {
           hash[item] = true;
         }
         setRowSelection(hash);
-        setProductLength(data?.products_sku?.length)
+        setProductLength(data?.products_sku?.length);
       }
     },
   });
@@ -97,11 +98,14 @@ const ProductsSLidersForm = ({ layout }) => {
       });
     }
   };
+  console.log(values);
 
   return (
     <BlockPaper
       title={"Products slider"}
-      contentBar={<span>Selected products {Object.keys(rowSelection)?.length}</span>}
+      contentBar={
+        <span>Selected products {Object.keys(rowSelection)?.length}</span>
+      }
     >
       <div className="flex gap-4 items-center mb-4">
         <InputField
@@ -111,6 +115,17 @@ const ProductsSLidersForm = ({ layout }) => {
           error={errors.sku ? errors.sku : null}
           onChange={(e) => handelChangeField("sku", +e.target.value, true)}
         />
+
+        <div className="flex flex-col gap-1">
+          <p>Select category</p>
+          <CategoryMultiFilter
+            name="category_link"
+            setFilterCategory={(category) => {
+              handelChangeField("category_id", category, true);
+            }}
+            filterCategory={values?.category_id}
+          />
+        </div>
         <CheckboxField
           defaultChecked={values?.display_home}
           value={values?.display_home}
@@ -120,6 +135,32 @@ const ProductsSLidersForm = ({ layout }) => {
           onChange={(e) =>
             handelChangeField("display_home", e.target.checked, true)
           }
+        />
+      </div>
+      <div className="flex gap-4 my-4">
+        <InputField
+          containerClassName="flex-1"
+          value={values?.en_text}
+          label={"en_text"}
+          required={true}
+          error={errors.en_text ? errors.en_text : null}
+          onChange={(e) => handelChangeField("en_text", e.target.value, true)}
+        />
+        <InputField
+          containerClassName="flex-1"
+          value={values?.tr_text}
+          label={"tr_text"}
+          required={true}
+          error={errors.tr_text ? errors.tr_text : null}
+          onChange={(e) => handelChangeField("tr_text", e.target.value, true)}
+        />
+        <InputField
+          containerClassName="flex-1"
+          value={values?.ar_text}
+          label={"ar_text"}
+          required={true}
+          error={errors.ar_text ? errors.ar_text : null}
+          onChange={(e) => handelChangeField("ar_text", e.target.value, true)}
         />
       </div>
 

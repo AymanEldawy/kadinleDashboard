@@ -52,9 +52,8 @@ const Orders = () => {
   };
 
    useEffect(() => {
-     // إذا كان هناك query params في العنوان، يتم إزالتها
      if (location.search) {
-       navigate(location.pathname, { replace: true }); // إزالة الـ query params مع الاحتفاظ بالمسار الحالي
+       navigate(location.pathname, { replace: true }); 
      }
    }, []);
 

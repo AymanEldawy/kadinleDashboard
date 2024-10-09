@@ -81,6 +81,7 @@ const category_content = [
 const chart = [
   { name: "id", type: "uuid" },
   { name: "number", type: "number" },
+  { name: "user_view",  key: "checkbox" },
 ];
 
 export const chart_content = [

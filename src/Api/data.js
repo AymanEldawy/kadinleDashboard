@@ -1816,6 +1816,17 @@ export const getCategorySearch = async (language_id, key, value) => {
   return await query;
 };
 
+export const getSizesFilter = async (region_id, type) => {
+  console.log(region_id, type);
+
+  const query = await supabase
+    .from("size")
+    .select(`id,size_sku,size_content(region_id, name)`)
+    // .eq("size_content.region_id", region_id)
+    .eq("type", type);
+  return query;
+};
+
 export const get_out_of_stock_products = async (
   param_lang_id,
   param_limit,

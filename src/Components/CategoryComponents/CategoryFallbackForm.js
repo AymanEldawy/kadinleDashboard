@@ -10,16 +10,15 @@ export const CategoryFallbackForm = ({
   CACHE_CATEGORIES,
   oldCategories,
   updateCategory,
-  name
+  name,
 }) => {
   const [categoryId, setCategoryId] = useState(null);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(()=> {
-    if(oldCategories?.length)
-      setCategories(oldCategories)
-  }, [oldCategories])
+  useEffect(() => {
+    if (oldCategories?.length) setCategories(oldCategories);
+  }, [oldCategories]);
 
   const addNewCategory = () => {
     setCategories((prev) => [...prev, categoryId]);
@@ -33,14 +32,15 @@ export const CategoryFallbackForm = ({
   const handleUpdateCategory = async () => {
     setIsLoading(true);
     const res = await updateCategory(categories);
-    if(res?.error) {
-      toast.error('Failed to save data')
+    if (res?.error) {
+      toast.error("Failed to save data");
     } else {
-      toast.success('Successfully save data')
+      toast.success("Successfully save data");
     }
     setIsLoading(false);
   };
-console.log(categories,'categories');
+  console.log(categories, "categories");
+  console.log(categories, "categories");
 
   return (
     <div>
@@ -62,10 +62,13 @@ console.log(categories,'categories');
       <div className="bg-gray-100 p-4 my-4 border rounded-md flex flex-wrap gap-2">
         {categories?.length ? (
           <>
-            {categories?.map((cate) => (
+            {categories?.map((cate, index) => (
               <button
+                key={cate || index}
                 className="hover:bg-red-100 hover:text-red-500 hover:line-through rounded-md bg-gray-100 border px-2 py-1 text-sm"
-                onClick={() => deleteCategory(cate)}
+                onClick={() => {
+                  if (cate) deleteCategory(cate);
+                }}
               >
                 {" "}
                 {CACHE_CATEGORIES[cate]}

@@ -24,7 +24,7 @@ import { LoadingProcess } from "../../Components/Global/LoadingProcess";
 const MoveCategory = () => {
   let name = "products_slider";
   const { defaultLanguage } = useGlobalOptions();
-  const { upsertItem, updateItem } = useUpdate();
+  const { upsertItem, updateItem, updateInItems } = useUpdate();
   const { deleteItem: onDelete } = useDelete();
   const [isProgress, setIsProgress] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
@@ -124,6 +124,7 @@ const MoveCategory = () => {
     if (e.target.checked) {
       let hash = {};
       for (const product of data?.products) {
+        console.log("🚀 ~ onSelectAll ~ product:", product);
         hash[product?.id] = true;
       }
       setSelectedList(hash);
@@ -132,23 +133,24 @@ const MoveCategory = () => {
     }
   };
 
+  console.log(newCategory,'newCategory');
+  
+
   const handleMoveAll = async () => {
     setIsProgress(true);
     let list = Object.keys(selectedList);
-    let bulk = [];
-    let response = null;
-    for (const id of list) {
-      // bulk.push({
-      //   id,
-      //   category_id: newCategory?.category_id,
-      // });
-      response = await updateItem("product", {
-        id,
-        category_id: newCategory?.category_id,
-      });
-    }
+    const response = await updateInItems(
+      "product",
+      {
+        category_id: newCategory?.id,
+      },
+      "id",
+      list
+    );
 
-    // const response = await upsertItem("product", bulk);
+    console.log(response,'response');
+    
+
     if (response?.error) {
       toast.error(`Failed to update category for selected products`);
     } else {
@@ -159,10 +161,6 @@ const MoveCategory = () => {
 
   const onMoveOne = async (productId, productSku) => {
     setIsProgress(true);
-    console.log(
-      newCategoriesList?.[productId],
-      "newCategoriesList?.[productId]"
-    );
 
     const response = await updateProductCategory(
       productId,
@@ -195,9 +193,6 @@ const MoveCategory = () => {
     setIsProgress(false);
     setOpenConfirmation(false);
   };
-
-  console.log('var', data);
-  
 
   return (
     <>
@@ -334,7 +329,9 @@ const MoveCategory = () => {
                 <div className="p-2 flex-[2] hover:text-blue-500 hover:bg-gray-100 hover:shadow">
                   <Link
                     className="flex gap-2"
-                    to={`https://kadinle.com/product/${product?.product_variant?.at(0)?.id}`}
+                    to={`https://kadinle.com/product/${
+                      product?.product_variant?.at(0)?.id
+                    }`}
                     target="_blank"
                   >
                     <img

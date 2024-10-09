@@ -1,5 +1,33 @@
+import { v4 as uuidv4 } from "uuid";
+
 async function uploadFile(formData, action) {
-  if (!formData.get('file')) return;
+  const originalFile = formData.get("file");
+
+  if (!originalFile) {
+    console.log("No file found in formData.");
+    return;
+  }
+
+  if (
+    typeof originalFile?.name !== "string" ||
+    !originalFile?.name.includes(".")
+  ) {
+    console.error("Invalid file name.");
+    return;
+  }
+
+  const newFileName =
+    `file-${uuidv4()}` + originalFile?.name?.split(".")?.pop();
+
+  const newFile = new File([originalFile], newFileName, {
+    type: originalFile.type,
+  });
+  console.log(newFileName);
+
+  formData.delete("file");
+
+  formData.append("file", newFile);
+
   const headers = new Headers();
   headers.append(
     "key",

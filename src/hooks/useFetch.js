@@ -8,6 +8,7 @@ import {
   getTableDataById,
   getTableDataWithPagination,
 } from "../Api/globalActions";
+import { getTableDataWithContent } from "../Api/data";
 
 export const useFetch = () => {
   const [loading, setLoading] = useState();
@@ -25,6 +26,11 @@ export const useFetch = () => {
     );
     return response;
   };
+
+  const getDataWithContent = async (table, id) => {
+    return await getTableDataWithContent(table, id);
+  }
+
   const getData = async (table, id, operation = "") => {
     setLoading(true);
     // let loadLanguage = toast.loading("Please wait...");
@@ -56,5 +62,5 @@ export const useFetch = () => {
     return response?.data;
   };
 
-  return { loading, getData, getDataWithPagination };
+  return { loading, getData, getDataWithPagination, getDataWithContent };
 };

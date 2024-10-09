@@ -389,7 +389,7 @@ export const getReturnRequests = async (page, pageSize, additionalData) => {
       `
       *,
       return_status(return_status_content(*, name:status)),
-      product_variant(id, sku,product_id, product(product_content(product_id, name, language_id))),
+      product_variant(id, variant_sku,product_id, product(product_content(product_id, name, language_id))),
       order(*, name:order_number)),
       return_reason(*,return_reason_content(*))
    `,
@@ -537,8 +537,8 @@ export const getProducts = async (page, pageSize, additionalData) => {
       *,
       category(category_content(*, name:title, language_id, language(id, name))),
       brand(name),
-      product_content(*,language_id, language(id, name)))
-      product_image
+      product_image(image),
+      product_content(*,language_id, language(id, name))),
       
    `,
       { count: "exact" }
@@ -922,6 +922,7 @@ export const getChartContent = async (page, pageSize, additionalData) => {
 };
 
 export const getChartData = async (page, pageSize, additionalData) => {
+  console.log("🚀 ~ getChartData ~ additionalData:", additionalData);
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
@@ -931,23 +932,18 @@ export const getChartData = async (page, pageSize, additionalData) => {
       `
     *,
     chart(chart_content(id, name, language_id)),
-    product (id, product_content (name, language_id )),
-    size (id, size_content (size_id, name, region_id ))
-    
+    size (id, size_content (size_id, name, region_id )),
+    chart_group(*)
      `,
       { count: "exact" }
     )
     .eq("size.size_content.region_id", additionalData?.regionId)
-    .eq("chart.chart_content.language_id", additionalData?.languageId)
-    .eq("product.product_content.language_id", additionalData?.languageId);
+    .eq("chart.chart_content.language_id", additionalData?.languageId);
 
   if (searchValue) {
     switch (searchKey) {
       case "chart":
         query.ilike(`chart.chart_content.name`, `%${searchValue}%`);
-        break;
-      case "product":
-        query.ilike(`product.product_content.name`, `%${searchValue}%`);
         break;
       case "size":
         query.ilike(`size.size_content.name`, `%${searchValue}%`);
@@ -962,11 +958,10 @@ export const getChartData = async (page, pageSize, additionalData) => {
     pageSize,
     additionalData,
     query,
-    ignoredFilterColumns: ["chart", "product", "size"],
+    ignoredFilterColumns: ["chart", "size"],
     filterFn: (f) => {
       return (
         f?.chart?.chart_content?.name === searchValue ||
-        f?.product?.product_content?.name === searchValue ||
         f?.size?.size_content?.name === searchValue
       );
     },
@@ -1111,7 +1106,7 @@ export const getStocks = async (page, pageSize, additionalData) => {
     `
     *,
     warehouse(name),
-    product_variant(id, sku)
+    product_variant(id, variant_sku)
   `,
     { count: "exact" }
   );
@@ -1122,7 +1117,7 @@ export const getStocks = async (page, pageSize, additionalData) => {
         query.ilike(`warehouse.name`, `%${searchValue}%`);
         break;
       case "variant":
-        query.eq(`product_variant.sku`, `%${searchValue}%`);
+        query.eq(`product_variant.variant_sku`, `%${searchValue}%`);
         break;
       default:
         query.eq(searchKey, searchValue);
@@ -1290,7 +1285,7 @@ export const getUsersCart = async (page, pageSize, additionalData) => {
     .select(
       `
     *,
-    product_variant(id, sku,product_id, product(product_content(product_id, name, language_id)))
+    product_variant(id, variant_sku,product_id, product(product_content(product_id, name, language_id)))
     `,
       { count: "exact" }
     )
@@ -1642,11 +1637,14 @@ export const getSupplierProducts = async (page, pageSize, additionalData) => {
     `,
       { count: "exact" }
     )
+    .eq("product_content.language_id", additionalData?.languageId)
     .eq("category.category_content.language_id", additionalData?.languageId);
 
   if (additionalData?.filter) {
     const categories = await getCategoryChildrenIDS(additionalData?.filter);
-    query.in("category_id", [...categories, additionalData?.filter]);
+    console.log("🚀 ~ getSupplierProducts ~ categories:", categories);
+    // query.in("category_id", [...categories, additionalData?.filter]);
+    query.eq("category_id", additionalData?.filter);
   }
 
   if (additionalData?.supplierId) {
@@ -1721,9 +1719,7 @@ export const refreshPrices = async (item) => {
       .upsert(batch);
 
     if (error) {
-      console.error("Error upserting batch:", error);
     } else {
-      console.log("Batch upsert successful:", data);
     }
   }
   return response;
@@ -1743,7 +1739,7 @@ export const refreshWeights = async (item) => {
   const variantsData = [];
 
   for (const variant of variants?.data) {
-    if (variant?.weight) continue;
+    // if (variant?.weight) continue;
 
     variantsData.push({
       ...variant,
@@ -1772,4 +1768,85 @@ export const getCategoryTree = async () => {
     .select(`*, category_content(*)`);
 
   return buildTree(categories?.data);
+};
+
+export const getProductEndingStock = async () => {
+  const { data: products } = await supabase
+    .from("product")
+    .select(`*, product_variant(*, stock(*))`)
+    .eq("product_variant.stock.stock", 0)
+    // .gt("product_variant.stock.stock", 1)
+    .is("display", true)
+    .limit(100);
+};
+
+export const getTableDataWithContent = async (table, id) => {
+  const query = supabase.from(table).select(`*, ${table}_content(*)`);
+
+  if (id) query.eq("id", id);
+
+  return await query;
+};
+
+export const getCacheCategory = async (language_id) => {
+  const query = await supabase
+    .from("category_content")
+    .select(`category_id, language_id, title`)
+    .eq("language_id", language_id);
+
+  let hash = {};
+  for (const cate of query?.data) {
+    hash[cate?.category_id] = cate?.title;
+  }
+
+  return hash;
+};
+
+export const getCategorySearch = async (language_id, key, value) => {
+  const query = supabase
+    .from("category")
+    .select(`numeric,id,category_content(language_id, title)`)
+    .eq("category_content.language_id", language_id);
+
+  if (key === 1) {
+    query.eq("numeric", value);
+  } else if (key === 2) {
+    query.ilike(`category_content.title`, `%${value}%`);
+  }
+  return await query;
+};
+
+export const getSizesFilter = async (region_id, type) => {
+  console.log(region_id, type);
+
+  const query = await supabase
+    .from("size")
+    .select(`id,size_sku,size_content(region_id, name)`)
+    // .eq("size_content.region_id", region_id)
+    .eq("type", type);
+  return query;
+};
+
+export const get_out_of_stock_products = async (
+  param_lang_id,
+  param_limit,
+  param_offset
+) => {
+  return await supabase.rpc("get_out_of_stock_products", {
+    param_lang_id,
+    param_limit,
+    param_offset,
+  });
+};
+
+export const hidden_available_products = async (
+  param_lang_id,
+  param_limit,
+  param_offset
+) => {
+  return await supabase.rpc("hidden_available_products", {
+    param_lang_id,
+    param_limit,
+    param_offset,
+  });
 };

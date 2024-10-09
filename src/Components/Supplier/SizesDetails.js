@@ -19,7 +19,6 @@ const SizesDetails = ({ product, showVariant }) => {
 
    return () => window.removeEventListener("resize", updateVisibleItems);
  }, []);
-  //   console.log("product from sizes", product);
   let show = useMemo(
     () =>
       showVariant?.find((variant) => variant?.id === product?.product_sku)
@@ -43,7 +42,6 @@ const SizesDetails = ({ product, showVariant }) => {
   // Determine if there are more items to show
   const isTruncated = uniqueSizes.length > visibleItems;
 
-  // console.log(uniqueSizes);
   return (
     <div>
       <div

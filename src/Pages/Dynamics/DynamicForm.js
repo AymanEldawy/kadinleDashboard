@@ -43,11 +43,9 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
     let response = null;
     let loading = toast.loading("Please wait...");
     if (SUPABASE_TABLE_NAME === "home_reviews") {
-      await handleUploadReviewerImage(values);
-    } else if (SUPABASE_TABLE_NAME === "offer") {
-      await handleUploadPartnerImage(values);
+      response = await handleUploadReviewerImage(values);
     } else if (SUPABASE_TABLE_NAME === "partner") {
-      await handleUploadPartnerImage(values);
+      response = await handleUploadPartnerImage(values);
     } else if (SUPABASE_TABLE_NAME === "user") {
       response = await signup(values);
       if (values?.profile_img) {
@@ -77,7 +75,7 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
             SUPABASE_TABLE_NAME === "offer" &&
             typeof values?.icon === "object"
           ) {
-            await handleUploadOfferIcon(values?.icon, itemId);
+            await handleUploadColorImage(values, itemId);
           }
 
           if (
@@ -129,6 +127,7 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
                 await handleUploadCategoryImages(item, itemId, CACHE_LANGUAGES);
               } else if (SUPABASE_TABLE_NAME === "offer") {
                 await handleUploadOfferImage(item, itemId, CACHE_LANGUAGES);
+                await handleUploadOfferIcon(values?.icon, itemId);
               } else if (SUPABASE_TABLE_NAME === "collection") {
                 await handleUploadCollectionImage(
                   item,
@@ -146,6 +145,7 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
         }
       }
     }
+
     if (!response?.error) {
       setValues({});
       setContentValues({});
@@ -155,7 +155,7 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
         isLoading: false,
         autoClose: 2000,
       });
-      navigate(-1);
+      // navigate(-1);
     } else {
       toast.update(loading, {
         render: "Oops! failed to added new",

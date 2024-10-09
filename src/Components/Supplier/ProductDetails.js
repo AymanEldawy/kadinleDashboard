@@ -19,7 +19,6 @@ const ProductDetails = ({
   checkedSku,
   setCheckedSku,
 }) => {
-  // console.log(product);
   const baseURL = "https://kadinle.com/en/product/";
 
   const initialMainChecked = useMemo(
@@ -39,7 +38,6 @@ const ProductDetails = ({
   const [mainChecked, setMainChecked] = useState(initialMainChecked);
   const [checkedStates, setCheckedStates] = useState(initialCheckedStates);
 
-  // console.log("checkedSku", checkedSku);
   const [visibleLength, setVisibleLength] = useState(20);
   const linkRef = useRef(null);
 
@@ -157,17 +155,14 @@ const ProductDetails = ({
     const handleMainCheckboxChange = useCallback(() => {
       // Toggle product?.product_sku in checkedSku array
       setCheckedSku((prevCheckedSku) => {
-        // console.log("Before update:", prevCheckedSku);
 
         if (prevCheckedSku.includes(product?.product_sku)) {
           const updatedSku = prevCheckedSku.filter(
             (sku) => sku !== product.product_sku
           );
-          // console.log("Updated checkedSku (removed):", updatedSku);
           return updatedSku;
         } else {
           const updatedSku = [...prevCheckedSku, product?.product_sku];
-          // console.log("Updated checkedSku (added):", updatedSku);
           return updatedSku;
         }
       });
@@ -175,7 +170,6 @@ const ProductDetails = ({
       const newMainChecked = checkedSku.includes(product?.product_sku);
       setMainChecked(newMainChecked);
 
-      console.log("checkedStates", checkedStates);
     }, [checkedSku, checkedStates, product.product_sku, setCheckedSku]);
     
   const handleShowVariants = useCallback(() => {
@@ -189,7 +183,6 @@ const ProductDetails = ({
     );
   }, [setClicked, setShowVariant, product?.product_sku]);
 
-  // console.log(
   //   "product?.product_sku",
   //   checkedSku.includes(product?.product_sku)
   // );

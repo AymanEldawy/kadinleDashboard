@@ -18,7 +18,6 @@ const SupplierPrice = ({
   const maxPrice = Math.max(
     ...(product?.variants?.map((variant) => variant.purchase_price) || [])
   );
-  //   console.log("index: ", index)
   let show = useMemo(
     () =>
       showVariant?.find((variant) => variant?.id === product?.product_sku)
@@ -40,7 +39,6 @@ const SupplierPrice = ({
     price: 8,
     percentage: 50,
   };
-  // console.log("updateAllData", updateAllData);
   const updateSingleItem = async () => {
     // await upsertItem("product_variant", data);
   };

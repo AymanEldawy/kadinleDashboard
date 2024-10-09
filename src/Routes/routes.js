@@ -110,6 +110,10 @@ import CategoriesBanner from "../Pages/StandAlone/CategoriesBanner";
 import Weights from "../Pages/Tables/Weights";
 import AddWeights from "../Pages/Forms/AddWeights";
 import CategoryTree from "../Pages/StandAlone/CategoryTree";
+import ProductsStatus from "../Pages/StandAlone/ProductsStatus";
+import CategoryFallback from "../Pages/StandAlone/CategoryFallback";
+import ChartGroup from "../Pages/StandAlone/ChartGroup";
+import ChartGroupTable from "../Pages/Tables/ChartGroupTable";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -147,6 +151,7 @@ const authProtectedRoutes = [
 
   // **** Group Content paths ****
   { path: "/products", component: <Products />, allowedRoles: ["*"] },
+  { path: "/products-status", component: <ProductsStatus />, allowedRoles: ["*"] },
   { path: "/brand", component: <Brands />, allowedRoles: ["*"] },
   { path: "/stocks", component: <Stocks />, allowedRoles: ["*"] },
 
@@ -157,6 +162,7 @@ const authProtectedRoutes = [
   // **** Group Feature paths ****
   { path: "/color", component: <Colors />, allowedRoles: ["*"] },
   { path: "/category", component: <Categories />, allowedRoles: ["*"] },
+  { path: "/category-fallback", component: <CategoryFallback />, allowedRoles: ["*"] },
   { path: "/category-tree", component: <CategoryTree />, allowedRoles: ["*"] },
   { path: "/size", component: <Sizes />, allowedRoles: ["*"] },
   // {
@@ -197,10 +203,12 @@ const authProtectedRoutes = [
     allowedRoles: ["*"],
   },
   { path: "/add-chart-data", component: <AddChartData />, allowedRoles: ["*"] },
+  { path: "/chart-group-from", component: <ChartGroup />, allowedRoles: ["*"] },
+  { path: "/chart-group-form/:id", component: <ChartGroup />, allowedRoles: ["*"] },
 
   // **** Group Chart paths ****
   { path: "/chart", component: <ChartContent />, allowedRoles: ["*"] },
-  // { path: "/chart-content", component: <ChartContent />, allowedRoles: ["*"] },
+  { path: "/chart-group", component: <ChartGroupTable />, allowedRoles: ["*"] },
   { path: "/chart-data", component: <ChartData />, allowedRoles: ["*"] },
 
   // **** Group News add paths ****
@@ -361,7 +369,7 @@ const authProtectedRoutes = [
   },
   {
     path: "/update-products-slider/:id",
-    component: <ProductsSLidersForm />,
+    component: <ProductsSLidersForm layout="update" />,
     allowedRoles: ["*"],
   },
   {
@@ -369,10 +377,26 @@ const authProtectedRoutes = [
     component: <ProductsSlider />,
     allowedRoles: ["*"],
   },
-  { path: "/add-chunks", component: <AddChunks />, allowedRoles: ["admin", "superadmin"] },
-  { path: "/chunks", component: <Chunks />, allowedRoles: ["admin", "superadmin"] },
-  { path: "/add-weights", component: <AddWeights />, allowedRoles: ["admin", "superadmin"] },
-  { path: "/weights", component: <Weights />, allowedRoles: ["admin", "superadmin"] },
+  {
+    path: "/add-chunks",
+    component: <AddChunks />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/chunks",
+    component: <Chunks />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/add-weights",
+    component: <AddWeights />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/weights",
+    component: <Weights />,
+    allowedRoles: ["admin", "superadmin"],
+  },
   { path: "/logs", component: <Logs />, allowedRoles: ["*"] },
   { path: "/rooms/:id", component: <ChatRoom />, allowedRoles: ["*"] },
   {
@@ -411,8 +435,8 @@ const authProtectedRoutes = [
     allowedRoles: ["admin", "superadmin"],
   },
   {
-    path:"/products-supplier",
-    component: <SupplierProducts/>,
+    path: "/products-supplier",
+    component: <SupplierProducts />,
     allowedRoles: ["admin", "superadmin"],
   },
   {

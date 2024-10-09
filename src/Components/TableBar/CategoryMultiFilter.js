@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
-import { useQuery } from "@tanstack/react-query";
-import { getCategoryChildren, getOnlyParentCategory } from "../../Api/data";
+import { QueryClient, useQuery } from "@tanstack/react-query";
+import {
+  getCategoryChildren,
+  getCategorySearch,
+  getOnlyParentCategory,
+} from "../../Api/data";
 import Select from "react-select";
+import AsyncSelect from "react-select/async";
+import { CategoryFilter } from "./CategoryFilter";
 
 export const CategoryMultiFilter = ({
   filterCategory,
@@ -10,82 +16,97 @@ export const CategoryMultiFilter = ({
   outerChange,
   name,
 }) => {
+  return (
+    <CategoryFilter
+      filterCategory={filterCategory}
+      setFilterCategory={setFilterCategory}
+      outerChange={outerChange}
+      name={name}
+    />
+  );
+  const [key, setKey] = useState(1);
   const { defaultLanguage } = useGlobalOptions();
-  const [listFilter, setListFilter] = useState({});
-  const [listCategories, setListCategories] = useState({});
+  const queryClient = new QueryClient();
 
-  const getCategoriesChildren = async (parent_id, level) => {
-    if (parent_id === "Select category") return;
-    const category = await getCategoryChildren(parent_id, defaultLanguage?.id);
-    setListCategories((props) => ({
-      ...props,
-      [level]: category?.data,
-    }));
-    return category?.data;
+  // const { data: loadOptions } = useQuery({
+  //   queryKey: ["category", "search", defaultLanguage?.id, name],
+  //   keepPreviousData: true,
+  //   queryFn: async () => {
+  //     if (!defaultLanguage?.id) return;
+  //     const category = await getCategorySearch(defaultLanguage?.id, key);
+  //     return category?.data;
+  //   },
+  // });
+
+  const loadOptions = async (value, callback) => {
+    try {
+      const res = await queryClient.fetchQuery({
+        queryKey: ["category", "search", defaultLanguage?.id, key, value],
+        queryFn: async () => {
+          if (!defaultLanguage?.id) return;
+          const category = await getCategorySearch(
+            defaultLanguage?.id,
+            key,
+            value
+          );
+          return category?.data;
+        },
+      });
+      return res;
+    } catch (error) {
+      return [];
+    }
   };
 
-  const { data } = useQuery({
-    queryKey: ["category", "parent", defaultLanguage?.id, name],
-    keepPreviousData: true,
-    queryFn: async () => {
-      const category = await getOnlyParentCategory(defaultLanguage?.id);
-      setListCategories({
-        1: category?.data,
-      });
-      setListFilter({
-        1: "",
-      });
-      return category?.data;
-    },
-  });
-
   return (
-    <div className="flex items-center gap-4">
-      {Object.entries(listCategories)?.map(([key, value]) => {
-        return (
-          <Select
-            menuPlacement="auto"
-            menuPortalTarget={document?.body}
-            styles={{
-              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-            }}
-            className="w-full min-w-[180px]"
-            value={value?.find((c) => c?.category_id === listFilter[key])}
-            onChange={(selected) => {
-              let value =
-                selected?.id === "" ? listFilter[key - 1] : selected?.id;
-              setFilterCategory(value);
-              outerChange && outerChange(selected);
-              getCategoriesChildren(value, key + 1);
-              if (+key === 1) {
-                setListFilter({
-                  1: value,
-                });
-                setListCategories({
-                  1: data,
-                });
-              } else {
-                setListFilter((props) => ({
-                  ...props,
-                  [key]: value,
-                }));
-              }
-            }}
-            getOptionLabel={(option) => {
-              return option?.category_content?.at(0)?.title;
-            }}
-            getOptionValue={(option) => {
-              return option?.id;
-            }}
-            // components={{ Option: ({ innerProps }) => <option></option> }}
-            options={value?.sort((a, b) =>
-              a?.category_content
-                ?.at(0)
-                ?.title.localeCompare(b?.category_content?.at(0)?.title)
-            )}
-          />
-        );
-      })}
+    <div className="flex overflow-hidden border">
+      {/* <Select
+        menuPlacement="auto"
+        menuPortalTarget={document?.body}
+        styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+        label="selected filter"
+        options={[
+          { label: "sku", value: 1 },
+          { label: "title", value: 2 },
+        ]}
+      /> */}
+      <button
+        className={`p-2 bg-gray-100 ${
+          key === 1 ? "!bg-orange-500 text-white" : ""
+        }`}
+        onClick={() => setKey(1)}
+      >
+        Sku
+      </button>
+      <button
+        className={`p-2 bg-gray-100 ${
+          key === 2 ? "!bg-orange-500 text-white" : ""
+        }`}
+        onClick={() => setKey(2)}
+      >
+        Title
+      </button>
+      <AsyncSelect
+        className="w-full min-w-[180px]"
+        menuPlacement="auto"
+        menuPortalTarget={document?.body}
+        styles={{
+          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+        }}
+        cacheOptions
+        loadOptions={loadOptions}
+        // getOptionLabel={({ title }) => title}
+        // getOptionValue={({ category_id }) => category_id}
+        getOptionLabel={(option) => {
+          return option?.category_content?.at(0)?.title;
+        }}
+        getOptionValue={(option) => {
+          return option?.id;
+        }}
+        onChange={(value) => {
+          setFilterCategory(value?.id);
+        }}
+      />
     </div>
   );
 };

@@ -43,10 +43,11 @@ const category = [
     refName: "title",
     refId: "category_id",
   },
-  { name: "display_homepage", key: "checkbox" },
   { name: "numeric", type: "text" },
+  { name: "order", type: "number" },
   { name: "banner_video", type: "text", key: "image" },
   { label: "icon", name: "image", type: "text", key: "image" },
+  { name: "display_homepage", key: "checkbox" },
 ];
 
 const category_content = [
@@ -73,11 +74,14 @@ const category_content = [
   },
   { name: "mobile_image", type: "text", key: "image" },
   { name: "web_image", type: "text", key: "image" },
+  { name: "mobile_banner", type: "text", key: "image" },
+  { name: "web_banner", type: "text", key: "image" },
 ];
 
 const chart = [
   { name: "id", type: "uuid" },
   { name: "number", type: "number" },
+  { name: "user_view",  key: "checkbox" },
 ];
 
 export const chart_content = [
@@ -116,17 +120,18 @@ export const chart_data = [
     type: "uuid",
     key: "ref",
     tableName: "chart",
+    refId: "id",
     required: true,
-    hide_in_add_form: true,
+    refName: "number",
   },
   {
-    name: "product_id",
+    name: "chart_group_id",
     type: "uuid",
     key: "ref",
-    tableName: "product_content",
-    refId: "product_id",
+    tableName: "chart_group",
+    refId: "id",
     required: true,
-    hide_in_add_form: true,
+    refName: "group_name",
   },
   {
     name: "size_id",
@@ -170,7 +175,21 @@ const collar_content = [
 const collection = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date" },
+  { name: "sku", type: "number" },
+  { name: "color", type: "color" },
   { name: "collection_connect", key: "collection_connect" },
+  { name: "display_home", key: "checkbox" },
+];
+const collection_content = [
+  { name: "id", type: "uuid" },
+  { name: "created_at", type: "date", hide_in_add_form: true },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
   {
     name: "category_id",
     key: "ref",
@@ -179,28 +198,7 @@ const collection = [
     refName: "title",
     hide_in_add_form: true,
   },
-  { name: "display_home", key: "checkbox" },
-];
-const collection_content = [
-  { name: "id", type: "uuid" },
-  { name: "created_at", type: "date", hide_in_add_form: true },
-  {
-    name: "collection_id",
-    type: "uuid",
-    key: "ref",
-    tableName: "collection_content",
-    refId: "collection_id",
-    hide_in_add_form: true,
-    required: true,
-  },
-  {
-    name: "language_id",
-    required: true,
-    type: "uuid",
-    key: "ref",
-    tableName: "language",
-  },
-  { name: "name", type: "text", required: true },
+  { name: "name", type: "text" },
   { name: "description", type: "text" },
   { name: "image", type: "text", key: "image" },
 ];
@@ -483,8 +481,9 @@ const offer = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date" },
   { name: "numerical", type: "number" },
-  { name: "display_home", key: "checkbox" },
+  { name: "hex", type: "color", },
   { name: "icon", type: "text", key: "image", required: true },
+  { name: "display_home", key: "checkbox" },
   { name: "is_banner", key: "checkbox" },
 ];
 
@@ -498,8 +497,8 @@ export const offer_content = [
     tableName: "language",
   },
   { name: "name", type: "text", required: true },
-  { name: "description", type: "text", required: true },
-  { name: "media", type: "text", key: "image", required: true },
+  { name: "description", type: "text" },
+  { name: "media", type: "text", key: "image" },
   {
     name: "offer_id",
     type: "uuid",

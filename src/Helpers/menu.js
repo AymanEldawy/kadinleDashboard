@@ -40,6 +40,7 @@ import {
   UserGroupIcon,
   UserIcon,
   UsersPlusIcon,
+  UturnArrowIcon,
   WeightIcon,
   WorldIcon,
 } from "./Icons";
@@ -99,6 +100,12 @@ export const menuData = [
         path: "/products",
       },
       {
+        key: "products Status",
+        name: "Products Status",
+        icon: <ProductIcon />,
+        path: "/products-status",
+      },
+      {
         key: "Brands",
         name: "Brands",
         icon: <BrandIcon />,
@@ -124,10 +131,22 @@ export const menuData = [
         path: "/category",
       },
       {
+        key: "categories-Banner",
+        icon: <GalleryIcon className="h-6 w-6" />,
+        path: "/categories-Banner",
+        name: "categories Banner",
+      },
+      {
         key: "Category Tree",
         name: "Category Tree",
         icon: <TreeIcon />,
         path: "/category-tree",
+      },
+      {
+        key: "Category fallback",
+        name: "Category fallback",
+        icon: <UturnArrowIcon />,
+        path: "/category-fallback",
       },
       {
         key: "Colors",
@@ -161,6 +180,7 @@ export const menuData = [
         icon: <ChartContentIcon />,
         name: "Chart",
       },
+      { path: "/chart-group", icon: <ChartIcon />, name: " Chart group" },
       { path: "/chart-data", icon: <ChartIcon />, name: " Chart data" },
     ],
   },
@@ -439,12 +459,7 @@ export const menuData = [
         icon: <UploadIcon />,
         name: "XML Import",
       },
-      {
-        key: "categories-Banner",
-        icon: <TagsIcon className="h-6 w-6" />,
-        path: "/categories-Banner",
-        name: "categories Banner",
-      },
+
       {
         path: "/products-slider",
         icon: <GalleryIcon />,
@@ -455,7 +470,7 @@ export const menuData = [
         icon: <HomeIcon />,
         name: "Home Sections",
       },
-    
+
       {
         path: "/home-slider",
         icon: <GalleryIcon />,

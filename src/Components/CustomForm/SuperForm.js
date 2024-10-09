@@ -15,6 +15,7 @@ import SelectField from "./SelectField";
 import UploadFile from "./UploadFile";
 import { CollectionConnectFields } from "./CollectionConnectFields";
 import Select from "react-select";
+import { MultiSizeFilter } from "../TableBar/MultiSizeFilter";
 
 let CACHED_TABLE = {};
 
@@ -50,8 +51,8 @@ const SuperForm = ({
   }, [initialFields, defaultLanguage]);
 
   async function checkRefTable(fields) {
-    setLoading(true);
     if (!fields?.length) return;
+    setLoading(true);
     for (const field of fields) {
       if (field.key === "ref") {
         const response = await getTableData(field?.tableName, {
@@ -182,75 +183,76 @@ const SuperForm = ({
                   );
                 } else if (field?.key === "radio") {
                 } else if (field?.key === "ref") {
-                  console.log(field, "----s");
-
                   return (
                     <>
-                      <div className={`flex flex-col w-full`}>
-                        {field?.name ? (
-                          <label
-                            htmlFor={field?.name}
-                            className={`overflow-hidden text-ellipsis flex items-center gap-1 text-sm font-normal mb-1 capitalize`}
-                          >
-                            {field?.name}{" "}
-                            {field?.required ? (
-                              <span className="text-red-500 font-semibold">
-                                *
-                              </span>
-                            ) : (
-                              ""
-                            )}
-                          </label>
-                        ) : null}
-                        <Select
-                          className=""
-                          menuPlacement="auto"
-                          menuPortalTarget={document?.body}
-                          styles={{
-                            menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          }}
-                          options={
-                            !!getCachedList
-                              ? getCachedList(field?.tableName)
-                              : []
-                          }
-                          getOptionLabel={(data) =>
-                            data[field?.refName || "name"]
-                          }
-                          getOptionValue={(data) => data[field?.refId || "id"]}
-                          onChange={(value) => {
-                            console.log(value);
-
+                      {field?.name === "size_id" ? (
+                        <MultiSizeFilter
+                          filterSize={values?.size_id}
+                          outerChange={(size) => {
                             handelChangeField(
                               field?.name,
-                              value[field?.refId || 'id'],
+                              size,
                               field?.required
                             );
-                            // setSupplierId(value?.id);
                           }}
                         />
-                      </div>
-                      {/* <SelectField
-                        index={i}
-                        value={values?.[field?.name]}
-                        // defaultValue={values?.[field?.name]}
-                        label={field?.name}
-                        list={
-                          !!getCachedList ? getCachedList(field?.tableName) : []
-                        }
-                        keyLabel={field?.refName || "name"}
-                        keyValue={field?.refId || "id"}
-                        name={field?.name}
-                        readonly={field?.readonly}
-                        required={field?.required}
-                        onChange={(e) =>
-                          handelChangeField(
-                            field?.name,
-                            e.target.value,
-                            field?.required
-                          )
-                        }
-                      /> */}
+                      ) : (
+                        <div className={`flex flex-col w-full`}>
+                          {field?.name ? (
+                            <label
+                              htmlFor={field?.name}
+                              className={`overflow-hidden text-ellipsis flex items-center gap-1 text-sm font-normal mb-1 capitalize`}
+                            >
+                              {field?.name}{" "}
+                              {field?.required ? (
+                                <span className="text-red-500 font-semibold">
+                                  *
+                                </span>
+                              ) : (
+                                ""
+                              )}
+                            </label>
+                          ) : null}
+                          <Select
+                            className=""
+                            menuPlacement="auto"
+                            menuPortalTarget={document?.body}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            }}
+                            options={
+                              !!getCachedList
+                                ? getCachedList(field?.tableName)
+                                : []
+                            }
+                            getOptionLabel={(data) =>
+                              data[field?.refName || "name"]
+                            }
+                            getOptionValue={(data) =>
+                              data[field?.refId || "id"]
+                            }
+                            value={
+                              getCachedList(field?.tableName)
+                                ? getCachedList(field?.tableName)?.find(
+                                    (c) =>
+                                      c?.[field?.refId || "id"] ===
+                                      values[field?.refId || "id"]
+                                  )
+                                : null
+                            }
+                            onChange={(value) => {
+                              console.log(value);
+
+                              handelChangeField(
+                                field?.name,
+                                value[field?.refId || "id"],
+                                field?.required
+                              );
+                              // setSupplierId(value?.id);
+                            }}
+                          />
+                        </div>
+                      )}
                     </>
                   );
                 } else if (field?.key === "radio") {

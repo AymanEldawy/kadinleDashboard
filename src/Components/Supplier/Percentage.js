@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import SupplierLine from './SupplierLine';
 
 const Percentage = ({ product, showVariant }) => {
-  //   console.log("product from stock", product);
     const minPer = Math.min(
       ...(product?.variants?.map((variant) => variant.percentage) || [])
     );

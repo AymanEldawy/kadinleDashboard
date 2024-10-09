@@ -13,7 +13,6 @@ const SearchCategoryField = ({ onChange }) => {
         queryKey: ["category", defaultLanguage?.id, value],
         queryFn: async () => {
           const response = await getCategoriesList(defaultLanguage?.id, value);
-          console.log("🚀 ~ queryFn: ~ response:", response);
           return response;
         },
       });
@@ -31,7 +30,6 @@ const SearchCategoryField = ({ onChange }) => {
       getOptionLabel={({ title }) => title}
       getOptionValue={({ category_id }) => category_id}
       onChange={(value) => {
-        console.log("🚀 ~ SearchCategoryField ~ value:", value);
         onChange(value);
       }}
     />

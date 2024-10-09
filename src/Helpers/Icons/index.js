@@ -10,6 +10,7 @@ export { default as PlusIcon } from "./PlusIcon";
 export { default as TreeIcon } from "./TreeIcon";
 export { default as UserIcon } from "./UserIcon";
 export { default as UsersPlusIcon } from "./UsersPlusIcon";
+export { default as UturnArrowIcon } from "./UturnArrowIcon";
 export { default as BriefcaseIcon } from "./BriefcaseIcon";
 export { default as ToolsIcon } from "./ToolsIcon";
 export { default as BanknoteIcon } from "./BanknoteIcon";

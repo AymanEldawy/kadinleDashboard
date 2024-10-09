@@ -8,7 +8,6 @@ export const RefreshWeightsBtn = ({ item }) => {
 
   const refresh = async () => {
     setIsLoadingProcess(true);
-    console.log("🚀 ~ refresh ~ item:", item);
     const response = await refreshWeights(item);
     if (response?.error) {
       toast.error(`Failed to update weight ${response?.error?.message}`);

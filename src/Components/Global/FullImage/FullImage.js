@@ -18,8 +18,11 @@ export const FullImage = ({ src, alt, height, width, ...imgProps }) => {
           ref={imageRef}
           src={src}
           alt={alt}
-          onClick={() => setOpen(true)}
-          className={`cursor-pointer !w-20 !h-16 object-contain ${imgProps?.className}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpen(true);
+          }}
+          className={`cursor-pointer rounded-md border object-cover !w-20 !h-16 ${imgProps?.className}`}
           {...imgProps}
         />
       ) : (
@@ -29,18 +32,20 @@ export const FullImage = ({ src, alt, height, width, ...imgProps }) => {
           UnK
         </span>
       )}
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        modalClassName="!p-2"
-        containerClassName="max-w-[575px] z-50"
-      >
-        <img
-          src={src}
-          alt={alt}
-          className="xs:w-96 min-w-[270px] w-full max-w-none max-h-[90vh] rounded-md object-cover "
-        />
-      </Modal>
+      {open ? (
+        <Modal
+          open={open}
+          onClose={() => setOpen(false)}
+          modalClassName="!p-2"
+          containerClassName="max-w-[575px] z-50"
+        >
+          <img
+            src={src}
+            alt={alt}
+            className="xs:w-96 min-w-[270px] w-full max-w-none max-h-[90vh] rounded-md object-cover "
+          />
+        </Modal>
+      ) : null}
     </>
   );
 };

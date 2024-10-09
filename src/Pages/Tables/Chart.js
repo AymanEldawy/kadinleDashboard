@@ -14,6 +14,7 @@ const Chart = () => {
       columns={columns}
       title="Chart"
       onAddClick={() => navigate(`/add-chart`)}
+    
     />
   );
 };

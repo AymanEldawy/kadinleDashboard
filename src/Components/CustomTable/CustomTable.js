@@ -14,7 +14,14 @@ import { DisplayOrder } from "../DisplayOrder/DisplayOrder";
 import { TablePagination } from "./TablePagination";
 import { SortIcon } from "../../Helpers/Icons";
 import { ResizeBar } from "./TableResizeBar";
-import { flexRender } from "@tanstack/react-table";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import { TableSkeleton } from "./TableSkeleton";
 
@@ -28,18 +35,68 @@ const CustomTable = ({
   tableName,
   openDrawerMore,
   setOpenDrawerMore,
-  table,
   containerClassName,
   tableClassName,
   tableHeadClassName,
   thClassName,
   tableBodyClassName,
   tdClassName,
+  hideAction,
+  rowSelection,
+  setRowSelection,
+  setPagination,
+  pageCount,
+  pagination,
+  outerSelectedId,
 }) => {
+  console.log(rowSelection);
+  
   const { t } = useTranslation();
   const { lang } = useContext(LanguageContext);
   const [currentItems, setCurrentItems] = useState([]);
   const [moreData, setMoreData] = useState({});
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [columnOrder, setColumnOrder] = useState([]);
+  const [columnVisibility, setColumnVisibility] = useState({});
+
+  const table = useReactTable({
+    columns: columns({
+      hideAction,
+    }),
+    data: isLoading ? [] : data,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
+    onColumnVisibilityChange: setColumnVisibility,
+    enableRowSelection: true,
+    onColumnOrderChange: setColumnOrder,
+    onRowSelectionChange: setRowSelection,
+    columnResizeMode: "onChange",
+    getRowId: (row, relativeIndex, parent) => {
+      if (!!outerSelectedId) return outerSelectedId(row, relativeIndex, parent);
+      return row?.id;
+      // console.log(row, parent, relativeIndex);
+    },
+    onPaginationChange: (v) => {
+      setPagination(v);
+      return {};
+    },
+    manualPagination: true,
+    pageCount,
+    autoResetPage: false,
+    state: {
+      columnFilters,
+      globalFilter,
+      rowSelection,
+      columnOrder,
+      columnVisibility,
+      pagination,
+    },
+  });
 
   useEffect(() => {
     setCurrentItems(data);
@@ -99,9 +156,8 @@ const CustomTable = ({
                       }
                       `}
                       onClick={() => {
-                        // if (header.column.getCanSort())
-                        header.column.getToggleSortingHandler();
-                        // header.column.getToggleSortingHandler();
+                        if (header.column.getCanSort())
+                          header.column.getToggleSortingHandler();
                       }}
                     >
                       {/* {header.column.columnDef.header} */}

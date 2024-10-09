@@ -15,13 +15,15 @@ import Loading from "../../Components/Loading/Loading";
 import Pagination from "../../Components/Supplier/Pagination";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
 import OrderUser from "../../Components/Orders/OrderUser";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Orders = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
   const { defaultLanguage } = useGlobalOptions();
   const [data, setData] = useState([]);
-  console.log("orders page", data);
   const [loading, setLoading] = useState(false);
-  // console.log("loading", loading);
   const [showVariant, setShowVariant] = useState([]);
   const [clicked, setClicked] = useState(true);
   const [checkedId, setCheckedId] = useState([]);
@@ -49,13 +51,12 @@ const Orders = () => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    // Clear localStorage when the component mounts
-    localStorage.removeItem("mainCheckedOrder");
-    localStorage.removeItem("checkedStatesOrder");
-    localStorage.removeItem("updateOrdersIdArr");
-    localStorage.removeItem("checkedIdOrder");
-  }, []);
+   useEffect(() => {
+     // إذا كان هناك query params في العنوان، يتم إزالتها
+     if (location.search) {
+       navigate(location.pathname, { replace: true }); // إزالة الـ query params مع الاحتفاظ بالمسار الحالي
+     }
+   }, []);
 
   useEffect(() => {
     getOrders();

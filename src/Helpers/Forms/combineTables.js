@@ -2,15 +2,16 @@ import { Link } from "react-router-dom";
 import { FullImage } from "./../../Components/Global/FullImage/FullImage";
 import { UserInfo } from "../../Components/Global/UserInfo/UserInfo";
 import { EyeIcon, SlashEyeIcon } from "../Icons";
-import { refreshPrices } from "../../Api/data";
-import { useGlobalOptions } from "../../Context/GlobalOptions";
 import { RefreshChunksBtn } from "../../Components/RefreshChunksBtn";
 import { RefreshWeightsBtn } from "../../Components/RefreshWeightsBtn";
+import { ProductInfo } from "../../Components/Global/FullImage/ProductInfo";
+import { ProductToggleView } from "../../Components/Global/FullImage/ProductToggleView";
 
 const combine_address = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -79,6 +80,7 @@ const combine_brand = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -124,6 +126,7 @@ const combine_Weights = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -180,6 +183,7 @@ const combine_chunks = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -238,6 +242,7 @@ const combine_bulk_alert = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -276,6 +281,7 @@ const combine_category = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -381,6 +387,22 @@ const combine_category = () => [
     },
   },
   {
+    accessorKey: "mobile_banner",
+    header: "mobile_banner",
+    cell: ({ row }) => {
+      let content = row?.original?.category_content?.at(0);
+      return <FullImage src={content?.mobile_banner} alt={content?.title} />;
+    },
+  },
+  {
+    accessorKey: "web_banner",
+    header: "web_banner",
+    cell: ({ row }) => {
+      let content = row?.original?.category_content?.at(0);
+      return <FullImage src={content?.web_banner} alt={content?.title} />;
+    },
+  },
+  {
     accessorKey: "display_homepage",
     header: "display_homepage",
     cell: ({ getValue }) => <span>{getValue() ? "YES" : "NO"}</span>,
@@ -403,6 +425,7 @@ const combine_chart = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -447,10 +470,74 @@ const combine_chart = () => [
     ),
   },
 ];
+
+const combine_chart_group = () => [
+  {
+    id: "select",
+    size: 20,
+    minSize: 50,
+    header: ({ table }) => (
+      <input
+        type="checkbox"
+        className="h-5 w-5"
+        {...{
+          checked: table?.getIsAllRowsSelected(),
+          // indeterminate: table?.getIsSomeRowsSelected(),
+          onChange: table?.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <input
+          type="checkbox"
+          className="h-5 w-5"
+          {...{
+            checked: row?.getIsSelected(),
+            disabled: !row?.getCanSelect(),
+            // indeterminate: row?.getIsSomeSelected(),
+            onChange: row?.getToggleSelectedHandler(),
+          }}
+        />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "group_name",
+    header: "group_name",
+    cell: ({ row, getValue }) => (
+      <Link
+        to={`/chart-group-form/${row?.original?.id}`}
+        className="text-blue-500 hover:underline capitalize"
+      >
+        {getValue()}
+      </Link>
+    ),
+  },
+  {
+    accessorKey: "chart_group_ids",
+    header: "categories group count",
+    cell: ({ getValue }) => <span>{getValue()?.length} Categories</span>,
+  },
+  {
+    accessorKey: "actions",
+    header: "actions",
+    cell: ({ row }) => (
+      <Link
+        to={`/chart-group-form/${row?.original?.id}`}
+        className="text-blue-500 hover:underline"
+      >
+        Edit
+      </Link>
+    ),
+  },
+];
+
 const combine_chart_content = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -521,6 +608,7 @@ const combine_chart_data = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -548,9 +636,39 @@ const combine_chart_data = () => [
     ),
   },
 
-  { accessorKey: "chart", header: "chart" },
-  { accessorKey: "product", header: "product" },
-  { accessorKey: "size", header: "size" },
+  {
+    accessorKey: "chart",
+    header: "chart",
+    cell: ({ row }) => {
+      return (
+        <span className="font-medium whitespace-nowrap capitalize">
+          {row?.original?.chart?.chart_content?.at(0)?.name}
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: "group_name",
+    header: "group_name",
+    cell: ({ row }) => {
+      return (
+        <span className="font-medium whitespace-nowrap capitalize">
+          {row?.original?.chart_group?.group_name}
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: "size",
+    header: "size",
+    cell: ({ row }) => {
+      return (
+        <span className="font-medium whitespace-nowrap capitalize">
+          {row?.original?.size?.size_content?.at(0)?.name}
+        </span>
+      );
+    },
+  },
   { accessorKey: "column1", header: "column1" },
   { accessorKey: "column2", header: "column2" },
   { accessorKey: "column3", header: "column3" },
@@ -577,6 +695,7 @@ const combine_collection = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -610,6 +729,20 @@ const combine_collection = () => [
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
 
+  {
+    accessorKey: "sku",
+    header: "sku",
+    cell: ({ getValue }) => {
+      return (
+        <Link
+          to={`/update/collection/${getValue()}`}
+          className="text-blue-500 hover:underline"
+        >
+          {getValue()}
+        </Link>
+      );
+    },
+  },
   {
     accessorKey: "name",
     header: "name",
@@ -651,11 +784,34 @@ const combine_collection = () => [
     header: "display_home",
     cell: ({ getValue }) => <span>{getValue() ? "YES" : "No"}</span>,
   },
+  {
+    accessorKey: "color",
+    header: "color",
+    cell: ({ getValue }) => (
+      <span
+        style={{ background: getValue() }}
+        className="block h-8 w-8 rounded-full border"
+      />
+    ),
+  },
+  {
+    accessorKey: "actions",
+    header: "actions",
+    cell: ({ row }) => (
+      <Link
+        to={`/update/collection/${row?.original?.id}`}
+        className="text-blue-500 hover:underline"
+      >
+        Edit
+      </Link>
+    ),
+  },
 ];
 const combine_color = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -715,6 +871,7 @@ const combine_comment = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -762,6 +919,7 @@ const combine_country = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -815,6 +973,7 @@ const combine_coupon = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -887,6 +1046,7 @@ const combine_credit_card = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -932,6 +1092,7 @@ const combine_currency = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -967,6 +1128,7 @@ const combine_home_reviews = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1002,6 +1164,7 @@ const combine_language = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1035,6 +1198,7 @@ const combine_logs = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1077,6 +1241,7 @@ const combine_news = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1121,6 +1286,7 @@ const combine_newsletter = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1159,6 +1325,7 @@ const combine_newsletter_subscription = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1191,6 +1358,7 @@ const combine_offer = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1228,7 +1396,6 @@ const combine_offer = () => [
     accessorKey: "name",
     header: "name",
     cell: ({ row }) => {
-      console.log("🚀 ~ row:", row?.original)
       return (
         <Link
           to={`/update/offer/${row?.original?.id}`}
@@ -1266,7 +1433,31 @@ const combine_offer = () => [
       return <FullImage src={getValue()} alt={"offer icon"} />;
     },
   },
-  { accessorKey: "display_home", header: "display_home" },
+  {
+    accessorKey: "hex",
+    header: "hex",
+    cell: ({ getValue }) => (
+      <span
+        className="h-10 w-10 block rounded-full"
+        style={{
+          background: getValue(),
+        }}
+      />
+    ),
+  },
+  {
+    accessorKey: "display_home",
+    header: "display_home",
+    cell: ({ getValue }) => (
+      <span
+        className={`px-8 py-1 rounded-md ${
+          getValue() ? "bg-green-500 text-white" : "bg-red-500 text-white"
+        }`}
+      >
+        {getValue() ? "Yes" : "No"}
+      </span>
+    ),
+  },
   {
     accessorKey: "actions",
     header: "actions",
@@ -1285,6 +1476,7 @@ const combine_offer_product = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1318,6 +1510,7 @@ export const combine_order = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1407,6 +1600,7 @@ const combine_order_return_request = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1465,6 +1659,7 @@ const combine_order_status = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1505,6 +1700,7 @@ const combine_payment_status = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1540,6 +1736,7 @@ const combine_point = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1581,6 +1778,7 @@ const combine_product = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1668,16 +1866,74 @@ const combine_product = () => [
   },
 ];
 const combine_collection_product = () => [
-  { accessorKey: "product_sku", header: "product_sku" },
-  { accessorKey: "name", header: "name" },
-  { accessorKey: "category", header: "category" },
+  {
+    id: "select",
+    size: 20,
+    minSize: 50,
+    header: ({ table }) => (
+      <input
+        type="checkbox"
+        className="h-5 w-5"
+        {...{
+          checked: table?.getIsAllRowsSelected(),
+          // indeterminate: table?.getIsSomeRowsSelected(),
+          onChange: table?.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <input
+          type="checkbox"
+          className="h-5 w-5"
+          {...{
+            checked: row?.getIsSelected(),
+            disabled: !row?.getCanSelect(),
+            // indeterminate: row?.getIsSomeSelected(),
+            onChange: row?.getToggleSelectedHandler(),
+          }}
+        />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "product",
+    header: "product",
+    cell: ({ row }) => (
+      <ProductInfo
+        image={row?.original?.product_image?.at(0)?.image}
+        product_sku={row?.original?.product_sku}
+        name={row?.original?.product_content?.[0]?.name}
+      />
+    ),
+  },
+  {
+    accessorKey: "category",
+    header: "category",
+    cell: ({ row }) => (
+      <span>{row?.original?.category?.category_content?.at(0)?.title}</span>
+    ),
+  },
   { accessorKey: "barcode", header: "barcode" },
+  {
+    accessorKey: "action",
+    header: "action",
+    cell: ({ row }) => (
+      <Link
+        to={`/products/update/product/${row?.original?.id}`}
+        className="hover:translate-x-1 transition-transform rounded-2xl flex items-center gap-2 px-2 p-1 bg-primary-blue text-white w-fit whitespace-nowrap"
+      >
+        <EyeIcon className=" w-4 h-4" />
+      </Link>
+    ),
+  },
 ];
 
 const combine_product_image = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1716,6 +1972,7 @@ const combine_product_variant = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1754,6 +2011,7 @@ const combine_region = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1798,6 +2056,7 @@ const combine_return_status = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1837,6 +2096,7 @@ const combine_sale = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1876,6 +2136,7 @@ const combine_showreel = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1921,6 +2182,7 @@ const combine_size = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -1987,6 +2249,7 @@ const combine_user = () => [
   // {
   //   id: "select",
   //   size: 20,
+  // minSize: 50,
   //   header: ({ table }) => (
   //     <input
   //       type="checkbox"
@@ -2044,6 +2307,7 @@ const combine_user_address = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2086,6 +2350,7 @@ const combine_user_alert = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2126,6 +2391,7 @@ const combine_user_cart = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2164,6 +2430,7 @@ const combine_user_invite = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2202,6 +2469,7 @@ const combine_user_like = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2240,6 +2508,7 @@ const combine_user_point = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2280,6 +2549,7 @@ const combine_user_suggestion = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2319,6 +2589,7 @@ const combine_user_ticket = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2357,6 +2628,7 @@ const combine_user_wallet = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2394,6 +2666,7 @@ const combine_warehouse_availability = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2448,6 +2721,7 @@ const combine_warehouse = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2487,6 +2761,7 @@ const combine_stock = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2543,6 +2818,7 @@ const combine_collar = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2575,6 +2851,7 @@ const combine_feature = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2608,6 +2885,7 @@ const combine_washing_instructions = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2641,6 +2919,7 @@ export const combine_shipping_price = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2678,6 +2957,7 @@ export const combine_bill = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2724,6 +3004,7 @@ export const combine_bill_report = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2768,6 +3049,7 @@ export const combine_order_report = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2813,6 +3095,7 @@ const combine_suppliers = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2884,6 +3167,7 @@ const combine_chat = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2927,6 +3211,7 @@ const combine_room = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -2968,6 +3253,7 @@ const combine_partner = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -3008,6 +3294,7 @@ const supplier_request = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -3076,6 +3363,7 @@ export const combine_definitions = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -3128,7 +3416,7 @@ export const combine_definitions = () => [
     cell: ({ row }) => {
       return (
         <FullImage
-          src={row.original?.definitions_content?.at?.(0)?.mobile_image}
+          src={row.original?.definitions_content?.at?.(0)?.image}
           alt={"image"}
         />
       );
@@ -3141,6 +3429,7 @@ export const combine_less_than = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -3217,6 +3506,7 @@ const home_sliders = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -3295,6 +3585,7 @@ const products_slider = () => [
   {
     id: "select",
     size: 20,
+    minSize: 50,
     header: ({ table }) => (
       <input
         type="checkbox"
@@ -3351,6 +3642,7 @@ const products_slider = () => [
 const COMBINE_DB_API = {
   products_slider,
   home_sliders,
+  combine_chart_group,
   combine_less_than,
   combine_definitions,
   supplier_request,
@@ -3414,6 +3706,6 @@ const COMBINE_DB_API = {
   combine_order_report,
   combine_washing_instructions,
   combine_chunks,
-  combine_Weights
+  combine_Weights,
 };
 export default COMBINE_DB_API;

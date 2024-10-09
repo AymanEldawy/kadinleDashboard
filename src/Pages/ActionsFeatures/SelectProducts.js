@@ -19,10 +19,10 @@ const SelectProduct = ({ tableName }) => {
   const { getData } = useFetch();
   const { removeItems } = useDelete();
   const { defaultLanguage } = useGlobalOptions();
-  const [selectedList, setSelectedList] = useState({});
   const [id, setId] = useState("");
   const [endDate, setEndDate] = useState("");
   const [listContent, setListContent] = useState([]);
+  const [rowSelection, setRowSelection] = useState([]);
   const [sale, setSale] = useState({});
   const [productsLength, setProductLength] = useState(0);
 
@@ -44,7 +44,7 @@ const SelectProduct = ({ tableName }) => {
     fetchData(tableName);
   }, [defaultLanguage?.id]);
 
-  const handleChoose = async (list = selectedList) => {
+  const handleChoose = async (list = rowSelection) => {
     if (tableName !== "sale" && !id) {
       toast.error(`You must select a ${tableName}_id`);
       return;
@@ -54,7 +54,7 @@ const SelectProduct = ({ tableName }) => {
       return;
     }
     let records = [];
-    for (const productId of Object.values(list)) {
+    for (const productId of Object.keys(list)) {
       let record = {};
       if (tableName === "sale") record.end_date = endDate;
       else record[`${tableName}_id`] = id;
@@ -86,6 +86,8 @@ const SelectProduct = ({ tableName }) => {
       }
     }
   };
+  console.log(rowSelection);
+  
 
   return (
     <div>
@@ -135,9 +137,9 @@ const SelectProduct = ({ tableName }) => {
           setProductLength={setProductLength}
           insertMany={handleChoose}
           tableName={tableName}
-          selectedList={selectedList}
-          setSelectedList={setSelectedList}
           id={id}
+          rowSelection={rowSelection}
+          setRowSelection={setRowSelection}
         />
       ) : null}
     </div>

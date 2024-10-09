@@ -1,7 +1,5 @@
-import { useMemo } from "react";
 
 const Variant = ({ product }) => {
-// console.log("product from Variant", product);
   return (
     <div className="flex flex-col space-y-4">
       <div className=" !h-[80px] flex items-center justify-center space-x-1">

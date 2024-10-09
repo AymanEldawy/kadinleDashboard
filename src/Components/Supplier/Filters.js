@@ -40,7 +40,7 @@ const Filters = ({
       setData(filtered);
     }
   };
-  console.log("data filtered: ", data);
+
   return (
     <div className="bg-gray-100 rounded-l-md p-2 flex items-center w-[200px] mb-3">
       <SearchIcon />

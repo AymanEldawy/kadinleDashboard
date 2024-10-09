@@ -785,6 +785,16 @@ const combine_collection = () => [
     cell: ({ getValue }) => <span>{getValue() ? "YES" : "No"}</span>,
   },
   {
+    accessorKey: "color",
+    header: "color",
+    cell: ({ getValue }) => (
+      <span
+        style={{ background: getValue() }}
+        className="block h-8 w-8 rounded-full border"
+      />
+    ),
+  },
+  {
     accessorKey: "actions",
     header: "actions",
     cell: ({ row }) => (

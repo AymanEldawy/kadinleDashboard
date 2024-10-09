@@ -174,6 +174,7 @@ const collection = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date" },
   { name: "sku", type: "number" },
+  { name: "color", type: "color" },
   { name: "collection_connect", key: "collection_connect" },
   { name: "display_home", key: "checkbox" },
 ];

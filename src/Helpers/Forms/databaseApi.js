@@ -44,6 +44,7 @@ const category = [
     refId: "category_id",
   },
   { name: "numeric", type: "text" },
+  { name: "order", type: "number" },
   { name: "banner_video", type: "text", key: "image" },
   { label: "icon", name: "image", type: "text", key: "image" },
   { name: "display_homepage", key: "checkbox" },

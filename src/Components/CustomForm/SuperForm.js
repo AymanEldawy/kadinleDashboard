@@ -218,11 +218,15 @@ const SuperForm = ({
                             data[field?.refName || "name"]
                           }
                           getOptionValue={(data) => data[field?.refId || "id"]}
-                          value={getCachedList(field?.tableName)?.find(
-                            (c) =>
-                              c?.[field?.refId || "id"] ===
-                              values[field?.refId || "id"]
-                          )}
+                          value={
+                            getCachedList(field?.tableName)
+                              ? getCachedList(field?.tableName)?.find(
+                                  (c) =>
+                                    c?.[field?.refId || "id"] ===
+                                    values[field?.refId || "id"]
+                                )
+                              : null
+                          }
                           onChange={(value) => {
                             console.log(value);
 

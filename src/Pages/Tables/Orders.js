@@ -18,8 +18,8 @@ import OrderUser from "../../Components/Orders/OrderUser";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const Orders = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { defaultLanguage } = useGlobalOptions();
   const [data, setData] = useState([]);
@@ -31,7 +31,7 @@ const Orders = () => {
   const languageID = JSON.parse(
     localStorage.getItem("KADINLE_DEFAULT_LANGUAGE")
   )?.id;
-  console.log("languageID", languageID);
+  // console.log("languageID", languageID);
 
   // const initialPageIndex = Number(localStorage.getItem("pageIndex")) || 0;
   const options = {
@@ -51,11 +51,11 @@ const Orders = () => {
     setLoading(false);
   };
 
-   useEffect(() => {
-     if (location.search) {
-       navigate(location.pathname, { replace: true }); 
-     }
-   }, []);
+  useEffect(() => {
+    if (location.search) {
+      navigate(location.pathname, { replace: true });
+    }
+  }, []);
 
   useEffect(() => {
     getOrders();
@@ -86,17 +86,17 @@ const Orders = () => {
         />
       ),
     },
-    // {
-    //   accessorKey: "created_at",
-    //   header: "created at",
-    //   cell: (props) => (
-    //     <p className="min-w-[320px] text-center">
-    //       <span className="">
-    //         {new Date(props.getValue()).toLocaleDateString("en-US", options)}
-    //       </span>
-    //     </p>
-    //   ),
-    // },
+    {
+      accessorKey: "order.createdAt",
+      header: "created at",
+      cell: (props) => (
+        <p className="min-w-[320px] text-center">
+          <span className="">
+            {new Date(props.getValue()).toLocaleDateString("en-US", options)}
+          </span>
+        </p>
+      ),
+    },
     {
       accessorKey: "order.order_number",
       header: "order number",

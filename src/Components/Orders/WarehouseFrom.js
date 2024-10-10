@@ -20,7 +20,7 @@ const WarehouseFrom = ({
   checkedId,
   setCheckedId,
 }) => {
-  // console.log("order from warehouse", order);
+  console.log("order from warehouse", order);
   let show = useMemo(
     () =>
       showVariant?.find((variant) => variant?.id === order?.order?.order_id)
@@ -30,7 +30,6 @@ const WarehouseFrom = ({
   const navigate = useNavigate();
   const location = useLocation();
   const baseURL = "https://kadinle.com/en/product/";
-
 
   const checkedStates = useRef([]);
   console.log("checkedStates", checkedStates);
@@ -68,32 +67,43 @@ const WarehouseFrom = ({
 
   useEffect(() => {
     if (storedChecked) {
-      checkedStates.current = storedChecked;
+      checkedStates.current = storedChecked.flat();
     }
 
     checkedStates.current = [...new Set(checkedStates.current)];
-
-
   }, [storedChecked]);
 
-const handleSaveCheckedInURL = (checked) => {
-  let updatedChecked;
+  const handleSaveCheckedInURL = (checked) => {
+    let updatedChecked;
 
-  if (checkedStates.current.includes(checked)) {
-    updatedChecked = checkedStates.current.filter((item) => item !== checked);
-  } else {
-    updatedChecked = [...checkedStates.current, checked];
-  }
+    if (Array.isArray(checked)) {
+      checked.forEach((arrItem) => {
+        if (
+          arrItem.every((element) => checkedStates.current.includes(element))
+        ) {
+          updatedChecked = checkedStates.current.filter(
+            (element) => !arrItem.includes(element)
+          );
+        } else {
+          updatedChecked = [...checkedStates.current, arrItem];
+        }
+      });
+    } else {
+      if (checkedStates.current.includes(checked)) {
+        updatedChecked = checkedStates.current.filter(
+          (item) => item !== checked
+        );
+      } else {
+        updatedChecked = [...checkedStates.current, checked];
+      }
+    }
+    checkedStates.current = updatedChecked;
 
-  checkedStates.current = updatedChecked;
-
-  const queryString = new URLSearchParams({
-    checked: JSON.stringify(updatedChecked),
-  }).toString();
-  navigate(`?${queryString}`);
-};
-
-
+    const queryString = new URLSearchParams({
+      checked: JSON.stringify(updatedChecked),
+    }).toString();
+    navigate(`?${queryString}`);
+  };
 
   const handleShowVariants = useCallback(() => {
     setClicked((pre) => !pre);
@@ -110,8 +120,20 @@ const handleSaveCheckedInURL = (checked) => {
     <div className="flex flex-col space-y-4 pl-6 pr-1">
       <div className="flex w-full space-x-2 relative">
         <Checkbox
-        // checked={checkedId.includes(order?.id) ? true : false}
-        // onChange={handleMainCheckboxChange}
+          checked={
+            order?.order_content
+              ?.map((item) => item.variant_sku)
+              .every((element) => checkedStates.current.includes(element))
+              ? true
+              : false
+          }
+          onChange={() => {
+            handleSaveCheckedInURL([
+              order?.order_content?.map((order) => {
+                return order?.variant_sku;
+              }),
+            ]);
+          }}
         />
         <a
           href={`${baseURL}${order?.order_content?.at(0)?.variant_id}`}
@@ -165,9 +187,11 @@ const handleSaveCheckedInURL = (checked) => {
               <div className="h-28 lg:h-24 text-[12px] ml-3 flex flex-col justify-center relative">
                 <div className="absolute -left-6">
                   <Checkbox
-                    checked={checkedStates.current.includes(
-                      variant?.variant_sku
-                    )? true: false}
+                    checked={
+                      checkedStates.current.includes(variant?.variant_sku)
+                        ? true
+                        : false
+                    }
                     onChange={() =>
                       // handleChildCheckboxChange(index, variant?.id)
                       handleSaveCheckedInURL(variant?.variant_sku)

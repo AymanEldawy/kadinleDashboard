@@ -24,6 +24,22 @@ export const getRecentOrders = async (limit = 10) => {
   return res;
 };
 
+export const getOrderData = async (
+  param_lang_id, // required
+  param_order_id, // optional
+  param_limit = 50,
+  param_offset = 0
+) => {
+  const response = await supabase.rpc("get_orders", {
+    param_lang_id,
+    param_order_id,
+    param_limit,
+    param_offset,
+  });
+
+  return response;
+};
+
 export const bestSelling = async () => {
   const { data, error } = await supabase
     .from("order_content")

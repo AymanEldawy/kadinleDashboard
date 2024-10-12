@@ -68,7 +68,7 @@ export const CategoryTreeItem = ({
         <Link
           className="bg-blue-500 px-4 text-white text-center w-[100px] py-1 text-sm rounded-md whitespace-nowrap"
           data-title={"Edit"}
-          to={`/update/category/${item?.number}`}
+          to={`/update/category/${item?.id}`}
         >
           Edit
         </Link>

@@ -76,6 +76,7 @@ const ProductsStatus = () => {
       accessorKey: "display",
       header: "display",
       cell: ({ row }) => {
+        console.log("🚀 ~ ProductsStatus ~ row:", row?.original?.product)
         return <span>{row?.original?.product?.display ? "YES" : "No"}</span>;
       },
     },

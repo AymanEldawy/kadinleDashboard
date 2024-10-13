@@ -575,7 +575,7 @@ const combine_chart_content = () => [
     header: "name",
     cell: ({ row, getValue }) => (
       <Link
-        to={`/update/chart_content/${row?.original?.id}`}
+        to={`/update/chart/${row?.original?.chart_id}`}
         className="text-blue-500 hover:underline"
       >
         {getValue()}
@@ -595,7 +595,7 @@ const combine_chart_content = () => [
     header: "actions",
     cell: ({ row }) => (
       <Link
-        to={`/update/chart_content/${row?.original?.id}`}
+        to={`/update/chart/${row?.original?.chart_id}`}
         className="text-blue-500 hover:underline"
       >
         Edit

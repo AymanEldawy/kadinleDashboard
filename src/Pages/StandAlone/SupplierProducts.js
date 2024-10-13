@@ -304,7 +304,9 @@ const SupplierProducts = () => {
             }}
             placeholder="Select supplier"
             className=""
-            value={suppliers?.find(c => c?.seller_file_id === suppliers?.at(0)?.seller_file_id)}
+            value={suppliers?.find(
+              (c) => c?.seller_file_id === suppliers?.at(0)?.seller_file_id
+            )}
             options={suppliers}
             getOptionLabel={({ seller_file_id }) => seller_file_id}
             getOptionValue={({ seller_file_id }) => seller_file_id}
@@ -361,7 +363,7 @@ const SupplierProducts = () => {
         data?.length > 0 ? (
           <>
             <div className="overflow-x-auto">
-              <div className="min-w-full">
+              <div className="max-w-xl">
                 <table className="table-auto border border-gray-300 rounded-md">
                   <thead className="sticky top-0">
                     {table?.getHeaderGroups().map((headerGroup) => (

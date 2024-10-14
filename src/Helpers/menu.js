@@ -106,6 +106,12 @@ export const menuData = [
         path: "/products-status",
       },
       {
+        key: "products report",
+        name: "Products report",
+        icon: <ChartIcon />,
+        path: "/products-report",
+      },
+      {
         key: "Brands",
         name: "Brands",
         icon: <BrandIcon />,

@@ -8,6 +8,7 @@ import { getRowsById, removeItemsFrom } from "../../Api/globalActions";
 import { toast } from "react-toastify";
 import CustomTable from "../CustomTable/CustomTable";
 import { useQuery } from "@tanstack/react-query";
+import { getProductsView } from "../../Api/data";
 
 export const SelectedProductTable = ({
   insertMany,
@@ -18,9 +19,8 @@ export const SelectedProductTable = ({
   hideTableBar,
   setRowSelection,
   rowSelection,
-  layout
+  layout,
 }) => {
-  console.log("🚀 ~ rowSelection:", rowSelection);
   const { defaultLanguage, defaultRegion } = useGlobalOptions();
   const { getDataWithPagination } = useFetch();
   const { getData } = useFetch();
@@ -35,7 +35,9 @@ export const SelectedProductTable = ({
     pageSize: 50,
   });
 
-  const { data, isLoading, refetch } = useQuery({
+  const [open, setOpen] = useState(false);
+
+  const { data, isLoading } = useQuery({
     queryKey: [
       pageCount,
       filterCategory,
@@ -45,24 +47,27 @@ export const SelectedProductTable = ({
       pagination?.pageSize,
       searchValue,
       selectedColumn,
+      open,
     ],
     keepPreviousData: true,
     queryFn: async () => {
       if (!defaultLanguage?.id) return [];
       let filter =
         filterCategory?.indexOf("Choose") !== -1 ? "" : filterCategory;
-      const response = await getDataWithPagination(
-        "product",
-        pagination?.pageIndex + 1,
-        pagination?.pageSize,
-        {
-          languageId: defaultLanguage?.id,
-          regionId: defaultRegion?.id,
-          filter,
-          search: { key: selectedColumn, value: searchValue },
-          ...additionalData,
-        }
-      );
+      const response = open
+        ? await getProductsView(defaultLanguage?.id, Object.keys(rowSelection))
+        : await getDataWithPagination(
+            "product",
+            pagination?.pageIndex + 1,
+            pagination?.pageSize,
+            {
+              languageId: defaultLanguage?.id,
+              regionId: defaultRegion?.id,
+              filter,
+              search: { key: selectedColumn, value: searchValue },
+              ...additionalData,
+            }
+          );
       setPageCount(Math.ceil(response?.count / parseInt(pagination?.pageSize)));
       return response?.data;
     },
@@ -116,9 +121,6 @@ export const SelectedProductTable = ({
   };
 
   const saveChanges = async () => {
-    //loop of selected if
-    console.log(rowSelection, "---", products);
-
     let productsList = Object.keys(products);
     let listOfIds = Object.keys(rowSelection);
     let deleteList = {};
@@ -167,6 +169,22 @@ export const SelectedProductTable = ({
                 <BookMarkIcon className="h-5 w-5" />
                 Save
               </button>
+
+              {open ? (
+                <button
+                  onClick={() => setOpen(false)}
+                  className="bg-red-500 text-white text-sm py-1 px-2 rounded-md"
+                >
+                  Hide View
+                </button>
+              ) : (
+                <button
+                  onClick={() => setOpen(true)}
+                  className="bg-green-500 text-white text-sm py-1 px-2 rounded-md"
+                >
+                  View Products
+                </button>
+              )}
             </>
           }
           columns={() => [

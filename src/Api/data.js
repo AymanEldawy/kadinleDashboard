@@ -526,6 +526,7 @@ export const getCollectionsProducts = async (
       product?.category?.category_content?.length,
   });
 };
+
 export const getProducts = async (page, pageSize, additionalData) => {
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
@@ -1849,4 +1850,93 @@ export const hidden_available_products = async (
     param_limit,
     param_offset,
   });
+};
+
+export const get_seller_products = async (
+  param_lang_id,
+  param_seller_id,
+  param_category_id,
+  param_seller_sku,
+  param_limit,
+  param_offset
+) => {
+  console.log("---", {
+    param_lang_id,
+    param_seller_id,
+    param_category_id,
+    param_seller_sku,
+    param_limit,
+    param_offset,
+  });
+
+  return await supabase.rpc("get_seller_products", {
+    param_lang_id,
+    param_seller_id,
+    param_category_id,
+    param_seller_sku,
+    param_limit,
+    param_offset,
+  });
+};
+
+export const getProductsForCategory = async (
+  languageId,
+  categoryId,
+  page = 0,
+  pageSize = 50
+) => {
+  let start = page * pageSize;
+  let end = (page + 1) * pageSize;
+
+  const query = supabase
+    .from("product")
+    .select(
+      `
+    id, seller_sku, seller_file_id,product_sku,
+    category(category_content(*, name:title)),
+    brand(name),
+    product_image(image),
+    product_content(name)
+ `,
+      { count: "exact" }
+    )
+    .eq("category.category_content.language_id", languageId)
+    .eq("product_content.language_id", languageId);
+
+  if (categoryId) {
+    const categories = await getCategoryChildrenIDS(categoryId);
+    query.in("category_id", [...categories, categoryId]);
+  }
+
+  return await query.range(start, end);
+};
+
+export const getCategoriesTopLevel = async (language_id) => {
+  const categories = await supabase
+    .from("category")
+    .select(`id, content:category_content(title)`)
+    .is("parent_id", null)
+    .eq("content.language_id", language_id);
+  return categories?.data;
+};
+
+export const getProductsView = async (languageId, product_ids) => {
+  const query = supabase
+    .from("product")
+    .select(
+      `
+      id, seller_sku, product_sku,
+      category(category_content(*, name:title)),
+      brand(name),
+      product_image(image),
+      product_content(name)
+      
+   `,
+      { count: "exact" }
+    )
+    .eq("category.category_content.language_id", languageId)
+    .eq("product_content.language_id", languageId)
+    .in("id", product_ids);
+
+  return await query;
 };

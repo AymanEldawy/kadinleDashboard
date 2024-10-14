@@ -124,8 +124,8 @@ const CustomTable = ({
   }, [openDrawerMore, data]);
 
   return (
-    <div className="">
-      <div className={`relative overflow-x-auto w-full  ${containerClassName}`}>
+    <div className="w-full">
+      <div className={`relative overflow-x-auto w-full ${containerClassName}`}>
         <table
           className={`w-[${table.getTotalSize()}] w-full ${tableClassName}`}
           // style={{ width: table.getTotalSize() }}

@@ -114,6 +114,7 @@ import ProductsStatus from "../Pages/StandAlone/ProductsStatus";
 import CategoryFallback from "../Pages/StandAlone/CategoryFallback";
 import ChartGroup from "../Pages/StandAlone/ChartGroup";
 import ChartGroupTable from "../Pages/Tables/ChartGroupTable";
+import ProductsReport from "../Pages/StandAlone/ProductsReport";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -152,6 +153,7 @@ const authProtectedRoutes = [
   // **** Group Content paths ****
   { path: "/products", component: <Products />, allowedRoles: ["*"] },
   { path: "/products-status", component: <ProductsStatus />, allowedRoles: ["*"] },
+  { path: "/products-report", component: <ProductsReport />, allowedRoles: ["*"] },
   { path: "/brand", component: <Brands />, allowedRoles: ["*"] },
   { path: "/stocks", component: <Stocks />, allowedRoles: ["*"] },
 

@@ -14,7 +14,11 @@ import SearchCategoryField from "../../Components/CustomForm/SearchCategoryField
 import Select from "react-select";
 import { useUpdate } from "../../hooks/useUpdate";
 import { toast } from "react-toastify";
-import { getSuppliersList } from "../../Api/data";
+import {
+  get_seller_products,
+  getProductsForCategory,
+  getSuppliersList,
+} from "../../Api/data";
 import { ChevronIcon, TrashIcon } from "../../Helpers/Icons";
 import ReactPaginate from "react-paginate";
 import { useDelete } from "../../hooks/useDelete";
@@ -24,12 +28,14 @@ import { LoadingProcess } from "../../Components/Global/LoadingProcess";
 const MoveCategory = () => {
   let name = "products_slider";
   const { defaultLanguage } = useGlobalOptions();
-  const { upsertItem, updateItem, updateInItems } = useUpdate();
+  const { updateItem, updateInItems } = useUpdate();
   const { deleteItem: onDelete } = useDelete();
   const [isProgress, setIsProgress] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [selectedList, setSelectedList] = useState({});
-  const [supplierId, setSupplierId] = useState("");
+  const [supplierId, setSupplierId] = useState(null);
+  const [categoryId, setCategoryId] = useState(null);
+  const [sellerSku, setSellerSku] = useState(null);
   const [category, setCategory] = useState("");
   const [pageCount, setPageCount] = useState(0);
   const [pagination, setPagination] = useState({
@@ -48,29 +54,24 @@ const MoveCategory = () => {
     },
   });
 
-  const fetchProducts = async (
-    pageIndex,
-    pageSize,
-    languageId,
-    category,
-    supplierId
-  ) => {
+  const fetchProducts = async () => {
     try {
-      const response = await getTableDataWithPagination(
-        "supplier_products",
-        pageIndex + 1, // Assuming pageIndex is zero-based and API expects 1-based
-        pageSize,
-        {
-          languageId,
-          filter: category === "Select category" ? "" : category,
-          supplierId,
-        }
+      const response = await get_seller_products(
+        defaultLanguage?.id,
+        supplierId || null,
+        categoryId || null,
+        sellerSku || null,
+        pagination?.pageIndex,
+        pagination?.pageSize
       );
-      setPageCount(Math.ceil(response?.count / parseInt(pagination?.pageSize)));
+      let products = response?.data?.products;
+      let total_count = response?.data?.total_count;
+
+      setPageCount(Math.ceil(total_count / parseInt(pagination?.pageSize)));
 
       return {
-        count: response?.count,
-        products: response?.data,
+        count: total_count,
+        products: products || [],
       };
     } catch (error) {
       // Handle errors as needed
@@ -80,24 +81,21 @@ const MoveCategory = () => {
 
   const { isLoading, refetch, data } = useQuery({
     queryKey: [
-      "product",
+      name,
       defaultLanguage?.id,
-      category,
+      categoryId,
       supplierId,
+      sellerSku,
       pagination.pageSize,
       pagination.pageIndex,
     ],
-    queryFn: () =>
-      fetchProducts(
-        pagination.pageIndex,
-        pagination.pageSize,
-        defaultLanguage?.id,
-        category,
-        supplierId
-      ),
+    queryFn: () => fetchProducts(),
     // keepPreviousData: true, // Optional: keeps old data while fetching new data
     // staleTime: 0, // O
   });
+
+  console.log(data,'-dsd');
+  
 
   const handlePageClick = (event) => {
     setPagination((prev) => ({
@@ -124,7 +122,6 @@ const MoveCategory = () => {
     if (e.target.checked) {
       let hash = {};
       for (const product of data?.products) {
-        console.log("🚀 ~ onSelectAll ~ product:", product);
         hash[product?.id] = true;
       }
       setSelectedList(hash);
@@ -132,9 +129,6 @@ const MoveCategory = () => {
       setSelectedList({});
     }
   };
-
-  console.log(newCategory,'newCategory');
-  
 
   const handleMoveAll = async () => {
     setIsProgress(true);
@@ -147,9 +141,6 @@ const MoveCategory = () => {
       "id",
       list
     );
-
-    console.log(response,'response');
-    
 
     if (response?.error) {
       toast.error(`Failed to update category for selected products`);

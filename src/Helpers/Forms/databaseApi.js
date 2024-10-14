@@ -78,10 +78,27 @@ const category_content = [
   { name: "web_banner", type: "text", key: "image" },
 ];
 
+const measurement = [
+  { name: "id", type: "uuid" },
+  { name: "name", type: "text" },
+];
+const measurement_content = [
+  { name: "id", type: "uuid" },
+  { name: "sku", type: "number" },
+  {
+    name: "language_id",
+    required: true,
+    type: "uuid",
+    key: "ref",
+    tableName: "language",
+  },
+  { name: "description", type: "text" },
+];
+
 const chart = [
   { name: "id", type: "uuid" },
   { name: "number", type: "number" },
-  { name: "user_view",  key: "checkbox" },
+  { name: "user_view", key: "checkbox" },
 ];
 
 export const chart_content = [
@@ -481,7 +498,7 @@ const offer = [
   { name: "id", type: "uuid" },
   { name: "created_at", type: "date" },
   { name: "numerical", type: "number" },
-  { name: "hex", type: "color", },
+  { name: "hex", type: "color" },
   { name: "icon", type: "text", key: "image", required: true },
   { name: "display_home", key: "checkbox" },
   { name: "is_banner", key: "checkbox" },
@@ -1424,5 +1441,7 @@ const DB_API = {
   definitions_content,
   chunks,
   weights,
+  measurement,
+  measurement_content,
 };
 export default DB_API;

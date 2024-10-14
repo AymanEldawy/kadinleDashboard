@@ -12,6 +12,7 @@ export { default as Users } from "./Users";
 export { default as Chart } from "./Chart";
 export { default as Collections } from "./Collections";
 export { default as BulkAlert } from "./BulkAlert";
+export { default as Measurement } from "./Measurement";
 export { default as Logs } from "./Logs";
 export { default as News } from "./News";
 export { default as Newsletter } from "./Newsletter";

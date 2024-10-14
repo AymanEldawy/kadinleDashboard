@@ -50,7 +50,6 @@ import {
   AddUser,
   AddWarehouse,
   AddWarehouseAvailability,
-  InsertOne,
 } from "./../Pages/Forms";
 import {
   Addresses,
@@ -81,7 +80,6 @@ import {
   OrderStatus,
   Partners,
   Points,
-  ProductFeatures,
   Products,
   Regions,
   ReturnStatus,
@@ -93,6 +91,7 @@ import {
   Users,
   WarehouseAvailability,
   Warehouses,
+  Measurement,
 } from "./../Pages/Tables";
 import SpecialOffer from "../Pages/Tables/SepcialOffer";
 import Support from "../Pages/StandAlone/Support";
@@ -115,6 +114,7 @@ import CategoryFallback from "../Pages/StandAlone/CategoryFallback";
 import ChartGroup from "../Pages/StandAlone/ChartGroup";
 import ChartGroupTable from "../Pages/Tables/ChartGroupTable";
 import ProductsReport from "../Pages/StandAlone/ProductsReport";
+import MeasurementForm from "../Pages/StandAlone/MeasurementForm";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -152,8 +152,16 @@ const authProtectedRoutes = [
 
   // **** Group Content paths ****
   { path: "/products", component: <Products />, allowedRoles: ["*"] },
-  { path: "/products-status", component: <ProductsStatus />, allowedRoles: ["*"] },
-  { path: "/products-report", component: <ProductsReport />, allowedRoles: ["*"] },
+  {
+    path: "/products-status",
+    component: <ProductsStatus />,
+    allowedRoles: ["*"],
+  },
+  {
+    path: "/products-report",
+    component: <ProductsReport />,
+    allowedRoles: ["*"],
+  },
   { path: "/brand", component: <Brands />, allowedRoles: ["*"] },
   { path: "/stocks", component: <Stocks />, allowedRoles: ["*"] },
 
@@ -164,7 +172,11 @@ const authProtectedRoutes = [
   // **** Group Feature paths ****
   { path: "/color", component: <Colors />, allowedRoles: ["*"] },
   { path: "/category", component: <Categories />, allowedRoles: ["*"] },
-  { path: "/category-fallback", component: <CategoryFallback />, allowedRoles: ["*"] },
+  {
+    path: "/category-fallback",
+    component: <CategoryFallback />,
+    allowedRoles: ["*"],
+  },
   { path: "/category-tree", component: <CategoryTree />, allowedRoles: ["*"] },
   { path: "/size", component: <Sizes />, allowedRoles: ["*"] },
   // {
@@ -206,10 +218,25 @@ const authProtectedRoutes = [
   },
   { path: "/add-chart-data", component: <AddChartData />, allowedRoles: ["*"] },
   { path: "/chart-group-from", component: <ChartGroup />, allowedRoles: ["*"] },
-  { path: "/chart-group-form/:id", component: <ChartGroup />, allowedRoles: ["*"] },
+  {
+    path: "/chart-group-form/:id",
+    component: <ChartGroup />,
+    allowedRoles: ["*"],
+  },
 
   // **** Group Chart paths ****
   { path: "/chart", component: <ChartContent />, allowedRoles: ["*"] },
+  { path: "/measurement", component: <Measurement />, allowedRoles: ["*"] },
+  {
+    path: "/add-measurement",
+    component: <MeasurementForm />,
+    allowedRoles: ["*"],
+  },
+  {
+    path: "/update-measurement/:id",
+    component: <MeasurementForm />,
+    allowedRoles: ["*"],
+  },
   { path: "/chart-group", component: <ChartGroupTable />, allowedRoles: ["*"] },
   { path: "/chart-data", component: <ChartData />, allowedRoles: ["*"] },
 

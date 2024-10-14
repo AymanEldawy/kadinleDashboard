@@ -10,8 +10,11 @@ export const CategoryFallbackForm = ({
   CACHE_CATEGORIES,
   oldCategories,
   updateCategory,
+  hideAction,
+  setSelectedCategories,
   name,
 }) => {
+  console.log("🚀 ~ oldCategories:", oldCategories)
   const [categoryId, setCategoryId] = useState(null);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,6 +22,10 @@ export const CategoryFallbackForm = ({
   useEffect(() => {
     if (oldCategories?.length) setCategories(oldCategories);
   }, [oldCategories]);
+
+  useEffect(() => {
+    setSelectedCategories(categories);
+  }, [categories]);
 
   const addNewCategory = () => {
     setCategories((prev) => [...prev, categoryId]);
@@ -71,7 +78,7 @@ export const CategoryFallbackForm = ({
                 }}
               >
                 {" "}
-                {CACHE_CATEGORIES[cate]}
+                {CACHE_CATEGORIES?.[cate]}
               </button>
             ))}
           </>
@@ -81,7 +88,7 @@ export const CategoryFallbackForm = ({
           </p>
         )}
       </div>
-      <div className="flex items-center gap-4">
+      <div className={`flex items-center gap-4 ${hideAction ? "hidden" : ""}`}>
         <button
           disabled={isLoading}
           onClick={onClickCancel}

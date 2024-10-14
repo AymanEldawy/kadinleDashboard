@@ -188,6 +188,7 @@ export const menuData = [
       },
       { path: "/chart-group", icon: <ChartIcon />, name: " Chart group" },
       { path: "/chart-data", icon: <ChartIcon />, name: " Chart data" },
+      { path: "/measurement", icon: <ChartIcon />, name: " Measurement" },
     ],
   },
 

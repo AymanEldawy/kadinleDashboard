@@ -1803,6 +1803,20 @@ export const getCacheCategory = async (language_id) => {
   return hash;
 };
 
+export const getCacheCategoryForMeasurement = async (id) => {
+  const query = await supabase
+    .from("measurement_categories_group")
+    .select(`*`)
+    .eq("id", id);
+
+  let hash = {};
+  for (const cate of query?.data?.categories_ids) {
+    hash[cate] = cate;
+  }
+
+  return hash;
+};
+
 export const getCategorySearch = async (language_id, key, value) => {
   const query = supabase
     .from("category")
@@ -1858,7 +1872,7 @@ export const get_seller_products = async (
   param_category_id,
   param_seller_sku,
   param_offset,
-  param_limit,
+  param_limit
 ) => {
   console.log("---", {
     param_lang_id,

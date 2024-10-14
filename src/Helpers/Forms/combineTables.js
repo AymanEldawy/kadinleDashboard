@@ -747,7 +747,7 @@ const combine_collection = () => [
     accessorKey: "name",
     header: "name",
     cell: ({ row }) => {
-      console.log("🚀 ~ row:", row?.original)
+      console.log("🚀 ~ row:", row?.original);
       return (
         <Link
           to={`/update/collection/${row?.original?.id}`}
@@ -3640,7 +3640,77 @@ const products_slider = () => [
   { accessorKey: "display_home", header: "display_home" },
 ];
 
+const combine_measurement = () => [
+  {
+    id: "select",
+    size: 20,
+    minSize: 50,
+    header: ({ table }) => (
+      <input
+        type="checkbox"
+        className="h-5 w-5"
+        {...{
+          checked: table?.getIsAllRowsSelected(),
+          // indeterminate: table?.getIsSomeRowsSelected(),
+          onChange: table?.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <input
+          type="checkbox"
+          className="h-5 w-5"
+          {...{
+            checked: row?.getIsSelected(),
+            disabled: !row?.getCanSelect(),
+            // indeterminate: row?.getIsSomeSelected(),
+            onChange: row?.getToggleSelectedHandler(),
+          }}
+        />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "created_at",
+    header: "created_at",
+    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
+  },
+  {
+    accessorKey: "numeric",
+    header: "numeric",
+    cell: ({ getValue, row }) => {
+      return (
+        <Link
+          to={`/update-measurement/${row.original.id}`}
+          className="text-blue-500 hover:underline"
+        >
+          {getValue()}
+        </Link>
+      );
+    },
+  },
+  {
+    accessorKey: "categories_ids",
+    header: "categories_ids",
+    cell: ({ getValue }) => <span>{getValue()?.length}</span>,
+  },
+  {
+    accessorKey: "actions",
+    header: "actions",
+    cell: ({ row }) => (
+      <Link
+        to={`/update-measurement/${row?.original?.id}`}
+        className="text-blue-500 hover:underline"
+      >
+        Edit
+      </Link>
+    ),
+  },
+];
+
 const COMBINE_DB_API = {
+  combine_measurement,
   products_slider,
   home_sliders,
   combine_chart_group,

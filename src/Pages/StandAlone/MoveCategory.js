@@ -61,9 +61,11 @@ const MoveCategory = () => {
         supplierId || null,
         categoryId || null,
         sellerSku || null,
-        pagination?.pageIndex,
+        pagination?.pageIndex * pagination?.pageSize,
         pagination?.pageSize
       );
+      console.log(response,'response,response');
+      
       let products = response?.data?.products;
       let total_count = response?.data?.total_count;
 
@@ -321,18 +323,18 @@ const MoveCategory = () => {
                   <Link
                     className="flex gap-2"
                     to={`https://kadinle.com/product/${
-                      product?.product_variant?.at(0)?.id
+                      product?.variant?.variant_id
                     }`}
                     target="_blank"
                   >
                     <img
-                      src={product?.product_image?.at(0)?.image}
+                      src={product?.variant?.image}
                       alt=""
                       className="w-20 h-20 object-contain"
                     />
                     <ul className="capitalize font-medium text-sm">
                       <li>product sku: {product?.product_sku}</li>
-                      <li>{product?.product_content?.at(0)?.name}</li>
+                      <li>{product?.name}</li>
                     </ul>
                   </Link>
                 </div>
@@ -344,7 +346,7 @@ const MoveCategory = () => {
                 </div>
                 <div className="p-2 flex-1">
                   <span className="bg-orange-500 text-white px-2 py-1 text-sm rounded-md">
-                    {product?.category?.category_content?.at(0)?.name}
+                    {product?.category?.title}
                   </span>
                 </div>
                 <div className="p-2 flex-1">

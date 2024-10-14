@@ -24,6 +24,7 @@ import ReactPaginate from "react-paginate";
 import { useDelete } from "../../hooks/useDelete";
 import ConfirmModal from "../../Components/ConfirmModal/ConfirmModal";
 import { LoadingProcess } from "../../Components/Global/LoadingProcess";
+import InputField from "../../Components/CustomForm/InputField";
 
 const MoveCategory = () => {
   let name = "products_slider";
@@ -34,7 +35,6 @@ const MoveCategory = () => {
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [selectedList, setSelectedList] = useState({});
   const [supplierId, setSupplierId] = useState(null);
-  const [categoryId, setCategoryId] = useState(null);
   const [sellerSku, setSellerSku] = useState(null);
   const [category, setCategory] = useState("");
   const [pageCount, setPageCount] = useState(0);
@@ -59,13 +59,13 @@ const MoveCategory = () => {
       const response = await get_seller_products(
         defaultLanguage?.id,
         supplierId || null,
-        categoryId || null,
+        category || null,
         sellerSku || null,
         pagination?.pageIndex * pagination?.pageSize,
         pagination?.pageSize
       );
-      console.log(response,'response,response');
-      
+      console.log(response, "response,response");
+
       let products = response?.data?.products;
       let total_count = response?.data?.total_count;
 
@@ -85,7 +85,7 @@ const MoveCategory = () => {
     queryKey: [
       name,
       defaultLanguage?.id,
-      categoryId,
+      category,
       supplierId,
       sellerSku,
       pagination.pageSize,
@@ -96,8 +96,7 @@ const MoveCategory = () => {
     // staleTime: 0, // O
   });
 
-  console.log(data,'-dsd');
-  
+  console.log(data, "-dsd");
 
   const handlePageClick = (event) => {
     setPagination((prev) => ({
@@ -202,7 +201,7 @@ const MoveCategory = () => {
           contentBar={
             <div className="flex gap-4 items-center font-medium text-lg text-gray-700">
               <Select
-                className="max-w-[150px]"
+                className="w-[180px] flex-1"
                 options={suppliers}
                 getOptionLabel={({ seller_file_id }) => seller_file_id}
                 getOptionValue={({ seller_file_id }) => seller_file_id}
@@ -226,7 +225,14 @@ const MoveCategory = () => {
             </div>
           }
         >
-          <div className="my-4 flex items-center gap-4">
+          <div className="my-4 flex items-end gap-4">
+            <InputField
+              value={sellerSku}
+              label={"Seller sku"}
+              className="py-[6px]"
+              onChange={(e) => setSellerSku(e.target.value)}
+            />
+
             <CategoryMultiFilter
               name={"change category"}
               filterCategory={category}
@@ -322,9 +328,7 @@ const MoveCategory = () => {
                 <div className="p-2 flex-[2] hover:text-blue-500 hover:bg-gray-100 hover:shadow">
                   <Link
                     className="flex gap-2"
-                    to={`https://kadinle.com/product/${
-                      product?.variant?.variant_id
-                    }`}
+                    to={`https://kadinle.com/product/${product?.variant?.variant_id}`}
                     target="_blank"
                   >
                     <img

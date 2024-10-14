@@ -28,14 +28,13 @@ const MeasurementForm = () => {
   const [categories, setCategories] = useState([]);
 
   const { data: measurement } = useQuery({
-    queryKey: ["list", "measurement"],
+    queryKey: ["list", "measurement", params?.id],
     queryFn: async () => {
       if (!params?.id) return;
       const response = await getRowsById("measurement", "id", params?.id);
       let data = response?.data?.at(0);
       if (data?.id) {
         setContent(data?.content);
-        // setCategories(data?.categories_ids);
         setNumeric(data?.numeric);
       }
       return response?.data?.at(0) || [];

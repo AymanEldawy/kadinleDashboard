@@ -732,10 +732,10 @@ const combine_collection = () => [
   {
     accessorKey: "sku",
     header: "sku",
-    cell: ({ getValue }) => {
+    cell: ({ getValue, row }) => {
       return (
         <Link
-          to={`/update/collection/${getValue()}`}
+          to={`/update/collection/${row?.original?.id}`}
           className="text-blue-500 hover:underline"
         >
           {getValue()}
@@ -747,6 +747,7 @@ const combine_collection = () => [
     accessorKey: "name",
     header: "name",
     cell: ({ row }) => {
+      console.log("🚀 ~ row:", row?.original)
       return (
         <Link
           to={`/update/collection/${row?.original?.id}`}

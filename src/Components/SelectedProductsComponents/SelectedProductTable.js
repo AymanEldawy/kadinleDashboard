@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import CustomTable from "../CustomTable/CustomTable";
 import { useQuery } from "@tanstack/react-query";
 import { getProductsView } from "../../Api/data";
+import { CategoryMultiFilter } from "../TableBar/CategoryMultiFilter";
+import SearchBar from "../SearchBar/SearchBar";
 
 export const SelectedProductTable = ({
   insertMany,
@@ -20,6 +22,8 @@ export const SelectedProductTable = ({
   setRowSelection,
   rowSelection,
   layout,
+  setSelectedCategory,
+  extraContent,
 }) => {
   const { defaultLanguage, defaultRegion } = useGlobalOptions();
   const { getDataWithPagination } = useFetch();
@@ -72,6 +76,10 @@ export const SelectedProductTable = ({
       return response?.data;
     },
   });
+
+  useEffect(() => {
+    if (!!setSelectedCategory) setSelectedCategory(filterCategory);
+  }, [filterCategory]);
 
   const getProductsIds = async () => {
     const response =
@@ -146,55 +154,52 @@ export const SelectedProductTable = ({
 
   return (
     <div>
-      {hideTableBar ? null : (
-        <TableBar
-          onDeleteClick={handleDeleteItem}
-          setSearchValue={setSearchValue}
-          // onSelectChange={setItemsPerPage}
-          // itemsPerPage={itemsPerPage}
-          selectedList={rowSelection}
-          hideSearch={hideSearch}
-          allowFilter
+      <div className="flex items-end gap-4 mb-6">
+        {extraContent ? extraContent : null}
+
+        <CategoryMultiFilter
+          name={tableName}
+          label={"select category"}
           filterCategory={filterCategory}
           setFilterCategory={setFilterCategory}
-          hideDelete
-          customBarButtons={
-            <>
-              <button
-                type="button"
-                onClick={saveChanges}
-                title="Save Changes"
-                className="p-2 rounded-md bg-primary-blue text-white flex items-center gap-2 text-base"
-              >
-                <BookMarkIcon className="h-5 w-5" />
-                Save
-              </button>
-
-              {open ? (
-                <button
-                  onClick={() => setOpen(false)}
-                  className="bg-red-500 text-white text-sm py-1 px-2 rounded-md"
-                >
-                  Hide View
-                </button>
-              ) : (
-                <button
-                  onClick={() => setOpen(true)}
-                  className="bg-green-500 text-white text-sm py-1 px-2 rounded-md"
-                >
-                  View Products
-                </button>
-              )}
-            </>
-          }
-          columns={() => [
-            { header: "name", accessorKey: "name" },
-            { header: "product_sku", accessorKey: "product_sku" },
-          ]}
-          selectedColumn={selectedColumn}
-          setSelectedColumn={setSelectedColumn}
         />
-      )}
+        <div className="relative">
+          <SearchBar
+            searchValue={searchValue}
+            columns={columns}
+            searchKey={selectedColumn}
+            setSearchKey={setSelectedColumn}
+            setSearchValue={setSearchValue}
+          />
+        </div>
+        <div className="ml-auto flex gap-4">
+          <button
+            type="button"
+            onClick={saveChanges}
+            title="Save Changes"
+            className="p-2 rounded-md bg-primary-blue text-white flex items-center gap-2 text-base"
+          >
+            <BookMarkIcon className="h-5 w-5" />
+            Save
+          </button>
+
+          {open ? (
+            <button
+              onClick={() => setOpen(false)}
+              className="bg-red-500 text-white text-sm py-1 px-2 rounded-md"
+            >
+              Hide View
+            </button>
+          ) : (
+            <button
+              onClick={() => setOpen(true)}
+              className="bg-green-500 text-white text-sm py-1 px-2 rounded-md"
+            >
+              View Products
+            </button>
+          )}
+        </div>
+      </div>
 
       <CustomTable
         columns={columns}

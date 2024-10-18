@@ -115,6 +115,8 @@ import ChartGroup from "../Pages/StandAlone/ChartGroup";
 import ChartGroupTable from "../Pages/Tables/ChartGroupTable";
 import ProductsReport from "../Pages/StandAlone/ProductsReport";
 import MeasurementForm from "../Pages/StandAlone/MeasurementForm";
+import Sale from "../Pages/StandAlone/Sale";
+import SaleForm from "../Pages/StandAlone/SaleForm";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -207,7 +209,10 @@ const authProtectedRoutes = [
     component: <OffersProducts />,
     allowedRoles: ["*"],
   },
-  { path: "/sale", component: <Sales />, allowedRoles: ["*"] },
+  // { path: "/sale", component: <Sales />, allowedRoles: ["*"] },
+  { path: "/sale/update/:id", component: <SaleForm />, allowedRoles: ["*"] },
+  { path: "/sale/add/", component: <SaleForm />, allowedRoles: ["*"] },
+  { path: "/sale", component: <Sale />, allowedRoles: ["*"] },
 
   // **** Group Chart add paths ****
   { path: "/add-chart", component: <AddChart />, allowedRoles: ["*"] },

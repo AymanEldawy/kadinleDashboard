@@ -2130,7 +2130,29 @@ const combine_sale = () => [
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "end_date", header: "end_date" },
+  { accessorKey: "start_date", header: "start_date",
+        cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
+
+   },
+  { accessorKey: "end_date", header: "end_date",
+        cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
+
+   },
+  { accessorKey: "products length", header: "products length" },
+  { accessorKey: "category_id", header: "category" },
+  { accessorKey: "status", header: "status" },
+  {
+    accessorKey: "actions",
+    header: "actions",
+    cell: ({ row }) => (
+      <Link
+        to={`/sale/update/${row?.original?.id}`}
+        className="text-blue-500 hover:underline"
+      >
+        Edit
+      </Link>
+    ),
+  },
 ];
 
 const combine_showreel = () => [

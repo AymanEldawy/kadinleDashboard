@@ -37,6 +37,7 @@ export const TableBar = ({
   rowSelection,
   hideSearch,
   searchValue,
+  extraContent,
 }) => {
   const { defaultLanguage, user } = useGlobalOptions();
   const { getData } = useFetch();
@@ -56,6 +57,7 @@ export const TableBar = ({
   return (
     <div className="flex justify-between gap-2 mb-4 flex-wrap max-[500px]:items-start ">
       <div className="flex gap-2 items-center">
+        {extraContent ? extraContent : null}
         {hideSearch ? null : (
           <div className="relative">
             <SearchBar
@@ -69,25 +71,25 @@ export const TableBar = ({
         )}
 
         {allowFilter ? (
-            <CategoryMultiFilter
-              filterCategory={filterCategory}
-              setFilterCategory={setFilterCategory}
-            />
-          // <>
-          // {window.location.pathname === "/category" ? (
-          //   ) : (
-          //     <SelectField
-          //       name="category"
-          //       list={categories}
-          //       keyValue="category_id"
-          //       keyLabel="title"
-          //       value={filterCategory}
-          //       onChange={(e) => setFilterCategory(e.target.value)}
-          //       className="p-2 rounded-md"
-          //     />
-          //   )}
-          // </>
-        ) : null}
+          <CategoryMultiFilter
+            filterCategory={filterCategory}
+            setFilterCategory={setFilterCategory}
+          />
+        ) : // <>
+        // {window.location.pathname === "/category" ? (
+        //   ) : (
+        //     <SelectField
+        //       name="category"
+        //       list={categories}
+        //       keyValue="category_id"
+        //       keyLabel="title"
+        //       value={filterCategory}
+        //       onChange={(e) => setFilterCategory(e.target.value)}
+        //       className="p-2 rounded-md"
+        //     />
+        //   )}
+        // </>
+        null}
         {/* <SelectField
           hideText
           value={itemsPerPage}

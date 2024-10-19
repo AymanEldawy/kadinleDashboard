@@ -13,16 +13,18 @@ import { getSaleData } from "../../Api/data";
 
 const SaleForm = () => {
   const params = useParams();
-  console.log("🚀 ~ SaleForm ~ params:", params);
   const { addItem } = useAdd();
   const { updateItem } = useUpdate();
   const { getData } = useFetch();
   const { defaultLanguage } = useGlobalOptions();
-  const [category_id, setCategory_id] = useState(null);
-  const [start_date, setStart_date] = useState(null);
-  const [end_date, setEnd_date] = useState(null);
+  const [sale, setSale] = useState({
+    category_id: null,
+    start_date: null,
+    end_date: null,
+    amount: 0,
+    percentage: false,
+  });
   const [rowSelection, setRowSelection] = useState([]);
-
   const { data } = useQuery({
     queryKey: ["sale", "slider-form", params?.id, defaultLanguage?.id],
     queryFn: async () => {
@@ -36,15 +38,18 @@ const SaleForm = () => {
         }
         setRowSelection(hash);
       }
-      setEnd_date(new Date(data?.end_date)?.toISOString().split("T")[0]);
-      setStart_date(new Date(data?.start_date)?.toISOString().split("T")[0]);
-      setCategory_id(data?.category_id);
+      setSale({
+        id: data?.id,
+        end_date: new Date(data?.end_date)?.toISOString().split("T")[0],
+        start_date: new Date(data?.start_date)?.toISOString().split("T")[0],
+        category_id: data?.category_id,
+      });
       return data;
     },
   });
 
   const handleChoose = async () => {
-    if (!start_date || !end_date || !category_id) {
+    if (!sale?.start_date || !sale?.end_date || !sale?.category_id || !sale?.amount) {
       toast.error("Please Fill Required Data");
       return;
     }
@@ -54,18 +59,14 @@ const SaleForm = () => {
 
     if (params?.id) {
       await updateItem(`sale`, {
-        id: params?.id,
-        category_id,
-        start_date,
-        end_date,
+        ...sale,
+
         products_ids: Object.keys(rowSelection),
         product_id: Object.keys(rowSelection)?.[0],
       });
     } else {
       await addItem(`sale`, {
-        category_id,
-        start_date,
-        end_date,
+        ...sale,
         products_ids: Object.keys(rowSelection),
         product_id: Object.keys(rowSelection)?.[0],
       });
@@ -86,6 +87,13 @@ const SaleForm = () => {
         autoClose: 1000,
       });
     }
+  };
+
+  const handleChangeField = (name, value) => {
+    setSale((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   console.log(data, "---sdsdsd");
@@ -112,8 +120,8 @@ const SaleForm = () => {
               required
               type="date"
               label="Start date"
-              value={start_date}
-              onChange={(e) => setStart_date(e.target.value)}
+              value={sale?.start_date}
+              onChange={(e) => handleChangeField("start_date", e.target.value)}
               className="p-1"
             />
             <InputField
@@ -121,8 +129,26 @@ const SaleForm = () => {
               required
               type="date"
               label="End date"
-              value={end_date}
-              onChange={(e) => setEnd_date(e.target.value)}
+              value={sale?.end_date}
+              onChange={(e) => handleChangeField("end_date", e.target.value)}
+              className="p-1"
+            />
+            <InputField
+              containerClassName="mb-0"
+              required
+              type="number"
+              label="Amount"
+              value={sale?.amount}
+              onChange={(e) => handleChangeField("amount", e.target.value)}
+              className="p-1"
+            />
+            <InputField
+              containerClassName="mb-0"
+              required
+              type="checkbox"
+              label="Percentage"
+              value={sale?.percentage}
+              onChange={(e) => handleChangeField("percentage", e.target.value)}
               className="p-1"
             />
           </div>
@@ -131,7 +157,9 @@ const SaleForm = () => {
         tableName={"sale"}
         rowSelection={rowSelection}
         setRowSelection={setRowSelection}
-        setSelectedCategory={setCategory_id}
+        setSelectedCategory={(value) => {
+          handleChangeField("category_id", value);
+        }}
       />
     </BlockPaper>
   );

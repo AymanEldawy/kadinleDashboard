@@ -405,7 +405,15 @@ const combine_category = () => [
   {
     accessorKey: "display_homepage",
     header: "display_homepage",
-    cell: ({ getValue }) => <span>{getValue() ? "YES" : "NO"}</span>,
+    cell: ({ getValue }) => (
+      <span
+        className={`px-8 py-1 rounded-md ${
+          getValue() ? "bg-green-500 text-white" : "bg-red-500 text-white"
+        }`}
+      >
+        {getValue() ? "Yes" : "No"}
+      </span>
+    ),
   },
   {
     accessorKey: "actions",
@@ -783,7 +791,15 @@ const combine_collection = () => [
   {
     accessorKey: "display_home",
     header: "display_home",
-    cell: ({ getValue }) => <span>{getValue() ? "YES" : "No"}</span>,
+    cell: ({ getValue }) => (
+      <span
+        className={`px-8 py-1 rounded-md ${
+          getValue() ? "bg-green-500 text-white" : "bg-red-500 text-white"
+        }`}
+      >
+        {getValue() ? "Yes" : "No"}
+      </span>
+    ),
   },
   {
     accessorKey: "color",
@@ -1022,7 +1038,15 @@ const combine_coupon = () => [
   {
     accessorKey: "percentage",
     header: "percentage",
-    cell: ({ getValue }) => <span>{getValue() ? "Yes" : "No"}</span>,
+    cell: ({ getValue }) => (
+      <span
+        className={`px-8 py-1 rounded-md ${
+          getValue() ? "bg-green-500 text-white" : "bg-red-500 text-white"
+        }`}
+      >
+        {getValue() ? "Yes" : "No"}
+      </span>
+    ),
   },
   {
     accessorKey: "expiration_date",
@@ -2130,28 +2154,54 @@ const combine_sale = () => [
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "start_date", header: "start_date",
-        cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
-
-   },
-  { accessorKey: "end_date", header: "end_date",
-        cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
-
-   },
-  { accessorKey: "products_ids", header: "products length", cell: ({getValue}) => <span className="font-medium">Selected Products:{ getValue()?.length}</span> },
-  { accessorKey: "category_id", header: "category", 
-    cell: ({ row }) => {
-    console.log("🚀 ~ row:", row?.original)
-    return (
-    <Link
-      to={`/update/category/${row?.original?.category_id}`}
-      className="text-blue-500 hover:underline"
-    >
-      {row?.original?.category?.category_content?.at(0)?.title}
-    </Link>
-  )},
+  {
+    accessorKey: "start_date",
+    header: "start_date",
+    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "status", header: "status" },
+  {
+    accessorKey: "end_date",
+    header: "end_date",
+    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
+  },
+  {
+    accessorKey: "products_ids",
+    header: "products length",
+    cell: ({ getValue }) => (
+      <span className="font-medium">
+        Selected Products:{getValue()?.length}
+      </span>
+    ),
+  },
+  {
+    accessorKey: "category_id",
+    header: "category",
+    cell: ({ row }) => {
+      console.log("🚀 ~ row:", row?.original);
+      return (
+        <Link
+          to={`/update/category/${row?.original?.category_id}`}
+          className="text-blue-500 hover:underline"
+        >
+          {row?.original?.category?.category_content?.at(0)?.title}
+        </Link>
+      );
+    },
+  },
+  { accessorKey: "amount", header: "amount" },
+  {
+    accessorKey: "percentage",
+    header: "percentage",
+    cell: ({ getValue }) => (
+      <span
+        className={`px-8 py-1 rounded-md ${
+          getValue() ? "bg-green-500 text-white" : "bg-red-500 text-white"
+        }`}
+      >
+        {getValue() ? "Yes" : "No"}
+      </span>
+    ),
+  },
   {
     accessorKey: "actions",
     header: "actions",

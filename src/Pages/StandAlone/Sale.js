@@ -10,6 +10,7 @@ import { useDelete } from "../../hooks/useDelete";
 import { BackIcon, TrashIcon } from "../../Helpers/Icons";
 import { Link, useNavigate } from "react-router-dom";
 import { getSales } from "../../Api/data";
+import ConfirmModal from "../../Components/ConfirmModal/ConfirmModal";
 
 const Sale = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const Sale = () => {
   const { deleteItem: onDelete } = useDelete();
   const [tab, setTab] = useState(1);
   const [pageCount, setPageCount] = useState(1);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
   const [rowSelection, setRowSelection] = useState([]);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -26,8 +28,14 @@ const Sale = () => {
 
   const columns = COMBINE_DB_API.combine_sale || [];
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["sale", tab, pagination?.pageIndex, pagination?.pageSize, defaultLanguage?.id],
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: [
+      "sale",
+      tab,
+      pagination?.pageIndex,
+      pagination?.pageSize,
+      defaultLanguage?.id,
+    ],
     keepPreviousData: true,
     queryFn: async () => {
       if (!defaultLanguage?.id) return;
@@ -37,21 +45,29 @@ const Sale = () => {
         pagination?.pageIndex + 1,
         pagination?.pageSize
       );
-      console.log(response,'responsesdsd');
-      
+      console.log(response, "responsesdsd");
+
       setPageCount(Math.ceil(response?.count / parseInt(pagination?.pageSize)));
       return response?.data;
     },
   });
 
   const handleDeleteItem = async () => {
-    // await onDelete("sale", Object.keys(rowSelection));
-    setRowSelection({});
+    await onDelete("sale", Object.keys(rowSelection));
+    refetch()
   };
   console.log(rowSelection, "-");
 
   return (
     <>
+      <ConfirmModal
+        onConfirm={() => {
+          handleDeleteItem();
+          setOpenConfirmation(false);
+        }}
+        open={openConfirmation}
+        setOpen={setOpenConfirmation}
+      />
       <button
         onClick={() => navigate(-1)}
         className="flex gap-2 mb-2 items-center p-1 px-3 hover:bg-primary-blue hover:text-white rounded-md border text-primary-blue border-primary-blue"
@@ -94,6 +110,7 @@ const Sale = () => {
 
             <button
               title="Delete all"
+              onClick={() => setOpenConfirmation(true)}
               className="bg-red-500 text-sm text-white rounded p-2 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300 disabled:bg-red-200"
               disabled={!Object.keys(rowSelection)?.length}
             >

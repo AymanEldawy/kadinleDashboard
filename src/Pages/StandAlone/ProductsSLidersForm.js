@@ -78,12 +78,12 @@ const ProductsSLidersForm = ({ layout }) => {
     if (values?.id) {
       response = await updateItem(name, {
         ...values,
-        products_sku: Object.keys(list),
+        products_sku: list,
       });
     } else {
       response = await addNewItem(name, {
         ...values,
-        products_sku: Object.keys(list),
+        products_sku: list,
       });
     }
     if (response?.error) {

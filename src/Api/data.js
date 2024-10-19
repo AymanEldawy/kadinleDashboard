@@ -46,15 +46,6 @@ export const contentFilterFetch = async (table, additionalData) => {
   }
 };
 
-export const getSales = async () => {
-  const response = await supabase.from("sale").select("*");
-  let hash = {};
-  for (const row of response?.data) {
-    hash[row?.end_date] = row;
-  }
-  return { data: Object.values(hash) };
-};
-
 export const getChats = async () => {
   const response = await supabase
     .from(`chat`)
@@ -174,6 +165,33 @@ export const getLogs = async (page, pageSize, additionalData) => {
       f?.user?.first_name + " " + f?.user?.last_name === searchValue,
   });
 };
+
+export const getSales = async (language_id, type, page, pageSize) => {
+  console.log("called", page, pageSize);
+
+  const query = supabase
+    .from("sale")
+    .select(`*,category(id, category_content(id, title, language_id))`, {
+      count: "exact",
+    })
+    .eq("category.category_content.language_id", language_id);
+
+  if (type === 1) {
+    query.gt("end_date", new Date().toISOString());
+    query.lt("start_date", new Date().toISOString());
+  } else if(type === 2) {
+    query.lt("end_date", new Date().toISOString());
+  } else {
+    query.gt("start_date", new Date().toISOString());
+  }
+
+  return globalGetData({
+    page,
+    pageSize,
+    query,
+  });
+};
+
 export const getCategories = async (page, pageSize, additionalData) => {
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
@@ -923,7 +941,6 @@ export const getChartContent = async (page, pageSize, additionalData) => {
 };
 
 export const getChartData = async (page, pageSize, additionalData) => {
-  console.log("🚀 ~ getChartData ~ additionalData:", additionalData);
   let searchKey = additionalData?.search?.key;
   let searchValue = additionalData?.search?.value;
 
@@ -1643,7 +1660,6 @@ export const getSupplierProducts = async (page, pageSize, additionalData) => {
 
   if (additionalData?.filter) {
     const categories = await getCategoryChildrenIDS(additionalData?.filter);
-    console.log("🚀 ~ getSupplierProducts ~ categories:", categories);
     // query.in("category_id", [...categories, additionalData?.filter]);
     query.eq("category_id", additionalData?.filter);
   }
@@ -1832,8 +1848,6 @@ export const getCategorySearch = async (language_id, key, value) => {
 };
 
 export const getSizesFilter = async (region_id, type) => {
-  console.log(region_id, type);
-
   const query = await supabase
     .from("size")
     .select(`id,size_sku,size_content(region_id, name)`)
@@ -1860,6 +1874,18 @@ export const hidden_available_products = async (
   param_offset
 ) => {
   return await supabase.rpc("hidden_available_products", {
+    param_lang_id,
+    param_limit,
+    param_offset,
+  });
+};
+
+export const getHiddenProducts = async (
+  param_lang_id,
+  param_limit,
+  param_offset
+) => {
+  return await supabase.rpc("get_hidden_products", {
     param_lang_id,
     param_limit,
     param_offset,
@@ -1954,3 +1980,10 @@ export const getProductsView = async (languageId, product_ids) => {
 
   return await query;
 };
+
+export const getSaleData = async (id, language_id) =>
+  await supabase
+    .from("sale")
+    .select(`*, category(id, category_content(title))`)
+    .eq("id", id)
+    .eq("category.category_content.language_id", language_id);

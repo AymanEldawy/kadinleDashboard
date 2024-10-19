@@ -9,6 +9,7 @@ import { useGlobalOptions } from "../../Context/GlobalOptions";
 import { useDelete } from "../../hooks/useDelete";
 import { BackIcon, TrashIcon } from "../../Helpers/Icons";
 import { Link, useNavigate } from "react-router-dom";
+import { getSales } from "../../Api/data";
 
 const Sale = () => {
   const navigate = useNavigate();
@@ -26,15 +27,18 @@ const Sale = () => {
   const columns = COMBINE_DB_API.combine_sale || [];
 
   const { data, isLoading } = useQuery({
-    queryKey: ["sale", pagination?.pageIndex, pagination?.pageSize],
+    queryKey: ["sale", tab, pagination?.pageIndex, pagination?.pageSize, defaultLanguage?.id],
     keepPreviousData: true,
     queryFn: async () => {
-      if (!defaultLanguage?.id || !defaultRegion?.id) return;
-      const response = await getDataWithPagination(
-        "sale",
+      if (!defaultLanguage?.id) return;
+      const response = await getSales(
+        defaultLanguage?.id,
+        tab,
         pagination?.pageIndex + 1,
         pagination?.pageSize
       );
+      console.log(response,'responsesdsd');
+      
       setPageCount(Math.ceil(response?.count / parseInt(pagination?.pageSize)));
       return response?.data;
     },
@@ -83,7 +87,7 @@ const Sale = () => {
           <div className="flex gap-2 items-center">
             <Link
               className="bg-blue-500 whitespace-nowrap text-sm text-white rounded p-2 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300"
-              to='/sale/add'
+              to="/sale/add"
             >
               add new
             </Link>

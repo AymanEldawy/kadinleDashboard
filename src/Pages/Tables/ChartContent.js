@@ -14,7 +14,6 @@ const ChartContent = () => {
       title="Chart Content"
       onAddClick={() => navigate(`/add-chart`)}
       outerSelectedId={(row, relativeIndex, parent) => {
-        console.log("🚀 ~ ChartContent ~ row:", row)
         return  row?.chart?.id
       }
       }

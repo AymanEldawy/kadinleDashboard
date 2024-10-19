@@ -94,7 +94,6 @@ const fetches = {
   recent_user: getRecentUser,
   logs: getLogs,
   collection_products: getCollectionsProducts,
-  sale: getSales,
   shipping_price: getShippingPrices,
   bill: getBills,
   order_report: getOrderReports,
@@ -110,6 +109,7 @@ const fetches = {
   definitions: (page, pageSize, additionalData) =>
     getHomeSliders("definitions", page, pageSize, additionalData),
   supplier_products: getSupplierProducts,
+  sale: getSales,
 };
 
 export const getTableDataWithPagination = async (

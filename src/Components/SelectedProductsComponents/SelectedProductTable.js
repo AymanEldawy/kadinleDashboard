@@ -13,23 +13,18 @@ import { CategoryMultiFilter } from "../TableBar/CategoryMultiFilter";
 import SearchBar from "../SearchBar/SearchBar";
 
 export const SelectedProductTable = ({
-  insertMany,
   additionalData,
   tableName,
-  id,
-  hideSearch,
-  hideTableBar,
   setRowSelection,
   rowSelection,
-  layout,
   setSelectedCategory,
   extraContent,
+  onSaveChanges,
+  categoryTitle
 }) => {
+  console.log("🚀 ~ categoryTitle:", categoryTitle)
   const { defaultLanguage, defaultRegion } = useGlobalOptions();
   const { getDataWithPagination } = useFetch();
-  const { getData } = useFetch();
-  const [products, setProducts] = useState({});
-  const [refresh, setRefresh] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [selectedColumn, setSelectedColumn] = useState(null);
   const [pageCount, setPageCount] = useState(1);
@@ -81,76 +76,7 @@ export const SelectedProductTable = ({
     if (!!setSelectedCategory) setSelectedCategory(filterCategory);
   }, [filterCategory]);
 
-  const getProductsIds = async () => {
-    const response =
-      tableName === "sale"
-        ? await getData("sale")
-        : await getRowsById(`${tableName}_product`, `${tableName}_id`, id);
-    let CACHE_PRODUCTS = {};
-    let data = tableName === "sale" ? response : response?.data;
-    for (const product of data) {
-      CACHE_PRODUCTS[product?.product_id] = product?.product_id;
-    }
-    setRowSelection({ ...CACHE_PRODUCTS });
-    setProducts({ ...CACHE_PRODUCTS });
-  };
-
-  useEffect(() => {
-    if (layout !== "slider") getProductsIds();
-  }, [id, layout]);
-
   const columns = COMBINE_DB_API.combine_collection_product;
-
-  const handleDeleteItem = async (list = rowSelection) => {
-    let loadLanguage = toast.loading("Please wait...");
-    let table = tableName === "sale" ? tableName : `${tableName}_product`;
-    const response = await removeItemsFrom(table, {
-      table_id: id,
-      ids: Object.keys(list),
-      col: tableName !== "sale" ? `${tableName}_id` : undefined,
-    });
-    if (response.error) {
-      toast.update(loadLanguage, {
-        render: response.error || "Field remove, please try again",
-        type: "error",
-        isLoading: false,
-        autoClose: 2000,
-      });
-    } else {
-      toast.update(loadLanguage, {
-        render: "Successfully removed",
-        type: "success",
-        isLoading: false,
-        autoClose: 1000,
-      });
-      getProductsIds();
-      setRefresh((p) => !p);
-    }
-  };
-
-  const saveChanges = async () => {
-    let productsList = Object.keys(products);
-    let listOfIds = Object.keys(rowSelection);
-    let deleteList = {};
-    let insertList = {};
-    if (productsList?.length) {
-      for (const id of productsList) {
-        if (!rowSelection?.[id]) {
-          deleteList[id] = id;
-        }
-      }
-      handleDeleteItem(deleteList);
-    }
-    if (listOfIds?.length) {
-      for (const id of listOfIds) {
-        if (!products?.[id]) {
-          insertList[id] = id;
-        }
-      }
-      await insertMany(insertList);
-      getProductsIds();
-    }
-  };
 
   return (
     <div>
@@ -162,6 +88,7 @@ export const SelectedProductTable = ({
           label={"select category"}
           filterCategory={filterCategory}
           setFilterCategory={setFilterCategory}
+          categoryTitle={categoryTitle}
         />
         <div className="relative">
           <SearchBar
@@ -175,9 +102,10 @@ export const SelectedProductTable = ({
         <div className="ml-auto flex gap-4">
           <button
             type="button"
-            onClick={saveChanges}
+            onClick={onSaveChanges}
+            disabled={!Object.keys(rowSelection)?.length}
             title="Save Changes"
-            className="p-2 rounded-md bg-primary-blue text-white flex items-center gap-2 text-base"
+            className="p-2 rounded-md disabled:bg-gray-200 disabled:text-gray-600 bg-primary-blue text-white flex items-center gap-2 text-base"
           >
             <BookMarkIcon className="h-5 w-5" />
             Save
@@ -186,14 +114,14 @@ export const SelectedProductTable = ({
           {open ? (
             <button
               onClick={() => setOpen(false)}
-              className="bg-red-500 text-white text-sm py-1 px-2 rounded-md"
+              className="bg-red-500 text-white whitespace-nowrap text-sm py-1 px-2 rounded-md"
             >
               Hide View
             </button>
           ) : (
             <button
               onClick={() => setOpen(true)}
-              className="bg-green-500 text-white text-sm py-1 px-2 rounded-md"
+              className="bg-green-500 text-white whitespace-nowrap text-sm py-1 px-2 rounded-md"
             >
               View Products
             </button>

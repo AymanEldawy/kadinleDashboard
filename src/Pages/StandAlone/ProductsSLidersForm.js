@@ -68,7 +68,11 @@ const ProductsSLidersForm = ({ layout }) => {
     });
   };
 
-  const onSubmit = async (list) => {
+  console.log(rowSelection);
+  
+
+  const onSubmit = async () => {
+    const list = Object.keys(rowSelection)
     const loading = toast.loading("loading...");
     let response = null;
     if (values?.id) {
@@ -165,7 +169,7 @@ const ProductsSLidersForm = ({ layout }) => {
       </div>
 
       <SelectedProductTable
-        insertMany={onSubmit}
+        onSaveChanges={onSubmit}
         tableName={"products slider"}
         rowSelection={rowSelection}
         setRowSelection={setRowSelection}

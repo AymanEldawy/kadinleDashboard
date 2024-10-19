@@ -2138,8 +2138,19 @@ const combine_sale = () => [
         cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
 
    },
-  { accessorKey: "products length", header: "products length" },
-  { accessorKey: "category_id", header: "category" },
+  { accessorKey: "products_ids", header: "products length", cell: ({getValue}) => <span className="font-medium">Selected Products:{ getValue()?.length}</span> },
+  { accessorKey: "category_id", header: "category", 
+    cell: ({ row }) => {
+    console.log("🚀 ~ row:", row?.original)
+    return (
+    <Link
+      to={`/update/category/${row?.original?.category_id}`}
+      className="text-blue-500 hover:underline"
+    >
+      {row?.original?.category?.category_content?.at(0)?.title}
+    </Link>
+  )},
+  },
   { accessorKey: "status", header: "status" },
   {
     accessorKey: "actions",

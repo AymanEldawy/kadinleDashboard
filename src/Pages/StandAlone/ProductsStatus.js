@@ -4,6 +4,7 @@ import { useUpdate } from "../../hooks/useUpdate";
 import { useQuery } from "@tanstack/react-query";
 import {
   get_out_of_stock_products,
+  getHiddenProducts,
   hidden_available_products,
 } from "../../Api/data";
 import CustomTable from "../../Components/CustomTable/CustomTable";
@@ -76,7 +77,7 @@ const ProductsStatus = () => {
       accessorKey: "display",
       header: "display",
       cell: ({ row }) => {
-        console.log("🚀 ~ ProductsStatus ~ row:", row?.original?.product)
+        console.log("🚀 ~ ProductsStatus ~ row:", row?.original?.product);
         return <span>{row?.original?.product?.display ? "YES" : "No"}</span>;
       },
     },
@@ -113,17 +114,24 @@ const ProductsStatus = () => {
               pagination?.pageSize,
               pagination?.pageIndex
             )
-          : await hidden_available_products(
+          : tab === 2
+          ? await hidden_available_products(
+              defaultLanguage?.id,
+              pagination?.pageSize,
+              pagination?.pageIndex
+            )
+          : await getHiddenProducts(
               defaultLanguage?.id,
               pagination?.pageSize,
               pagination?.pageIndex
             );
-      setPageCount(Math.ceil(response?.data?.count / parseInt(pagination?.pageSize)));
+      setPageCount(
+        Math.ceil(response?.data?.count / parseInt(pagination?.pageSize))
+      );
       return response?.data?.products;
     },
   });
   console.log(pageCount);
-  
 
   async function handleToggleViewAll(display, oldList) {
     const list = oldList || Object.keys(rowSelection);
@@ -162,6 +170,13 @@ const ProductsStatus = () => {
               title="Unstocked Products"
               onClick={() => setTab(2)}
             />
+            <Button
+              classes={`whitespace-nowrap !w-fit ${
+                tab === 3 ? "" : "!bg-gray-200 !text-gray-500"
+              }`}
+              title="Hidden Products"
+              onClick={() => setTab(3)}
+            />
           </div>
           <div className="flex items-center gap-4">
             {tab === 1 ? (
@@ -173,7 +188,7 @@ const ProductsStatus = () => {
                 onClick={() => handleToggleViewAll(false)}
                 disabled={!Object.keys(rowSelection)?.length}
               />
-            ) : (
+            ) : tab === 2 ? (
               <Button
                 classes={`whitespace-nowrap !w-fit bg-green-500`}
                 title={`Show Selected Products (${
@@ -182,7 +197,7 @@ const ProductsStatus = () => {
                 onClick={() => handleToggleViewAll(true)}
                 disabled={!Object.keys(rowSelection)?.length}
               />
-            )}
+            ) : null}
           </div>
         </div>
         <CustomTable

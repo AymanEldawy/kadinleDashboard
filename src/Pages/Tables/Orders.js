@@ -31,7 +31,6 @@ const Orders = () => {
   const languageID = JSON.parse(
     localStorage.getItem("KADINLE_DEFAULT_LANGUAGE")
   )?.id;
-  // console.log("languageID", languageID);
 
   // const initialPageIndex = Number(localStorage.getItem("pageIndex")) || 0;
   const options = {

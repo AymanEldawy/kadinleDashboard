@@ -33,7 +33,6 @@ const SelectField = ({
   //   }
   //   return isUnique;
   // });
-  console.log(value, "-vs");
 
   return (
     <div

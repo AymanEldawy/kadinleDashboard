@@ -9,7 +9,8 @@ import { useParams } from "react-router-dom";
 import InputField from "../../Components/CustomForm/InputField";
 import { useQuery } from "@tanstack/react-query";
 import { useUpdate } from "../../hooks/useUpdate";
-import { getSaleData } from "../../Api/data";
+import { getSaleData, getSales } from "../../Api/data";
+import { getTableDataWithPagination } from "../../Api/globalActions";
 
 const SaleSlider = () => {
   const params = useParams();
@@ -29,10 +30,11 @@ const SaleSlider = () => {
   const { data: saleProducts } = useQuery({
     queryKey: ["sale", "data", params?.id, defaultLanguage?.id],
     queryFn: async () => {
-      const response = await getData("sale");
+      if (!defaultLanguage?.id) return;
+      const response = await getSales(defaultLanguage?.id, 1, 1, 100);
       let CACHE_ids = [];
       let CACHE_DATE = {};
-      for (const item of response) {
+      for (const item of response?.data) {
         let productIds = item?.products_ids || [];
         CACHE_ids.push(...productIds);
         for (const product of productIds) {
@@ -45,6 +47,8 @@ const SaleSlider = () => {
       };
     },
   });
+  console.log(saleProducts,'saleProducts');
+  
 
   const { data: saleSlider } = useQuery({
     queryKey: ["sale_slider"],

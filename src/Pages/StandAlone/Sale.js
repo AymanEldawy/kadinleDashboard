@@ -45,7 +45,6 @@ const Sale = () => {
         pagination?.pageIndex + 1,
         pagination?.pageSize
       );
-      console.log(response, "responsesdsd");
 
       setPageCount(Math.ceil(response?.count / parseInt(pagination?.pageSize)));
       return response?.data;

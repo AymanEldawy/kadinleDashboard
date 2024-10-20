@@ -20,9 +20,10 @@ export const SelectedProductTable = ({
   setSelectedCategory,
   extraContent,
   onSaveChanges,
-  categoryTitle
+  categoryTitle,
+  showIndex,
+  saleProductsIds
 }) => {
-  console.log("🚀 ~ categoryTitle:", categoryTitle)
   const { defaultLanguage, defaultRegion } = useGlobalOptions();
   const { getDataWithPagination } = useFetch();
   const [searchValue, setSearchValue] = useState("");
@@ -63,6 +64,7 @@ export const SelectedProductTable = ({
               languageId: defaultLanguage?.id,
               regionId: defaultRegion?.id,
               filter,
+              product_ids: saleProductsIds,
               search: { key: selectedColumn, value: searchValue },
               ...additionalData,
             }
@@ -139,6 +141,7 @@ export const SelectedProductTable = ({
         setPagination={setPagination}
         rowSelection={rowSelection}
         setRowSelection={setRowSelection}
+        showIndex={showIndex}
       />
     </div>
   );

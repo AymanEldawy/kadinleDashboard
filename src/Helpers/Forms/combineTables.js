@@ -1890,7 +1890,78 @@ const combine_product = () => [
     ),
   },
 ];
-const combine_collection_product = () => [
+const combine_collection_product = (rowSelection, showIndex) => [
+  {
+    id: "select",
+    size: 20,
+    minSize: 50,
+    header: ({ table }) => (
+      <input
+        type="checkbox"
+        className="h-5 w-5"
+        {...{
+          checked: table?.getIsAllRowsSelected(),
+          // indeterminate: table?.getIsSomeRowsSelected(),
+          onChange: table?.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="px-1">
+          <input
+            type="checkbox"
+            className="h-5 w-5"
+            {...{
+              checked: row?.getIsSelected(),
+              disabled: !row?.getCanSelect(),
+              // indeterminate: row?.getIsSomeSelected(),
+              onChange: row?.getToggleSelectedHandler(),
+            }}
+          />
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "product",
+    header: "product",
+    cell: ({ row }) => {
+      return (
+        <ProductInfo
+          showIndex={showIndex}
+          rowSelection={rowSelection}
+          image={row?.original?.product_image?.at(0)?.image}
+          product_sku={row?.original?.product_sku}
+          product_id={row?.original?.id}
+          name={row?.original?.product_content?.[0]?.name}
+        />
+      );
+    },
+  },
+  {
+    accessorKey: "category",
+    header: "category",
+    cell: ({ row }) => (
+      <span>{row?.original?.category?.category_content?.at(0)?.title}</span>
+    ),
+  },
+  { accessorKey: "barcode", header: "barcode" },
+  {
+    accessorKey: "action",
+    header: "action",
+    cell: ({ row }) => (
+      <Link
+        to={`/products/update/product/${row?.original?.id}`}
+        className="hover:translate-x-1 transition-transform rounded-2xl flex items-center gap-2 px-2 p-1 bg-primary-blue text-white w-fit whitespace-nowrap"
+      >
+        <EyeIcon className=" w-4 h-4" />
+      </Link>
+    ),
+  },
+];
+
+const combine_sale_product = () => [
   {
     id: "select",
     size: 20,
@@ -1921,6 +1992,7 @@ const combine_collection_product = () => [
       </div>
     ),
   },
+  { accessorKey: "sku", header: "sku" },
   {
     accessorKey: "product",
     header: "product",
@@ -1930,26 +2002,6 @@ const combine_collection_product = () => [
         product_sku={row?.original?.product_sku}
         name={row?.original?.product_content?.[0]?.name}
       />
-    ),
-  },
-  {
-    accessorKey: "category",
-    header: "category",
-    cell: ({ row }) => (
-      <span>{row?.original?.category?.category_content?.at(0)?.title}</span>
-    ),
-  },
-  { accessorKey: "barcode", header: "barcode" },
-  {
-    accessorKey: "action",
-    header: "action",
-    cell: ({ row }) => (
-      <Link
-        to={`/products/update/product/${row?.original?.id}`}
-        className="hover:translate-x-1 transition-transform rounded-2xl flex items-center gap-2 px-2 p-1 bg-primary-blue text-white w-fit whitespace-nowrap"
-      >
-        <EyeIcon className=" w-4 h-4" />
-      </Link>
     ),
   },
 ];
@@ -3861,5 +3913,6 @@ const COMBINE_DB_API = {
   combine_washing_instructions,
   combine_chunks,
   combine_Weights,
+  combine_sale_product,
 };
 export default COMBINE_DB_API;

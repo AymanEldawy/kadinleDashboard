@@ -48,9 +48,9 @@ const CustomTable = ({
   pageCount,
   pagination,
   outerSelectedId,
+  showIndex
 }) => {
-  console.log(rowSelection);
-  
+
   const { t } = useTranslation();
   const { lang } = useContext(LanguageContext);
   const [currentItems, setCurrentItems] = useState([]);
@@ -61,9 +61,7 @@ const CustomTable = ({
   const [columnVisibility, setColumnVisibility] = useState({});
 
   const table = useReactTable({
-    columns: columns({
-      hideAction,
-    }),
+    columns: columns(rowSelection, showIndex),
     data: isLoading ? [] : data,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),

@@ -117,6 +117,7 @@ import ProductsReport from "../Pages/StandAlone/ProductsReport";
 import MeasurementForm from "../Pages/StandAlone/MeasurementForm";
 import Sale from "../Pages/StandAlone/Sale";
 import SaleForm from "../Pages/StandAlone/SaleForm";
+import SaleSlider from "../Pages/StandAlone/SaleSlider";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -212,6 +213,7 @@ const authProtectedRoutes = [
   // { path: "/sale", component: <Sales />, allowedRoles: ["*"] },
   { path: "/sale/update/:id", component: <SaleForm />, allowedRoles: ["*"] },
   { path: "/sale/add/", component: <SaleForm />, allowedRoles: ["*"] },
+  { path: "/sale/slider/", component: <SaleSlider />, allowedRoles: ["*"] },
   { path: "/sale", component: <Sale />, allowedRoles: ["*"] },
 
   // **** Group Chart add paths ****

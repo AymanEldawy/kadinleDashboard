@@ -3,7 +3,7 @@ import TableRow from "./TableRow";
 import TableCol from "./TableCol";
 
 export const TableSkeleton = ({ columns }) => {
-  let len = columns?.length ? columns : Array(8).fill(0);
+  let len = columns()?.length ? columns() : Array(8).fill(0);
   return (
     <>
       {len?.map((r, index) => (

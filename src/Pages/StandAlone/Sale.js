@@ -56,7 +56,6 @@ const Sale = () => {
     await onDelete("sale", Object.keys(rowSelection));
     refetch()
   };
-  console.log(rowSelection, "-");
 
   return (
     <>
@@ -101,6 +100,12 @@ const Sale = () => {
             />
           </div>
           <div className="flex gap-2 items-center">
+            <Link
+              className="bg-green-500 whitespace-nowrap text-sm text-white rounded p-2 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300"
+              to="/sale/slider"
+            >
+              Products Slider
+            </Link>
             <Link
               className="bg-blue-500 whitespace-nowrap text-sm text-white rounded p-2 font-normal capitalize hover:shadow-md hover:rounded-lg duration-300"
               to="/sale/add"

@@ -564,7 +564,7 @@ export const getProducts = async (page, pageSize, additionalData) => {
     )
     .eq("category.category_content.language_id", additionalData?.languageId)
     .eq("product_content.language_id", additionalData?.languageId);
-  if (additionalData?.filtersByIds) {
+  if (additionalData?.product_ids) {
     query.in("id", additionalData?.product_ids);
   }
   if (additionalData?.filter) {

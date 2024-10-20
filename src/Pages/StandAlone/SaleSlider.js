@@ -66,7 +66,7 @@ const SaleSlider = () => {
     const loading = toast.loading("loading...");
     let list = Object.keys(rowSelection);
     let data = [];
-    let item = [];
+    let item = {};
     for (let i = 0; i < list.length; i++) {
       let id = saleSlider?.CACHE_SALE_IDS?.[list?.[i]];
       item = {

@@ -6,6 +6,7 @@ import { RefreshChunksBtn } from "../../Components/RefreshChunksBtn";
 import { RefreshWeightsBtn } from "../../Components/RefreshWeightsBtn";
 import { ProductInfo } from "../../Components/Global/FullImage/ProductInfo";
 import { ProductToggleView } from "../../Components/Global/FullImage/ProductToggleView";
+import { ButtonRestartSale } from "../../Components/Supplier/ButtonRestartSale";
 
 const combine_address = () => [
   {
@@ -2258,12 +2259,15 @@ const combine_sale = () => [
     accessorKey: "actions",
     header: "actions",
     cell: ({ row }) => (
-      <Link
-        to={`/sale/update/${row?.original?.id}`}
-        className="text-blue-500 hover:underline"
-      >
-        Edit
-      </Link>
+      <div className="flex gap-2 items-center">
+        <Link
+          to={`/sale/update/${row?.original?.id}`}
+          className="text-blue-500 hover:underline"
+        >
+          Edit
+        </Link>
+        <ButtonRestartSale sale={row?.original} />
+      </div>
     ),
   },
 ];

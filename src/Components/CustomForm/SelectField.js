@@ -18,6 +18,7 @@ const SelectField = ({
   onChange,
   firstOptionText,
   containerClassName,
+  placeholder,
   labelClassName,
   ...field
 }) => {
@@ -55,6 +56,7 @@ const SelectField = ({
       ) : null}
       <Select
         menuPlacement="auto"
+        className="w-full"
         menuPortalTarget={document?.body}
         styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
         getOptionLabel={(option) => {
@@ -64,6 +66,7 @@ const SelectField = ({
         }}
         getOptionValue={(option) => option[keyValue]}
         // components={{ Option: ({ innerProps }) => <option></option> }}
+        placeholder={placeholder}
         options={list}
         required={required}
         onChange={onChange}

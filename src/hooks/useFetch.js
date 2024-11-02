@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { toast } from "react-toastify";
 
 import {
-  getRowsById,
   getTableContentDataById,
   getTableData,
   getTableDataById,

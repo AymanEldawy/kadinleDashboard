@@ -179,7 +179,7 @@ export const getSales = async (language_id, type, page, pageSize) => {
   if (type === 1) {
     query.gt("end_date", new Date().toISOString());
     query.lt("start_date", new Date().toISOString());
-  } else if(type === 2) {
+  } else if (type === 2) {
     query.lt("end_date", new Date().toISOString());
   } else {
     query.gt("start_date", new Date().toISOString());
@@ -1987,3 +1987,6 @@ export const getSaleData = async (id, language_id) =>
     .select(`*, category(id, category_content(title))`)
     .eq("id", id)
     .eq("category.category_content.language_id", language_id);
+
+export const getOfferProducts = async (offer_id) =>
+  await supabase.from("offer_product").select(`*`).eq("offer_id", offer_id);

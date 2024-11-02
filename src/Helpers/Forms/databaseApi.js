@@ -515,7 +515,7 @@ export const offer_content = [
   },
   { name: "name", type: "text", required: true },
   { name: "description", type: "text" },
-  { name: "media", type: "text", key: "image" },
+  // { name: "media", type: "text", key: "image" },
   {
     name: "offer_id",
     type: "uuid",

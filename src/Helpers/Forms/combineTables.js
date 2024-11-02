@@ -7,6 +7,7 @@ import { RefreshWeightsBtn } from "../../Components/RefreshWeightsBtn";
 import { ProductInfo } from "../../Components/Global/FullImage/ProductInfo";
 import { ProductToggleView } from "../../Components/Global/FullImage/ProductToggleView";
 import { ButtonRestartSale } from "../../Components/Supplier/ButtonRestartSale";
+import { OFFER_TYPES } from "../Scripts/constants";
 
 const combine_address = () => [
   {
@@ -1417,14 +1418,15 @@ const combine_offer = () => [
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "numerical", header: "numerical" },
+  { accessorKey: "sku", header: "sku" },
+  { accessorKey: "offer_type", header: "offer_type", cell: ({getValue}) => <span>{OFFER_TYPES?.find(c => c?.value === +getValue())?.label}</span> },
   {
     accessorKey: "name",
     header: "name",
     cell: ({ row }) => {
       return (
         <Link
-          to={`/update/offer/${row?.original?.id}`}
+          to={`/update-offer/${row?.original?.id}`}
           className="text-blue-500 hover:underline"
         >
           {row?.original?.offer_content?.at(0)?.name}
@@ -1432,26 +1434,7 @@ const combine_offer = () => [
       );
     },
   },
-  {
-    accessorKey: "description",
-    header: "description",
-    cell: ({ row }) => {
-      return <span>{row?.original?.offer_content?.at(0)?.description}</span>;
-    },
-  },
-  {
-    accessorKey: "media",
-    header: "media",
-    cell: ({ row }) => {
-      return (
-        <FullImage
-          src={row?.original?.offer_content?.at(0)?.media}
-          width={80}
-          height={60}
-        />
-      );
-    },
-  },
+
   {
     accessorKey: "icon",
     header: "icon",
@@ -1472,24 +1455,11 @@ const combine_offer = () => [
     ),
   },
   {
-    accessorKey: "display_home",
-    header: "display_home",
-    cell: ({ getValue }) => (
-      <span
-        className={`px-8 py-1 rounded-md ${
-          getValue() ? "bg-green-500 text-white" : "bg-red-500 text-white"
-        }`}
-      >
-        {getValue() ? "Yes" : "No"}
-      </span>
-    ),
-  },
-  {
     accessorKey: "actions",
     header: "actions",
     cell: ({ row }) => (
       <Link
-        to={`/update/offer/${row?.original?.id}`}
+        to={`/update-offer/${row?.original?.id}`}
         className="text-blue-500 hover:underline"
       >
         Edit

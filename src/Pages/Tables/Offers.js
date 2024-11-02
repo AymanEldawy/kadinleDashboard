@@ -14,12 +14,12 @@ const Offers = () => {
       columns={columns}
       title="offers"
       onAddClick={() => navigate(`/add-offer`)}
-      contentBar={
-        <Link to={`/offers/products`} className="flex gap-2 items-center p-1 px-3 hover:bg-primary-blue hover:text-white rounded-md border text-primary-blue border-primary-blue">
-          Show Products
-          <EyeIcon className="h-5 w-5" />
-        </Link>
-      }
+      // contentBar={
+      //   <Link to={`/offers/products`} className="flex gap-2 items-center p-1 px-3 hover:bg-primary-blue hover:text-white rounded-md border text-primary-blue border-primary-blue">
+      //     Show Products
+      //     <EyeIcon className="h-5 w-5" />
+      //   </Link>
+      // }
       headerClassName='flex justify-between gap-2 items-center'
     />
   );

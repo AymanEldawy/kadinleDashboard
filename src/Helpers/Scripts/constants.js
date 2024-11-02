@@ -17,3 +17,17 @@ export const XML_IMPORT_STEPS = [
   { name: "Processing", icon: "" },
   { name: "Completed", icon: "" },
 ];
+
+export const OFFER_TYPES = [
+  { value: 1, label: "شحن مجاني", type: "free_shipping" },
+  { value: 2, label: "خصم ع السلة", type: "cart_discount" },
+  { value: 3, label: "خصومات الكمية", type: "bulk_discounts" },
+  { value: 4, label: "خصومات سريعة (فلاش)", type: "flash_discounts" },
+  { value: 5, label: "خصم موسمي", type: "seasonal_discount" },
+  { value: 6, label: "شحن سريع", type: "fast_shipping" },
+  { value: 7, label: "كوبونات خصم", type: "discount_coupons" },
+  { value: 8, label: "عرض القطعة الإضافية", type: "extra_item" },
+  { value: 9, label: "خصومات الولاء", type: "loyalty_discounts" },
+  { value: 10, label: "خصم ع المبلغ", type: "amount_discount" },
+  { value: 11, label: "قسائم المشتريات", type: "purchase_vouchers" },
+];

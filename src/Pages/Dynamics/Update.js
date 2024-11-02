@@ -66,6 +66,7 @@ const Update = () => {
     setContentValues(contentsObject);
     setOldList((p) => !p);
   };
+  
   useEffect(() => {
     fetchData();
   }, [id, tableName]);

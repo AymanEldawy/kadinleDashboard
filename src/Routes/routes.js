@@ -118,6 +118,7 @@ import MeasurementForm from "../Pages/StandAlone/MeasurementForm";
 import Sale from "../Pages/StandAlone/Sale";
 import SaleForm from "../Pages/StandAlone/SaleForm";
 import SaleSlider from "../Pages/StandAlone/SaleSlider";
+import OffersForm from "../Pages/StandAlone/OffersForm";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -190,7 +191,8 @@ const authProtectedRoutes = [
 
   // **** Group Seasons add paths ****
   { path: "/add-sale", component: <AddSale />, allowedRoles: ["*"] },
-  { path: "/add-offer", component: <AddOffer />, allowedRoles: ["*"] },
+  { path: "/add-offer", component: <OffersForm />, allowedRoles: ["*"] },
+  { path: "/update-offer/:id", component: <OffersForm layout="update" />, allowedRoles: ["*"] },
   {
     path: "/add-collection",
     component: <AddCollection />,

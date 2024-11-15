@@ -1,13 +1,8 @@
 import React, { useState } from "react";
-import { useFetch } from "../../hooks/useFetch";
-import { Link, NavLink, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
-import {
-  getTableData,
-  getTableDataWithPagination,
-} from "../../Api/globalActions";
 import { CategoryMultiFilter } from "../../Components/TableBar/CategoryMultiFilter";
 import { Button } from "../../Components/Global/Button";
 import SearchCategoryField from "../../Components/CustomForm/SearchCategoryField";
@@ -15,9 +10,7 @@ import Select from "react-select";
 import { useUpdate } from "../../hooks/useUpdate";
 import { toast } from "react-toastify";
 import {
-  get_seller_products,
-  getProductsForCategory,
-  getSuppliersList,
+  get_seller_products, getSuppliersList
 } from "../../Api/data";
 import { ChevronIcon, TrashIcon } from "../../Helpers/Icons";
 import ReactPaginate from "react-paginate";

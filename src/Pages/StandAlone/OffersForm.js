@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
-import { OFFER_TYPES } from "../../Helpers/Scripts/constants";
+import {
+  OFFER_CHECKED_TYPES,
+  OFFER_FIELDS,
+  OFFER_TYPES,
+  offerCheckedType,
+  TABLES_NAMES,
+} from "../../Helpers/Scripts/constants";
 import InputField from "../../Components/CustomForm/InputField";
 import UploadFile from "../../Components/CustomForm/UploadFile";
 import { OfferTemplates } from "../../Components/OfferTemplates/OfferTemplates";
@@ -24,18 +30,23 @@ function OffersForm({ layout }) {
   const navigate = useNavigate();
   const params = useParams();
   const { CACHE_LANGUAGES, languages } = useGlobalOptions();
-  const { addItem } = useAdd();
+  const { addItem, addManyItem } = useAdd();
   const { deleteItem } = useDelete();
   const { getData } = useFetch();
   const { upsertItem, updateItem } = useUpdate();
+  const [offer_type, setOffer_type] = useState(null);
   const [offer, setOffer] = useState({});
   const [offerContent, setOfferContent] = useState({});
-  console.log("🚀 ~ OffersForm ~ offerContent:", offerContent);
+  const [offerData, setOfferData] = useState({});
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [refresh, setRefresh] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
   const [toggleStage, setToggleStage] = useState(true);
+
+  console.log("🚀 ~ OffersForm ~ offer:", offer);
+  console.log("🚀 ~ OffersForm ~ offerContent:", offerContent);
+  console.log("🚀 ~ OffersForm ~ offerData:", offerData);
 
   useQuery({
     queryKey: ["offer", params?.id],
@@ -82,7 +93,24 @@ function OffersForm({ layout }) {
     },
   });
 
-  const handelChangeField = (name, value, required) => {
+  console.log("lllcalleds", offer_type);
+  useEffect(() => {
+    setOfferData({});
+  }, [offer?.offer_type]);
+
+  const handleChangeRow = (name, value, index) => {
+    setOfferData((prev) => {
+      return {
+        ...prev,
+        [index]: {
+          ...prev?.[index],
+          [name]: value,
+        },
+      };
+    });
+  };
+
+  const handelChangeField = (name, value) => {
     setOffer((prev) => {
       return {
         ...prev,
@@ -161,6 +189,7 @@ function OffersForm({ layout }) {
 
       if (icon) await handleUploadOfferIcon(icon, offer_id);
 
+      await insertIntoOfferData(offer_id || params?.id);
       await insertOfferProduct(offer_id || params?.id);
 
       toast.update(loading, {
@@ -178,6 +207,30 @@ function OffersForm({ layout }) {
       });
     }
   };
+
+  const insertIntoOfferData = async (offer_id) => {
+    const list = Object.values(offerData);
+    console.log("🚀 ~ insertIntoOfferData ~ list:", list)
+    const inserted = [];
+    const updated = [];
+
+    for (const item of list) {
+      if (item?.id) updated.push(item);
+      else
+        inserted.push({
+          offer_id,
+          ...item,
+        });
+    }
+
+    const tableName = TABLES_NAMES?.[offer_type];
+    console.log("🚀 ~ insertIntoOfferData ~ tableName:", tableName)
+
+    if (inserted?.length) await addItem(tableName, inserted);
+    if (updated?.length) await upsertItem(tableName, updated);
+  };
+
+  console.log(offer_type, "-----offer");
 
   const insertOfferProduct = async (offer_id) => {
     let insertedList = [];
@@ -208,19 +261,20 @@ function OffersForm({ layout }) {
       contentBar={
         <div className="flex gap-4 items-center min-w-[50%]">
           <SelectField
-            key={offer?.offer_type}
             containerClassName="!flex-row !gap-2 w-full"
             placeholder="Select offer type"
             list={OFFER_TYPES}
             required
             keyLabel="label"
-            keyValue="value"
-            value={offer?.offer_type}
+            keyValue="offer_type"
+            value={offer?.type}
             onChange={(option) => {
+              setOffer_type(option?.type);
               setOffer({
-                offer_type: option?.value,
+                offer_type: option?.offer_type,
+                discount_type: option?.type
               });
-              setRefresh((p) => !p);
+              // setRefresh((p) => !p);
             }}
           />
           <SelectField
@@ -251,7 +305,12 @@ function OffersForm({ layout }) {
         </div>
       }
     >
-      {/* <div className="flex gap-4 items-center">
+      <div
+        className={`${
+          offer?.offer_type ? "" : "pointer-events-none opacity-50"
+        }`}
+      >
+        {/* <div className="flex gap-4 items-center">
      
         <CategoryMultiFilter
           containerClassName="min-w-[20%]"
@@ -268,93 +327,113 @@ function OffersForm({ layout }) {
           }}
         />
       </div> */}
-      {toggleStage ? (
-        <>
-          <div className="grid mb-4 grid-cols-5 gap-2 p-4 rounded-md bg-gray-100 border">
-            <InputField
-              value={offer?.sku}
-              name="sku"
-              key={offer?.offer_type + "sku"}
-              type="number"
-              label="Sku"
-              onChange={(e) => handelChangeField("sku", e.target.value)}
-              onFocus={() => onTouched("sku")}
-              error={touched?.sku && errors?.sku ? errors?.sku : null}
-              required
-            />
+        {toggleStage ? (
+          <>
+            <div className="flex gap-12 items-start">
+              <div
+                className={`${
+                  // offer?.offer_type === "FREE_SHIPPING" ||
+                  // offer?.offer_type === "FAST_SHIPPING" ||
+                  // !offer?.offer_type
+                  //   ? "grid grid-cols-3 w-full gap-2 items-center"
+                  //   : "flex flex-col w-1/3"
+                  "flex flex-col w-1/3"
+                } gap-2 mb-4 3 p-4 rounded-md bg-gray-100 border`}
+              >
+                {OFFER_FIELDS?.map((field) => {
+                  if (field?.key === "image") {
+                    return (
+                      <UploadFile
+                        boxContainerClassName="bg-white"
+                        src={offer?.[field?.name]}
+                        name={field?.name}
+                        key={offer?.offer_type + field?.name}
+                        label={field?.label}
+                        required
+                        onChange={(e) => handelFieldUpload(field?.name, e)}
+                        onFocus={() => onTouched(field?.name)}
+                        error={
+                          touched?.[field?.name] && errors?.[field?.name]
+                            ? errors?.[field?.name]
+                            : null
+                        }
+                      />
+                    );
+                  } else {
+                    return (
+                      <InputField
+                        containerClassName="flex-1 !flex-row gap-2"
+                        labelClassName="whitespace-nowrap min-w-[100px]"
+                        className={"flex-1"}
+                        value={offer?.[field?.name]}
+                        name={field?.name}
+                        key={offer?.offer_type + field?.name}
+                        type={field?.type}
+                        label={field?.label}
+                        onChange={(e) =>
+                          handelChangeField(field?.name, e.target.value)
+                        }
+                        onFocus={() => onTouched(field?.name)}
+                        error={
+                          touched?.[field?.name] && errors?.[field?.name]
+                            ? errors?.[field?.name]
+                            : null
+                        }
+                        required
+                      />
+                    );
+                  }
+                })}
+                <InputField
+                  containerClassName="flex-1 !flex-row gap-2"
+                  labelClassName="whitespace-nowrap order-1"
+                  value={offer?.display}
+                  name="display"
+                  key={offer?.offer_type + "display"}
+                  type="checkbox"
+                  label="display"
+                  onChange={(e) =>
+                    handelChangeField("display", e.target.checked)
+                  }
+                  onFocus={() => onTouched("display")}
+                  error={
+                    touched?.display && errors?.display ? errors?.display : null
+                  }
+                  required
+                />
+              </div>
 
-            <InputField
-              value={offer?.start_date}
-              name="start_date"
-              key={offer?.offer_type + "start_date"}
-              type="date"
-              label="start_date"
-              onChange={(e) => handelChangeField("start_date", e.target.value)}
-              onFocus={() => onTouched("start_date")}
-              error={
-                touched?.start_date && errors?.start_date
-                  ? errors?.start_date
-                  : null
-              }
-              required
+              <OfferTemplates
+                handelChangeField={handelChangeField}
+                offer={offer}
+                offer_type={offer_type}
+                handleChangeRow={handleChangeRow}
+                data={offerData}
+                key={offer?.offer_type}
+              />
+            </div>
+            <FormIncreasable
+              key={offer?.offer_type}
+              initialFields={DB_API?.offer_content}
+              maxCount={languages?.length}
+              values={offerContent}
+              setValues={setOfferContent}
+              errors={errors}
+              setErrors={setErrors}
+              oldList={refresh}
+              SUPABASE_TABLE_NAME={"offer"}
             />
-            <InputField
-              value={offer?.end_date}
-              name="end_date"
-              key={offer?.offer_type + "end_date"}
-              type="date"
-              label="end_date"
-              onChange={(e) => handelChangeField("end_date", e.target.value)}
-              onFocus={() => onTouched("end_date")}
-              error={
-                touched?.end_date && errors?.end_date ? errors?.end_date : null
-              }
-              required
-            />
-            <UploadFile
-              boxContainerClassName="bg-white"
-              src={offer?.icon}
-              name="icon"
-              key={offer?.offer_type + "Icon"}
-              label="Icon"
-              required
-              onChange={(e) => handelFieldUpload("icon", e)}
-              onFocus={() => onTouched("icon")}
-              error={touched?.icon && errors?.icon ? errors?.icon : null}
-            />
-            <InputField
-              value={offer?.hex}
-              name="hex"
-              key={offer?.offer_type + "hex"}
-              type="color"
-              label="hex"
-              onChange={(e) => handelChangeField("hex", e.target.value)}
-              onFocus={() => onTouched("hex")}
-              error={touched?.hex && errors?.hex ? errors?.hex : null}
-              required
-            />
-          </div>
-          <OfferTemplates handelChangeField={handelChangeField} offer={offer} />
-          <FormIncreasable
-            initialFields={DB_API?.offer_content}
-            maxCount={languages?.length}
-            values={offerContent}
-            setValues={setOfferContent}
-            errors={errors}
-            setErrors={setErrors}
-            oldList={refresh}
-            SUPABASE_TABLE_NAME={"offer"}
+          </>
+        ) : (
+          <SelectedProductTable
+            onSaveChanges={onSubmit}
+            tableName={"products slider"}
+            rowSelection={rowSelection}
+            setRowSelection={setRowSelection}
+            layout="slider"
           />
-        </>
-      ) : (
-        <SelectedProductTable
-          onSaveChanges={onSubmit}
-          tableName={"products slider"}
-          rowSelection={rowSelection}
-          setRowSelection={setRowSelection}
-          layout="slider"
-        />
-      )}
+        )}
+      </div>
       <Button title="Submit" onClick={onSubmit} />
     </BlockPaper>
   );

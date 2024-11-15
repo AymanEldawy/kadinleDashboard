@@ -19,15 +19,79 @@ export const XML_IMPORT_STEPS = [
 ];
 
 export const OFFER_TYPES = [
-  { value: 1, label: "شحن مجاني", type: "free_shipping" },
-  { value: 2, label: "خصم ع السلة", type: "cart_discount" },
-  { value: 3, label: "خصومات الكمية", type: "bulk_discounts" },
-  { value: 4, label: "خصومات سريعة (فلاش)", type: "flash_discounts" },
-  { value: 5, label: "خصم موسمي", type: "seasonal_discount" },
-  { value: 6, label: "شحن سريع", type: "fast_shipping" },
-  { value: 7, label: "كوبونات خصم", type: "discount_coupons" },
-  { value: 8, label: "عرض القطعة الإضافية", type: "extra_item" },
-  { value: 9, label: "خصومات الولاء", type: "loyalty_discounts" },
-  { value: 10, label: "خصم ع المبلغ", type: "amount_discount" },
-  { value: 11, label: "قسائم المشتريات", type: "purchase_vouchers" },
+  { label: "شحن مجاني", type: 'shipping', offer_type: "FREE_SHIPPING" },
+  { label: "شحن سريع", type: 'shipping', offer_type: "FAST_SHIPPING" },
+
+  { label: "خصم ع السلة", type: "amount", offer_type: "CART" },
+  { label: "خصومات الكمية", type: "amount", offer_type: "BULK" },
+  { label: "خصم موسمي", type: "amount", offer_type: "SEASONAL" },
+  { label: "خصومات سريعة (فلاش)", type: "amount", offer_type: "FLASH" },
+
+  { label: "خصم ع المبلغ", type: "amount_tier", offer_type: "AMOUNT" },
+
+  { label: "كوبونات خصم", type: "coupon", offer_type: "COUPONS" },
+  { label: "قسائم المشتريات", type: "coupon", offer_type: "VOUCHERS" },
+  // { label: "كوبونات خصم", type: "amount_tier", offer_type: "COUPONS" },
+
+  { label: "عرض القطعة الإضافية", type: "pay_x_buy_y", offer_type: "ITEMS" },
+
+  // { label: "خصومات الولاء", type: "amount", offer_type: "LOYALTY" },
 ];
+
+export const OFFER_CHECKED_TYPES = [
+  {
+    name: "is_fast_shipping",
+    type: "checkbox",
+    label: "fast shipping",
+  },
+  {
+    name: "is_free_shipping",
+    type: "checkbox",
+    label: "free shipping",
+  },
+  {
+    name: "is_flash",
+    type: "checkbox",
+    label: "Flash Sale",
+  },
+  {
+    name: "is_seasonal",
+    type: "checkbox",
+    label: "Seasonal",
+  },
+];
+
+export const OFFER_FIELDS = [
+  {
+    name: "sku",
+    type: "number",
+    label: "sku",
+  },
+  {
+    name: "start_date",
+    type: "date",
+    label: "start date",
+  },
+  {
+    name: "end_date",
+    type: "date",
+    label: "end date",
+  },
+  {
+    name: "hex",
+    type: "color",
+    label: "hex",
+  },
+  {
+    name: "icon",
+    key: "image",
+    label: "icon",
+  },
+];
+
+export const TABLES_NAMES = {
+  amount_tier: "offer_amount_tier",
+  coupon: "offer_coupons",
+  pay_x_buy_y: "offer_pay_get_tier",
+  
+};

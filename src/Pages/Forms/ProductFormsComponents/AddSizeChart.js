@@ -80,7 +80,7 @@ const AddSizeChart = ({
     if (layout === "update") {
       for (const subRow in newValues[row]) {
         if (newValues[row][subRow]?.id)
-          await deleteItem("chart_data", subRow?.id);
+          await deleteItem("chart_data", [subRow?.id]);
       }
     }
     delete newValues[row];

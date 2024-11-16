@@ -165,7 +165,7 @@ const TableForm = ({
             onClick={async () => {
               if (layout === "update") {
                 let id = grid?.[tabKey]?.[rowLength]?.id;
-                if (id) await deleteItem("chart_data", id);
+                if (id) await deleteItem("chart_data", [id]);
               }
               changeChartLength(tabKey, rowLength - 1);
             }}

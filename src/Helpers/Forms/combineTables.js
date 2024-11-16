@@ -1419,7 +1419,24 @@ const combine_offer = () => [
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
   { accessorKey: "sku", header: "sku" },
-  { accessorKey: "offer_type", header: "offer_type", cell: ({getValue}) => <span>{OFFER_TYPES?.find(c => c?.value === +getValue())?.label}</span> },
+  {
+    accessorKey: "offer_type",
+    header: "offer_type",
+    cell: ({ getValue }) => <span>{getValue()}</span>,
+  },
+  {
+    accessorKey: "display",
+    header: "display",
+    cell: ({ getValue }) => (
+      <span
+        className={`px-8 py-1 rounded-md ${
+          getValue() ? "bg-green-500 text-white" : "bg-red-500 text-white"
+        }`}
+      >
+        {getValue() ? "Yes" : "No"}
+      </span>
+    ),
+  },
   {
     accessorKey: "name",
     header: "name",
@@ -1433,6 +1450,16 @@ const combine_offer = () => [
         </Link>
       );
     },
+  },
+  {
+    accessorKey: "start_date",
+    header: "start_date",
+    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
+  },
+  {
+    accessorKey: "end_date",
+    header: "end_date",
+    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
 
   {

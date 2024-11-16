@@ -73,7 +73,7 @@ export const AddStockIncreasable = ({
     let id = newValues?.[itemKey]?.sizes?.[subItemKey]?.stocks?.[item];
     if (id && layout === "update") {
       // delete item
-      await deleteItem("stock", id);
+      await deleteItem("stock", [id]);
     }
     delete newValues?.[itemKey]?.sizes?.[subItemKey]?.stocks?.[item];
     setAllValues(newValues);

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import {
-  OFFER_CHECKED_TYPES,
   OFFER_FIELDS,
   OFFER_TYPES,
-  offerCheckedType,
   TABLES_NAMES,
 } from "../../Helpers/Scripts/constants";
 import InputField from "../../Components/CustomForm/InputField";
@@ -17,24 +15,22 @@ import { FormIncreasable } from "../../Components/CustomForm/FormIncreasable";
 import { useAdd } from "../../hooks/useAdd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGlobalOptions } from "../../Context/GlobalOptions";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useFetch } from "../../hooks/useFetch";
 import { handleUploadOfferIcon } from "../../Api/DynamicUploadHandler";
 import { toast } from "react-toastify";
 import { Button } from "../../Components/Global/Button";
 import { useUpdate } from "../../hooks/useUpdate";
 import { useDelete } from "../../hooks/useDelete";
-import { getOfferProducts } from "../../Api/data";
+import { getOfferData, getOfferProducts } from "../../Api/data";
 
-function OffersForm({ layout }) {
-  const navigate = useNavigate();
+function OffersForm() {
   const params = useParams();
-  const { CACHE_LANGUAGES, languages } = useGlobalOptions();
-  const { addItem, addManyItem } = useAdd();
+  const { languages } = useGlobalOptions();
+  const { addItem } = useAdd();
   const { deleteItem } = useDelete();
   const { getData } = useFetch();
   const { upsertItem, updateItem } = useUpdate();
-  const [offer_type, setOffer_type] = useState(null);
   const [offer, setOffer] = useState({});
   const [offerContent, setOfferContent] = useState({});
   const [offerData, setOfferData] = useState({});
@@ -45,16 +41,18 @@ function OffersForm({ layout }) {
   const [toggleStage, setToggleStage] = useState(true);
 
   console.log("🚀 ~ OffersForm ~ offer:", offer);
-  console.log("🚀 ~ OffersForm ~ offerContent:", offerContent);
-  console.log("🚀 ~ OffersForm ~ offerData:", offerData);
+  // console.log("🚀 ~ OffersForm ~ offerContent:", offerContent);
+  // console.log("🚀 ~ OffersForm ~ offerData:", offerData);
 
-  useQuery({
+  const { data: oldOfferData } = useQuery({
     queryKey: ["offer", params?.id],
     queryFn: async () => {
       if (!params?.id) return;
 
       const response = await getData("offer", params?.id);
       const content = await getData("offer", params?.id, "content");
+      const offer = response?.at(0);
+      setOffer(offer);
       setOffer(response?.at(0));
       if (content) {
         let hash = {};
@@ -63,7 +61,16 @@ function OffersForm({ layout }) {
         }
         setOfferContent(hash);
         setRefresh((p) => !p);
-        return content;
+      }
+      const tableName = TABLES_NAMES?.[offer?.offer_type];
+      const offerDataResponse = await getOfferData(tableName, params?.id);
+      if (!offerDataResponse?.error) {
+        let hash = {};
+        for (const item of offerDataResponse?.data) {
+          hash[item?.id] = item;
+        }
+        setOfferData(hash);
+        return hash;
       }
     },
   });
@@ -93,7 +100,6 @@ function OffersForm({ layout }) {
     },
   });
 
-  console.log("lllcalleds", offer_type);
   useEffect(() => {
     setOfferData({});
   }, [offer?.offer_type]);
@@ -210,7 +216,6 @@ function OffersForm({ layout }) {
 
   const insertIntoOfferData = async (offer_id) => {
     const list = Object.values(offerData);
-    console.log("🚀 ~ insertIntoOfferData ~ list:", list)
     const inserted = [];
     const updated = [];
 
@@ -223,14 +228,11 @@ function OffersForm({ layout }) {
         });
     }
 
-    const tableName = TABLES_NAMES?.[offer_type];
-    console.log("🚀 ~ insertIntoOfferData ~ tableName:", tableName)
+    const tableName = TABLES_NAMES?.[offer?.offer_type];
 
     if (inserted?.length) await addItem(tableName, inserted);
     if (updated?.length) await upsertItem(tableName, updated);
   };
-
-  console.log(offer_type, "-----offer");
 
   const insertOfferProduct = async (offer_id) => {
     let insertedList = [];
@@ -267,12 +269,11 @@ function OffersForm({ layout }) {
             required
             keyLabel="label"
             keyValue="offer_type"
-            value={offer?.type}
+            value={offer?.offer_type}
             onChange={(option) => {
-              setOffer_type(option?.type);
               setOffer({
                 offer_type: option?.offer_type,
-                discount_type: option?.type
+                discount_type: option?.type,
               });
               // setRefresh((p) => !p);
             }}
@@ -406,8 +407,8 @@ function OffersForm({ layout }) {
               <OfferTemplates
                 handelChangeField={handelChangeField}
                 offer={offer}
-                offer_type={offer_type}
                 handleChangeRow={handleChangeRow}
+                setOfferData={setOfferData}
                 data={offerData}
                 key={offer?.offer_type}
               />

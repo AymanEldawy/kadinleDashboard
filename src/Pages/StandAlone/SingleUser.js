@@ -88,7 +88,7 @@ const SingleUser = () => {
 
 
   const handleDeleteItem = async () => {
-    const response = await deleteItem(user, params?.id);
+    const response = await deleteItem(user, [params?.id]);
     if (response?.error) {
       toast.success("Failed to delete the user, please try again");
     } else {

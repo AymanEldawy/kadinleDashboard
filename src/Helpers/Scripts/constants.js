@@ -19,8 +19,8 @@ export const XML_IMPORT_STEPS = [
 ];
 
 export const OFFER_TYPES = [
-  { label: "شحن مجاني", type: 'shipping', offer_type: "FREE_SHIPPING" },
-  { label: "شحن سريع", type: 'shipping', offer_type: "FAST_SHIPPING" },
+  { label: "شحن مجاني", type: "shipping", offer_type: "FREE_SHIPPING" },
+  { label: "شحن سريع", type: "shipping", offer_type: "FAST_SHIPPING" },
 
   { label: "خصم ع السلة", type: "amount", offer_type: "CART" },
   { label: "خصومات الكمية", type: "amount", offer_type: "BULK" },
@@ -93,5 +93,8 @@ export const TABLES_NAMES = {
   amount_tier: "offer_amount_tier",
   coupon: "offer_coupons",
   pay_x_buy_y: "offer_pay_get_tier",
-  
+  VOUCHERS: "offer_coupons",
+  COUPONS: "offer_coupons",
+  AMOUNT: "offer_amount_tier",
+  ITEMS: "offer_pay_get_tier",
 };

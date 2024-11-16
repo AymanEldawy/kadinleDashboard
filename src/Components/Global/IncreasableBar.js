@@ -16,6 +16,7 @@ export const IncreasableBar = ({
   onIncrease,
 }) => {
   const { CACHE_LANGUAGES } = useGlobalOptions();
+  
   const increase = () => {
     if (maxCount && list?.length >= maxCount) return;
     let lastElement = uuidv4();
@@ -23,6 +24,7 @@ export const IncreasableBar = ({
     setActiveTab(lastElement);
     if (!!onIncrease) onIncrease(list, lastElement);
   };
+
   const decrease = (item, index) => {
     if (!!onDecrease) {
       onDecrease(item, index);
@@ -36,6 +38,8 @@ export const IncreasableBar = ({
     }
     setList((prev) => prev?.filter((currentItem, i) => currentItem !== item));
   };
+
+
   return (
     <div className="mb-4 border-b flex flex-wrap w-full">
       {list?.map((item, index) => {

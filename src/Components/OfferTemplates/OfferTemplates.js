@@ -51,10 +51,10 @@ const offer_amount_tier = [
 
 export const OfferTemplates = ({
   offer,
-  offer_type,
   handelChangeField,
   handleChangeRow,
   data,
+  setOfferData
 }) => {
   if (
     offer?.offer_type === "FREE_SHIPPING" ||
@@ -64,24 +64,29 @@ export const OfferTemplates = ({
 
   return (
     <div className="flex gap-4 flex-1">
-      {offer_type === "amount" && (
+      {(offer?.discount_type === "amount" ||
+        offer?.discount_type === "percentage") && (
         <OfferPercentageOrAmount
           handelChangeField={handelChangeField}
           offer={offer}
         />
       )}
-      {offer_type === "amount_tier" && (
+      {offer?.offer_type === "AMOUNT" && (
         <OfferRowView
           fields={offer_amount_tier}
           handleChangeRow={handleChangeRow}
           data={data}
+          setOfferData={setOfferData}
+          offer={offer}
         />
       )}
-      {offer_type === "pay_x_buy_y" && (
+      {offer?.offer_type === "ITEMS" && (
         <OfferRowView
           fields={offer_pay_get_tier}
           handleChangeRow={handleChangeRow}
           data={data}
+          setOfferData={setOfferData}
+          offer={offer}
         />
       )}
       {offer?.offer_type === "VOUCHERS" && (
@@ -119,6 +124,8 @@ export const OfferTemplates = ({
               ]}
               handleChangeRow={handleChangeRow}
               data={data}
+              setOfferData={setOfferData}
+              offer={offer}
               increasable={offer?.offer_type !== "VOUCHERS"}
             />
           }

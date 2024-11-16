@@ -12,9 +12,10 @@ export const regions = {
 };
 
 export const XML_IMPORT_STEPS = [
-  { name: "Upload File", icon: "" },
+  { name: "Import Xml File", icon: "" },
   { name: "Mapping", icon: "" },
-  { name: "Processing", icon: "" },
+  { name: "Second Mapping", icon: "" },
+  { name: "Report", icon: "" },
   { name: "Completed", icon: "" },
 ];
 
@@ -98,3 +99,35 @@ export const TABLES_NAMES = {
   AMOUNT: "offer_amount_tier",
   ITEMS: "offer_pay_get_tier",
 };
+
+export const XML_FIELDS = [
+  { root: "" },
+  { list: "" },
+  { item: "" },
+  { sku: "" },
+  { name: "" },
+  { details: "" },
+  { brand: "" },
+  { category: "" },
+  { price: "" },
+  { is_price_in_variant: true },
+  { stock: "" },
+  { is_stock_in_variant: true },
+  { is_image_list: true },
+  { image_list: "" },
+  { image_list_item: "" },
+  { image_fields: [] },
+  { has_variants: true },
+  { variant_list: "" },
+  { variant_list_item: "" },
+  { variant_sku: "" },
+  { variant_stock_quantity: "" },
+  { variant_stock_code: "" },
+  { variant_price: "" },
+  { is_variant_specs_list: true },
+  { variant_specs_list: "" },
+  { variant_color_name: "" },
+  { variant_color_value: "" },
+  { variant_size_name: "" },
+  { variant_size_value: "" },
+];

@@ -54,7 +54,7 @@ export const OfferTemplates = ({
   handelChangeField,
   handleChangeRow,
   data,
-  setOfferData
+  setData
 }) => {
   if (
     offer?.offer_type === "FREE_SHIPPING" ||
@@ -76,7 +76,7 @@ export const OfferTemplates = ({
           fields={offer_amount_tier}
           handleChangeRow={handleChangeRow}
           data={data}
-          setOfferData={setOfferData}
+          setData={setData}
           offer={offer}
         />
       )}
@@ -85,7 +85,7 @@ export const OfferTemplates = ({
           fields={offer_pay_get_tier}
           handleChangeRow={handleChangeRow}
           data={data}
-          setOfferData={setOfferData}
+          setData={setData}
           offer={offer}
         />
       )}
@@ -124,7 +124,7 @@ export const OfferTemplates = ({
               ]}
               handleChangeRow={handleChangeRow}
               data={data}
-              setOfferData={setOfferData}
+              setData={setData}
               offer={offer}
               increasable={offer?.offer_type !== "VOUCHERS"}
             />

@@ -408,7 +408,7 @@ function OffersForm() {
                 handelChangeField={handelChangeField}
                 offer={offer}
                 handleChangeRow={handleChangeRow}
-                setOfferData={setOfferData}
+                setData={setOfferData}
                 data={offerData}
                 key={offer?.offer_type}
               />

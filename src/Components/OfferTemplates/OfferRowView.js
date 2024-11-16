@@ -12,7 +12,7 @@ export const OfferRowView = ({
   fields,
   data,
   handleChangeRow,
-  setOfferData,
+  setData,
   offer,
   increasable = true,
 }) => {
@@ -21,17 +21,16 @@ export const OfferRowView = ({
 
   const increase = () => {
     let lastElement = uuidv4();
-    setOfferData((prev) => ({ ...prev, [lastElement]: {} }));
+    setData((prev) => ({ ...prev, [lastElement]: {} }));
     setRefresh((p) => !p);
   };
 
   const decrease = async (item, value) => {
-    console.log("🚀 ~ decrease ~ item:", value);
     const list = data;
     delete list[item];
-    setOfferData(list);
+    setData(list);
     setRefresh((p) => !p);
-    if (value?.id) {
+    if (value?.id && offer) {
       const tableName = TABLES_NAMES?.[offer?.offer_type];
       await deleteItem(tableName, [value?.id]);
     }

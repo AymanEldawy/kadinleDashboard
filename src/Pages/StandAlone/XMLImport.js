@@ -21,21 +21,42 @@ import { MappingColumn } from "../../Components/Xml/MappingColumn";
 const XMLImport = () => {
   // static data
   const response = "success";
-  const fields = [
-    { id: 0, name: "product" },
-    { id: 1, name: "product_sku" },
-    { id: 2, name: "price" },
-    { id: 3, name: "tax_percent" },
-    { id: 4, name: "barcode" },
-    { id: 5, name: "name" },
-    { id: 6, name: "description" },
-    { id: 7, name: "image" },
-    { id: 8, name: "stock" },
-    { id: 9, name: "category" },
-    { id: 10, name: "color" },
-    { id: 11, name: "size" },
-  ];
+  // const fields = [
+  //   { id: 0, name: "product" },
+  //   { id: 1, name: "product_sku" },
+  //   { id: 2, name: "price" },
+  //   { id: 3, name: "tax_percent" },
+  //   { id: 4, name: "barcode" },
+  //   { id: 5, name: "name" },
+  //   { id: 6, name: "description" },
+  //   { id: 7, name: "image" },
+  //   { id: 8, name: "stock" },
+  //   { id: 9, name: "category" },
+  //   { id: 10, name: "color" },
+  //   { id: 11, name: "size" },
+  // ];
 
+  const fields = [
+    { id: 0, name: "product_list" },
+    { id: 1, name: "product_element" },
+    { id: 2, name: "product_name" },
+    { id: 3, name: "product_sku" },
+    { id: 4, name: "product_price" },
+    { id: 5, name: "product_description" },
+    { id: 6, name: "product_stock" },
+    { id: 7, name: "product_image1" },
+    { id: 8, name: "product_image2" },
+    { id: 9, name: "product_image3" },
+    { id: 10, name: "product_image4" },
+    { id: 11, name: "product_image5" },
+    { id: 12, name: "product_category" },
+    { id: 13, name: "variants_list" },
+    { id: 14, name: "variant_element" },
+    { id: 15, name: "variant_color_field_name" },
+    { id: 16, name: "variant_color" },
+    { id: 17, name: "variant_size" },
+    { id: 18, name: "product_brand" },
+  ];
   // states
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -49,8 +70,8 @@ const XMLImport = () => {
   const [valuesData, setValuesData] = useState(null);
   const [categories, setCategories] = useState(null);
   const [colors, setColors] = useState(null);
-    const [sizes, setSizes] = useState(null);
-    console.log("colors", colors);
+  const [sizes, setSizes] = useState(null);
+  console.log("colors", colors);
   const [xmlValuesPayload, setXmlValuesPayload] = useState({
     category: [],
     size: [],
@@ -60,17 +81,19 @@ const XMLImport = () => {
 
   console.log("valuesData", valuesData);
   const [fileData, setFileData] = useState({
-    language_id: "",
+    // language_id: "",
     seller_file_id: "",
     url: "",
     template_name: "",
   });
 
   // API URLs
+  const baseUrl = "https://xml.kadinle.com";
   const createXmlFileUrl =
     process.env.REACT_APP_KADINLE_API + "/xml-mapping/xml";
   const getXmlFieldsUrl =
-    process.env.REACT_APP_KADINLE_API + "/xml-mapping/xml/9/fields";
+    baseUrl +
+    "/api/v4?url=https://www.toptanbulurum.com/export/1/1158S4586M653";
   const getXmlValuesUrl =
     process.env.REACT_APP_KADINLE_API +
     "/xml-mapping/xml/9/values-to-map?category=Category&size=VariantValue1&color=VariantValue2";
@@ -119,6 +142,7 @@ const XMLImport = () => {
     } finally {
       setLoading(false);
       fetchFieldsData();
+      console.log("finally");
     }
   };
 
@@ -129,6 +153,7 @@ const XMLImport = () => {
     setError(null);
     try {
       const response = await fetch(getXmlFieldsUrl);
+      console.log("response get fields", response);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -320,7 +345,7 @@ const XMLImport = () => {
           {activeStage === STAGES[0] ? (
             <>
               <div className="flex flex-col md:flex-row w-full gap-5 mb-5">
-                <SelectField
+                {/* <SelectField
                   list={[
                     { name: "English" },
                     { name: "Turkish" },
@@ -335,8 +360,10 @@ const XMLImport = () => {
                       language_id: e.target.value,
                     });
                   }}
-                />
+                /> */}
                 {/* <InputField label="language_id" containerClassName="w-full" /> */}
+              </div>
+              <div className="flex flex-col md:flex-row w-full gap-5">
                 <InputField
                   label="seller_file_id"
                   containerClassName="w-full"
@@ -348,8 +375,6 @@ const XMLImport = () => {
                     });
                   }}
                 />
-              </div>
-              <div className="flex flex-col md:flex-row w-full gap-5">
                 <InputField
                   label="url"
                   containerClassName="w-full"
@@ -403,7 +428,7 @@ const XMLImport = () => {
                         key={field.id}
                         className="flex items-center justify-center"
                       >
-                        <span className="w-20">{field.name}</span>
+                        <span className="w-[180px] text-end">{field.name}</span>
                         <div className="h-1 w-48 bg-[#E5E7EB] mt-2 ml-3" />
                         <span className="text-[#5D9FF2] text-[22px] mt-1">
                           ➤

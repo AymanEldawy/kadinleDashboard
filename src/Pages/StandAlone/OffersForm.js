@@ -23,6 +23,7 @@ import { Button } from "../../Components/Global/Button";
 import { useUpdate } from "../../hooks/useUpdate";
 import { useDelete } from "../../hooks/useDelete";
 import { getOfferData, getOfferProducts } from "../../Api/data";
+import { LoadingProcess } from "../../Components/Global/LoadingProcess";
 
 function OffersForm() {
   const params = useParams();
@@ -39,6 +40,7 @@ function OffersForm() {
   const [refresh, setRefresh] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
   const [toggleStage, setToggleStage] = useState(true);
+  const [isProgress, setIsProgress] = useState(false);
 
   console.log("🚀 ~ OffersForm ~ offer:", offer);
   // console.log("🚀 ~ OffersForm ~ offerContent:", offerContent);
@@ -163,7 +165,8 @@ function OffersForm() {
   };
 
   const onSubmit = async () => {
-    let loading = toast.loading("Please wait...");
+    // let loading = toast.loading("Please wait...");
+    setIsProgress(true);
     let icon = null;
 
     if (typeof offer?.icon === "object") {
@@ -195,22 +198,15 @@ function OffersForm() {
 
       if (icon) await handleUploadOfferIcon(icon, offer_id);
 
+      setIsProgress(false);
+
+      toast.success(
+        `Great! successfully ${params?.id ? "Updated" : "added"} offer`
+      );
       await insertIntoOfferData(offer_id || params?.id);
       await insertOfferProduct(offer_id || params?.id);
-
-      toast.update(loading, {
-        render: `Great! successfully ${params?.id ? "Updated" : "added"} offer`,
-        type: "success",
-        isLoading: false,
-        autoClose: 2000,
-      });
     } else {
-      toast.update(loading, {
-        render: `Oops! failed to ${params?.id ? "Updated" : "added"} offer`,
-        type: "error",
-        isLoading: false,
-        autoClose: 2000,
-      });
+      toast.error(`Oops! failed to ${params?.id ? "Updated" : "added"} offer`);
     }
   };
 
@@ -235,6 +231,7 @@ function OffersForm() {
   };
 
   const insertOfferProduct = async (offer_id) => {
+    if (!rowSelection) return;
     let insertedList = [];
     let updatedList = [];
     let list = oldProducts;
@@ -307,10 +304,12 @@ function OffersForm() {
       }
     >
       <div
-        className={`${
+        className={`relative ${
           offer?.offer_type ? "" : "pointer-events-none opacity-50"
         }`}
       >
+        {isProgress ? <LoadingProcess /> : null}
+
         {/* <div className="flex gap-4 items-center">
      
         <CategoryMultiFilter

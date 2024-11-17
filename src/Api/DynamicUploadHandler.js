@@ -73,6 +73,7 @@ export const handleUploadOfferIcon = async (icon, itemId) => {
       id: itemId,
     });
   }
+  return true
 };
 
 export const handleUploadOfferImage = async (item, itemId, CACHE_LANGUAGES) => {

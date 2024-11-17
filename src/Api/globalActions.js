@@ -179,24 +179,23 @@ export const addManyItem = async (table, items) => {
 export const deleteItems = async (table, ids) => {
   const response = await supabase.from(table).delete().in("id", ids);
   if (!response?.error) {
-    for (const id of ids) {
-      await addNewItem("logs", {
-        description: `Deleted item from ${table}`,
-        row_id: id,
-        table_name: table,
-        admin_id: ADMIN?.id,
-      });
-    }
+    await addNewItem("logs", {
+      description: `Deleted item from ${table}`,
+      row_id: JSON.stringify(ids),
+      table_name: table,
+      admin_id: ADMIN?.id,
+    });
   } else {
     await addNewItem("logs", {
       description: `Failed to Delete item from ${table}`,
-      row_id: ids?.[0],
+      row_id: JSON.stringify(ids),
       table_name: table,
       admin_id: ADMIN?.id,
     });
   }
   return response;
 };
+
 export const deleteItem = async (table, id) => {
   const response = await supabase.from(table).delete().eq("id", id);
   if (!response?.error) {

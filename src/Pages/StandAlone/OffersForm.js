@@ -166,6 +166,10 @@ function OffersForm() {
 
   const onSubmit = async () => {
     // let loading = toast.loading("Please wait...");
+    if(!Object.values(offerContent)?.at(0)?.name) {
+      toast.error(`Offer name is required`)
+      return 
+    }
     setIsProgress(true);
     let icon = null;
 

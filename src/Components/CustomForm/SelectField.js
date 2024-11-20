@@ -70,7 +70,9 @@ const SelectField = ({
         options={list}
         required={required}
         onChange={onChange}
-        value={list?.find((c) => c?.[keyValue] == value)}
+        value={
+          list && list?.length && list?.find((c) => c?.[keyValue] == value)
+        }
       />
       {error ? (
         <p className="bg-red-200 mt-2 rounded text-sm text-red-500 px-2 py-1">

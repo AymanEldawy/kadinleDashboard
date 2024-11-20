@@ -1,11 +1,7 @@
-import React, { useState } from "react";
-import InputField from "../CustomForm/InputField";
+import React, { useEffect, useState } from "react";
 import { OfferRowView } from "../OfferTemplates/OfferRowView";
 
-export const XmlImageListIncreasable = () => {
-  const [data, setData] = useState({
-    1: {}
-  });
+export const XmlImageListIncreasable = ({ data, setData }) => {
   return (
     <OfferRowView
       data={data}
@@ -16,7 +12,6 @@ export const XmlImageListIncreasable = () => {
           label: "images",
         },
       ]}
-
     />
     // <div>
     //     <InputField />

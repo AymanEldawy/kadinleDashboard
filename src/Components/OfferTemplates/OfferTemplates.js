@@ -118,7 +118,6 @@ export const OfferTemplates = ({
               fields={[
                 {
                   name: "code",
-                  type: "number",
                   label: "code",
                 },
               ]}

@@ -1991,6 +1991,26 @@ export const getSaleData = async (id, language_id) =>
 export const getOfferProducts = async (offer_id) =>
   await supabase.from("offer_product").select(`*`).eq("offer_id", offer_id);
 
-
 export const getOfferData = async (table, offer_id) =>
-  await supabase.from(table, ).select(`*`).eq("offer_id", offer_id);
+  await supabase.from(table).select(`*`).eq("offer_id", offer_id);
+
+export const getColorsMap = async (value, languageId, region_id) =>
+  await supabase
+    .from("color")
+    .select(`id,color_sku, color_content(name, color_id)`)
+    .ilike("color_sku", `%${value}%`)
+    .eq("color_content.region_id", region_id);
+
+export const getSizesMap = async (value, languageId) =>
+  await supabase
+    .from("size")
+    .select(`id,size_sku, size_content(name, size_id, region_id)`)
+    .ilike("size_sku", `%${value}%`)
+    .eq("size_content.language_id", languageId);
+
+export const getCategoriesMap = async (value, languageId) =>
+  await supabase
+    .from("category")
+    .select(`id,numeric, category_content(title, category_id)`)
+    .ilike("numeric", `%${value}%`)
+    .eq("category_content.language_id", languageId);

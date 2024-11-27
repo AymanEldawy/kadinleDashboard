@@ -26,6 +26,7 @@ export const XmlSecondMapFields = ({ fileId }) => {
     size: [],
     color: [],
   });
+  console.log("🚀 ~ XmlSecondMapFields ~ xmlValuesPayload:", xmlValuesPayload);
 
   const { data, isLoading } = useQuery({
     queryKey: [fileId],
@@ -33,7 +34,6 @@ export const XmlSecondMapFields = ({ fileId }) => {
     queryFn: async () => {
       if (!fileId) return [];
       const response = await XMLGetValuesToMap(fileId);
-      console.log("🚀 ~ queryFn: ~ response:", response);
       return response?.data;
     },
   });
@@ -57,21 +57,23 @@ export const XmlSecondMapFields = ({ fileId }) => {
       return [];
     }
   };
-  console.log(isLoading, "--sd");
-
+  
   return (
     <>
       {isLoading ? <LoadingProcess withBackdrop /> : null}
       <div className="flex flex-col gap-4">
         {data?.category && (
-          <XmlSectionWrapper title="Categories">
+          <XmlSectionWrapper title={`Categories (${data?.category?.length})`}>
             {data?.category?.map((cate) => (
-              <div className="flex gap-12 items-center" key={cate}>
+              <div
+                className="flex gap-12 items-center border-b p-2 hover:bg-white duration-300 hover:shadow justify-between"
+                key={cate}
+              >
                 <p>{cate}</p>
                 <AsyncSelect
                   placeholder={"Categories"}
                   required
-                  className="flex-1 min-w-[180px]"
+                  className="flex-1 max-w-[250px]"
                   cacheOptions
                   onChange={(e) => {
                     const newCategoryItem = {
@@ -84,14 +86,14 @@ export const XmlSecondMapFields = ({ fileId }) => {
                       category: [...prevState.size, newCategoryItem],
                     }));
                   }}
-                  getOptionLabel={(option) =>{
-                    console.log(option,'option');
-                    
-                    return option?.category_content?.at(0)?.title
+                  getOptionLabel={(option) => {
+                    console.log(option, "option");
+
+                    return option?.category_content?.at(0)?.title;
                   }}
                   getOptionValue={(option) => option?.id}
                   loadOptions={(inputValue) => {
-                    loadOptions("category", inputValue);
+                    return loadOptions("category", inputValue);
                   }}
                 />{" "}
               </div>
@@ -99,14 +101,17 @@ export const XmlSecondMapFields = ({ fileId }) => {
           </XmlSectionWrapper>
         )}
         {data?.color && (
-          <XmlSectionWrapper title="Colors">
+          <XmlSectionWrapper title={`Colors (${data?.color?.length})`}>
             {data?.color?.map((color) => (
-              <div className="flex gap-12 items-center" key={color}>
+              <div
+                className="flex gap-12 items-center border-b p-2 hover:bg-white duration-300 hover:shadow"
+                key={color}
+              >
                 <p>{color}</p>
                 <AsyncSelect
                   placeholder={"Colors"}
                   required
-                  className="flex-1 min-w-[180px]"
+                  className="flex-1 max-w-[250px]"
                   cacheOptions
                   onChange={(e) => {
                     const newCategoryItem = {
@@ -124,7 +129,7 @@ export const XmlSecondMapFields = ({ fileId }) => {
                   }
                   getOptionValue={(option) => option?.id}
                   loadOptions={(inputValue) => {
-                    loadOptions("color", inputValue);
+                    return loadOptions("color", inputValue);
                   }}
                 />
               </div>
@@ -132,14 +137,17 @@ export const XmlSecondMapFields = ({ fileId }) => {
           </XmlSectionWrapper>
         )}
         {data?.size && (
-          <XmlSectionWrapper title="Sizes">
+          <XmlSectionWrapper title={`Sizes (${data?.size?.length})`}>
             {data?.size?.map((size) => (
-              <div className="flex gap-12 items-center" key={size}>
+              <div
+                className="flex gap-12 items-center border-b p-2 hover:bg-white duration-300 hover:shadow"
+                key={size}
+              >
                 <p>{size}</p>
                 <AsyncSelect
                   placeholder={"size"}
                   required
-                  className="flex-1 min-w-[180px]"
+                  className="flex-1 max-w-[250px]"
                   cacheOptions
                   onChange={(e) => {
                     const newCategoryItem = {
@@ -155,7 +163,7 @@ export const XmlSecondMapFields = ({ fileId }) => {
                   getOptionLabel={(option) => option?.size_content?.at(0)?.name}
                   getOptionValue={(option) => option?.id}
                   loadOptions={(inputValue) => {
-                    loadOptions("size", inputValue);
+                    return loadOptions("size", inputValue);
                   }}
                 />{" "}
               </div>

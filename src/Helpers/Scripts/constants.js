@@ -20,23 +20,21 @@ export const XML_IMPORT_STEPS = [
 ];
 
 export const OFFER_TYPES = [
-  { label: "شحن مجاني", type: "shipping", offer_type: "FREE_SHIPPING" },
-  { label: "شحن سريع", type: "shipping", offer_type: "FAST_SHIPPING" },
+  { label: "شحن مجاني", offer_type: "FREE_SHIPPING", group: 1 },
+  { label: "شحن سريع", offer_type: "FAST_SHIPPING", group: 1 },
 
-  { label: "خصم ع السلة", type: "amount", offer_type: "CART" },
-  { label: "خصومات الكمية", type: "amount", offer_type: "BULK" },
-  { label: "خصم موسمي", type: "amount", offer_type: "SEASONAL" },
-  { label: "خصومات سريعة (فلاش)", type: "amount", offer_type: "FLASH" },
+  { label: "خصومات سريعة (فلاش)", type: "", offer_type: "FLASH", group: 2 },
+  { label: "خصم ع السلة", type: "", offer_type: "CART", group: 2 },
+  { label: "خصم عام", type: "", offer_type: "GENERAL", group: 2 },
 
-  { label: "خصم ع المبلغ", type: "amount_tier", offer_type: "AMOUNT" },
+  { label: "خصم موسمي", offer_type: "SEASONAL", group: 2 }, // amount
+  { label: "خصومات الكمية", offer_type: "BULK", group: 1 }, // amount
+  { label: "خصم ع المبلغ", offer_type: "AMOUNT", group: 2 }, // amount_tier
+  { label: "كوبونات خصم", offer_type: "COUPONS", group: 2 }, // coupon
+  { label: "قسائم المشتريات", offer_type: "VOUCHERS", group: 2 }, // coupon
+  { label: "عرض القطعة الإضافية", offer_type: "ITEMS", group: 1 }, // pay_x_buy_y
 
-  { label: "كوبونات خصم", type: "coupon", offer_type: "COUPONS" },
-  { label: "قسائم المشتريات", type: "coupon", offer_type: "VOUCHERS" },
-  // { label: "كوبونات خصم", type: "amount_tier", offer_type: "COUPONS" },
-
-  { label: "عرض القطعة الإضافية", type: "pay_x_buy_y", offer_type: "ITEMS" },
-
-  // { label: "خصومات الولاء", type: "amount", offer_type: "LOYALTY" },
+  // { label: "خصومات الولاء", type: "amount", offer_type: "LOYALTY", group: 1 },
 ];
 
 export const OFFER_CHECKED_TYPES = [

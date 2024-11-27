@@ -1,135 +1,84 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import InputField from "../CustomForm/InputField";
 import { OfferRowView } from "./OfferRowView";
 import { OfferPercentageOrAmount } from "./OfferPercentageOrAmount";
 
-// { value: 1, label: "شحن مجاني", type: "free_shipping" },
-// { value: 4, label: "خصومات سريعة (فلاش)", type: "flash" },
-// { value: 6, label: "شحن سريع", type: "fast_shipping" },
+const VIEW = {
+  FREE_SHIPPING: "",
+  FAST_SHIPPING: "",
 
-// { value: 2, label: "خصم ع السلة", type: "cart_discount" },
-// { value: 3, label: "خصومات الكمية", type: "bulk_discounts" },
-// { value: 5, label: "خصم موسمي", type: "seasonal_discount" },
-// { value: 7, label: "كوبونات خصم", type: "discount_coupons" },
-// { value: 10, label: "خصم ع المبلغ", type: "amount_discount" },
-// { value: 11, label: "قسائم المشتريات", type: "purchase_vouchers" },
-// { value: 9, label: "خصومات الولاء", type: "loyalty_discounts" },
+  FLASH: "one",
+  CART: "one",
+  GENERAL: "one",
 
-// { value: 8, label: "عرض القطعة الإضافية", type: "extra_item" },
+  SEASONAL: "grid",
+  BULK: "grid",
+  AMOUNT: "grid",
+  COUPONS: "grid",
+  VOUCHERS: "grid",
+  ITEMS: "grid",
+};
 
-// Change status
-// is_flash
-// is_fast_shipping
-// is_free_shipping
-// is_seasonal
+const getFields = (withCoupon) => {
+  const fields = [
+    {
+      name: "discount_value",
+      type: "number",
+      label: "Field 2",
+    },
+    {
+      name: "discount_type",
+      type: "text",
+      label: "discount type",
+      list: [
+        { name: "amount" },
+        { name: "percentage" },
+        { name: "pay_x_buy_y" },
+      ],
+    },
+  ];
+  if (withCoupon)
+    fields.unshift({
+      name: "code",
+      type: "text",
+      label: "code",
+    });
+  else
+    fields.unshift({
+      name: "minimum_order_count",
+      type: "number",
+      label: "Field 1",
+    });
 
-const offer_pay_get_tier = [
-  {
-    name: "buy_quantity",
-    type: "number",
-    label: "buy quantity",
-  },
-  {
-    name: "pay_quantity",
-    type: "number",
-    label: "pay quantity",
-  },
-];
-
-const offer_amount_tier = [
-  {
-    name: "minimum_order_count",
-    type: "number",
-    label: "minimum order count",
-  },
-  {
-    name: "discount_amount",
-    type: "number",
-    label: "discount amount",
-  },
-];
+  return fields;
+};
 
 export const OfferTemplates = ({
   offer,
   handelChangeField,
   handleChangeRow,
   data,
-  setData
+  setData,
 }) => {
-  if (
-    offer?.offer_type === "FREE_SHIPPING" ||
-    offer?.offer_type === "FAST_SHIPPING"
-  )
-    return;
+  const fields = useMemo(() => {
+    if (offer?.offer_type === "VOUCHERS" || offer?.offer_type === "COUPONS")
+      return getFields(true);
+    return getFields();
+  }, [offer?.offer_type]);
+
+  const view = VIEW?.[offer?.offer_type];
+  if (!view) return;
 
   return (
-    <div className="flex gap-4 flex-1">
-      {(offer?.discount_type === "amount" ||
-        offer?.discount_type === "percentage") && (
-        <OfferPercentageOrAmount
-          handelChangeField={handelChangeField}
-          offer={offer}
-        />
-      )}
-      {offer?.offer_type === "AMOUNT" && (
-        <OfferRowView
-          fields={offer_amount_tier}
-          handleChangeRow={handleChangeRow}
-          data={data}
-          setData={setData}
-          offer={offer}
-        />
-      )}
-      {offer?.offer_type === "ITEMS" && (
-        <OfferRowView
-          fields={offer_pay_get_tier}
-          handleChangeRow={handleChangeRow}
-          data={data}
-          setData={setData}
-          offer={offer}
-        />
-      )}
-      {offer?.offer_type === "VOUCHERS" && (
-        <OfferPercentageOrAmount
-          containerClassName="grid-cols-2"
-          handelChangeField={handelChangeField}
-          offer={offer}
-          extra={
-            <InputField
-              containerClassName="flex-1 mb-1 gap-2 !flex-row"
-              labelClassName="w-[100px]"
-              className="flex-1 w-full"
-              value={data?.[0]?.code}
-              name={"code"}
-              label={"code"}
-              required
-              onChange={(e) => handleChangeRow("code", e.target.value, 0)}
-            />
-          }
-        />
-      )}
-      {offer?.offer_type === "COUPONS" && (
-        <OfferPercentageOrAmount
-          handelChangeField={handelChangeField}
-          offer={offer}
-          extra={
-            <OfferRowView
-              containerClassName="order-4"
-              fields={[
-                {
-                  name: "code",
-                  label: "code",
-                },
-              ]}
-              handleChangeRow={handleChangeRow}
-              data={data}
-              setData={setData}
-              offer={offer}
-              increasable={offer?.offer_type !== "VOUCHERS"}
-            />
-          }
-        />
-      )}
+    <div className="flex gap-4 flex-1 p-2 shadow bg-gray-100 my-8">
+      <OfferRowView
+        fields={fields}
+        handleChangeRow={handleChangeRow}
+        data={data}
+        setData={setData}
+        offer={offer}
+        increasable={view === "grid"}
+      />
     </div>
   );
 };

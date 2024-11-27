@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import React, { useEffect, useState } from "react";
 import BlockPaper from "../../Components/BlockPaper/BlockPaper";
 import {
@@ -22,10 +23,17 @@ import { toast } from "react-toastify";
 import { Button } from "../../Components/Global/Button";
 import { useUpdate } from "../../hooks/useUpdate";
 import { useDelete } from "../../hooks/useDelete";
-import { getOfferData, getOfferProducts } from "../../Api/data";
+import {
+  getOfferCountry,
+  getOfferData,
+  getOfferProducts,
+} from "../../Api/data";
 import { LoadingProcess } from "../../Components/Global/LoadingProcess";
+import { SelectCountries } from "../../Components/OfferTemplates/SelectCountries";
 
 function OffersForm() {
+  const hash_id = uuidv4();
+  const navigate = useNavigate();
   const params = useParams();
   const { languages } = useGlobalOptions();
   const { addItem } = useAdd();
@@ -33,24 +41,20 @@ function OffersForm() {
   const { getData } = useFetch();
   const { upsertItem, updateItem } = useUpdate();
   const [offer, setOffer] = useState({});
+  const [selectedCountries, setSelectedCountries] = useState({});
   const [offerContent, setOfferContent] = useState({});
   const [offerData, setOfferData] = useState({});
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [refresh, setRefresh] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
+  const [countries, setCountries] = useState([]);
   const [toggleStage, setToggleStage] = useState(true);
   const [isProgress, setIsProgress] = useState(false);
-
-  console.log("🚀 ~ OffersForm ~ offer:", offer);
-  // console.log("🚀 ~ OffersForm ~ offerContent:", offerContent);
-  // console.log("🚀 ~ OffersForm ~ offerData:", offerData);
 
   const { data: oldOfferData } = useQuery({
     queryKey: ["offer", params?.id],
     queryFn: async () => {
-      if (!params?.id) return;
-
       const response = await getData("offer", params?.id);
       const content = await getData("offer", params?.id, "content");
       const offer = response?.at(0);
@@ -64,17 +68,19 @@ function OffersForm() {
         setOfferContent(hash);
         setRefresh((p) => !p);
       }
-      const tableName = TABLES_NAMES?.[offer?.offer_type];
-      const offerDataResponse = await getOfferData(tableName, params?.id);
+      // const tableName = TABLES_NAMES?.[offer?.offer_type];
+      const offerDataResponse = await getOfferData("offer_tier", params?.id);
       if (!offerDataResponse?.error) {
         let hash = {};
         for (const item of offerDataResponse?.data) {
           hash[item?.id] = item;
         }
         setOfferData(hash);
+        console.log("🚀 ~ queryFn: ~ hash:", hash);
         return hash;
       }
     },
+    enabled: !!params?.id,
   });
 
   const { data: oldProducts } = useQuery({
@@ -94,16 +100,25 @@ function OffersForm() {
     },
   });
 
-  const { data: countries } = useQuery({
-    queryKey: ["country"],
+  const { data: oldCountries } = useQuery({
+    queryKey: ["offer", "country", params?.id],
     queryFn: async () => {
-      const response = await getData("country");
-      return response;
+      if (!params?.id) return;
+
+      const response = await getOfferCountry(params?.id);
+      let hashCountry = {};
+      for (const country of response?.data) {
+        hashCountry[country?.country_id] = country;
+      }
+      setCountries(Object.keys(hashCountry));
+      return hashCountry;
     },
   });
 
   useEffect(() => {
-    setOfferData({});
+    setOfferData({
+      [uuidv4()]: {},
+    });
   }, [offer?.offer_type]);
 
   const handleChangeRow = (name, value, index) => {
@@ -166,9 +181,9 @@ function OffersForm() {
 
   const onSubmit = async () => {
     // let loading = toast.loading("Please wait...");
-    if(!Object.values(offerContent)?.at(0)?.name) {
-      toast.error(`Offer name is required`)
-      return 
+    if (!Object.values(offerContent)?.at(0)?.name) {
+      toast.error(`Offer name is required`);
+      return;
     }
     setIsProgress(true);
     let icon = null;
@@ -208,11 +223,27 @@ function OffersForm() {
         `Great! successfully ${params?.id ? "Updated" : "added"} offer`
       );
       await insertIntoOfferData(offer_id || params?.id);
-      await insertOfferProduct(offer_id || params?.id);
+      await insertOfferList(
+        offer_id || params?.id,
+        Object.keys(rowSelection),
+        oldProducts,
+        "product_id",
+        "offer_product"
+      );
+      await insertOfferList(
+        offer_id || params?.id,
+        countries,
+        oldCountries,
+        "country_id",
+        "offer_countries"
+      );
+      if (!params?.id) navigate("/offers");
     } else {
       toast.error(`Oops! failed to ${params?.id ? "Updated" : "added"} offer`);
     }
   };
+
+  console.log(rowSelection, countries);
 
   const insertIntoOfferData = async (offer_id) => {
     const list = Object.values(offerData);
@@ -228,33 +259,40 @@ function OffersForm() {
         });
     }
 
-    const tableName = TABLES_NAMES?.[offer?.offer_type];
+    // const tableName = TABLES_NAMES?.[offer?.offer_type];
 
-    if (inserted?.length) await addItem(tableName, inserted);
-    if (updated?.length) await upsertItem(tableName, updated);
+    if (inserted?.length) await addItem("offer_tier", inserted);
+    if (updated?.length) await upsertItem("offer_tier", updated);
   };
 
-  const insertOfferProduct = async (offer_id) => {
-    if (!rowSelection) return;
+  const insertOfferList = async (
+    offer_id,
+    newList,
+    oldList,
+    item_id,
+    tableName
+  ) => {
+    if (!newList) return;
     let insertedList = [];
     let updatedList = [];
-    let list = oldProducts;
+    let list = oldList;
 
-    for (const product_id of Object.keys(rowSelection)) {
-      if (list?.[product_id]) {
-        updatedList.push(list?.[product_id]);
-        delete list[product_id];
+    for (const item of newList) {
+      if (list?.[item]) {
+        updatedList.push(list?.[item]);
+        delete list[item];
       } else {
         insertedList.push({
-          product_id,
+          [item_id]: item,
           offer_id,
         });
       }
     }
 
-    await updateItem("offer_product", updatedList);
-    await addItem("offer_product", insertedList);
-    await deleteItem("offer_product", Object.keys(list));
+    await updateItem(tableName, updatedList);
+    await addItem(tableName, insertedList);
+    await deleteItem(tableName, Object.keys(list));
+    return
   };
 
   return (
@@ -265,36 +303,38 @@ function OffersForm() {
         <div className="flex gap-4 items-center min-w-[50%]">
           <SelectField
             containerClassName="!flex-row !gap-2 w-full"
-            placeholder="Select offer type"
-            list={OFFER_TYPES}
+            placeholder="Select Group"
+            list={[
+              { id: 1, name: "Group 1" },
+              { id: 2, name: "Group 2" },
+            ]}
+            value={offer?.group}
+            keyLabel="name"
+            keyValue="id"
+            onChange={(option) => {
+              setOffer((prev) => ({
+                ...prev,
+                group: option?.id,
+              }));
+            }}
+          />
+          <SelectField
+            containerClassName="!flex-row !gap-2 w-full"
+            placeholder="Select offer"
+            list={OFFER_TYPES?.filter((o) => o?.group === offer?.group)}
             required
             keyLabel="label"
             keyValue="offer_type"
             value={offer?.offer_type}
             onChange={(option) => {
-              setOffer({
+              setOffer((prev) => ({
+                group: prev?.group,
                 offer_type: option?.offer_type,
                 discount_type: option?.type,
-              });
-              // setRefresh((p) => !p);
-            }}
-          />
-          <SelectField
-            key={offer?.offer_type + "Select"}
-            // label="Select Country"
-            containerClassName="!flex-row !gap-2 w-full"
-            placeholder="Select Country"
-            list={countries}
-            keyLabel="name"
-            keyValue="id"
-            value={countries?.find((c) => c?.name === offer?.country_id)}
-            onChange={(option) => {
-              setOffer((prev) => ({
-                ...prev,
-                country_id: option?.id,
               }));
             }}
           />
+
           <button
             onClick={() => setToggleStage((p) => !p)}
             className={`${
@@ -314,44 +354,20 @@ function OffersForm() {
       >
         {isProgress ? <LoadingProcess /> : null}
 
-        {/* <div className="flex gap-4 items-center">
-     
-        <CategoryMultiFilter
-          containerClassName="min-w-[20%]"
-          name="offer_category"
-          label="select category"
-          required
-
-          filterCategory={offer?.category_id}
-          setFilterCategory={(category_id) => {
-            setOffer((prev) => ({
-              ...prev,
-              category_id,
-            }));
-          }}
-        />
-      </div> */}
         {toggleStage ? (
           <>
-            <div className="flex gap-12 items-start">
+            <div className="grid md:grid-cols-2 gap-8 items-start">
               <div
-                className={`${
-                  // offer?.offer_type === "FREE_SHIPPING" ||
-                  // offer?.offer_type === "FAST_SHIPPING" ||
-                  // !offer?.offer_type
-                  //   ? "grid grid-cols-3 w-full gap-2 items-center"
-                  //   : "flex flex-col w-1/3"
-                  "flex flex-col w-1/3"
-                } gap-2 mb-4 3 p-4 rounded-md bg-gray-100 border`}
+                className={`grid grid-cols-2 gap-2 mb-4 3 p-4 items-end rounded-md bg-gray-100 border`}
               >
                 {OFFER_FIELDS?.map((field) => {
                   if (field?.key === "image") {
                     return (
                       <UploadFile
-                        boxContainerClassName="bg-white"
+                        boxContainerClassName="bg-white flex-1"
                         src={offer?.[field?.name]}
                         name={field?.name}
-                        key={offer?.offer_type + field?.name}
+                        // key={offer?.offer_type + field?.name}
                         label={field?.label}
                         required
                         onChange={(e) => handelFieldUpload(field?.name, e)}
@@ -366,12 +382,12 @@ function OffersForm() {
                   } else {
                     return (
                       <InputField
-                        containerClassName="flex-1 !flex-row gap-2"
+                        // containerClassName="justify-center"
+                        // containerClassName="flex-1 !flex-row gap-2"
                         labelClassName="whitespace-nowrap min-w-[100px]"
-                        className={"flex-1"}
                         value={offer?.[field?.name]}
                         name={field?.name}
-                        key={offer?.offer_type + field?.name}
+                        // key={offer?.offer_type + field?.name}
                         type={field?.type}
                         label={field?.label}
                         onChange={(e) =>
@@ -389,11 +405,11 @@ function OffersForm() {
                   }
                 })}
                 <InputField
-                  containerClassName="flex-1 !flex-row gap-2"
+                  containerClassName="flex-1 !flex-row gap-2 items-center"
                   labelClassName="whitespace-nowrap order-1"
                   value={offer?.display}
                   name="display"
-                  key={offer?.offer_type + "display"}
+                  checked={offer?.display}
                   type="checkbox"
                   label="display"
                   onChange={(e) =>
@@ -406,18 +422,20 @@ function OffersForm() {
                   required
                 />
               </div>
-
-              <OfferTemplates
-                handelChangeField={handelChangeField}
-                offer={offer}
-                handleChangeRow={handleChangeRow}
-                setData={setOfferData}
-                data={offerData}
-                key={offer?.offer_type}
+              <SelectCountries
+                countries={countries}
+                setCountries={setCountries}
               />
             </div>
+            <OfferTemplates
+              handelChangeField={handelChangeField}
+              offer={offer}
+              handleChangeRow={handleChangeRow}
+              setData={setOfferData}
+              data={offerData}
+            />
             <FormIncreasable
-              key={offer?.offer_type}
+              // key={offer?.offer_type}
               initialFields={DB_API?.offer_content}
               maxCount={languages?.length}
               values={offerContent}

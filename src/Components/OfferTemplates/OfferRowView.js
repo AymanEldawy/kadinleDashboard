@@ -5,6 +5,7 @@ import MinusIcon from "../../Helpers/Icons/MinusIcon";
 import { v4 as uuidv4 } from "uuid";
 import { TABLES_NAMES } from "../../Helpers/Scripts/constants";
 import { useDelete } from "../../hooks/useDelete";
+import SelectField from "../CustomForm/SelectField";
 
 export const OfferRowView = ({
   containerClassName,
@@ -35,32 +36,61 @@ export const OfferRowView = ({
       await deleteItem(tableName, [value?.id]);
     }
   };
+console.log(data,'---d');
 
   return (
     <div className={`flex-1 ${containerClassName}`}>
       {Object.entries(data).map(([key, value], index) => (
-        <div className={`flex gap-2 items-center`} key={index + key}>
+        <div
+          className={`flex lg:flex-row flex-col gap-2 items-start lg:items-center`}
+          key={index + key}
+        >
           {fields?.map((field, i) => {
-            return (
-              <InputField
-                key={field?.name}
-                containerClassName="flex-1 mb-1"
-                value={value?.[field?.name]}
-                name={field?.name}
-                type={field?.type}
-                label={index > 0 ? null : field?.label}
-                required
-                onChange={(e) =>
-                  handleChangeRow(
-                    field?.name,
-                    field?.type === "checkbox"
-                      ? e.target.checked
-                      : e.target.value,
-                    key
-                  )
-                }
-              />
-            );
+            if (field?.list) {
+              console.log(value,' ---v');
+
+              return (
+                <SelectField
+                  {...field}
+                  key={field?.name}
+                  containerClassName="flex-1 mb-1 w-full"
+                  value={value?.[field?.name]}
+                  keyLabel="name"
+                  keyValue="name"
+                  labelClassName={`${
+                    index > 0 && "lg:hidden"
+                  } font-medium text-lg`}
+                  onChange={(option) =>
+                    handleChangeRow(
+                      field?.name,
+                      option?.name,
+                      key
+                    )
+                  }
+                />
+              );
+            } else {
+              return (
+                <InputField
+                  {...field}
+                  key={field?.name}
+                  containerClassName="flex-1 mb-1 w-full"
+                  value={value?.[field?.name]}
+                  labelClassName={`${
+                    index > 0 && "lg:hidden"
+                  } font-medium text-lg`}
+                  onChange={(e) =>
+                    handleChangeRow(
+                      field?.name,
+                      field?.type === "checkbox"
+                        ? e.target.checked
+                        : e.target.value,
+                      key
+                    )
+                  }
+                />
+              );
+            }
           })}
           {increasable ? (
             <button
@@ -76,7 +106,7 @@ export const OfferRowView = ({
         </div>
       ))}
       {increasable ? (
-        <div className="flex w-fit border rounded-md gap-2 items-center justify-between bg-blue-50 py-1 px-2">
+        <div className="flex w-fit border rounded-md gap-2 items-center justify-between bg-blue-50 py-1 px-2 mt-2">
           <p>Rows: {Object.keys(data).length}</p>
           <button
             className="bg-blue-500 active:bg-blue-700 text-white rounded-md w-7 h-7 flex items-center justify-center"

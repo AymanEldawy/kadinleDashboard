@@ -9,7 +9,7 @@ export const OfferPercentageOrAmount = ({
 }) => {
   return (
     <div
-      className={`grid justify-between gap-4 items-center w-full ${containerClassName || 'grid-cols-3'}`}
+      className={`grid justify-between gap-4 items-center w-full ${containerClassName}`}
     >
       {extra ? extra : null}
       <InputField

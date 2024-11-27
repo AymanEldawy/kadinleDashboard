@@ -22,6 +22,11 @@ const VIEW = {
 const getFields = (withCoupon) => {
   const fields = [
     {
+      name: "minimum_order_count",
+      type: "number",
+      label: "Field 1",
+    },
+    {
       name: "discount_value",
       type: "number",
       label: "Field 2",
@@ -42,12 +47,6 @@ const getFields = (withCoupon) => {
       name: "code",
       type: "text",
       label: "code",
-    });
-  else
-    fields.unshift({
-      name: "minimum_order_count",
-      type: "number",
-      label: "Field 1",
     });
 
   return fields;

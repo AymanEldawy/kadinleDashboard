@@ -165,6 +165,7 @@ const DynamicForm = ({ SUPABASE_TABLE_NAME, title }) => {
       });
     }
   };
+  
   return (
     <>
       <div className="my-2">

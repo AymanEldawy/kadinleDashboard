@@ -1925,6 +1925,7 @@ const combine_collection_product = (rowSelection, showIndex) => [
     accessorKey: "product",
     header: "product",
     cell: ({ row }) => {
+      console.log("🚀 ~ row:", row.original)
       return (
         <ProductInfo
           showIndex={showIndex}

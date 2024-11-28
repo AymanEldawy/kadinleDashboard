@@ -20,6 +20,7 @@ const SelectField = ({
   containerClassName,
   placeholder,
   labelClassName,
+  readOnly,
   ...field
 }) => {
   const { theme: webTheme } = useContext(ThemeContext);
@@ -73,6 +74,7 @@ const SelectField = ({
         value={
           list && list?.length && list?.find((c) => c?.[keyValue] == value)
         }
+        isDisabled={readOnly}
       />
       {error ? (
         <p className="bg-red-200 mt-2 rounded text-sm text-red-500 px-2 py-1">

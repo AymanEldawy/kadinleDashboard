@@ -13,6 +13,7 @@ export const CategoryFallbackForm = ({
   hideAction,
   setSelectedCategories,
   name,
+  hideActions,
 }) => {
   const [categoryId, setCategoryId] = useState(null);
   const [categories, setCategories] = useState([]);
@@ -85,21 +86,25 @@ export const CategoryFallbackForm = ({
           </p>
         )}
       </div>
-      <div className={`flex items-center gap-4 ${hideAction ? "hidden" : ""}`}>
-        <button
-          disabled={isLoading}
-          onClick={onClickCancel}
-          className="bg-red-50 text-red-500 text-sm px-4 py-2 rounded-md hover:bg-red-500 hover:text-white duration-300"
+      {hideActions ? null : (
+        <div
+          className={`flex items-center gap-4 ${hideAction ? "hidden" : ""}`}
         >
-          Cancel
-        </button>
-        <Button
-          title="Save Categories"
-          classes="text-xs capitalize whitespace-nowrap"
-          onClick={handleUpdateCategory}
-          disabled={isLoading || !categories?.length}
-        />
-      </div>
+          <button
+            disabled={isLoading}
+            onClick={onClickCancel}
+            className="bg-red-50 text-red-500 text-sm px-4 py-2 rounded-md hover:bg-red-500 hover:text-white duration-300"
+          >
+            Cancel
+          </button>
+          <Button
+            title="Save Categories"
+            classes="text-xs capitalize whitespace-nowrap"
+            onClick={handleUpdateCategory}
+            disabled={isLoading || !categories?.length}
+          />
+        </div>
+      )}
     </div>
   );
 };

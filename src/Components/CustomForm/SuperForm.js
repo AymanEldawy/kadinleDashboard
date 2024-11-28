@@ -34,6 +34,9 @@ const SuperForm = ({
   const [touched, setTouched] = useState({});
   const [loading, setLoading] = useState(false);
 
+  console.log(CACHED_TABLE,'CACHED_TABLE');
+  
+
   // Clean up component
   const location = useLocation();
 

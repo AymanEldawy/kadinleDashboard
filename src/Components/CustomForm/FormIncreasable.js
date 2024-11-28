@@ -13,6 +13,7 @@ import InputField from "./InputField";
 import RadioField from "./RadioField";
 import SelectField from "./SelectField";
 import UploadFile from "./UploadFile";
+import { NewIncreasableBar } from "../Global/NewIncreasableBar";
 
 let CACHED_TABLE = {};
 
@@ -28,7 +29,7 @@ export const FormIncreasable = ({
   oldList,
   SUPABASE_TABLE_NAME,
   tableName,
-  customGrid
+  customGrid,
 }) => {
   const { getData } = useFetch();
   const location = useLocation();
@@ -36,24 +37,37 @@ export const FormIncreasable = ({
     useGlobalOptions();
   const [selectedTab, setSelectedTab] = useState([]);
   const [touched, setTouched] = useState({});
-  const [listCount, setListCount] = useState([`00${uuidv4()}`]);
-  const [activeTab, setActiveTab] = useState(listCount[0]);
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     checkRefTable(initialFields);
   }, [initialFields]);
 
   useEffect(() => {
-    if (!!onChangeValues) onChangeValues(values);
-  }, [values]);
+    if (
+      !Object.keys(values)?.length &&
+      defaultLanguage?.id &&
+      defaultRegion?.id
+    ) {
+      let key = SUPABASE_TABLE_NAME === "size" ? "region_id" : "language_id";
+      let value =
+        SUPABASE_TABLE_NAME === "size"
+          ? defaultRegion?.id
+          : defaultLanguage?.id;
+      setValues({
+        [value]: {
+          [key]: value,
+        },
+      });
+      setActiveTab(value);
+      setSelectedTab([value]);
+    }
+  }, [values, defaultLanguage?.id, defaultRegion?.id, SUPABASE_TABLE_NAME]);
+  console.log(CACHED_TABLE , "---dsd");
 
   useEffect(() => {
-    if (!!values && !!oldList) {
-      const list = Object.keys(values)?.length ?  Object.keys(values) : [1];
-      setListCount(list);
-      setActiveTab(list[0]);
-    }
-  }, [oldList]);
+    if (!!onChangeValues) onChangeValues(values);
+  }, [values]);
 
   async function checkRefTable(fields) {
     if (!fields?.length) return;
@@ -67,7 +81,6 @@ export const FormIncreasable = ({
           CACHED_TABLE[field?.tableName] = response?.data;
         } else {
           const data = await getData(field?.tableName);
-
           CACHED_TABLE[field?.tableName] = data;
         }
       }
@@ -143,10 +156,9 @@ export const FormIncreasable = ({
   return (
     <div className="">
       <div className="flex flex-wrap gap-2 items-start">
-        <IncreasableBar
-          list={listCount}
-          setList={setListCount}
+        <NewIncreasableBar
           values={values}
+          setValues={setValues}
           setActiveTab={setActiveTab}
           activeTab={activeTab}
           maxCount={maxCount}
@@ -161,13 +173,18 @@ export const FormIncreasable = ({
           }
         />
       </div>
-      {listCount?.map((item, index) => (
+      {Object.keys(values)?.map((item, index) => (
         <form
           className={`mb-8 ${activeTab === item ? "" : "hidden"}`}
           tabName={item}
           key={item}
         >
-          <div className={customGrid || "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8"}>
+          <div
+            className={
+              customGrid ||
+              "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8"
+            }
+          >
             {!!initialFields
               ? initialFields?.map((field, i) => {
                   if (field?.name === "id" || field?.hide_in_add_form)

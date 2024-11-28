@@ -1994,6 +1994,9 @@ export const getOfferProducts = async (offer_id) =>
 export const getOfferCountry = async (offer_id) =>
   await supabase.from("offer_countries").select(`*`).eq("offer_id", offer_id);
 
+export const getOfferCategory = async (offer_id) =>
+  await supabase.from("offer_category").select(`*`).eq("offer_id", offer_id);
+
 export const getOfferData = async (table, offer_id) =>
   await supabase.from(table).select(`*`).eq("offer_id", offer_id);
 

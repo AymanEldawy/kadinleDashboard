@@ -24,18 +24,21 @@ import { Button } from "../../Components/Global/Button";
 import { useUpdate } from "../../hooks/useUpdate";
 import { useDelete } from "../../hooks/useDelete";
 import {
+  getCacheCategory,
+  getOfferCategory,
   getOfferCountry,
   getOfferData,
   getOfferProducts,
 } from "../../Api/data";
 import { LoadingProcess } from "../../Components/Global/LoadingProcess";
 import { SelectCountries } from "../../Components/OfferTemplates/SelectCountries";
+import { CategoryFallbackForm } from "../../Components/CategoryComponents/CategoryFallbackForm";
 
 function OffersForm() {
   const hash_id = uuidv4();
   const navigate = useNavigate();
   const params = useParams();
-  const { languages } = useGlobalOptions();
+  const { languages, defaultLanguage } = useGlobalOptions();
   const { addItem } = useAdd();
   const { deleteItem } = useDelete();
   const { getData } = useFetch();
@@ -48,9 +51,12 @@ function OffersForm() {
   const [touched, setTouched] = useState({});
   const [refresh, setRefresh] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
+  const [selectedCategories, setSelectedCategories] = useState(null);
   const [countries, setCountries] = useState([]);
   const [toggleStage, setToggleStage] = useState(true);
   const [isProgress, setIsProgress] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [category, setCategory] = useState(null);
 
   const { data: oldOfferData } = useQuery({
     queryKey: ["offer", params?.id],
@@ -76,8 +82,17 @@ function OffersForm() {
           hash[item?.id] = item;
         }
         setOfferData(hash);
-        console.log("🚀 ~ queryFn: ~ hash:", hash);
         return hash;
+      }
+      if (offer?.offer_type === "FLASH") {
+        const category = await getData(
+          "category",
+          offer?.category_id,
+          "content"
+        );
+        setCategory(
+          category?.find((c) => c?.language_id === defaultLanguage?.id)
+        );
       }
     },
     enabled: !!params?.id,
@@ -86,8 +101,6 @@ function OffersForm() {
   const { data: oldProducts } = useQuery({
     queryKey: ["offer", "products", params?.id],
     queryFn: async () => {
-      if (!params?.id) return;
-
       const response = await getOfferProducts(params?.id);
       let hashProduct = {};
       let selection = {};
@@ -98,13 +111,27 @@ function OffersForm() {
       setRowSelection(selection);
       return hashProduct;
     },
+    enabled: !!params?.id,
   });
+
+  // const { data: oldCategories } = useQuery({
+  //   queryKey: ["offer", "category", params?.id],
+  //   queryFn: async () => {
+  //     const response = await getOfferCategory(params?.id);
+  //     let hashCategory = {};
+  //     for (const category of response?.data) {
+  //       hashCategory[category?.category_id] = category;
+  //     }
+  //     setCountries(Object.keys(hashCategory));
+  //     setSelectedCategories(Object.keys(hashCategory));
+  //     return hashCategory;
+  //   },
+  //   enabled: !!params?.id,
+  // });
 
   const { data: oldCountries } = useQuery({
     queryKey: ["offer", "country", params?.id],
     queryFn: async () => {
-      if (!params?.id) return;
-
       const response = await getOfferCountry(params?.id);
       let hashCountry = {};
       for (const country of response?.data) {
@@ -113,7 +140,16 @@ function OffersForm() {
       setCountries(Object.keys(hashCountry));
       return hashCountry;
     },
+    enabled: !!params?.id,
   });
+
+  // const { data: CACHE_CATEGORIES } = useQuery({
+  //   queryKey: ["CACHE_CATEGORIES", "category", defaultLanguage?.id],
+  //   queryFn: async () => {
+  //     return await getCacheCategory(defaultLanguage?.id);
+  //   },
+  //   enabled: !!defaultLanguage?.id,
+  // });
 
   useEffect(() => {
     setOfferData({
@@ -133,7 +169,10 @@ function OffersForm() {
     });
   };
 
-  const handelChangeField = (name, value) => {
+  const handelChangeField = (name, value, required) => {
+    if (required) {
+      insertIntoErrors(name, value);
+    }
     setOffer((prev) => {
       return {
         ...prev,
@@ -168,9 +207,6 @@ function OffersForm() {
   };
 
   const handelFieldUpload = (name, e, required) => {
-    if (required) {
-      // insertIntoErrors(name, value);
-    }
     setOffer((prev) => {
       return {
         ...prev,
@@ -179,12 +215,27 @@ function OffersForm() {
     });
   };
 
+  console.log(Object.keys(offerContent).length, "---");
+
   const onSubmit = async () => {
-    // let loading = toast.loading("Please wait...");
+    if (!offer?.icon || !offer?.hex) {
+      toast.error(`Please fill required fields`);
+      return;
+    }
     if (!Object.values(offerContent)?.at(0)?.name) {
       toast.error(`Offer name is required`);
       return;
     }
+
+    if (!Object.values(offerContent)?.length < 3) {
+      toast.error(`Offer content must be with all languages`);
+      return;
+    }
+
+    if (offer?.offer_type === "FLASH") {
+      offer.category_id = selectedCategory;
+    }
+
     setIsProgress(true);
     let icon = null;
 
@@ -237,7 +288,13 @@ function OffersForm() {
         "country_id",
         "offer_countries"
       );
-      if (!params?.id) navigate("/offers");
+      // await insertOfferList(
+      //   offer_id || params?.id,
+      //   selectedCategories,
+      //   oldCategories,
+      //   "category_id",
+      //   "offer_category"
+      // );
     } else {
       toast.error(`Oops! failed to ${params?.id ? "Updated" : "added"} offer`);
     }
@@ -292,7 +349,7 @@ function OffersForm() {
     await updateItem(tableName, updatedList);
     await addItem(tableName, insertedList);
     await deleteItem(tableName, Object.keys(list));
-    return
+    return;
   };
 
   return (
@@ -311,6 +368,7 @@ function OffersForm() {
             value={offer?.group}
             keyLabel="name"
             keyValue="id"
+            readOnly={offer?.offer_type}
             onChange={(option) => {
               setOffer((prev) => ({
                 ...prev,
@@ -325,6 +383,7 @@ function OffersForm() {
             required
             keyLabel="label"
             keyValue="offer_type"
+            readOnly={offer?.offer_type}
             value={offer?.offer_type}
             onChange={(option) => {
               setOffer((prev) => ({
@@ -336,10 +395,11 @@ function OffersForm() {
           />
 
           <button
+            disabled={!offer?.offer_type}
             onClick={() => setToggleStage((p) => !p)}
             className={`${
               toggleStage ? "bg-primary-green" : "bg-primary-red"
-            } px-4 py-1 rounded-md whitespace-nowrap text-white capitalize`}
+            } disabled:bg-gray-100 disabled:text-gray-300 px-4 py-1 rounded-md whitespace-nowrap text-white capitalize`}
           >
             {toggleStage ? "Show Products" : "hide Products"} (
             {Object.keys(rowSelection)?.length})
@@ -447,16 +507,31 @@ function OffersForm() {
             />
           </>
         ) : (
-          <SelectedProductTable
-            onSaveChanges={onSubmit}
-            tableName={"products slider"}
-            rowSelection={rowSelection}
-            setRowSelection={setRowSelection}
-            layout="slider"
-          />
+          <>
+            {/* <CategoryFallbackForm
+              setSelectedCategories={setSelectedCategories}
+              CACHE_CATEGORIES={CACHE_CATEGORIES}
+              oldCategories={oldCategories}
+              hideActions
+            />{" "} */}
+            <SelectedProductTable
+              onSaveChanges={onSubmit}
+              tableName={"products slider"}
+              rowSelection={rowSelection}
+              setRowSelection={setRowSelection}
+              setSelectedCategory={setSelectedCategory}
+              categoryTitle={category?.title || ""}
+            />
+          </>
         )}
       </div>
-      <Button title="Submit" onClick={onSubmit} />
+      <Button
+        title="Submit"
+        onClick={onSubmit}
+        disabled={
+          !offer?.hex || !offer?.icon || Object.keys(offerContent)?.length < 3
+        }
+      />
     </BlockPaper>
   );
 }

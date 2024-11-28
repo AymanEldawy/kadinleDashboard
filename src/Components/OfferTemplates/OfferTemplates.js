@@ -25,16 +25,19 @@ const getFields = (withCoupon) => {
       name: "minimum_order_count",
       type: "number",
       label: "Field 1",
+      required: true,
     },
     {
       name: "discount_value",
       type: "number",
       label: "Field 2",
+      required: true,
     },
     {
       name: "discount_type",
       type: "text",
       label: "discount type",
+      required: true,
       list: [
         { name: "amount" },
         { name: "percentage" },

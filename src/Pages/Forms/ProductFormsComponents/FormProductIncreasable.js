@@ -117,6 +117,7 @@ export const FormProductIncreasable = ({
           values={values}
           list={listCount}
           setList={setListCount}
+          setValues={setValues}
           maxCount={maxCount}
           activeTab={activeTab}
           setActiveTab={setActiveTab}

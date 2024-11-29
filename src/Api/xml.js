@@ -13,7 +13,6 @@ export async function XMLgetTemplateFields(url) {
 }
 
 export async function XMLCreateFile(data) {
-  console.log("🚀 ~ XMLCreateFile ~ data:", data);
   try {
     const response = await fetch(
       `${process.env.REACT_APP_KADINLE_XML}/api/v4`,

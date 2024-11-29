@@ -77,7 +77,6 @@ const CustomTable = ({
     getRowId: (row, relativeIndex, parent) => {
       if (!!outerSelectedId) return outerSelectedId(row, relativeIndex, parent);
       return row?.id;
-      // console.log(row, parent, relativeIndex);
     },
     onPaginationChange: (v) => {
       setPagination(v);

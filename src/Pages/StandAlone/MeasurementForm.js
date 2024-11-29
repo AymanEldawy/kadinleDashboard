@@ -90,7 +90,6 @@ const MeasurementForm = () => {
     delete list[index];
     setContent(list);
   };
-  console.log(measurement, "------");
 
   return (
     <BlockPaper

@@ -20,7 +20,6 @@ const WarehouseFrom = ({
   checkedId,
   setCheckedId,
 }) => {
-  console.log("order from warehouse", order);
   let show = useMemo(
     () =>
       showVariant?.find((variant) => variant?.id === order?.order?.order_id)
@@ -32,7 +31,6 @@ const WarehouseFrom = ({
   const baseURL = "https://kadinle.com/en/product/";
 
   const checkedStates = useRef([]);
-  console.log("checkedStates", checkedStates);
 
   const [visibleLength, setVisibleLength] = useState(20);
   const linkRef = useRef(null);

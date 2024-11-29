@@ -111,7 +111,6 @@ const ProductsReport = () => {
                 options={categories}
                 getOptionValue={({ id }) => id}
                 getOptionLabel={({ content }) => {
-                  console.log("🚀 ~ ProductsReport ~ content:", content);
                   return content?.at(0)?.title;
                 }}
                 onChange={(value) => {

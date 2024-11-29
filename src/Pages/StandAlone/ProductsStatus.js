@@ -77,7 +77,6 @@ const ProductsStatus = () => {
       accessorKey: "display",
       header: "display",
       cell: ({ row }) => {
-        console.log("🚀 ~ ProductsStatus ~ row:", row?.original?.product);
         return <span>{row?.original?.product?.display ? "YES" : "No"}</span>;
       },
     },
@@ -131,7 +130,6 @@ const ProductsStatus = () => {
       return response?.data?.products;
     },
   });
-  console.log(pageCount);
 
   async function handleToggleViewAll(display, oldList) {
     const list = oldList || Object.keys(rowSelection);

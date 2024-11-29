@@ -96,8 +96,6 @@ const SaleForm = () => {
     }));
   };
 
-  console.log(data, "---sdsdsd");
-
   return (
     <BlockPaper
       title="Flash Sale"

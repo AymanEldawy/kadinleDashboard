@@ -8,7 +8,7 @@ import { getRowsById, removeItemsFrom } from "../../Api/globalActions";
 import { toast } from "react-toastify";
 import CustomTable from "../CustomTable/CustomTable";
 import { useQuery } from "@tanstack/react-query";
-import { getProductsView } from "../../Api/data";
+import { getProductsList, getProductsView } from "../../Api/data";
 import { CategoryMultiFilter } from "../TableBar/CategoryMultiFilter";
 import SearchBar from "../SearchBar/SearchBar";
 
@@ -22,7 +22,9 @@ export const SelectedProductTable = ({
   onSaveChanges,
   categoryTitle,
   showIndex,
-  saleProductsIds
+  saleProductsIds,
+  param_ignore_ids,
+  param_price,
 }) => {
   const { defaultLanguage, defaultRegion } = useGlobalOptions();
   const { getDataWithPagination } = useFetch();
@@ -37,6 +39,42 @@ export const SelectedProductTable = ({
 
   const [open, setOpen] = useState(false);
 
+  // const { data, isLoading } = useQuery({
+  //   queryKey: [
+  //     pageCount,
+  //     filterCategory,
+  //     defaultLanguage?.id,
+  //     defaultRegion?.id,
+  //     pagination?.pageIndex,
+  //     pagination?.pageSize,
+  //     searchValue,
+  //     selectedColumn,
+  //     open,
+  //   ],
+  //   keepPreviousData: true,
+  //   queryFn: async () => {
+  //     if (!defaultLanguage?.id) return [];
+  //     let filter =
+  //       filterCategory?.indexOf("Choose") !== -1 ? "" : filterCategory;
+  //     const response = open
+  //       ? await getProductsView(defaultLanguage?.id, Object.keys(rowSelection))
+  //       : await getDataWithPagination(
+  //           "product",
+  //           pagination?.pageIndex + 1,
+  //           pagination?.pageSize,
+  //           {
+  //             languageId: defaultLanguage?.id,
+  //             regionId: defaultRegion?.id,
+  //             filter,
+  //             product_ids: saleProductsIds,
+  //             search: { key: selectedColumn, value: searchValue },
+  //             ...additionalData,
+  //           }
+  //         );
+  //     setPageCount(Math.ceil(response?.count / parseInt(pagination?.pageSize)));
+  //     return response?.data;
+  //   },
+  // });
   const { data, isLoading } = useQuery({
     queryKey: [
       pageCount,
@@ -53,24 +91,25 @@ export const SelectedProductTable = ({
     queryFn: async () => {
       if (!defaultLanguage?.id) return [];
       let filter =
-        filterCategory?.indexOf("Choose") !== -1 ? "" : filterCategory;
-      const response = open
-        ? await getProductsView(defaultLanguage?.id, Object.keys(rowSelection))
-        : await getDataWithPagination(
-            "product",
-            pagination?.pageIndex + 1,
-            pagination?.pageSize,
-            {
-              languageId: defaultLanguage?.id,
-              regionId: defaultRegion?.id,
-              filter,
-              product_ids: saleProductsIds,
-              search: { key: selectedColumn, value: searchValue },
-              ...additionalData,
-            }
-          );
-      setPageCount(Math.ceil(response?.count / parseInt(pagination?.pageSize)));
-      return response?.data;
+        filterCategory?.indexOf("Choose") !== -1 ? null : filterCategory;
+      let filters = {};
+      // param_name:"",
+      // param_seller_sku,
+
+      const response = await getProductsList({
+        param_lang_id: defaultLanguage?.id,
+        param_products_ids: open ? Object.keys(rowSelection) : null,
+        param_category_id: filter,
+        param_limit: pagination?.pageSize,
+        param_offset: pagination?.pageIndex + 1,
+        param_ignore_ids,
+        param_price,
+        ...filters,
+      });
+      console.log(response,  rowSelection);
+  
+      setPageCount(Math.ceil(response?.total_count / parseInt(pagination?.pageSize)));
+      return response?.products;
     },
   });
 
@@ -82,7 +121,7 @@ export const SelectedProductTable = ({
 
   return (
     <div>
-      <div className="flex items-end gap-4 mb-6">
+      <div className="flex flex-wrap items-end gap-4 mb-6">
         {extraContent ? extraContent : null}
 
         <CategoryMultiFilter
@@ -142,6 +181,9 @@ export const SelectedProductTable = ({
         rowSelection={rowSelection}
         setRowSelection={setRowSelection}
         showIndex={showIndex}
+        outerSelectedId={(row, relativeIndex, parent) =>{
+          return row?.product_id
+        }}
       />
     </div>
   );

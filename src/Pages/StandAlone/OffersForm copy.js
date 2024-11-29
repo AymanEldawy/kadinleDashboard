@@ -39,8 +39,6 @@ function OffersForm() {
     });
   };
 
-  console.log(offer, rowSelection);
-
   const onSubmit = async () => {};
 
   return (

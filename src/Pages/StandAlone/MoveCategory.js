@@ -57,7 +57,6 @@ const MoveCategory = () => {
         pagination?.pageIndex * pagination?.pageSize,
         pagination?.pageSize
       );
-      console.log(response, "response,response");
 
       let products = response?.data?.products;
       let total_count = response?.data?.total_count;
@@ -89,7 +88,6 @@ const MoveCategory = () => {
     // staleTime: 0, // O
   });
 
-  console.log(data, "-dsd");
 
   const handlePageClick = (event) => {
     setPagination((prev) => ({
@@ -218,7 +216,7 @@ const MoveCategory = () => {
             </div>
           }
         >
-          <div className="my-4 flex items-end gap-4">
+          <div className="my-4 flex flex-wrap items-end gap-4">
             <InputField
               value={sellerSku}
               label={"Seller sku"}
@@ -302,7 +300,7 @@ const MoveCategory = () => {
             <div className="p-2 flex-1">Actions</div>
           </div>
           {data?.products?.map((product) => {
-            let isSelected = selectedList?.[product?.id];
+            let isSelected = selectedList?.[product?.id];            
             return (
               <div
                 className={`border-y flex items-center dark:border-[#343333]  dark:text-white ${

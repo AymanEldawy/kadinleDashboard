@@ -28,7 +28,6 @@ const ProductsSLidersForm = ({ layout }) => {
       if (layout !== "update") return;
       const response = await getData(name, params?.id);
       let data = response?.at(0);
-      console.log("🚀 ~ queryFn: ~ data:", data);
       setValues(data);
       if (data?.products_sku?.length) {
         let hash = {};
@@ -68,7 +67,6 @@ const ProductsSLidersForm = ({ layout }) => {
     });
   };
 
-  console.log(rowSelection);
   
 
   const onSubmit = async () => {
@@ -102,7 +100,6 @@ const ProductsSLidersForm = ({ layout }) => {
       });
     }
   };
-  console.log(values);
 
   return (
     <BlockPaper

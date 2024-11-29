@@ -22,7 +22,6 @@ async function uploadFile(formData, action) {
   const newFile = new File([originalFile], newFileName, {
     type: originalFile.type,
   });
-  console.log(newFileName);
 
   formData.delete("file");
 

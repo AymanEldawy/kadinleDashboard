@@ -38,7 +38,6 @@ const MoveCategory = () => {
     queryKey: ["list", "suppliers"],
     queryFn: async () => {
       const data = await getSuppliersList();
-      console.log("🚀 ~ queryFn: ~ response:", data);
       return data;
     },
   });
@@ -95,7 +94,6 @@ const MoveCategory = () => {
   });
 
   const handlePageClick = (event) => {
-    console.log("🚀 ~ handlePageClick ~ event:", event);
     setPagination((prev) => ({
       ...prev,
       pageIndex: event,

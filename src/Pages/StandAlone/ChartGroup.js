@@ -41,7 +41,6 @@ const ChartGroup = () => {
   });
 
   const updateCategory = async (categories) => {
-    console.log("🚀 ~ updateCategory ~ categories:", categories);
     if (params?.id) {
       return await updateItem("chart_group", {
         id: params?.id,
@@ -53,12 +52,10 @@ const ChartGroup = () => {
         group_name,
         chart_group_ids: categories,
       });
-      console.log(res);
 
       return res;
     }
   };
-console.log(chartGroup,'chartGroup');
 
   return (
     <BlockPaper title="Chart Group">

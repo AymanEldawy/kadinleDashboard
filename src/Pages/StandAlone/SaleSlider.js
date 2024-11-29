@@ -47,8 +47,6 @@ const SaleSlider = () => {
       };
     },
   });
-  console.log(saleProducts,'saleProducts');
-  
 
   const { data: saleSlider } = useQuery({
     queryKey: ["sale_slider"],

@@ -43,9 +43,7 @@ const SupplierProducts = () => {
   const [clicked, setClicked] = useState(true);
 
   const [data, setData] = useState([]);
-  console.log("data: ", data);
   const [error, setError] = useState();
-  console.log("error: ", error);
   const [showVariant, setShowVariant] = useState([]);
   const [checkedSku, setCheckedSku] = useState([]);
   const [dataCount, setDataCount] = useState(1);
@@ -74,7 +72,6 @@ const SupplierProducts = () => {
   });
   const numberOfPages = Math.ceil(dataCount / itemsPerPage);
 
-  // console.log("suppliers", suppliers);
   useEffect(() => {
     // Clear localStorage when the component mounts
     localStorage.removeItem("mainChecked");
@@ -273,7 +270,6 @@ const SupplierProducts = () => {
     localStorage.setItem("pageIndex", pageIndex);
   }, [table.getState().pagination.pageIndex]);
 
-  console.log(currencyData, "currencyData");
 
   const initialPageIndex = Number(localStorage.getItem("pageIndex")) || 0;
   return (

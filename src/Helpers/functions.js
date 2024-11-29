@@ -67,16 +67,15 @@ export function getFormatPrice(price, currency) {
   return calculatePrice;
 }
 
-
 export function buildTree(items) {
   const map = {};
   const roots = [];
 
-  items.forEach(item => {
+  items.forEach((item) => {
     map[item.id] = { ...item, children: [] };
   });
 
-  items.forEach(item => {
+  items.forEach((item) => {
     if (item.parent_id === null) {
       roots.push(map[item.id]);
     } else {
@@ -95,4 +94,16 @@ export function debounce(func, delay) {
       func(...args);
     }, delay);
   };
+}
+
+export function getDiscountIcon(type) {
+  console.log("🚀 ~ getDiscountIcon ~ type:", type)
+  switch (type) {
+    case "amount":
+      return "$";
+    case "percentage":
+      return "%";
+    default:
+      return "";
+  }
 }

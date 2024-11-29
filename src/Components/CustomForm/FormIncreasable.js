@@ -35,7 +35,7 @@ export const FormIncreasable = ({
   const location = useLocation();
   const { CACHE_LANGUAGES, languages, defaultLanguage, defaultRegion } =
     useGlobalOptions();
-  const [selectedTab, setSelectedTab] = useState([]);
+  // const [selectedTab, setSelectedTab] = useState([]);
   const [touched, setTouched] = useState({});
   const [activeTab, setActiveTab] = useState(0);
 
@@ -60,10 +60,9 @@ export const FormIncreasable = ({
         },
       });
       setActiveTab(value);
-      setSelectedTab([value]);
+      // setSelectedTab([value]);
     }
   }, [values, defaultLanguage?.id, defaultRegion?.id, SUPABASE_TABLE_NAME]);
-  console.log(CACHED_TABLE , "---dsd");
 
   useEffect(() => {
     if (!!onChangeValues) onChangeValues(values);
@@ -121,8 +120,7 @@ export const FormIncreasable = ({
   };
   const handelChangeField = (name, value, required, row) => {
     if (name === "language_id") {
-      if (selectedTab?.includes(value)) return;
-      setSelectedTab((prev) => [...prev, value]);
+      if (Object.keys(values)?.includes(value)) return;
     }
     if (required) {
       insertIntoErrors(name, value, row);

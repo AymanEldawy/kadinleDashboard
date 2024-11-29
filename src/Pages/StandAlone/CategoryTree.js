@@ -56,7 +56,6 @@ const CategoryTree = () => {
   };
 
   const onSelectedItem = (event, item) => {
-    // console.log("----", event, item);
     const list = selectedList;
     setSelectedList(recursiveSelect(list, item, event.target.checked));
     setRefresh((p) => !p);

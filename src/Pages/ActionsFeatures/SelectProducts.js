@@ -86,8 +86,6 @@ const SelectProduct = ({ tableName }) => {
       }
     }
   };
-  console.log(rowSelection);
-  
 
   return (
     <div>

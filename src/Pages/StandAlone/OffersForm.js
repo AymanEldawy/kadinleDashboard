@@ -29,10 +29,13 @@ import {
   getOfferCountry,
   getOfferData,
   getOfferProducts,
+  getProductsList,
 } from "../../Api/data";
 import { LoadingProcess } from "../../Components/Global/LoadingProcess";
 import { SelectCountries } from "../../Components/OfferTemplates/SelectCountries";
 import { CategoryFallbackForm } from "../../Components/CategoryComponents/CategoryFallbackForm";
+import { GeneralOfferTemplate } from "../../Components/OfferTemplates/GeneralOfferTemplate";
+import { getDiscountIcon, getFormatPrice } from "../../Helpers/functions";
 
 function OffersForm() {
   const hash_id = uuidv4();
@@ -57,6 +60,7 @@ function OffersForm() {
   const [isProgress, setIsProgress] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [category, setCategory] = useState(null);
+  const [selectedCurrency, setSelectedCurrency] = useState(null);
 
   const { data: oldOfferData } = useQuery({
     queryKey: ["offer", params?.id],
@@ -95,8 +99,17 @@ function OffersForm() {
         );
       }
     },
-    enabled: !!params?.id,
+    enabled: !!params?.id && !!defaultLanguage?.id,
   });
+
+  const { data: currencies } = useQuery({
+    queryKey: ["offer", "products", params?.id],
+    queryFn: async () => {
+      const response = await getData("currency");
+      return response;
+    },
+  });
+  console.log(currencies, "currencies");
 
   const { data: oldProducts } = useQuery({
     queryKey: ["offer", "products", params?.id],
@@ -215,19 +228,19 @@ function OffersForm() {
     });
   };
 
-  console.log(Object.keys(offerContent).length, "---");
-
   const onSubmit = async () => {
-    if (!offer?.icon || !offer?.hex) {
-      toast.error(`Please fill required fields`);
-      return;
+    if (offer?.offer_type !== "GENERAL") {
+      if (!offer?.icon || !offer?.hex) {
+        toast.error(`Please fill required fields`);
+        return;
+      }
     }
     if (!Object.values(offerContent)?.at(0)?.name) {
       toast.error(`Offer name is required`);
       return;
     }
 
-    if (!Object.values(offerContent)?.length < 3) {
+    if (Object.values(offerContent)?.length < 3) {
       toast.error(`Offer content must be with all languages`);
       return;
     }
@@ -268,11 +281,7 @@ function OffersForm() {
 
       if (icon) await handleUploadOfferIcon(icon, offer_id);
 
-      setIsProgress(false);
-
-      toast.success(
-        `Great! successfully ${params?.id ? "Updated" : "added"} offer`
-      );
+    
       await insertIntoOfferData(offer_id || params?.id);
       await insertOfferList(
         offer_id || params?.id,
@@ -295,19 +304,42 @@ function OffersForm() {
       //   "category_id",
       //   "offer_category"
       // );
+      setIsProgress(false);
+
+      toast.success(
+        `Great! successfully ${params?.id ? "Updated" : "added"} offer`
+      );
+      navigate('/offers')
     } else {
       toast.error(`Oops! failed to ${params?.id ? "Updated" : "added"} offer`);
     }
   };
 
-  console.log(rowSelection, countries);
-
+  console.log(offerContent, 'pffdf');
+  
   const insertIntoOfferData = async (offer_id) => {
     const list = Object.values(offerData);
     const inserted = [];
     const updated = [];
 
     for (const item of list) {
+      console.log(item, "-old");
+      if (item?.discount_type === "amount") {
+        console.log(item, "-convert");
+        if (item?.minimum_order_count)
+          item.minimum_order_count = getFormatPrice(
+            item?.minimum_order_count,
+            selectedCurrency
+          );
+        if (item?.discount_value)
+          item.discount_value = getFormatPrice(
+            item?.discount_value,
+            selectedCurrency
+          );
+      }
+
+      console.log(item, "-new");
+
       if (item?.id) updated.push(item);
       else
         inserted.push({
@@ -320,6 +352,7 @@ function OffersForm() {
 
     if (inserted?.length) await addItem("offer_tier", inserted);
     if (updated?.length) await upsertItem("offer_tier", updated);
+    return
   };
 
   const insertOfferList = async (
@@ -346,20 +379,20 @@ function OffersForm() {
       }
     }
 
-    await updateItem(tableName, updatedList);
-    await addItem(tableName, insertedList);
-    await deleteItem(tableName, Object.keys(list));
+    const responseUpdateItem = await updateItem(tableName, updatedList);
+    const responseAddItem = await addItem(tableName, insertedList);
+    const responseDeleteItem = await deleteItem(tableName, Object.keys(list));
     return;
   };
 
   return (
     <BlockPaper
       title={"Offer"}
-      headerClassName="flex justify-between"
+      headerClassName="flex flex-wrap justify-between"
       contentBar={
-        <div className="flex gap-4 items-center min-w-[50%]">
+        <div className="flex max-md:flex-wrap gap-4 items-center min-w-[50%]">
           <SelectField
-            containerClassName="!flex-row !gap-2 w-full"
+            containerClassName="!flex-row !gap-2 w-full min-w-[140px]"
             placeholder="Select Group"
             list={[
               { id: 1, name: "Group 1" },
@@ -377,7 +410,7 @@ function OffersForm() {
             }}
           />
           <SelectField
-            containerClassName="!flex-row !gap-2 w-full"
+            containerClassName="!flex-row !gap-2 w-full min-w-[140px]"
             placeholder="Select offer"
             list={OFFER_TYPES?.filter((o) => o?.group === offer?.group)}
             required
@@ -389,8 +422,22 @@ function OffersForm() {
               setOffer((prev) => ({
                 group: prev?.group,
                 offer_type: option?.offer_type,
-                discount_type: option?.type,
               }));
+            }}
+          />
+          <SelectField
+            containerClassName="!flex-row !gap-2 w-full"
+            placeholder="Currency"
+            list={currencies}
+            readOnly={params?.id}
+            value={offer?.currency_id}
+            keyLabel="code"
+            onChange={(option) => {
+              setOffer((prev) => ({
+                ...prev,
+                currency_id: option?.id,
+              }));
+              setSelectedCurrency(option);
             }}
           />
 
@@ -407,93 +454,101 @@ function OffersForm() {
         </div>
       }
     >
-      <div
-        className={`relative ${
-          offer?.offer_type ? "" : "pointer-events-none opacity-50"
-        }`}
-      >
+      <div className={`relative ${offer?.offer_type ? "" : "hidden"}`}>
         {isProgress ? <LoadingProcess /> : null}
 
         {toggleStage ? (
           <>
-            <div className="grid md:grid-cols-2 gap-8 items-start">
-              <div
-                className={`grid grid-cols-2 gap-2 mb-4 3 p-4 items-end rounded-md bg-gray-100 border`}
-              >
-                {OFFER_FIELDS?.map((field) => {
-                  if (field?.key === "image") {
-                    return (
-                      <UploadFile
-                        boxContainerClassName="bg-white flex-1"
-                        src={offer?.[field?.name]}
-                        name={field?.name}
-                        // key={offer?.offer_type + field?.name}
-                        label={field?.label}
-                        required
-                        onChange={(e) => handelFieldUpload(field?.name, e)}
-                        onFocus={() => onTouched(field?.name)}
-                        error={
-                          touched?.[field?.name] && errors?.[field?.name]
-                            ? errors?.[field?.name]
-                            : null
-                        }
-                      />
-                    );
-                  } else {
-                    return (
-                      <InputField
-                        // containerClassName="justify-center"
-                        // containerClassName="flex-1 !flex-row gap-2"
-                        labelClassName="whitespace-nowrap min-w-[100px]"
-                        value={offer?.[field?.name]}
-                        name={field?.name}
-                        // key={offer?.offer_type + field?.name}
-                        type={field?.type}
-                        label={field?.label}
-                        onChange={(e) =>
-                          handelChangeField(field?.name, e.target.value)
-                        }
-                        onFocus={() => onTouched(field?.name)}
-                        error={
-                          touched?.[field?.name] && errors?.[field?.name]
-                            ? errors?.[field?.name]
-                            : null
-                        }
-                        required
-                      />
-                    );
-                  }
-                })}
-                <InputField
-                  containerClassName="flex-1 !flex-row gap-2 items-center"
-                  labelClassName="whitespace-nowrap order-1"
-                  value={offer?.display}
-                  name="display"
-                  checked={offer?.display}
-                  type="checkbox"
-                  label="display"
-                  onChange={(e) =>
-                    handelChangeField("display", e.target.checked)
-                  }
-                  onFocus={() => onTouched("display")}
-                  error={
-                    touched?.display && errors?.display ? errors?.display : null
-                  }
-                  required
-                />
-              </div>
-              <SelectCountries
-                countries={countries}
-                setCountries={setCountries}
+            {offer?.offer_type === "GENERAL" ? (
+              <GeneralOfferTemplate
+                offer={offer}
+                handelChangeField={handelChangeField}
+                handleChangeRow={handleChangeRow}
+                setData={setOfferData}
+                data={offerData}
               />
-            </div>
-            <OfferTemplates
-              handelChangeField={handelChangeField}
-              offer={offer}
-              handleChangeRow={handleChangeRow}
-              setData={setOfferData}
-              data={offerData}
-            />
+            ) : (
+              <>
+                <div className="grid md:grid-cols-2 gap-8 items-start">
+                  <div
+                    className={`grid grid-cols-2 gap-2 mb-4 3 p-4 items-end rounded-md bg-gray-100 border`}
+                  >
+                    {OFFER_FIELDS?.map((field) => {
+                      if (field?.key === "image") {
+                        return (
+                          <UploadFile
+                            boxContainerClassName="bg-white flex-1"
+                            src={offer?.[field?.name]}
+                            name={field?.name}
+                            // key={offer?.offer_type + field?.name}
+                            label={field?.label}
+                            required
+                            onChange={(e) => handelFieldUpload(field?.name, e)}
+                            onFocus={() => onTouched(field?.name)}
+                            error={
+                              touched?.[field?.name] && errors?.[field?.name]
+                                ? errors?.[field?.name]
+                                : null
+                            }
+                          />
+                        );
+                      } else {
+                        return (
+                          <InputField
+                            labelClassName="whitespace-nowrap min-w-[100px]"
+                            value={offer?.[field?.name]}
+                            name={field?.name}
+                            type={field?.type}
+                            label={field?.label}
+                            onChange={(e) =>
+                              handelChangeField(field?.name, e.target.value)
+                            }
+                            onFocus={() => onTouched(field?.name)}
+                            error={
+                              touched?.[field?.name] && errors?.[field?.name]
+                                ? errors?.[field?.name]
+                                : null
+                            }
+                            required
+                          />
+                        );
+                      }
+                    })}
+                    <InputField
+                      containerClassName="flex-1 !flex-row gap-2 items-center"
+                      labelClassName="whitespace-nowrap order-1"
+                      value={offer?.display}
+                      name="display"
+                      checked={offer?.display}
+                      type="checkbox"
+                      label="display"
+                      onChange={(e) =>
+                        handelChangeField("display", e.target.checked)
+                      }
+                      onFocus={() => onTouched("display")}
+                      error={
+                        touched?.display && errors?.display
+                          ? errors?.display
+                          : null
+                      }
+                      required
+                    />
+                  </div>
+                  <SelectCountries
+                    countries={countries}
+                    setCountries={setCountries}
+                  />
+                </div>
+                <OfferTemplates
+                  offer={offer}
+                  handelChangeField={handelChangeField}
+                  handleChangeRow={handleChangeRow}
+                  setData={setOfferData}
+                  data={offerData}
+                />
+              </>
+            )}
+
             <FormIncreasable
               // key={offer?.offer_type}
               initialFields={DB_API?.offer_content}
@@ -528,9 +583,7 @@ function OffersForm() {
       <Button
         title="Submit"
         onClick={onSubmit}
-        disabled={
-          !offer?.hex || !offer?.icon || Object.keys(offerContent)?.length < 3
-        }
+        disabled={Object.keys(offerContent)?.length < 3}
       />
     </BlockPaper>
   );

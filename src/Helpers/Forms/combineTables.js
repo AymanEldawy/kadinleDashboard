@@ -757,7 +757,6 @@ const combine_collection = () => [
     accessorKey: "name",
     header: "name",
     cell: ({ row }) => {
-      console.log("🚀 ~ row:", row?.original);
       return (
         <Link
           to={`/update/collection/${row?.original?.id}`}
@@ -1604,7 +1603,6 @@ const combine_order_short = () => [
   //   accessorKey: "variant",
   //   header: "variant",
   //   cell: ({ getValue, row }) => {
-  //     console.log(getValue(), row.original);
   //   },
   // },
   { accessorKey: "price", header: "price" },
@@ -1925,15 +1923,16 @@ const combine_collection_product = (rowSelection, showIndex) => [
     accessorKey: "product",
     header: "product",
     cell: ({ row }) => {
-      console.log("🚀 ~ row:", row.original)
       return (
         <ProductInfo
           showIndex={showIndex}
           rowSelection={rowSelection}
-          image={row?.original?.product_image?.at(0)?.image}
+          image={row?.original?.image}
           product_sku={row?.original?.product_sku}
+          seller_sku={row?.original?.seller_sku}
           product_id={row?.original?.id}
-          name={row?.original?.product_content?.[0]?.name}
+          name={row?.original?.content?.name}
+          variant_id={row?.original?.variant_id}
         />
       );
     },
@@ -1942,16 +1941,16 @@ const combine_collection_product = (rowSelection, showIndex) => [
     accessorKey: "category",
     header: "category",
     cell: ({ row }) => (
-      <span>{row?.original?.category?.category_content?.at(0)?.title}</span>
+      <span>{row?.original?.category?.title}</span>
     ),
   },
-  { accessorKey: "barcode", header: "barcode" },
+  { accessorKey: "price", header: "price" },
   {
     accessorKey: "action",
     header: "action",
     cell: ({ row }) => (
       <Link
-        to={`/products/update/product/${row?.original?.id}`}
+        to={`/products/update/product/${row?.original?.product_id}`}
         className="hover:translate-x-1 transition-transform rounded-2xl flex items-center gap-2 px-2 p-1 bg-primary-blue text-white w-fit whitespace-nowrap"
       >
         <EyeIcon className=" w-4 h-4" />
@@ -2228,7 +2227,6 @@ const combine_sale = () => [
     accessorKey: "category_id",
     header: "category",
     cell: ({ row }) => {
-      console.log("🚀 ~ row:", row?.original);
       return (
         <Link
           to={`/update/category/${row?.original?.category_id}`}

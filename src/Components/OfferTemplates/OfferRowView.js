@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { TABLES_NAMES } from "../../Helpers/Scripts/constants";
 import { useDelete } from "../../hooks/useDelete";
 import SelectField from "../CustomForm/SelectField";
+import { getDiscountIcon } from "../../Helpers/functions";
 
 export const OfferRowView = ({
   containerClassName,
@@ -15,6 +16,7 @@ export const OfferRowView = ({
   handleChangeRow,
   setData,
   offer,
+  showIcon,
   increasable = true,
 }) => {
   const { deleteItem } = useDelete();
@@ -36,7 +38,6 @@ export const OfferRowView = ({
       await deleteItem(tableName, [value?.id]);
     }
   };
-console.log(data,'---d');
 
   return (
     <div className={`flex-1 ${containerClassName}`}>
@@ -47,8 +48,6 @@ console.log(data,'---d');
         >
           {fields?.map((field, i) => {
             if (field?.list) {
-              console.log(value,' ---v');
-
               return (
                 <SelectField
                   {...field}
@@ -61,11 +60,7 @@ console.log(data,'---d');
                     index > 0 && "lg:hidden"
                   } font-medium text-lg`}
                   onChange={(option) =>
-                    handleChangeRow(
-                      field?.name,
-                      option?.name,
-                      key
-                    )
+                    handleChangeRow(field?.name, option?.name, key)
                   }
                 />
               );
@@ -79,6 +74,7 @@ console.log(data,'---d');
                   labelClassName={`${
                     index > 0 && "lg:hidden"
                   } font-medium text-lg`}
+                  showIcon={field?.has_icon ? getDiscountIcon(value?.discount_type) : null}
                   onChange={(e) =>
                     handleChangeRow(
                       field?.name,

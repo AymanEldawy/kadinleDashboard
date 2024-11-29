@@ -1,9 +1,19 @@
 import React from "react";
 
-const InputField = ({ label, error, labelClassName, containerClassName, className, ...field }) => {
+const InputField = ({
+  label,
+  error,
+  labelClassName,
+  containerClassName,
+  className,
+  showIcon,
+  ...field
+}) => {
   return (
     <div
-      className={`flex flex-col ${containerClassName} ${field?.type === "checkbox" ? "" : ""} `}
+      className={`flex flex-col ${containerClassName} ${
+        field?.type === "checkbox" ? "" : ""
+      } `}
       key={`${field?.index}-${field?.label}` || Math.round()}
     >
       {label ? (
@@ -19,15 +29,20 @@ const InputField = ({ label, error, labelClassName, containerClassName, classNam
           )}
         </label>
       ) : null}
-      <input
-        id={label}
-        {...field}
-        min={field?.type === "number" ? "0" : ""}
-        className={`border read-only:bg-gray-200 h-[37px] dark:read-only:bg-[#444] rounded p-1 ${className} ${error ? "border-red-200 text-red-500" : ""
+      <div className="flex gap-2 items-center">
+        <input
+          id={label}
+          {...field}
+          min={field?.type === "number" ? "0" : ""}
+          className={`border read-only:bg-gray-200 w-full h-[37px] dark:read-only:bg-[#444] rounded p-1 ${className} ${
+            error ? "border-red-200 text-red-500" : ""
           }
           ${field?.type === "checkbox" ? "w-7 h-7" : ""}
         `}
-      />
+        />
+        {showIcon ? <span>{showIcon}</span> : null}
+      </div>
+
       {error ? (
         <p className="bg-red-200 mt-2 rounded text-sm text-red-500 px-2 py-1">
           {error}

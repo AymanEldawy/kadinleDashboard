@@ -26,7 +26,6 @@ export const XmlSecondMapFields = ({ fileId }) => {
     size: [],
     color: [],
   });
-  console.log("🚀 ~ XmlSecondMapFields ~ xmlValuesPayload:", xmlValuesPayload);
 
   const { data, isLoading } = useQuery({
     queryKey: [fileId],
@@ -87,7 +86,6 @@ export const XmlSecondMapFields = ({ fileId }) => {
                     }));
                   }}
                   getOptionLabel={(option) => {
-                    console.log(option, "option");
 
                     return option?.category_content?.at(0)?.title;
                   }}

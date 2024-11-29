@@ -167,7 +167,6 @@ export const getLogs = async (page, pageSize, additionalData) => {
 };
 
 export const getSales = async (language_id, type, page, pageSize) => {
-  console.log("called", page, pageSize);
 
   const query = supabase
     .from("sale")
@@ -1900,15 +1899,6 @@ export const get_seller_products = async (
   param_offset,
   param_limit
 ) => {
-  console.log("---", {
-    param_lang_id,
-    param_seller_id,
-    param_category_id,
-    param_seller_sku,
-    param_offset,
-    param_limit,
-  });
-
   return await supabase.rpc("get_seller_products", {
     param_lang_id,
     param_seller_id,
@@ -2020,3 +2010,28 @@ export const getCategoriesMap = async (value, languageId) =>
     .select(`id,numeric, category_content(title, category_id)`)
     .ilike("numeric", `%${value}%`)
     .eq("category_content.language_id", languageId);
+
+export const getProductsList = async ({
+  param_lang_id,
+  param_seller_sku,
+  param_category_id,
+  param_price,
+  param_name,
+  param_ignore_ids,
+  param_limit,
+  param_offset,
+  param_products_ids,
+}) => {
+  let { data, error } = await supabase.rpc("get_products_list", {
+    param_lang_id,
+    param_seller_sku,
+    param_category_id,
+    param_price,
+    param_name,
+    param_ignore_ids,
+    param_limit,
+    param_offset,
+    param_products_ids
+  });
+  return data;
+};

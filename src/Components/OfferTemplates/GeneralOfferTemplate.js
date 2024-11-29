@@ -40,9 +40,8 @@ export const GeneralOfferTemplate = ({
   onTouched,
   touched,
   errors,
-  showIcon
+  
 }) => {
-  console.log("🚀 ~ showIcon:", showIcon)
   return (
     <div className="grid lg:grid-cols-2 gap-2 p-4 bg-gray-100 my-4">
       <div className="grid grid-cols-2 gap-2">
@@ -74,7 +73,6 @@ export const GeneralOfferTemplate = ({
         setData={setData}
         offer={offer}
         increasable={false}
-        showIcon={showIcon}
       />
     </div>
   );

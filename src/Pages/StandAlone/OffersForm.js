@@ -112,7 +112,7 @@ function OffersForm() {
   console.log(currencies, "currencies");
 
   const { data: oldProducts } = useQuery({
-    queryKey: ["offer", "products", params?.id],
+    queryKey: ["offer", "products_list", params?.id],
     queryFn: async () => {
       const response = await getOfferProducts(params?.id);
       let hashProduct = {};
@@ -126,6 +126,8 @@ function OffersForm() {
     },
     enabled: !!params?.id,
   });
+
+  console.log(oldProducts, "---dsd");
 
   // const { data: oldCategories } = useQuery({
   //   queryKey: ["offer", "category", params?.id],
@@ -281,7 +283,6 @@ function OffersForm() {
 
       if (icon) await handleUploadOfferIcon(icon, offer_id);
 
-    
       await insertIntoOfferData(offer_id || params?.id);
       await insertOfferList(
         offer_id || params?.id,
@@ -309,14 +310,14 @@ function OffersForm() {
       toast.success(
         `Great! successfully ${params?.id ? "Updated" : "added"} offer`
       );
-      navigate('/offers')
+      navigate("/offers");
     } else {
       toast.error(`Oops! failed to ${params?.id ? "Updated" : "added"} offer`);
     }
   };
 
-  console.log(offerContent, 'pffdf');
-  
+  console.log(offerContent, "pffdf");
+
   const insertIntoOfferData = async (offer_id) => {
     const list = Object.values(offerData);
     const inserted = [];
@@ -352,7 +353,7 @@ function OffersForm() {
 
     if (inserted?.length) await addItem("offer_tier", inserted);
     if (updated?.length) await upsertItem("offer_tier", updated);
-    return
+    return;
   };
 
   const insertOfferList = async (
@@ -425,21 +426,23 @@ function OffersForm() {
               }));
             }}
           />
-          <SelectField
-            containerClassName="!flex-row !gap-2 w-full"
-            placeholder="Currency"
-            list={currencies}
-            readOnly={params?.id}
-            value={offer?.currency_id}
-            keyLabel="code"
-            onChange={(option) => {
-              setOffer((prev) => ({
-                ...prev,
-                currency_id: option?.id,
-              }));
-              setSelectedCurrency(option);
-            }}
-          />
+          {!offer?.currency_id && params?.id ? null : (
+            <SelectField
+              containerClassName="!flex-row !gap-2 w-full"
+              placeholder="Currency"
+              list={currencies}
+              readOnly={params?.id}
+              value={offer?.currency_id}
+              keyLabel="code"
+              onChange={(option) => {
+                setOffer((prev) => ({
+                  ...prev,
+                  currency_id: option?.id,
+                }));
+                setSelectedCurrency(option);
+              }}
+            />
+          )}
 
           <button
             disabled={!offer?.offer_type}

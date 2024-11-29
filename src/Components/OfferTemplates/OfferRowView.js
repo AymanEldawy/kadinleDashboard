@@ -16,7 +16,6 @@ export const OfferRowView = ({
   handleChangeRow,
   setData,
   offer,
-  showIcon,
   increasable = true,
 }) => {
   const { deleteItem } = useDelete();

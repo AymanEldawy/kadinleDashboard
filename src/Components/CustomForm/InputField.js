@@ -29,7 +29,7 @@ const InputField = ({
           )}
         </label>
       ) : null}
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-2 items-center relative">
         <input
           id={label}
           {...field}
@@ -40,7 +40,7 @@ const InputField = ({
           ${field?.type === "checkbox" ? "w-7 h-7" : ""}
         `}
         />
-        {showIcon ? <span>{showIcon}</span> : null}
+        {showIcon ? <span className="absolute top-1 ltr:right-2 rtl:left-2 bg-gray-100 h-7 w-7 rounded-md flex items-center justify-center border">{showIcon}</span> : null}
       </div>
 
       {error ? (

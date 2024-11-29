@@ -97,12 +97,14 @@ export function debounce(func, delay) {
 }
 
 export function getDiscountIcon(type) {
-  console.log("🚀 ~ getDiscountIcon ~ type:", type)
+  console.log("🚀 ~ getDiscountIcon ~ type:", type);
   switch (type) {
     case "amount":
-      return "$";
+      return "💸";
     case "percentage":
       return "%";
+    case "pay_x_buy_y":
+      return "🏷️";
     default:
       return "";
   }

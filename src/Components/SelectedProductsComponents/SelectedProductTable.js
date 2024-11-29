@@ -100,7 +100,7 @@ export const SelectedProductTable = ({
         param_lang_id: defaultLanguage?.id,
         param_products_ids: open ? Object.keys(rowSelection) : null,
         param_category_id: filter,
-        param_limit: pagination?.pageSize,
+        param_limit: 11,
         param_offset: pagination?.pageIndex,
         param_ignore_ids,
         param_price,

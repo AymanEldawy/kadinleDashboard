@@ -26,12 +26,13 @@ const getFields = (withCoupon) => {
       type: "number",
       label: "Field 1",
       required: true,
+      has_icon: true,
     },
     {
       name: "discount_value",
       type: "number",
       label: "Field 2",
-      required: true,
+      has_icon: true,
     },
     {
       name: "discount_type",

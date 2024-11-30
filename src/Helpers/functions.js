@@ -109,3 +109,15 @@ export function getDiscountIcon(type) {
       return "";
   }
 }
+
+export async function processBatch(list, batchFunc, batchSize = 100) {
+  const totalBatches = Math.ceil(list.length / batchSize);
+
+  for (let i = 0; i < totalBatches; i++) {
+    const batch = list.slice(i * batchSize, (i + 1) * batchSize);
+
+    await batchFunc(batch, i, totalBatches);
+  }
+
+  return true;
+}

@@ -1990,6 +1990,12 @@ export const getOfferCategory = async (offer_id) =>
 export const getOfferData = async (table, offer_id) =>
   await supabase.from(table).select(`*`).eq("offer_id", offer_id);
 
+export const getProductsByCategoryId = async (category_id) =>
+  await supabase.from('product').select(`product_id:id`).eq("category_id", category_id);
+
+export const getAllProductsId = async () =>
+  await supabase.from('product').select(`product_id:id`);
+
 export const getColorsMap = async (value, languageId, region_id) =>
   await supabase
     .from("color")

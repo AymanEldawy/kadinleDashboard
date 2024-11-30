@@ -24,18 +24,24 @@ import { Button } from "../../Components/Global/Button";
 import { useUpdate } from "../../hooks/useUpdate";
 import { useDelete } from "../../hooks/useDelete";
 import {
+  getAllProductsId,
   getCacheCategory,
   getOfferCategory,
   getOfferCountry,
   getOfferData,
   getOfferProducts,
+  getProductsByCategoryId,
   getProductsList,
 } from "../../Api/data";
 import { LoadingProcess } from "../../Components/Global/LoadingProcess";
 import { SelectCountries } from "../../Components/OfferTemplates/SelectCountries";
 import { CategoryFallbackForm } from "../../Components/CategoryComponents/CategoryFallbackForm";
 import { GeneralOfferTemplate } from "../../Components/OfferTemplates/GeneralOfferTemplate";
-import { getDiscountIcon, getFormatPrice } from "../../Helpers/functions";
+import {
+  getDiscountIcon,
+  getFormatPrice,
+  processBatch,
+} from "../../Helpers/functions";
 
 function OffersForm() {
   const hash_id = uuidv4();
@@ -109,7 +115,6 @@ function OffersForm() {
       return response;
     },
   });
-  console.log(currencies, "currencies");
 
   const { data: oldProducts } = useQuery({
     queryKey: ["offer", "products_list", params?.id],
@@ -126,8 +131,6 @@ function OffersForm() {
     },
     enabled: !!params?.id,
   });
-
-  console.log(oldProducts, "---dsd");
 
   // const { data: oldCategories } = useQuery({
   //   queryKey: ["offer", "category", params?.id],
@@ -236,14 +239,19 @@ function OffersForm() {
         toast.error(`Please fill required fields`);
         return;
       }
-    }
-    if (!Object.values(offerContent)?.at(0)?.name) {
-      toast.error(`Offer name is required`);
-      return;
+      if (!Object.values(offerContent)?.at(0)?.name) {
+        toast.error(`Offer name is required`);
+        return;
+      }
+
+      if (Object.values(offerContent)?.length < 3) {
+        toast.error(`Offer content must be with all languages`);
+        return;
+      }
     }
 
-    if (Object.values(offerContent)?.length < 3) {
-      toast.error(`Offer content must be with all languages`);
+    if (offer?.select_product_type === 1 && !selectedCategory) {
+      toast.error(`Please select category for products`);
       return;
     }
 
@@ -258,65 +266,77 @@ function OffersForm() {
       icon = offer?.icon;
       delete offer?.icon;
     }
-    let response = null;
+    try {
+      let response = null;
 
-    if (params?.id) {
-      response = await updateItem("offer", offer);
-    } else {
-      response = await addItem("offer", offer);
-    }
-
-    if (!response?.error) {
-      const offer_id = params?.id || response?.data?.at(0)?.id;
-
-      for (const content of Object.values(offerContent)) {
-        let item = {
-          ...content,
-          offer_id,
-        };
-        if (item?.id) {
-          await updateItem(`offer_content`, item);
-        } else {
-          await addItem(`offer_content`, item);
-        }
+      if (params?.id) {
+        response = await updateItem("offer", offer);
+      } else {
+        response = await addItem("offer", offer);
       }
 
-      if (icon) await handleUploadOfferIcon(icon, offer_id);
+      if (!response?.error) {
+        const offer_id = params?.id || response?.data?.at(0)?.id;
 
-      await insertIntoOfferData(offer_id || params?.id);
-      await insertOfferList(
-        offer_id || params?.id,
-        Object.keys(rowSelection),
-        oldProducts,
-        "product_id",
-        "offer_product"
-      );
-      await insertOfferList(
-        offer_id || params?.id,
-        countries,
-        oldCountries,
-        "country_id",
-        "offer_countries"
-      );
-      // await insertOfferList(
-      //   offer_id || params?.id,
-      //   selectedCategories,
-      //   oldCategories,
-      //   "category_id",
-      //   "offer_category"
-      // );
-      setIsProgress(false);
+        for (const content of Object.values(offerContent)) {
+          let item = {
+            ...content,
+            offer_id,
+          };
+          if (item?.id) {
+            await updateItem(`offer_content`, item);
+          } else {
+            await addItem(`offer_content`, item);
+          }
+        }
 
-      toast.success(
-        `Great! successfully ${params?.id ? "Updated" : "added"} offer`
-      );
-      navigate("/offers");
-    } else {
+        if (icon) await handleUploadOfferIcon(icon, offer_id);
+
+        await insertIntoOfferData(offer_id || params?.id);
+        await insertProducts();
+        await insertOfferList(
+          offer_id || params?.id,
+          countries,
+          oldCountries,
+          "country_id",
+          "offer_countries"
+        );
+
+        setIsProgress(false);
+
+        toast.success(
+          `Great! successfully ${params?.id ? "Updated" : "added"} offer`
+        );
+        if (!params?.id) navigate("/offers");
+      }
+    } catch (error) {
       toast.error(`Oops! failed to ${params?.id ? "Updated" : "added"} offer`);
     }
   };
 
-  console.log(offerContent, "pffdf");
+  const insertProducts = async (offer_id) => {
+    let list = Object.keys(rowSelection);
+
+    if (offer?.select_product_type === 1 && selectedCategory) {
+      const response = await getProductsByCategoryId(selectedCategory);
+      list = response?.data;
+    }
+    if (offer?.select_product_type === 2) {
+      const response = await getAllProductsId();
+      list = response?.data;
+    }
+    try {
+      await insertOfferList(
+        offer_id || params?.id,
+        list,
+        oldProducts,
+        "product_id",
+        "offer_product",
+        !!offer?.select_product_type,
+        true
+      );
+    } catch (err) {}
+  };
 
   const insertIntoOfferData = async (offer_id) => {
     const list = Object.values(offerData);
@@ -324,9 +344,7 @@ function OffersForm() {
     const updated = [];
 
     for (const item of list) {
-      console.log(item, "-old");
       if (item?.discount_type === "amount") {
-        console.log(item, "-convert");
         if (item?.minimum_order_count)
           item.minimum_order_count = getFormatPrice(
             item?.minimum_order_count,
@@ -339,8 +357,6 @@ function OffersForm() {
           );
       }
 
-      console.log(item, "-new");
-
       if (item?.id) updated.push(item);
       else
         inserted.push({
@@ -348,27 +364,33 @@ function OffersForm() {
           ...item,
         });
     }
-
     // const tableName = TABLES_NAMES?.[offer?.offer_type];
 
-    if (inserted?.length) await addItem("offer_tier", inserted);
-    if (updated?.length) await upsertItem("offer_tier", updated);
-    return;
+    try {
+      if (inserted?.length) await addItem("offer_tier", inserted);
+      if (updated?.length) await upsertItem("offer_tier", updated);
+    } catch (error) {
+      console.error("Error processing offer list:", error);
+      throw error;
+    }
   };
 
   const insertOfferList = async (
     offer_id,
     newList,
-    oldList,
+    oldList = {},
     item_id,
-    tableName
+    tableName,
+    isObject,
+    isProductsProcess
   ) => {
     if (!newList) return;
     let insertedList = [];
     let updatedList = [];
     let list = oldList;
 
-    for (const item of newList) {
+    for (const key of newList) {
+      let item = isObject ? key?.[item_id] : key;
       if (list?.[item]) {
         updatedList.push(list?.[item]);
         delete list[item];
@@ -380,10 +402,32 @@ function OffersForm() {
       }
     }
 
-    const responseUpdateItem = await updateItem(tableName, updatedList);
-    const responseAddItem = await addItem(tableName, insertedList);
-    const responseDeleteItem = await deleteItem(tableName, Object.keys(list));
-    return;
+    try {
+      await Promise.all([
+        updatedList.length > 0 &&
+          processBatch(updatedList, async (batchList) => {
+            await upsertItem(tableName, batchList);
+          }),
+
+        insertedList.length > 0 &&
+          processBatch(insertedList, async (batchList) => {
+            await addItem(tableName, batchList);
+          }),
+
+        Object.keys(list).length > 0 &&
+          processBatch(
+            Object.keys(list),
+            async (batchList, i, totalBatches) => {
+              await deleteItem(tableName, batchList, item_id, false);
+              toast.success(`Processing batch ${i + 1} of ${totalBatches}...`);
+            }
+          ),
+      ]);
+      console.log("Offer list processing completed.");
+    } catch (error) {
+      console.error("Error processing offer list:", error);
+      throw error;
+    }
   };
 
   return (
@@ -549,20 +593,19 @@ function OffersForm() {
                   setData={setOfferData}
                   data={offerData}
                 />
+                <FormIncreasable
+                  // key={offer?.offer_type}
+                  initialFields={DB_API?.offer_content}
+                  maxCount={languages?.length}
+                  values={offerContent}
+                  setValues={setOfferContent}
+                  errors={errors}
+                  setErrors={setErrors}
+                  oldList={refresh}
+                  SUPABASE_TABLE_NAME={"offer"}
+                />
               </>
             )}
-
-            <FormIncreasable
-              // key={offer?.offer_type}
-              initialFields={DB_API?.offer_content}
-              maxCount={languages?.length}
-              values={offerContent}
-              setValues={setOfferContent}
-              errors={errors}
-              setErrors={setErrors}
-              oldList={refresh}
-              SUPABASE_TABLE_NAME={"offer"}
-            />
           </>
         ) : (
           <>
@@ -579,6 +622,24 @@ function OffersForm() {
               setRowSelection={setRowSelection}
               setSelectedCategory={setSelectedCategory}
               categoryTitle={category?.title || ""}
+              hideCategoryFilter={offer?.select_product_type === 2}
+              extraContent={
+                <SelectField
+                  name="select_product_type"
+                  label="select product type"
+                  list={[
+                    { id: 0, name: "Custom" },
+                    { id: 1, name: "Select all in category" },
+                    { id: 2, name: "Select all" },
+                  ]}
+                  onChange={(option) => {
+                    setOffer((prev) => ({
+                      ...prev,
+                      select_product_type: option?.id,
+                    }));
+                  }}
+                />
+              }
             />
           </>
         )}

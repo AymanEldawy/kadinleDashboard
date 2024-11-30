@@ -19,6 +19,7 @@ export const SelectedProductTable = ({
   rowSelection,
   setSelectedCategory,
   extraContent,
+  hideCategoryFilter,
   onSaveChanges,
   categoryTitle,
   showIndex,
@@ -106,9 +107,10 @@ export const SelectedProductTable = ({
         param_price,
         ...filters,
       });
-      console.log(response,  rowSelection);
-  
-      setPageCount(Math.ceil(response?.total_count / parseInt(pagination?.pageSize)));
+
+      setPageCount(
+        Math.ceil(response?.total_count / parseInt(pagination?.pageSize))
+      );
       return response?.products;
     },
   });
@@ -123,14 +125,15 @@ export const SelectedProductTable = ({
     <div>
       <div className="flex flex-wrap items-end gap-4 mb-6">
         {extraContent ? extraContent : null}
-
-        <CategoryMultiFilter
-          name={tableName}
-          label={"select category"}
-          filterCategory={filterCategory}
-          setFilterCategory={setFilterCategory}
-          categoryTitle={categoryTitle}
-        />
+        {hideCategoryFilter ? null : (
+          <CategoryMultiFilter
+            name={tableName}
+            label={"select category"}
+            filterCategory={filterCategory}
+            setFilterCategory={setFilterCategory}
+            categoryTitle={categoryTitle}
+          />
+        )}
         <div className="relative">
           <SearchBar
             searchValue={searchValue}
@@ -181,8 +184,8 @@ export const SelectedProductTable = ({
         rowSelection={rowSelection}
         setRowSelection={setRowSelection}
         showIndex={showIndex}
-        outerSelectedId={(row, relativeIndex, parent) =>{
-          return row?.product_id
+        outerSelectedId={(row, relativeIndex, parent) => {
+          return row?.product_id;
         }}
       />
     </div>

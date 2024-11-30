@@ -176,8 +176,11 @@ export const addManyItem = async (table, items) => {
 };
 
 // delete items
-export const deleteItems = async (table, ids) => {
-  const response = await supabase.from(table).delete().in("id", ids);
+export const deleteItems = async (table, ids, column) => {
+  const response = await supabase
+    .from(table)
+    .delete()
+    .in(column || "id", ids);
   if (!response?.error) {
     await addNewItem("logs", {
       description: `Deleted item from ${table}`,
@@ -196,8 +199,11 @@ export const deleteItems = async (table, ids) => {
   return response;
 };
 
-export const deleteItem = async (table, id) => {
-  const response = await supabase.from(table).delete().eq("id", id);
+export const deleteItem = async (table, id, column) => {
+  const response = await supabase
+    .from(table)
+    .delete()
+    .eq(column || "id", id);
   if (!response?.error) {
     await addNewItem("logs", {
       description: `Deleted item from ${table}`,

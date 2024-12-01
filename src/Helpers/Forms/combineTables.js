@@ -220,6 +220,8 @@ const combine_chunks = () => [
   { accessorKey: "min_price", header: "min_price" },
   { accessorKey: "max_price", header: "max_price" },
   { accessorKey: "percentage", header: "percentage" },
+  { accessorKey: "is_global", header: "is_global" },
+  { accessorKey: "global_percentage", header: "global_percentage" },
   { accessorKey: "available", header: "available" },
   {
     accessorKey: "actions",

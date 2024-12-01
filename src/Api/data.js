@@ -167,7 +167,6 @@ export const getLogs = async (page, pageSize, additionalData) => {
 };
 
 export const getSales = async (language_id, type, page, pageSize) => {
-
   const query = supabase
     .from("sale")
     .select(`*,category(id, category_content(id, title, language_id))`, {
@@ -1722,13 +1721,39 @@ export const refreshPrices = async (item) => {
   const variants = response?.data || [];
 
   for (let i = 0; i < variants.length; i += batchSize) {
-    const batch = variants.slice(i, i + batchSize).map((variant) => ({
-      ...variant,
-      price:
-        (item?.percentage / 100) * variant?.purchase_price +
-        variant?.purchase_price,
-      percentage: item?.percentage,
-    }));
+    const batch = variants.slice(i, i + batchSize).map((variant) => {
+      let additionalData = {};
+
+      let global = {
+        global_price:
+          (item?.global_percentage / 100) * variant?.purchase_price +
+          variant?.purchase_price,
+        global_percentage: item?.global_percentage,
+      };
+
+      let local = {
+        percentage: item?.percentage,
+        price:
+          (item?.percentage / 100) * variant?.purchase_price +
+          variant?.purchase_price,
+      };
+
+      if (item?.is_global) {
+        additionalData = global;
+      } else if (item?.percentage && item?.global_percentage) {
+        additionalData = {
+          ...local,
+          ...global,
+        };
+      } else {
+        additionalData = local;
+      }
+
+      return {
+        ...variant,
+        ...additionalData,
+      };
+    });
 
     const { data, error } = await supabase
       .from("product_variant")
@@ -1991,10 +2016,13 @@ export const getOfferData = async (table, offer_id) =>
   await supabase.from(table).select(`*`).eq("offer_id", offer_id);
 
 export const getProductsByCategoryId = async (category_id) =>
-  await supabase.from('product').select(`product_id:id`).eq("category_id", category_id);
+  await supabase
+    .from("product")
+    .select(`product_id:id`)
+    .eq("category_id", category_id);
 
 export const getAllProductsId = async () =>
-  await supabase.from('product').select(`product_id:id`);
+  await supabase.from("product").select(`product_id:id`);
 
 export const getColorsMap = async (value, languageId, region_id) =>
   await supabase
@@ -2037,7 +2065,7 @@ export const getProductsList = async ({
     param_ignore_ids,
     param_limit,
     param_offset,
-    param_products_ids
+    param_products_ids,
   });
   return data;
 };

@@ -23,8 +23,10 @@ const brand = [
 const chunks = [
   { name: "min_price", type: "number", required: true },
   { name: "max_price", type: "number", required: true },
-  { name: "percentage", type: "number", required: true },
+  { name: "percentage", type: "number", required: false },
   { name: "available", key: "checkbox", required: false },
+  { name: "global_percentage", type: "number", required: false },
+  { name: "is_global", key: "checkbox", required: false },
 ];
 
 const bulk_alert = [

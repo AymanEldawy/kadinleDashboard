@@ -19,43 +19,6 @@ const VIEW = {
   ITEMS: "grid",
 };
 
-const getFields = (withCoupon) => {
-  const fields = [
-    {
-      name: "minimum_order_count",
-      type: "number",
-      label: "Field 1",
-      required: true,
-      has_icon: true,
-    },
-    {
-      name: "discount_value",
-      type: "number",
-      label: "Field 2",
-      has_icon: true,
-    },
-    {
-      name: "discount_type",
-      type: "text",
-      label: "discount type",
-      required: true,
-      list: [
-        { name: "amount" },
-        { name: "percentage" },
-        { name: "pay_x_buy_y" },
-      ],
-    },
-  ];
-  if (withCoupon)
-    fields.unshift({
-      name: "code",
-      type: "text",
-      label: "code",
-    });
-
-  return fields;
-};
-
 export const OfferTemplates = ({
   offer,
   handelChangeField,
@@ -64,9 +27,46 @@ export const OfferTemplates = ({
   setData,
 }) => {
   const fields = useMemo(() => {
-    if (offer?.offer_type === "VOUCHERS" || offer?.offer_type === "COUPONS")
-      return getFields(true);
-    return getFields();
+    const default_fields = [
+      {
+        name: "minimum_order_count",
+        type: "number",
+        label: "Field 1",
+        required: true,
+        has_icon: true,
+      },
+      {
+        name: "discount_value",
+        type: "number",
+        label: "Field 2",
+        has_icon: true,
+      },
+      {
+        name: "discount_type",
+        type: "text",
+        label: "discount type",
+        required: true,
+        list: [
+          { name: "amount" },
+          { name: "percentage" },
+          { name: "pay_x_buy_y" },
+        ],
+      },
+    ];
+    if (offer?.offer_type === "ITEMS") {
+      default_fields.at(1).required = true;
+    }
+    if (offer?.offer_type === "FLASH" || offer?.offer_type === 'CART') {
+      default_fields.splice(1, 1);
+    }
+    if (offer?.offer_type === "VOUCHERS")
+      default_fields.unshift({
+        name: "code",
+        type: "text",
+        label: "code",
+      });
+
+    return default_fields;
   }, [offer?.offer_type]);
 
   const view = VIEW?.[offer?.offer_type];

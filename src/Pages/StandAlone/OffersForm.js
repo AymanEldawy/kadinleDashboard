@@ -250,6 +250,15 @@ function OffersForm() {
       }
     }
 
+    if (offer?.offer_type === "ITEMS") {
+      for (const item of Object.values(offerData)) {
+        if (!item?.minimum_order_count || !item?.discount_value) {
+          toast.error(`Please fill the required fields in offer data`);
+          return;
+        }
+      }
+    }
+
     if (offer?.select_product_type === 1 && !selectedCategory) {
       toast.error(`Please select category for products`);
       return;
@@ -436,9 +445,25 @@ function OffersForm() {
       headerClassName="flex flex-wrap justify-between"
       contentBar={
         <div className="flex max-md:flex-wrap gap-4 items-center min-w-[50%]">
+          <InputField
+          containerClassName="!flex-row gap-2"
+            labelClassName="whitespace-nowrap order-2"
+            className="!w-5 !h-5"
+            checked={offer?.is_seasonal}
+            name='is_seasonal'
+            type='checkbox'
+            label="is seasonal"
+            onChange={(e) => handelChangeField('is_seasonal', e.target.checked)}
+            onFocus={() => onTouched('is_seasonal')}
+            error={
+              touched?.is_seasonal && errors?.is_seasonal
+                ? errors?.is_seasonal
+                : null
+            }
+          />
           <SelectField
             containerClassName="!flex-row !gap-2 w-full min-w-[140px]"
-            placeholder="Select Group"
+            placeholder="Group"
             list={[
               { id: 1, name: "Group 1" },
               { id: 2, name: "Group 2" },

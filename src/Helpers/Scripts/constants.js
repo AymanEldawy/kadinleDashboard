@@ -27,11 +27,11 @@ export const OFFER_TYPES = [
   { label: "خصم ع السلة", type: "", offer_type: "CART", group: 2 },
   { label: "خصم عام", type: "", offer_type: "GENERAL", group: 2 },
 
-  { label: "خصم موسمي", offer_type: "SEASONAL", group: 2 }, // amount
+  // { label: "خصم موسمي", offer_type: "SEASONAL", group: 2 }, // amount
   { label: "خصومات الكمية", offer_type: "BULK", group: 1 }, // amount
   { label: "خصم ع المبلغ", offer_type: "AMOUNT", group: 2 }, // amount_tier
   { label: "كوبونات خصم", offer_type: "COUPONS", group: 2 }, // coupon
-  { label: "قسائم المشتريات", offer_type: "VOUCHERS", group: 2 }, // coupon
+  { label: "قسائم المشتريات", offer_type: "VOUCHERS", group: 1 }, // coupon
   { label: "عرض القطعة الإضافية", offer_type: "ITEMS", group: 1 }, // pay_x_buy_y
 
   // { label: "خصومات الولاء", type: "amount", offer_type: "LOYALTY", group: 1 },

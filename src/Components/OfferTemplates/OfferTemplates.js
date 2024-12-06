@@ -31,40 +31,50 @@ export const OfferTemplates = ({
       {
         name: "minimum_order_count",
         type: "number",
-        label: "Field 1",
+        label: "Product Amount",
         required: true,
         has_icon: true,
       },
       {
         name: "discount_value",
         type: "number",
-        label: "Field 2",
+        label: "Discount Amount",
         has_icon: true,
+        required: true,
       },
       {
         name: "discount_type",
         type: "text",
         label: "discount type",
         required: true,
-        list: [
-          { name: "amount" },
-          { name: "percentage" },
-          { name: "pay_x_buy_y" },
-        ],
+        list: [{ name: "amount" }, { name: "percentage" }],
       },
     ];
+
     if (offer?.offer_type === "ITEMS") {
       default_fields.at(1).required = true;
+      default_fields.at(0).label = "Number of pieces purchased";
+      default_fields.at(1).label = "Number of pieces acquired";
+      default_fields.at(2).list = [{ name: "pay_x_buy_y" }];
     }
-    if (offer?.offer_type === "FLASH" || offer?.offer_type === 'CART') {
-      default_fields.splice(1, 1);
+    if (offer?.offer_type === "BULK") {
+      default_fields.at(1).required = true;
+      default_fields.at(0).label = "Number of pieces purchased";
     }
-    if (offer?.offer_type === "VOUCHERS")
+
+    if (offer?.offer_type === "FLASH" || offer?.offer_type === "CART") {
+      default_fields.splice(0, 1);
+    }
+    if (offer?.offer_type === "VOUCHERS") {
+      default_fields.at(1).required = true;
+      default_fields.at(0).label = "Purchase value";
       default_fields.unshift({
         name: "code",
         type: "text",
         label: "code",
+        required: true,
       });
+    }
 
     return default_fields;
   }, [offer?.offer_type]);

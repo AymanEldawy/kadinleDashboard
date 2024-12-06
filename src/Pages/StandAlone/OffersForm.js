@@ -446,15 +446,15 @@ function OffersForm() {
       contentBar={
         <div className="flex max-md:flex-wrap gap-4 items-center min-w-[50%]">
           <InputField
-          containerClassName="!flex-row gap-2"
+            containerClassName="!flex-row gap-2"
             labelClassName="whitespace-nowrap order-2"
             className="!w-5 !h-5"
             checked={offer?.is_seasonal}
-            name='is_seasonal'
-            type='checkbox'
+            name="is_seasonal"
+            type="checkbox"
             label="is seasonal"
-            onChange={(e) => handelChangeField('is_seasonal', e.target.checked)}
-            onFocus={() => onTouched('is_seasonal')}
+            onChange={(e) => handelChangeField("is_seasonal", e.target.checked)}
+            onFocus={() => onTouched("is_seasonal")}
             error={
               touched?.is_seasonal && errors?.is_seasonal
                 ? errors?.is_seasonal

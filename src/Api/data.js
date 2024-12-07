@@ -2069,3 +2069,22 @@ export const getProductsList = async ({
   });
   return data;
 };
+
+export const getGroup2ProductIds = async (offer_id) => {
+  console.log("🚀 ~ getGroup2ProductIds ~ offer_id:", offer_id)
+  let query = supabase
+    .from("offer")
+    .select(`id, group, offer_product(product_id)`)
+    .eq("group", 2);
+
+  if (offer_id) query.neq("id", offer_id);
+
+  const response = await query
+  console.log("🚀 ~ getGroup2ProductIds ~ response:", response)
+  const productIds = response?.data?.flatMap(c => 
+    c?.offer_product?.map(p => p?.product_id)
+  );
+  
+  return productIds
+  
+};

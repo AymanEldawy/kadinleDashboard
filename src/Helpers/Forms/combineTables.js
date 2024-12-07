@@ -1423,7 +1423,10 @@ const combine_offer = () => [
   {
     accessorKey: "offer_type",
     header: "offer_type",
-    cell: ({ getValue }) => <span>{getValue()}</span>,
+    cell: ({ getValue, row }) => {
+      let group = row.original?.group
+      return <p className="flex gap-2 items-center bg-white p-1 border rounded"><span className={`px-1 rounded ${group === 1 ? 'bg-blue-400' : 'bg-primary-green'}`}>{group}</span> <span>{getValue()}</span></p>
+    },
   },
   {
     accessorKey: "display",
@@ -1454,13 +1457,15 @@ const combine_offer = () => [
   },
   {
     accessorKey: "start_date",
-    header: "start_date",
-    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
-  },
-  {
-    accessorKey: "end_date",
-    header: "end_date",
-    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
+    header: "Date",
+    cell: ({ getValue, row }) => {
+      return (
+        <div className="flex gap-2 flex-col text-xs">
+          <span className="whitespace-nowrap bg-gray-500 p-1 rounded-md text-white">Start: {new Date(row.original?.start_date).toLocaleDateString("en-UK")}</span>
+          <span className="whitespace-nowrap bg-red-500 p-1 rounded-md text-white">End {new Date(row.original?.end_date).toLocaleDateString("en-UK")}</span>
+        </div>
+      )
+    },
   },
 
   {

@@ -26,6 +26,7 @@ import { useDelete } from "../../hooks/useDelete";
 import {
   getAllProductsId,
   getCacheCategory,
+  getGroup2ProductIds,
   getOfferCategory,
   getOfferCountry,
   getOfferData,
@@ -112,6 +113,15 @@ function OffersForm() {
     queryKey: ["offer", "products", params?.id],
     queryFn: async () => {
       const response = await getData("currency");
+      return response;
+    },
+  });
+
+  const { data: param_ignore_ids } = useQuery({
+    queryKey: ["offer", "products", "ignored", params?.id],
+    queryFn: async () => {
+      const response = await getGroup2ProductIds(params?.id);
+      console.log("🚀 ~ queryFn: ~ response:", response)
       return response;
     },
   });
@@ -646,6 +656,7 @@ function OffersForm() {
               rowSelection={rowSelection}
               setRowSelection={setRowSelection}
               setSelectedCategory={setSelectedCategory}
+              param_ignore_ids={param_ignore_ids}
               categoryTitle={category?.title || ""}
               hideCategoryFilter={offer?.select_product_type === 2}
               extraContent={

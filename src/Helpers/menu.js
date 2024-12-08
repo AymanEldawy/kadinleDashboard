@@ -17,6 +17,7 @@ import {
   CollectionIcon,
   CurrencyIcon,
   DatabaseIcon,
+  EditIcon,
   ExclamationTriangleIcon,
   FireIcon,
   GearIcon,
@@ -443,7 +444,7 @@ export const menuData = [
       },
       {
         key: "supplier-review",
-        icon: <RoundedArrowsIcon className="h-6 w-6" />,
+        icon: <EditIcon className="h-6 w-6" />,
         path: "/supplier-review",
         name: "supplier review",
       },

@@ -141,7 +141,7 @@ const SuppliersReview = () => {
                               <div className="flex-1 p-2">Stock</div>
                             </div>
                             {isVariantLoading ? (
-                              <p className="w-full min-h-[120px] flex items-center justify-center text-blue-500 animate-pulse text-l">
+                              <p className="w-full gap-2 min-h-[120px] flex items-center justify-center text-blue-500 animate-pulse text-l">
                                 <svg
                                   aria-hidden="true"
                                   role="status"

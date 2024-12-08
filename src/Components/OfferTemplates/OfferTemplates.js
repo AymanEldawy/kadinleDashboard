@@ -64,6 +64,12 @@ export const OfferTemplates = ({
 
     if (offer?.offer_type === "FLASH" || offer?.offer_type === "CART") {
       default_fields.splice(0, 1);
+      default_fields.unshift({
+        name: "category_hex",
+        type: "color",
+        label: "category color",
+        required: true,
+      })
     }
     if (offer?.offer_type === "VOUCHERS") {
       default_fields.at(1).required = true;

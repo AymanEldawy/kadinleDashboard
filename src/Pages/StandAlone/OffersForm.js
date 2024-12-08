@@ -68,6 +68,7 @@ function OffersForm() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [category, setCategory] = useState(null);
   const [selectedCurrency, setSelectedCurrency] = useState(null);
+  const [param_price, setParam_price] = useState(null);
 
   const { data: oldOfferData } = useQuery({
     queryKey: ["offer", params?.id],
@@ -121,7 +122,7 @@ function OffersForm() {
     queryKey: ["offer", "products", "ignored", params?.id],
     queryFn: async () => {
       const response = await getGroup2ProductIds(params?.id);
-      console.log("🚀 ~ queryFn: ~ response:", response)
+      console.log("🚀 ~ queryFn: ~ response:", response);
       return response;
     },
   });
@@ -523,6 +524,16 @@ function OffersForm() {
             />
           )}
 
+          <InputField
+            containerClassName="!flex-row !gap-2 w-full"
+            placeholder="Price"
+            value={param_price}
+            keyLabel="code"
+            onChange={(e) => {
+              setParam_price(e.target.value);
+            }}
+          />
+
           <button
             disabled={!offer?.offer_type}
             onClick={() => setToggleStage((p) => !p)}
@@ -659,6 +670,11 @@ function OffersForm() {
               param_ignore_ids={param_ignore_ids}
               categoryTitle={category?.title || ""}
               hideCategoryFilter={offer?.select_product_type === 2}
+              param_price={
+                param_price
+                  ? getFormatPrice(param_price, selectedCurrency)
+                  : 0
+              }
               extraContent={
                 <SelectField
                   name="select_product_type"

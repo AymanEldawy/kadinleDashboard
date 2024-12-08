@@ -1701,6 +1701,25 @@ export const getSuppliersList = async () => {
   return Object.values(hash);
 };
 
+export const getSupplierProductsReview = async (
+  language_id,
+  supplierId,
+  page,
+  pageSize
+) => {
+  let start = page * pageSize;
+  let end = (page + 1) * pageSize;
+
+  const response = await supabase
+    .from("product")
+    .select(`id, seller_file_id,seller_sku, content:product_content(name)`)
+    // .select(`id, seller_file_id,seller_sku, content:product_content(name)`)
+    .eq("product_content.language_id", language_id)
+    .eq("seller_file_id", supplierId);
+  // .range(start, end);
+  return response;
+};
+
 export const getSupplierData = async () => {};
 
 export const refreshPrices = async (item) => {
@@ -2078,11 +2097,54 @@ export const getGroup2ProductIds = async (offer_id) => {
 
   if (offer_id) query.neq("id", offer_id);
 
-  const response = await query
-  const productIds = response?.data?.flatMap(c => 
-    c?.offer_product?.map(p => p?.product_id)
+  const response = await query;
+  const productIds = response?.data?.flatMap((c) =>
+    c?.offer_product?.map((p) => p?.product_id)
   );
-  
-  return productIds
-  
+
+  return productIds;
+};
+
+export const getFirstVariant = async (productId) => {
+  const { data, error } = await supabase
+    .from("product_variant")
+    .select("id")
+    .eq("product_id", productId);
+
+  return data?.at(0)?.id;
+};
+
+export const getProductInfo = async (productId, language_id, region_id) => {
+  const { data, error } = await supabase
+    .from("product_variant")
+    .select(
+      `
+    id,
+    product_id,
+    color_details,
+    discount,
+    global_percentage,
+    global_price,
+    percentage,
+    price,
+    purchase_price,
+    seller_sku,
+    size(id, size_content(name)),
+    color(id, color_content(name)),
+    stock(stock)`
+    )
+    .eq("product_id", productId)
+    .eq("color.color_content.language_id", language_id)
+    .eq("size.size_content.region_id", region_id);
+
+  const { data: images } = await supabase
+    .from("product_image")
+    .select("image")
+    .eq("product_id", productId);
+
+  return {
+    variants: data,
+    images,
+    error,
+  };
 };

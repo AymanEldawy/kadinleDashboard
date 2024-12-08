@@ -441,6 +441,12 @@ export const menuData = [
         path: "/change-category",
         name: "change category",
       },
+      {
+        key: "supplier-review",
+        icon: <RoundedArrowsIcon className="h-6 w-6" />,
+        path: "/supplier-review",
+        name: "supplier review",
+      },
 
       {
         key: "chunks",

@@ -119,6 +119,7 @@ import Sale from "../Pages/StandAlone/Sale";
 import SaleForm from "../Pages/StandAlone/SaleForm";
 import SaleSlider from "../Pages/StandAlone/SaleSlider";
 import OffersForm from "../Pages/StandAlone/OffersForm";
+import SuppliersReview from "../Pages/StandAlone/SuppliersReview";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -445,6 +446,11 @@ const authProtectedRoutes = [
   {
     path: "/change-category",
     component: <MoveCategory />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/supplier-review",
+    component: <SuppliersReview />,
     allowedRoles: ["admin", "superadmin"],
   },
   {

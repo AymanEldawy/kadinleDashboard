@@ -4,11 +4,6 @@ import { OfferRowView } from "./OfferRowView";
 
 const FIELDS = [
   {
-    name: "display",
-    type: "checkbox",
-    label: "Display",
-  },
-  {
     name: "start_date",
     type: "date",
     label: "start date",
@@ -50,8 +45,9 @@ export const GeneralOfferTemplate = ({
     <div className="grid lg:grid-cols-2 gap-2 p-4 bg-gray-100 my-4">
       <div className="grid grid-cols-3 gap-2">
         <InputField
-          containerClassName="flex-1 !flex-row gap-2 items-center"
-          labelClassName="whitespace-nowrap order-1"
+          containerClassName="flex-1 gap-2 items-start"
+          // labelClassName="whitespace-nowrap order-1"
+          className="!h-6 !w-6"
           value={offer?.display}
           name="display"
           checked={offer?.display}

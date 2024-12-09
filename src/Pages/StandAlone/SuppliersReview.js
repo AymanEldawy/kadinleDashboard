@@ -6,7 +6,7 @@ import Select from "react-select";
 import {
   getProductInfo,
   getSupplierProductsReview,
-  getSuppliersList
+  getSuppliersList,
 } from "../../Api/data";
 import { LoadingProcess } from "../../Components/Global/LoadingProcess";
 import { VariantsView } from "../../Components/DisplayOrder/VariantsView";
@@ -14,7 +14,7 @@ import { VariantsView } from "../../Components/DisplayOrder/VariantsView";
 const SuppliersReview = () => {
   let name = "products_slider";
   const { defaultLanguage, defaultRegion } = useGlobalOptions();
-  const [supplierId, setSupplierId] = useState(null);
+  const [supplierId, setSupplierId] = useState(74);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
   const { data: suppliers } = useQuery({
@@ -46,20 +46,19 @@ const SuppliersReview = () => {
   });
 
   const { data: selectedProduct, isLoading: isVariantLoading } = useQuery({
-    queryKey: [selectedProductId, "variant", defaultLanguage?.id, defaultRegion?.id],
+    queryKey: [
+      selectedProductId,
+      "variant",
+      defaultLanguage?.id,
+      defaultRegion?.id,
+    ],
     queryFn: async () =>
-      await getProductInfo(selectedProductId, defaultLanguage?.id, defaultRegion?.id),
+      await getProductInfo(
+        selectedProductId,
+        defaultLanguage?.id,
+        defaultRegion?.id
+      ),
   });
-  console.log(selectedProduct, "selectedProduct");
-
-  // const handleLink = async (productId) => {
-  //   // const variantId = await getFirstVariant(productId);
-  //   // const product = await ;
-  //   console.log("🚀 ~ handleLink ~ product:", product);
-  //   // window.open(`https://kadinle.com/product/${variantId}`, "_blank");
-
-  //   setSelectedProduct(product);
-  // };
 
   return (
     <>
@@ -77,16 +76,27 @@ const SuppliersReview = () => {
                 options={suppliers}
                 getOptionLabel={({ seller_file_id }) => seller_file_id}
                 getOptionValue={({ seller_file_id }) => seller_file_id}
+                value={suppliers?.find(c => c?.seller_file_id === supplierId)}
                 onChange={(value) => {
                   setSupplierId(value?.seller_file_id);
                 }}
               />
-              <span>
-                Supplier id:{" "}
-                <span className="bg-gray-100 rounded-md px-2 py-1 border border-gray-200">
-                  {supplierId}
-                </span>{" "}
-              </span>
+              <div className="flex gap-2 items-center">
+                <span>
+                  Supplier id:{" "}
+                  <span className="bg-gray-100 rounded-md px-2 py-1 border border-gray-200">
+                    {supplierId}
+                  </span>{" "}
+                </span>
+                |
+                <span>
+                  Products count:{" "}
+                  <span className="bg-gray-100 rounded-md px-2 py-1 border border-gray-200">
+                    {products?.data?.length}
+                  </span>{" "}
+                </span>
+
+              </div>
             </div>
           }
         >

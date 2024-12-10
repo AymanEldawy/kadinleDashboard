@@ -2,9 +2,18 @@ import React from "react";
 import { useState } from "react";
 
 import { useGlobalOptions } from "../../Context/GlobalOptions";
+import { useTranslation } from "react-i18next";
 
 const LanguageBar = () => {
+  const { t, i18n } = useTranslation();
   const { languages, setDefaultSettings, defaultLanguage } = useGlobalOptions();
+  console.log("🚀 ~ LanguageBar ~ languages:", languages)
+
+  const changeLanguage = (lng) => {
+    console.log("🚀 ~ changeLanguage ~ lng:", lng)
+    i18n.changeLanguage(lng); // Switch language
+  };
+
   const [open, setOpen] = useState(false);
   return (
     <div className="relative">
@@ -29,6 +38,7 @@ const LanguageBar = () => {
               onClick={() => {
                 setDefaultSettings("lang", language);
                 setOpen(false);
+                changeLanguage(language?.translation_code)
               }}
               className="flex items-center gap-4 cursor-pointer font-medium hover:text-gray-900 dark:hover:text-gray-200"
             >

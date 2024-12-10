@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import InputField from "../../Components/CustomForm/InputField";
 import { useQuery } from "@tanstack/react-query";
 import { useUpdate } from "../../hooks/useUpdate";
-import { getSaleData, getSales } from "../../Api/data";
+import { getOnlySaleProduct, getSaleData, getSales } from "../../Api/data";
 import { getTableDataWithPagination } from "../../Api/globalActions";
 
 const SaleSlider = () => {
@@ -28,23 +28,11 @@ const SaleSlider = () => {
   });
 
   const { data: saleProducts } = useQuery({
-    queryKey: ["sale", "data", params?.id, defaultLanguage?.id],
+    queryKey: ["offer", "products", "ignored", params?.id],
     queryFn: async () => {
-      if (!defaultLanguage?.id) return;
-      const response = await getSales(defaultLanguage?.id, 1, 1, 100);
-      let CACHE_ids = [];
-      let CACHE_DATE = {};
-      for (const item of response?.data) {
-        let productIds = item?.products_ids || [];
-        CACHE_ids.push(...productIds);
-        for (const product of productIds) {
-          CACHE_DATE[product] = item?.end_date;
-        }
-      }
-      return {
-        CACHE_ids,
-        CACHE_DATE,
-      };
+      const response = await getOnlySaleProduct();
+      console.log("🚀 ~ queryFn: ~ response:", response);
+      return response;
     },
   });
 
@@ -100,7 +88,7 @@ const SaleSlider = () => {
 
   return (
     <BlockPaper
-      title="Flash Sale"
+      title="Flash Sale slider"
       headerClassName="flex items-center justify-between"
       contentBar={
         <p className="ml-auto">
@@ -117,7 +105,7 @@ const SaleSlider = () => {
         rowSelection={rowSelection}
         setRowSelection={setRowSelection}
         showIndex
-        saleProducts={saleProducts?.CACHE_ids}
+        param_products_ids={saleProducts?.productIds}
       />
     </BlockPaper>
   );

@@ -77,7 +77,7 @@ const SuppliersReview = () => {
                 getOptionLabel={({ seller_file_id }) => seller_file_id}
                 getOptionValue={({ seller_file_id }) => seller_file_id}
                 value={suppliers?.find(c => c?.seller_file_id === supplierId)}
-                onChange={(value) => {
+              onChange={(value) => {
                   setSupplierId(value?.seller_file_id);
                 }}
               />

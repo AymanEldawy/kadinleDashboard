@@ -1424,8 +1424,19 @@ const combine_offer = () => [
     accessorKey: "offer_type",
     header: "offer_type",
     cell: ({ getValue, row }) => {
-      let group = row.original?.group
-      return <p className="flex gap-2 items-center bg-white p-1 border rounded"><span className={`px-1 rounded ${group === 1 ? 'bg-blue-400' : 'bg-primary-green'}`}>{group}</span> <span>{getValue()}</span></p>
+      let group = row.original?.group;
+      return (
+        <p className="flex gap-2 items-center bg-white p-1 border rounded">
+          <span
+            className={`px-1 rounded ${
+              group === 1 ? "bg-blue-400" : "bg-primary-green"
+            }`}
+          >
+            {group}
+          </span>{" "}
+          <span>{getValue()}</span>
+        </p>
+      );
     },
   },
   {
@@ -1461,10 +1472,15 @@ const combine_offer = () => [
     cell: ({ getValue, row }) => {
       return (
         <div className="flex gap-2 flex-col text-xs">
-          <span className="whitespace-nowrap bg-gray-500 p-1 rounded-md text-white">Start: {new Date(row.original?.start_date).toLocaleDateString("en-UK")}</span>
-          <span className="whitespace-nowrap bg-red-500 p-1 rounded-md text-white">End {new Date(row.original?.end_date).toLocaleDateString("en-UK")}</span>
+          <span className="whitespace-nowrap bg-gray-500 p-1 rounded-md text-white">
+            Start:{" "}
+            {new Date(row.original?.start_date).toLocaleDateString("en-UK")}
+          </span>
+          <span className="whitespace-nowrap bg-red-500 p-1 rounded-md text-white">
+            End {new Date(row.original?.end_date).toLocaleDateString("en-UK")}
+          </span>
         </div>
-      )
+      );
     },
   },
 
@@ -1947,9 +1963,7 @@ const combine_collection_product = (rowSelection, showIndex) => [
   {
     accessorKey: "category",
     header: "category",
-    cell: ({ row }) => (
-      <span>{row?.original?.category?.title}</span>
-    ),
+    cell: ({ row }) => <span>{row?.original?.category?.title}</span>,
   },
   { accessorKey: "price", header: "price" },
   {
@@ -2237,26 +2251,41 @@ const combine_sale = () => [
       return (
         <Link
           to={`/update/category/${row?.original?.category_id}`}
-          className="text-blue-500 hover:underline"
+          className="text-blue-500 hover:underline flex gap-2 items-center"
         >
+          <span className="h-6 w-6 rounded-full border shrink-0" style={{background: row?.original?.category_hex}} />
           {row?.original?.category?.category_content?.at(0)?.title}
         </Link>
       );
     },
   },
-  { accessorKey: "amount", header: "amount" },
+  {
+    accessorKey: "amount",
+    header: "amount",
+    cell: ({ row }) => {
+      let amount = row?.original?.offer_tier?.at(0)?.discount_value
+      return (
+      <span
+        className={`px-8 py-1 rounded-md`}
+      >
+        {amount}
+      </span>
+    )},
+  },
   {
     accessorKey: "percentage",
     header: "percentage",
-    cell: ({ getValue }) => (
+    cell: ({ row }) => {
+      let isPercentage = row?.original?.offer_tier?.at(0)?.discount_type === 'percentage'
+      return (
       <span
         className={`px-8 py-1 rounded-md ${
-          getValue() ? "bg-green-500 text-white" : "bg-red-500 text-white"
+          isPercentage ? "bg-green-500 text-white" : "bg-red-500 text-white"
         }`}
       >
-        {getValue() ? "Yes" : "No"}
+        {isPercentage ? "Yes" : "No"}
       </span>
-    ),
+    )},
   },
   {
     accessorKey: "actions",
@@ -2264,7 +2293,7 @@ const combine_sale = () => [
     cell: ({ row }) => (
       <div className="flex gap-2 items-center">
         <Link
-          to={`/sale/update/${row?.original?.id}`}
+          to={`/update-offer/${row?.original?.id}`}
           className="text-blue-500 hover:underline"
         >
           Edit

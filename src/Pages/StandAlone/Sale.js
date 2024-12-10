@@ -30,7 +30,7 @@ const Sale = () => {
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: [
-      "sale",
+      "flash",
       tab,
       pagination?.pageIndex,
       pagination?.pageSize,
@@ -52,7 +52,7 @@ const Sale = () => {
   });
 
   const handleDeleteItem = async () => {
-    await onDelete("sale", Object.keys(rowSelection));
+    await onDelete("offer", Object.keys(rowSelection));
     refetch()
   };
 

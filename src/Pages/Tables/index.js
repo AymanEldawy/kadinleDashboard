@@ -20,7 +20,6 @@ export { default as Comments } from "./Comments";
 export { default as Brands } from "./Brands";
 export { default as Coupons } from "./Coupons";
 export { default as Currency } from "./Currency";
-export { default as Sales } from "./Sales";
 export { default as ChartContent } from "./ChartContent";
 export { default as ChartData } from "./ChartData";
 export { default as NewsletterSubscription } from "./NewsletterSubscription";

@@ -168,10 +168,14 @@ export const getLogs = async (page, pageSize, additionalData) => {
 
 export const getSales = async (language_id, type, page, pageSize) => {
   const query = supabase
-    .from("sale")
-    .select(`*,category(id, category_content(id, title, language_id))`, {
-      count: "exact",
-    })
+    .from("offer")
+    .select(
+      `*,category(id, category_content(id, title, language_id)), offer_tier(*)`,
+      {
+        count: "exact",
+      }
+    )
+    .eq("offer_type", "FLASH")
     .eq("category.category_content.language_id", language_id);
 
   if (type === 1) {
@@ -2140,11 +2144,35 @@ export const getProductInfo = async (productId, language_id, region_id) => {
   const { data: images } = await supabase
     .from("product_image")
     .select("image")
-    .eq("product_id", productId);
+    .eq("product_id", productId)
+    .limit(1);
 
   return {
     variants: data,
     images,
     error,
+  };
+};
+
+export const getOnlySaleProduct = async () => {
+  let response = await supabase
+    .from("offer")
+    .select(`id, group, end_date, offer_product(product_id)`)
+    .eq("offer_type", "FLASH")
+    .gt("end_date", new Date().toISOString())
+    .lt("start_date", new Date().toISOString());
+
+  const CACHE_DATE = {};
+
+  const productIds = response?.data?.flatMap((c) =>
+    c?.offer_product?.map((p) => {
+      CACHE_DATE[p?.product_id] = c?.end_date;
+      return p?.product_id;
+    })
+  );
+
+  return {
+    productIds,
+    CACHE_DATE,
   };
 };

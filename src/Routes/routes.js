@@ -36,9 +36,7 @@ import {
   AddLessThan,
   AddNewSupplier,
   AddNews,
-  AddNewsletter,
-  AddOffer,
-  AddOrderStatus,
+  AddNewsletter, AddOrderStatus,
   AddPartner,
   AddPoint,
   AddProduct,
@@ -49,7 +47,7 @@ import {
   AddSupplierRequest,
   AddUser,
   AddWarehouse,
-  AddWarehouseAvailability,
+  AddWarehouseAvailability
 } from "./../Pages/Forms";
 import {
   Addresses,
@@ -82,16 +80,14 @@ import {
   Points,
   Products,
   Regions,
-  ReturnStatus,
-  Sales,
-  Sizes,
+  ReturnStatus, Sizes,
   Stocks,
   SupplierRequest,
   Suppliers,
   Users,
   WarehouseAvailability,
   Warehouses,
-  Measurement,
+  Measurement
 } from "./../Pages/Tables";
 import SpecialOffer from "../Pages/Tables/SepcialOffer";
 import Support from "../Pages/StandAlone/Support";
@@ -213,7 +209,6 @@ const authProtectedRoutes = [
     component: <OffersProducts />,
     allowedRoles: ["*"],
   },
-  // { path: "/sale", component: <Sales />, allowedRoles: ["*"] },
   { path: "/sale/update/:id", component: <SaleForm />, allowedRoles: ["*"] },
   { path: "/sale/add/", component: <SaleForm />, allowedRoles: ["*"] },
   { path: "/sale/slider/", component: <SaleSlider />, allowedRoles: ["*"] },

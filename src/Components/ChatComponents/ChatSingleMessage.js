@@ -15,7 +15,7 @@ export const ChatSingleMessage = ({ item, user }) => {
         />
       ) : null}
       <div
-        className={`px-4 py-2 max-w-[70%] rounded-md w-fit ${
+        className={`px-4 py-2 max-w-lg rounded-md w-fit break-words ${
           item?.sender === "SUPPORT"
             ? "bg-[#129b9b] text-white flex-1 max-w-fit ltr:ml-auto rtl:mr-auto"
             : "bg-gray-200 text-black"

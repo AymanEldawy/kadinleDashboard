@@ -78,7 +78,7 @@ export const OfferTemplates = ({
         default_fields[1],
         default_fields[0],
       ];
-      default_fields.at(1).label = "maximum price";
+      default_fields.at(1).label = "minimum price";
       default_fields.splice(2, 0, {
         name: "maximum_value",
         type: "number",

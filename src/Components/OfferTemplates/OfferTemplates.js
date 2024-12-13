@@ -69,14 +69,22 @@ export const OfferTemplates = ({
         type: "color",
         label: "category color",
         required: true,
-      })
+      });
     }
     console.log(offer?.offer_type);
-    
-    if (offer?.offer_type === "COUPONS") {
-      [default_fields[0], default_fields[1]] = [default_fields[1], default_fields[0]]
-      default_fields.at(1).label = "Product price";
 
+    if (offer?.offer_type === "COUPONS") {
+      [default_fields[0], default_fields[1]] = [
+        default_fields[1],
+        default_fields[0],
+      ];
+      default_fields.at(1).label = "maximum price";
+      default_fields.splice(2, 0, {
+        name: "maximum_value",
+        type: "number",
+        label: "maximum price",
+        required: true,
+      });
     }
     if (offer?.offer_type === "VOUCHERS") {
       default_fields.at(1).required = true;

@@ -375,6 +375,11 @@ function OffersForm() {
             item?.discount_value,
             selectedCurrency
           );
+        if (item?.maximum_value)
+          item.maximum_value = getFormatPrice(
+            item?.maximum_value,
+            selectedCurrency
+          );
       }
 
       if (item?.id) updated.push(item);
@@ -671,9 +676,7 @@ function OffersForm() {
               categoryTitle={category?.title || ""}
               hideCategoryFilter={offer?.select_product_type === 2}
               param_price={
-                param_price
-                  ? getFormatPrice(param_price, selectedCurrency)
-                  : 0
+                param_price ? getFormatPrice(param_price, selectedCurrency) : 0
               }
               extraContent={
                 <SelectField

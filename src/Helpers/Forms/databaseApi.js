@@ -50,6 +50,7 @@ const category = [
   { name: "banner_video", type: "text", key: "image" },
   { label: "icon", name: "image", type: "text", key: "image" },
   { name: "display_homepage", key: "checkbox" },
+  { name: "privacy_content", key: "checkbox" },
 ];
 
 const category_content = [

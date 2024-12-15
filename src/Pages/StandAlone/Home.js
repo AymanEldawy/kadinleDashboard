@@ -157,9 +157,33 @@ const Home = () => {
     );
   }
 
+  const insert = async () => {
+    const products = await supabase
+      .from("product")
+      .select("id")
+      .in(
+        "product_sku",
+        [
+          81673, 81712, 178316, 178969, 652710, 80220, 80204, 318285, 639637,
+          330879, 330892, 331069, 625229, 639839, 626147, 327574, 327610,
+          226024, 327298, 199652, 94991,
+        ]
+      );
+    let orders = [];
+    for (const product of products?.data) {
+      orders.push({
+        user_id: "a3471155-2cb0-4083-b885-6f174205503e",
+        product_id: product?.id,
+      });
+    }
+
+    const res = await supabase.from("user_like").insert(orders);
+    console.log("🚀 ~ insert ~ res:", res);
+  };
   return (
     <div>
       <StatisticsCards data={statistics} />
+      <button onClick={insert}>load</button>
       <div className="grid items-start grid-cols-1 xl:grid-cols-2 gap-8 mt-8">
         <div className="dark:bg-bgmaindark bg-white shadow ">
           <h4 className="font-medium dark:text-white text-gray-800 text-lg p-2">

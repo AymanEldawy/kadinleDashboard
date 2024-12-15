@@ -11,6 +11,11 @@ import { useQuery } from "@tanstack/react-query";
 import { getProductsList, getProductsView } from "../../Api/data";
 import { CategoryMultiFilter } from "../TableBar/CategoryMultiFilter";
 import SearchBar from "../SearchBar/SearchBar";
+import InputField from "../CustomForm/InputField";
+import {
+  getFormatPrice,
+  getFormatPriceToInsert,
+} from "../../Helpers/functions";
 
 export const SelectedProductTable = ({
   additionalData,
@@ -25,14 +30,15 @@ export const SelectedProductTable = ({
   showIndex,
   param_ignore_ids,
   param_products_ids,
-  param_price,
 }) => {
-  const { defaultLanguage, defaultRegion } = useGlobalOptions();
+  const { defaultLanguage, defaultRegion, currency } = useGlobalOptions();
   const [searchValue, setSearchValue] = useState("");
   const [selectedColumn, setSelectedColumn] = useState(null);
   const [pageCount, setPageCount] = useState(1);
   const [filterCategory, setFilterCategory] = useState();
   const [open, setOpen] = useState(false);
+  const [param_min_price, setParam_min_price] = useState(null);
+  const [param_max_price, setParam_max_price] = useState(null);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 50,
@@ -51,7 +57,8 @@ export const SelectedProductTable = ({
       open,
       param_products_ids,
       param_ignore_ids,
-      param_price,
+      param_min_price,
+      param_max_price,
     ],
     keepPreviousData: true,
     queryFn: async () => {
@@ -73,7 +80,12 @@ export const SelectedProductTable = ({
         param_offset: pagination?.pageIndex * pagination?.pageSize,
         param_limit: pagination?.pageSize,
         param_ignore_ids,
-        param_price,
+        param_max_price: param_max_price
+          ? getFormatPriceToInsert(param_max_price, currency)
+          : null,
+        param_min_price: param_min_price
+          ? getFormatPriceToInsert(param_min_price, currency)
+          : null,
         ...filters,
       });
 
@@ -103,6 +115,24 @@ export const SelectedProductTable = ({
             categoryTitle={categoryTitle}
           />
         )}
+        <div className="flex gap-4">
+          <InputField
+            className="max-w-[90px]"
+            label="Min Price"
+            value={param_min_price}
+            onChange={(e) => {
+              setParam_min_price(e.target.value);
+            }}
+          />
+          <InputField
+            className="max-w-[90px]"
+            label="Max Price"
+            value={param_max_price}
+            onChange={(e) => {
+              setParam_max_price(e.target.value);
+            }}
+          />
+        </div>
         <div className="relative">
           <SearchBar
             searchValue={searchValue}

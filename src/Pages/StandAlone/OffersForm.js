@@ -41,6 +41,7 @@ import { GeneralOfferTemplate } from "../../Components/OfferTemplates/GeneralOff
 import {
   getDiscountIcon,
   getFormatPrice,
+  getFormatPriceToInsert,
   processBatch,
 } from "../../Helpers/functions";
 
@@ -48,7 +49,7 @@ function OffersForm() {
   const hash_id = uuidv4();
   const navigate = useNavigate();
   const params = useParams();
-  const { languages, defaultLanguage } = useGlobalOptions();
+  const { languages, defaultLanguage, currency } = useGlobalOptions();
   const { addItem } = useAdd();
   const { deleteItem } = useDelete();
   const { getData } = useFetch();
@@ -67,8 +68,6 @@ function OffersForm() {
   const [isProgress, setIsProgress] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [category, setCategory] = useState(null);
-  const [selectedCurrency, setSelectedCurrency] = useState(null);
-  const [param_price, setParam_price] = useState(null);
 
   const { data: oldOfferData } = useQuery({
     queryKey: ["offer", params?.id],
@@ -108,14 +107,6 @@ function OffersForm() {
       }
     },
     enabled: !!params?.id && !!defaultLanguage?.id,
-  });
-
-  const { data: currencies } = useQuery({
-    queryKey: ["offer", "products", params?.id],
-    queryFn: async () => {
-      const response = await getData("currency");
-      return response;
-    },
   });
 
   const { data: param_ignore_ids } = useQuery({
@@ -366,19 +357,19 @@ function OffersForm() {
     for (const item of list) {
       if (item?.discount_type === "amount") {
         if (item?.minimum_order_count)
-          item.minimum_order_count = getFormatPrice(
+          item.minimum_order_count = getFormatPriceToInsert(
             item?.minimum_order_count,
-            selectedCurrency
+            currency
           );
         if (item?.discount_value)
-          item.discount_value = getFormatPrice(
+          item.discount_value = getFormatPriceToInsert(
             item?.discount_value,
-            selectedCurrency
+            currency
           );
         if (item?.maximum_value)
-          item.maximum_value = getFormatPrice(
+          item.maximum_value = getFormatPriceToInsert(
             item?.maximum_value,
-            selectedCurrency
+            currency
           );
       }
 
@@ -511,34 +502,6 @@ function OffersForm() {
               }));
             }}
           />
-          {!offer?.currency_id && params?.id ? null : (
-            <SelectField
-              containerClassName="!flex-row !gap-2 w-full"
-              placeholder="Currency"
-              list={currencies}
-              readOnly={params?.id}
-              value={offer?.currency_id}
-              keyLabel="code"
-              onChange={(option) => {
-                setOffer((prev) => ({
-                  ...prev,
-                  currency_id: option?.id,
-                }));
-                setSelectedCurrency(option);
-              }}
-            />
-          )}
-
-          <InputField
-            containerClassName="!flex-row !gap-2 w-full"
-            placeholder="Price"
-            value={param_price}
-            keyLabel="code"
-            onChange={(e) => {
-              setParam_price(e.target.value);
-            }}
-          />
-
           <button
             disabled={!offer?.offer_type}
             onClick={() => setToggleStage((p) => !p)}
@@ -675,9 +638,6 @@ function OffersForm() {
               param_ignore_ids={param_ignore_ids}
               categoryTitle={category?.title || ""}
               hideCategoryFilter={offer?.select_product_type === 2}
-              param_price={
-                param_price ? getFormatPrice(param_price, selectedCurrency) : 0
-              }
               extraContent={
                 <SelectField
                   name="select_product_type"

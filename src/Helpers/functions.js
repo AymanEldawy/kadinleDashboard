@@ -61,11 +61,47 @@ export function TicketIdGen() {
   return firstId + "-" + secondId + "-" + thirdId;
 }
 
-export function getFormatPrice(price, currency) {
+export function getFormatPriceToInsert(price, currency) {
   let calculatePrice = (price / currency?.rate).toFixed(2);
   if (!calculatePrice || isNaN(calculatePrice)) calculatePrice = price;
   return calculatePrice;
 }
+
+
+export const getFormatPrice = (
+  price,
+  currency,
+  ignore,
+  withCode = true,
+  realNumber
+) => {
+  console.log(price, currency,'--');
+  
+  let code = "";
+  switch (currency?.code) {
+    case "USD":
+      code = "$";
+      break;
+    case "TRY":
+      code = "TL";
+      break;
+    case "EUR":
+      code = "€";
+      break;
+    default:
+      code = currency?.code;
+  }
+  let calculatePrice = ignore
+    ? price
+    : (price * currency?.rate).toFixed(2);
+
+  if (!calculatePrice || isNaN(calculatePrice)) return price;
+
+  if(realNumber) 
+    return `${Math.round(calculatePrice)} ${code}`
+
+  return withCode ? `${calculatePrice} ${code}` : +calculatePrice;
+};
 
 export function buildTree(items) {
   const map = {};

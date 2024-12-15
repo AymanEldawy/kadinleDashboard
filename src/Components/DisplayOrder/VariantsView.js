@@ -1,7 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { getFormatPrice } from "../../Helpers/functions";
+import { useGlobalOptions } from "../../Context/GlobalOptions";
 
 export const VariantsView = ({ variant }) => {
+  const { currency } = useGlobalOptions();
   return (
     <Link
       to={`https://kadinle.com/product/${variant?.id}`}
@@ -13,24 +16,24 @@ export const VariantsView = ({ variant }) => {
       </div> */}
       <ul className="flex-1 text-sm flex flex-col gap-2">
         <li className="flex gap-2 items-center">
-           <span className="min-w-[130px]">International price:</span>
+          <span className="min-w-[130px]">International price:</span>
           <span className="bg-gray-200 rounded-md px-1 font-medium">
             {" "}
-            {variant?.global_price || "0"}
+            {getFormatPrice(variant?.global_price, currency) || "0"}
           </span>
         </li>
         <li className="flex gap-2 items-center">
-           <span className="min-w-[130px]">Turkey price:</span>
+          <span className="min-w-[130px]">Turkey price:</span>
           <span className="bg-gray-200 rounded-md px-1 font-medium">
             {" "}
-            {variant?.price}
+            {getFormatPrice(variant?.price, currency) || "0"}
           </span>
         </li>
         <li className="flex gap-2 items-center">
-           <span className="min-w-[130px]">Supplier price:</span>
+          <span className="min-w-[130px]">Supplier price:</span>
           <span className="bg-gray-200 rounded-md px-1 font-medium">
             {" "}
-            {variant?.purchase_price}
+            {getFormatPrice(variant?.purchase_price, currency) || "0"}
           </span>
         </li>
       </ul>
@@ -38,7 +41,7 @@ export const VariantsView = ({ variant }) => {
         <div className="flex items-center gap-2">
           <span className="min-w-[100px]">Supplier color:</span>
           <span className=" bg-gray-200 text-gray-500 border rounded-md p-1 text-xs">
-            {variant?.color_details || 'Nothing'}
+            {variant?.color_details || "Nothing"}
           </span>
         </div>
         <div className="flex items-center gap-2">

@@ -10,6 +10,7 @@ import { exitFullscreen, openFullscreen } from "../Helpers/functions";
 import { FitScreenIcon, FullScreenIcon, LogoutIcon } from "../Helpers/Icons";
 import BarsIcon from "../Helpers/Icons/BarsIcon";
 import UserBar from "./../Components/UserBar/UserBar";
+import CurrenciesBar from "../Components/LanguageBar/CurrenciesBar";
 
 function Header({ open, setOpen, mode, setMode }) {
   const { changeTheme, theme } = useContext(ThemeContext);
@@ -46,6 +47,7 @@ function Header({ open, setOpen, mode, setMode }) {
           <div className="flex items-center gap-2">
             <RegionBar />
             <LanguageBar />
+            <CurrenciesBar />
             <div className="w-[1px] h-6 bg-gray-300" />
             <div className="divide-x-2 divide-gray-400 divide-solid" />
             <button

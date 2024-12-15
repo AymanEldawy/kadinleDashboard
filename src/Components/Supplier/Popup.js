@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useUpdate } from "../../hooks/useUpdate";
 import { toast } from "react-toastify";
+import { getFormatPriceToInsert } from "../../Helpers/functions";
 
 const Popup = ({
   isVisible,
@@ -16,7 +17,7 @@ const Popup = ({
   const updateProductsIdArr =
     JSON.parse(localStorage.getItem("updateProductsIdArr")) || [];
 
-  const productPrice = getFormatPrice(
+  const productPrice = getFormatPriceToInsert(
     product?.variants[index]?.price,
     selectedCurrency
   );

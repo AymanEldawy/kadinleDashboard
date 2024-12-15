@@ -8,6 +8,7 @@ import { ProductInfo } from "../../Components/Global/FullImage/ProductInfo";
 import { ProductToggleView } from "../../Components/Global/FullImage/ProductToggleView";
 import { ButtonRestartSale } from "../../Components/Supplier/ButtonRestartSale";
 import { OFFER_TYPES } from "../Scripts/constants";
+import { PriceView } from './../../Components/PriceView';
 
 const combine_address = () => [
   {
@@ -217,8 +218,8 @@ const combine_chunks = () => [
     header: "created_at",
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
-  { accessorKey: "min_price", header: "min_price" },
-  { accessorKey: "max_price", header: "max_price" },
+  { accessorKey: "min_price", header: "min_price", },
+  { accessorKey: "max_price", header: "max_price", },
   { accessorKey: "percentage", header: "percentage" },
   { accessorKey: "is_global", header: "is_global" },
   { accessorKey: "global_percentage", header: "global_percentage" },
@@ -1589,7 +1590,7 @@ export const combine_order = () => [
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
   },
   { accessorKey: "order_number", header: "order_number" },
-  { accessorKey: "price", header: "price" },
+  { accessorKey: "price", header: "price", cell: ({getValue}) => <PriceView price={getValue()}  /> },
   {
     accessorKey: "warehouse_from",
     header: "warehouse_from",
@@ -1628,7 +1629,7 @@ const combine_order_short = () => [
   //   cell: ({ getValue, row }) => {
   //   },
   // },
-  { accessorKey: "price", header: "price" },
+  { accessorKey: "price", header: "price", cell: ({getValue}) => <PriceView price={getValue()}  /> },
   {
     accessorKey: "order_status",
     header: "order_status",
@@ -1879,7 +1880,7 @@ const combine_product = () => [
       );
     },
   },
-  { accessorKey: "price", header: "price" },
+  { accessorKey: "price", header: "price", cell: ({getValue}) => <PriceView price={getValue()}  /> },
   { accessorKey: "barcode", header: "barcode" },
   {
     accessorKey: "brand",
@@ -1965,7 +1966,7 @@ const combine_collection_product = (rowSelection, showIndex) => [
     header: "category",
     cell: ({ row }) => <span>{row?.original?.category?.title}</span>,
   },
-  { accessorKey: "price", header: "price" },
+  { accessorKey: "price", header: "price", cell: ({getValue}) => <PriceView price={getValue()}  /> },
   {
     accessorKey: "action",
     header: "action",
@@ -3671,7 +3672,7 @@ export const combine_less_than = () => [
       );
     },
   },
-  { accessorKey: "price", header: "price" },
+  { accessorKey: "price", header: "price", cell: ({getValue}) => <PriceView price={getValue()}  /> },
 ];
 
 const home_sliders = () => [

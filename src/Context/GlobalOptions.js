@@ -5,6 +5,8 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { getUser } from "../Api/auth";
 import { getAdmin } from "../Api/globalActions";
 import Cookies from "js-cookie";
+import { getCurrency } from "../Api/data";
+import { useQuery } from "@tanstack/react-query";
 
 export const GlobalOptions = createContext();
 
@@ -24,7 +26,18 @@ export const GlobalOptionsProvider = ({ children }) => {
   const [defaultRegion, setDefaultRegion] = useState();
   const [user, setUser] = useState();
   const [refresh, setRefresh] = useState(false);
+  const [currency, setCurrency] = useState(null);
+  console.log("🚀 ~ GlobalOptionsProvider ~ currency:", currency)
   // const [languageId, setLanguageId] = useLocalStorage('name', '');
+  const { data: currencies } = useQuery({
+    queryKey: ["currencies", "list"],
+    queryFn: async () => {
+      const response = await getCurrency();
+      setCurrency(response?.data?.find((c) => c?.code === "USD"));
+      return response?.data;
+    },
+  });
+
   const getAndCacheData = async (table, setData, setCache) => {
     const response = await getData(table);
     setData(response);
@@ -37,6 +50,7 @@ export const GlobalOptionsProvider = ({ children }) => {
       setCache(cache);
     }
   };
+
   const setDefaultSettings = (type, data) => {
     if (type === "region") {
       setDefaultRegion(data);
@@ -86,6 +100,9 @@ export const GlobalOptionsProvider = ({ children }) => {
     setRefresh,
     refresh,
     user,
+    currency,
+    setCurrency,
+    currencies,
     setUser,
   };
   return (

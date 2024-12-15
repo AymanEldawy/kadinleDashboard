@@ -1,4 +1,4 @@
-import { buildTree, getFormatPrice } from "../Helpers/functions";
+import { buildTree, getFormatPrice, getFormatPriceToInsert } from "../Helpers/functions";
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
 
 let CURRENT_SEARCH_DATA = [];
@@ -1733,11 +1733,11 @@ export const refreshPrices = async (item) => {
     .select("*")
     .gte(
       "purchase_price",
-      getFormatPrice(item?.min_price, currency?.data?.at(0))
+      getFormatPriceToInsert(item?.min_price, currency?.data?.at(0))
     )
     .lte(
       "purchase_price",
-      getFormatPrice(item?.max_price, currency?.data?.at(0))
+      getFormatPriceToInsert(item?.max_price, currency?.data?.at(0))
     );
 
   const batchSize = 200;
@@ -2070,25 +2070,27 @@ export const getCategoriesMap = async (value, languageId) =>
 
 export const getProductsList = async ({
   param_lang_id,
+  param_min_price,
+  param_max_price,
   param_seller_sku,
   param_category_id,
-  param_price,
   param_name,
   param_ignore_ids,
+  param_products_ids,
   param_limit,
   param_offset,
-  param_products_ids,
 }) => {
   let { data, error } = await supabase.rpc("get_products_list", {
     param_lang_id,
+    param_min_price,
+    param_max_price,
     param_seller_sku,
     param_category_id,
-    param_price,
     param_name,
     param_ignore_ids,
+    param_products_ids,
     param_limit,
     param_offset,
-    param_products_ids,
   });
   return data;
 };
@@ -2176,3 +2178,7 @@ export const getOnlySaleProduct = async () => {
     CACHE_DATE,
   };
 };
+
+export const getCurrency = async () => {
+  return await supabase.from('currency').select('*')
+}

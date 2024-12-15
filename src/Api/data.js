@@ -1749,8 +1749,8 @@ export const refreshPrices = async (item) => {
 
       let global = {
         global_price:
-          (item?.global_percentage / 100) * variant?.price +
-          variant?.price,
+          (item?.global_percentage / 100) * variant?.purchase_price +
+          variant?.purchase_price,
         global_percentage: item?.global_percentage,
       };
 

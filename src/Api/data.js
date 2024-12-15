@@ -1,4 +1,8 @@
-import { buildTree, getFormatPrice, getFormatPriceToInsert } from "../Helpers/functions";
+import {
+  buildTree,
+  getFormatPrice,
+  getFormatPriceToInsert,
+} from "../Helpers/functions";
 import { supabase } from "../Helpers/SupabaseConfig/SupabaseConfig";
 
 let CURRENT_SEARCH_DATA = [];
@@ -1748,17 +1752,13 @@ export const refreshPrices = async (item) => {
       let additionalData = {};
 
       let global = {
-        global_price:
-          (item?.global_percentage / 100) * variant?.purchase_price +
-          variant?.purchase_price,
+        global_price: item?.global_percentage * variant?.purchase_price,
         global_percentage: item?.global_percentage,
       };
 
       let local = {
         percentage: item?.percentage,
-        price:
-          (item?.percentage / 100) * variant?.purchase_price +
-          variant?.purchase_price,
+        price: item?.percentage * variant?.purchase_price,
       };
 
       if (item?.is_global) {
@@ -2180,5 +2180,5 @@ export const getOnlySaleProduct = async () => {
 };
 
 export const getCurrency = async () => {
-  return await supabase.from('currency').select('*')
-}
+  return await supabase.from("currency").select("*");
+};

@@ -33,7 +33,8 @@ export const GlobalOptionsProvider = ({ children }) => {
     queryKey: ["currencies", "list"],
     queryFn: async () => {
       const response = await getCurrency();
-      setCurrency(response?.data?.find((c) => c?.code === "USD"));
+      if(!currency)
+        setCurrency(response?.data?.find((c) => c?.code === "USD"));
       return response?.data;
     },
   });

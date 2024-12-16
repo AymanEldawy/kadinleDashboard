@@ -1944,14 +1944,16 @@ export const get_seller_products = async (
   param_seller_id,
   param_category_id,
   param_seller_sku,
+  param_product_sku,
+  param_limit,
   param_offset,
-  param_limit
 ) => {
   return await supabase.rpc("get_seller_products", {
     param_lang_id,
     param_seller_id,
     param_category_id,
     param_seller_sku,
+    param_product_sku,
     param_limit,
     param_offset,
   });

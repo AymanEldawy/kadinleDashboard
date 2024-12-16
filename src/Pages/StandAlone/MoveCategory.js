@@ -29,6 +29,7 @@ const MoveCategory = () => {
   const [selectedList, setSelectedList] = useState({});
   const [supplierId, setSupplierId] = useState(null);
   const [sellerSku, setSellerSku] = useState(null);
+  const [productSku, setProductSku] = useState(null);
   const [category, setCategory] = useState("");
   const [pageCount, setPageCount] = useState(0);
   const [pagination, setPagination] = useState({
@@ -50,12 +51,14 @@ const MoveCategory = () => {
   const fetchProducts = async () => {
     try {
       const response = await get_seller_products(
+
         defaultLanguage?.id,
         supplierId || null,
         category || null,
         sellerSku || null,
+        productSku || null,
+        pagination?.pageSize,
         pagination?.pageIndex * pagination?.pageSize,
-        pagination?.pageSize
       );
 
       let products = response?.data?.products;
@@ -80,6 +83,7 @@ const MoveCategory = () => {
       category,
       supplierId,
       sellerSku,
+      productSku,
       pagination.pageSize,
       pagination.pageIndex,
     ],
@@ -222,6 +226,12 @@ const MoveCategory = () => {
               label={"Seller sku"}
               className="py-[6px]"
               onChange={(e) => setSellerSku(e.target.value)}
+            />
+            <InputField
+              value={productSku}
+              label={"Product sku"}
+              className="py-[6px]"
+              onChange={(e) => setProductSku(e.target.value)}
             />
 
             <CategoryMultiFilter

@@ -125,7 +125,7 @@ const ProductsStatus = () => {
               pagination?.pageIndex
             );
       setPageCount(
-        Math.ceil(response?.data?.count / parseInt(pagination?.pageSize))
+        Math.ceil(response?.data?.total_count / parseInt(pagination?.pageSize))
       );
       return response?.data?.products;
     },

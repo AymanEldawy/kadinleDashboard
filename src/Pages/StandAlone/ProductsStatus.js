@@ -111,18 +111,18 @@ const ProductsStatus = () => {
           ? await get_out_of_stock_products(
               defaultLanguage?.id,
               pagination?.pageSize,
-              pagination?.pageIndex
+              pagination?.pageIndex * pagination?.pageSize
             )
           : tab === 2
           ? await hidden_available_products(
               defaultLanguage?.id,
               pagination?.pageSize,
-              pagination?.pageIndex
+              pagination?.pageIndex * pagination?.pageSize
             )
           : await getHiddenProducts(
               defaultLanguage?.id,
               pagination?.pageSize,
-              pagination?.pageIndex
+              pagination?.pageIndex * pagination?.pageSize
             );
       setPageCount(
         Math.ceil(response?.data?.total_count / parseInt(pagination?.pageSize))

@@ -158,15 +158,40 @@ const Home = () => {
   }
 
   const insert = async () => {
+    // const products = await supabase
+    //   .from("product")
+    //   .select("*, product_variant(id)")
+    //   .in(
+    //     "product_sku",
+    //     [
+    //       95080, 94653, 82469, 640803, 649417, 94781, 682081, 81585, 681695,
+    //       94107, 182876, 229209, 60452, 637497, 209895, 699885, 236015, 696303,
+    //       214215, 202046, 211456, 692834, 94074, 94380, 96061, 330873, 642179,
+    //       94978, 318330,
+    //     ]
+    //   );
+    // let orders = [];
+    // for (const product of products?.data) {
+    //   orders.push({
+    //     order_id: "13b5cf80-58da-4f45-a20c-eea296b6c4fb",
+    //     variant_id: product?.product_variant.at(0)?.id,
+    //     quantity: 2,
+    //   });
+    // }
+
+    // const res = await supabase.from("order_content").insert(orders);
+
+    //
     const products = await supabase
       .from("product")
-      .select("id")
+      .select("*")
       .in(
         "product_sku",
         [
-          81673, 81712, 178316, 178969, 652710, 80220, 80204, 318285, 639637,
-          330879, 330892, 331069, 625229, 639839, 626147, 327574, 327610,
-          226024, 327298, 199652, 94991,
+          94648, 94895, 706463, 81984, 692352, 94396, 94054, 96124, 82807,
+          95033, 211381, 203255, 93753, 623328, 695903, 94019, 94111, 211437,
+          696233, 189825, 210412, 703296, 83012, 82526, 95221, 641914, 94577,
+          625105, 94815,
         ]
       );
     let orders = [];
@@ -183,7 +208,7 @@ const Home = () => {
   return (
     <div>
       <StatisticsCards data={statistics} />
-      <button onClick={insert}>load</button>
+      {/* <button onClick={insert}>load</button> */}
       <div className="grid items-start grid-cols-1 xl:grid-cols-2 gap-8 mt-8">
         <div className="dark:bg-bgmaindark bg-white shadow ">
           <h4 className="font-medium dark:text-white text-gray-800 text-lg p-2">

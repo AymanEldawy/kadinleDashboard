@@ -1946,7 +1946,7 @@ export const get_seller_products = async (
   param_seller_sku,
   param_product_sku,
   param_limit,
-  param_offset,
+  param_offset
 ) => {
   return await supabase.rpc("get_seller_products", {
     param_lang_id,
@@ -2183,4 +2183,15 @@ export const getOnlySaleProduct = async () => {
 
 export const getCurrency = async () => {
   return await supabase.from("currency").select("*");
+};
+
+export const pricingProducts = async (language_id, isPricing) => {
+  const query = supabase
+    .from("product")
+    .select(`id, display, product_sku, seller_sku, seller_file_id, product_variant(purchase_price), product_content(name)`)
+    .eq("product_content.language_id", language_id);
+  if (isPricing) query.gt("product_variant.purchase_price", 0);
+  else query.eq("product_variant.purchase_price", 0);
+
+  return await query;
 };

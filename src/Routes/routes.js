@@ -1,5 +1,5 @@
 import React from "react";
-
+import ProductsPricingStatus from './../Pages/StandAlone/ProductsPricingStatus';
 import Login from "../Components/Auth/Login";
 import NotAllowed from "../Components/Auth/NotAllowed";
 import PageNotFound from "../Components/Auth/PageNotFound";
@@ -36,7 +36,8 @@ import {
   AddLessThan,
   AddNewSupplier,
   AddNews,
-  AddNewsletter, AddOrderStatus,
+  AddNewsletter,
+  AddOrderStatus,
   AddPartner,
   AddPoint,
   AddProduct,
@@ -47,7 +48,7 @@ import {
   AddSupplierRequest,
   AddUser,
   AddWarehouse,
-  AddWarehouseAvailability
+  AddWarehouseAvailability,
 } from "./../Pages/Forms";
 import {
   Addresses,
@@ -80,14 +81,15 @@ import {
   Points,
   Products,
   Regions,
-  ReturnStatus, Sizes,
+  ReturnStatus,
+  Sizes,
   Stocks,
   SupplierRequest,
   Suppliers,
   Users,
   WarehouseAvailability,
   Warehouses,
-  Measurement
+  Measurement,
 } from "./../Pages/Tables";
 import SpecialOffer from "../Pages/Tables/SepcialOffer";
 import Support from "../Pages/StandAlone/Support";
@@ -156,7 +158,12 @@ const authProtectedRoutes = [
   {
     path: "/products-status",
     component: <ProductsStatus />,
-    allowedRoles: ["*"],
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/products-pricing",
+    component: <ProductsPricingStatus />,
+    allowedRoles: ["admin", "superadmin"],
   },
   {
     path: "/products-report",
@@ -189,7 +196,11 @@ const authProtectedRoutes = [
   // **** Group Seasons add paths ****
   { path: "/add-sale", component: <AddSale />, allowedRoles: ["*"] },
   { path: "/add-offer", component: <OffersForm />, allowedRoles: ["*"] },
-  { path: "/update-offer/:id", component: <OffersForm layout="update" />, allowedRoles: ["*"] },
+  {
+    path: "/update-offer/:id",
+    component: <OffersForm layout="update" />,
+    allowedRoles: ["*"],
+  },
   {
     path: "/add-collection",
     component: <AddCollection />,

@@ -9,15 +9,14 @@ import SearchCategoryField from "../../Components/CustomForm/SearchCategoryField
 import Select from "react-select";
 import { useUpdate } from "../../hooks/useUpdate";
 import { toast } from "react-toastify";
-import {
-  get_seller_products, getSuppliersList
-} from "../../Api/data";
+import { get_seller_products, getSuppliersList } from "../../Api/data";
 import { ChevronIcon, TrashIcon } from "../../Helpers/Icons";
 import ReactPaginate from "react-paginate";
 import { useDelete } from "../../hooks/useDelete";
 import ConfirmModal from "../../Components/ConfirmModal/ConfirmModal";
 import { LoadingProcess } from "../../Components/Global/LoadingProcess";
 import InputField from "../../Components/CustomForm/InputField";
+import { MultiSizeFilter } from "../../Components/TableBar/MultiSizeFilter";
 
 const MoveCategory = () => {
   let name = "products_slider";
@@ -27,6 +26,7 @@ const MoveCategory = () => {
   const [isProgress, setIsProgress] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [selectedList, setSelectedList] = useState({});
+  const [size, setSize] = useState(null);
   const [supplierId, setSupplierId] = useState(null);
   const [sellerSku, setSellerSku] = useState(null);
   const [productSku, setProductSku] = useState(null);
@@ -51,14 +51,13 @@ const MoveCategory = () => {
   const fetchProducts = async () => {
     try {
       const response = await get_seller_products(
-
         defaultLanguage?.id,
         supplierId || null,
         category || null,
         sellerSku || null,
         productSku || null,
         pagination?.pageSize,
-        pagination?.pageIndex * pagination?.pageSize,
+        pagination?.pageIndex * pagination?.pageSize
       );
 
       let products = response?.data?.products;
@@ -91,7 +90,6 @@ const MoveCategory = () => {
     // keepPreviousData: true, // Optional: keeps old data while fetching new data
     // staleTime: 0, // O
   });
-
 
   const handlePageClick = (event) => {
     setPagination((prev) => ({
@@ -181,6 +179,26 @@ const MoveCategory = () => {
     setOpenConfirmation(false);
   };
 
+  const hanldeChooseSize = async () => {
+    setIsProgress(true);
+    let list = Object.keys(selectedList);
+    const response = await updateInItems(
+      "product",
+      {
+        size_id: size,
+      },
+      "id",
+      list
+    );
+
+    if (response?.error) {
+      toast.error(`Failed to update category for selected products`);
+    } else {
+      toast.success(`Successfully update category for selected products`);
+    }
+    setIsProgress(false);
+  };
+
   return (
     <>
       <ConfirmModal
@@ -263,6 +281,21 @@ const MoveCategory = () => {
             </button>
           </div>
 
+          <div className="flex items-end mb-4 gap-4">
+            <MultiSizeFilter
+              outerChange={(value) => {
+                console.log(value, "value");
+                setSize(value);
+              }}
+              filterSize={size}
+            />
+            <Button
+              disabled={!size || !Object.keys(selectedList)?.length}
+              onClick={hanldeChooseSize}
+              classes=""
+              title="Save Size"
+            />
+          </div>
           <div className="flex justify-between items-center  dark:text-white border-t  shadow p-3 bg-white dark:bg-bgmaindark">
             <p>
               Selected Products:{" "}
@@ -310,7 +343,7 @@ const MoveCategory = () => {
             <div className="p-2 flex-1">Actions</div>
           </div>
           {data?.products?.map((product) => {
-            let isSelected = selectedList?.[product?.id];            
+            let isSelected = selectedList?.[product?.id];
             return (
               <div
                 className={`border-y flex items-center dark:border-[#343333]  dark:text-white ${

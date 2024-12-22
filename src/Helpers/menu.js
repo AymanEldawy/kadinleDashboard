@@ -107,11 +107,17 @@ export const menuData = [
         path: "/products-status",
       },
       {
-        key: "products report",
-        name: "Products report",
+        key: "products pricing",
+        name: "Products pricing",
         icon: <ChartIcon />,
-        path: "/products-report",
+        path: "/products-pricing",
       },
+      // {
+      //   key: "products report",
+      //   name: "Products report",
+      //   icon: <ChartIcon />,
+      //   path: "/products-report",
+      // },
       {
         key: "Brands",
         name: "Brands",

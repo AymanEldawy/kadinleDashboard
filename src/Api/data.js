@@ -1898,7 +1898,7 @@ export const getSizesFilter = async (region_id, type) => {
   const query = await supabase
     .from("size")
     .select(`id,size_sku,size_content(region_id, name)`)
-    // .eq("size_content.region_id", region_id)
+    .eq("size_content.region_id", region_id)
     .eq("type", type);
   return query;
 };

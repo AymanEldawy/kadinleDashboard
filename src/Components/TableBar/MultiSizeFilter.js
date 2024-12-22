@@ -35,13 +35,13 @@ export const MultiSizeFilter = ({
     ],
     keepPreviousData: true,
     queryFn: async () => {
-      if (!defaultRegion?.id) return;
       const size = await getSizesFilter(
-        defaultLanguage?.id,
+        defaultRegion?.id,
         selectedSizeType?.value
       );
       return size?.data;
     },
+    enable: !!defaultRegion?.id && !!selectedSizeType?.value,
   });
 
   return (

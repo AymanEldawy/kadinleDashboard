@@ -24,7 +24,8 @@ export const CategoryFallbackForm = ({
   }, [oldCategories]);
 
   useEffect(() => {
-    setSelectedCategories(categories);
+    if(setSelectedCategories)
+      setSelectedCategories(categories);
   }, [categories]);
 
   const addNewCategory = () => {

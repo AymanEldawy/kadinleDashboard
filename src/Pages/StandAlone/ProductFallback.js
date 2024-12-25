@@ -134,7 +134,6 @@ const ProductFallback = () => {
             rowSelection={rowSelection}
             setRowSelection={setRowSelection}
             setSelectedCategory={setCategoryId}
-            hideCategoryFilter
             // categoryTitle={category?.title || ""}
           />
         </div>

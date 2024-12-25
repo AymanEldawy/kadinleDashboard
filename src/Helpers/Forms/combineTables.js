@@ -1910,6 +1910,7 @@ const combine_product = () => [
     ),
   },
 ];
+
 const combine_collection_product = (rowSelection, showIndex) => [
   {
     id: "select",
@@ -1954,7 +1955,7 @@ const combine_collection_product = (rowSelection, showIndex) => [
           image={row?.original?.image}
           product_sku={row?.original?.product_sku}
           seller_sku={row?.original?.seller_sku}
-          product_id={row?.original?.id}
+          product_id={row?.original?.product_id}
           name={row?.original?.content?.name}
           variant_id={row?.original?.variant_id}
         />

@@ -50,7 +50,7 @@ const ProductFallback = () => {
     },
     enabled: !!category?.id,
   });
-  console.log(oldProducts, "Object.keys(list)");
+  console.log("🚀 ~ onSubmit ~ rowSelection:", rowSelection)
 
   const onSubmit = async () => {
     let newList = Object.keys(rowSelection);
@@ -134,6 +134,7 @@ const ProductFallback = () => {
             rowSelection={rowSelection}
             setRowSelection={setRowSelection}
             setSelectedCategory={setCategoryId}
+            showIndex
             // categoryTitle={category?.title || ""}
           />
         </div>

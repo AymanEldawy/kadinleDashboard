@@ -14,6 +14,7 @@ export const ProductInfo = ({
   seller_sku,
 }) => {
   const index = (Object.keys(rowSelection) || []).indexOf(product_id);
+
   return (
     <div className="flex gap-2">
       {index + 1 > 0 && showIndex ? (

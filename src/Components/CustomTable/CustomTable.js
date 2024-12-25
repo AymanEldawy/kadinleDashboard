@@ -185,10 +185,12 @@ const CustomTable = ({
               <>
                 {data?.length ? (
                   table.getRowModel().rows.map((row) => {
+                    console.log(row.getIsSelected(), '---sd');
+                    
                     return (
                       <tr
                         key={row.id}
-                        className={`border-b last:border-none even:bg-gray-100 border-gray-100 `}
+                        className={`border-b last:border-none even:bg-gray-100 border-gray-100 ${row.getIsSelected() && '!bg-blue-100'}`}
                       >
                         {row.getVisibleCells().map((cell) => {
                           return (

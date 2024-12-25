@@ -34,7 +34,7 @@ const InputField = ({
           id={label}
           {...field}
           min={field?.type === "number" ? "0" : ""}
-          className={`border read-only:bg-gray-200 w-full h-[37px] dark:read-only:bg-[#444] rounded p-1 ${className} ${
+          className={`border read-only:bg-gray-200 ${field?.type !== 'checkbox' && 'w-full'} h-[37px] dark:read-only:bg-[#444] rounded p-1 ${className} ${
             error ? "border-red-200 text-red-500" : ""
           }
           ${field?.type === "checkbox" ? "w-7 h-7" : ""}

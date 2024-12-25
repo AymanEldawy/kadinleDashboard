@@ -94,7 +94,7 @@ const HomeSections = () => {
   const [sortedSections, setSortedSection] = useState([]);
   const [newSection, setNewSection] = useState("");
   const [newCategory, setNewCategory] = useState("");
-  const [selectedType, setSelectedType] = useState("");
+  const [selectedType, setSelectedType] = useState("SECTION");
   const [categories, setCategories] = useState([]);
   const [HASH_SECTIONS, setHASH_SECTIONS] = useState({});
 
@@ -175,6 +175,8 @@ const HomeSections = () => {
     setNewCategory("");
   };
 
+  console.log(selectedType, "-dsdssdsd");
+
   const addNewSection = () => {
     let item = {
       section_id: newSection?.replace(/ /gi, "_").toLocaleUpperCase(),
@@ -184,8 +186,8 @@ const HomeSections = () => {
       display_home: true,
       deletable: false,
     };
-    
-    if (+selectedType === 1) {
+
+    if (selectedType === "SECTION") {
       item = {
         ...item,
         section_id: newSection?.replace(/ /gi, "_").toLocaleUpperCase(),
@@ -193,7 +195,7 @@ const HomeSections = () => {
         section_name: newSection,
       };
     } else {
-      let type = +selectedType === 2 ? "SLIDER" : "OFFER";
+      let type = selectedType;
       item = {
         ...item,
         section_id: type + "_" + newSection,
@@ -202,6 +204,8 @@ const HomeSections = () => {
         deletable: true,
       };
     }
+
+    console.log(item, "item");
 
     setSortedSection((prev) => [
       ...prev,
@@ -213,9 +217,10 @@ const HomeSections = () => {
   };
 
   const deleteSection = async (section) => {
-    setSortedSection((prev) =>
-      prev?.filter((p) => prev?.section_name !== section?.section_name)
+    let newList = sortedSections?.filter(
+      (p) => p?.section_id !== section?.section_id
     );
+    setSortedSection(newList);
     if (section?.id && section?.section_type === "CATEGORY") {
       // delete section from database
       await deleteItem("home_sections", [section?.id]);
@@ -273,7 +278,7 @@ const HomeSections = () => {
               placeholder="Enter new category ..."
             />
             <Button
-              classes="!py-2"
+              classes="!py-2 whitespace-nowrap px-4 !w-fit"
               title="Add new category"
               onClick={addNewCategory}
             />
@@ -284,9 +289,10 @@ const HomeSections = () => {
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value)}
             >
-              <option value={1}>Section</option>
-              <option value={2}>Slider</option>
-              <option value={3}>offer</option>
+              <option value={"SECTION"}>Section</option>
+              <option value={"SLIDER"}>Slider</option>
+              <option value={"OFFER"}>offer</option>
+              <option value={"BANNER"}>banner</option>
             </select>
             <input
               value={newSection}
@@ -295,7 +301,7 @@ const HomeSections = () => {
               placeholder="Enter new section ..."
             />
             <Button
-              classes="!py-2 bg-orange-500"
+              classes="!py-2 bg-orange-500 whitespace-nowrap px-4 !w-fit"
               title="Add new section"
               onClick={addNewSection}
             />

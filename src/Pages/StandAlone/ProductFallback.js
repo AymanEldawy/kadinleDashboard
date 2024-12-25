@@ -50,34 +50,44 @@ const ProductFallback = () => {
     },
     enabled: !!category?.id,
   });
-  console.log("🚀 ~ onSubmit ~ rowSelection:", rowSelection)
+  console.log("🚀 ~ onSubmit ~ rowSelection:", rowSelection);
 
   const onSubmit = async () => {
     let newList = Object.keys(rowSelection);
     if (!newList) return;
     let insertedList = [];
+    let updatedList = [];
     let list = oldProducts;
 
-    for (const item of newList) {
+    for (let i = 0; i < newList?.length; i++) {
+      let item = newList?.[i];
       if (list?.[item]) {
+        updatedList.push({
+          ...list?.[item],
+          sku: i + 1,
+        });
         delete list[item];
       } else {
         insertedList.push({
           product_id: item,
           category_id: category?.id,
+          sku: i + 1,
         });
       }
     }
 
     let deletedList = Object.keys(list);
-    
+
     try {
       await Promise.all([
+        updatedList.length > 0 &&
+          processBatch(updatedList, async (batchList) => {
+            await upsertItem("product_fallback", batchList);
+          }),
         insertedList.length > 0 &&
           processBatch(insertedList, async (batchList) => {
             await addItem("product_fallback", batchList);
           }),
-
         deletedList.length > 0 &&
           processBatch(deletedList, async (batchList, i, totalBatches) => {
             console.log("should delete", batchList);

@@ -101,7 +101,7 @@ const ProductFallback = () => {
   };
 
   return (
-    <BlockPaper title="Category Fallback">
+    <BlockPaper title="Category Fallback Products">
       {category ? (
         <div>
           <div className="mb-4 pb-2 border-b flex items-center justify-between gap-4">

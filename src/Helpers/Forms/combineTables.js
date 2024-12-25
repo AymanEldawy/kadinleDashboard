@@ -3707,11 +3707,6 @@ const home_sliders = () => [
     ),
   },
   {
-    accessorKey: "created_at",
-    header: "created_at",
-    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("en-UK"),
-  },
-  {
     accessorKey: "sku",
     header: "sku",
     cell: ({ getValue, row }) => {
@@ -3749,8 +3744,17 @@ const home_sliders = () => [
       );
     },
   },
-  { accessorKey: "title", header: "title" },
-  { accessorKey: "description", header: "description" },
+  { accessorKey: "is_banner", header: "is_banner", cell: ({ getValue }) => (
+    <span
+      className={`px-8 py-1 rounded-md ${
+        getValue() ? "bg-green-500 text-white" : "bg-red-500 text-white"
+      }`}
+    >
+      {getValue() ? "Yes" : "No"}
+    </span>
+  ), },
+  { accessorKey: "title", header: "title", cell: ({row}) => row.original?.home_sliders_content?.at?.(0)?.title },
+  { accessorKey: "description", header: "description", cell: ({row}) => row.original?.home_sliders_content?.at?.(0)?.description },
   { accessorKey: "url", header: "url" },
 ];
 

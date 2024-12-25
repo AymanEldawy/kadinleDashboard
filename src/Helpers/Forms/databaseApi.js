@@ -1337,7 +1337,7 @@ const supplier_request = [
 const home_sliders = [
   { name: "url", type: "text" },
   { name: "sku", type: "number", required: true },
-  { name: "is_banner", type: "checkbox"},
+  { name: "is_banner", key: "checkbox"},
 ];
 
 const home_sliders_content = [

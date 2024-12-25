@@ -503,6 +503,11 @@ export const menuData = [
         name: "Home slider",
       },
       {
+        path: "/home-banner",
+        icon: <GalleryIcon />,
+        name: "Home banners",
+      },
+      {
         key: "logs",
         icon: <ExclamationTriangleIcon />,
         path: "/logs",

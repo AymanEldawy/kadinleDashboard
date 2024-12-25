@@ -119,6 +119,8 @@ import SaleSlider from "../Pages/StandAlone/SaleSlider";
 import OffersForm from "../Pages/StandAlone/OffersForm";
 import SuppliersReview from "../Pages/StandAlone/SuppliersReview";
 import ProductFallback from "../Pages/StandAlone/ProductFallback";
+import HomeBanner from "../Pages/Tables/HomeBanner";
+import HomeBannerForm from "../Pages/StandAlone/HomeBannerForm";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -488,6 +490,21 @@ const authProtectedRoutes = [
   {
     path: "/add-home-sliders",
     component: <AddHomeSlider />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/home-banner",
+    component: <HomeBanner />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/add-home-banner",
+    component: <HomeBannerForm />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/update-home-banner/:id",
+    component: <HomeBannerForm />,
     allowedRoles: ["admin", "superadmin"],
   },
   {

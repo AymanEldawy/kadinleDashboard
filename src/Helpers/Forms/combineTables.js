@@ -3676,6 +3676,80 @@ export const combine_less_than = () => [
   { accessorKey: "price", header: "price", cell: ({getValue}) => <PriceView price={getValue()}  /> },
 ];
 
+const home_banners = () => [
+  {
+    id: "select",
+    size: 20,
+    minSize: 50,
+    header: ({ table }) => (
+      <input
+        type="checkbox"
+        className="h-5 w-5"
+        {...{
+          checked: table?.getIsAllRowsSelected(),
+          // indeterminate: table?.getIsSomeRowsSelected(),
+          onChange: table?.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <input
+          type="checkbox"
+          className="h-5 w-5"
+          {...{
+            checked: row?.getIsSelected(),
+            disabled: !row?.getCanSelect(),
+            // indeterminate: row?.getIsSomeSelected(),
+            onChange: row?.getToggleSelectedHandler(),
+          }}
+        />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "sku",
+    header: "sku",
+    cell: ({ getValue, row }) => {
+      return (
+        <Link
+          to={`/update-home-banner/${row.original.id}`}
+          className="text-blue-500 hover:underline"
+        >
+          {getValue()}
+        </Link>
+      );
+    },
+  },
+  {
+    accessorKey: "web_image",
+    header: "web_image",
+    cell: ({ row }) => {
+      return (
+        <FullImage
+          src={row.original?.home_banners_content?.at?.(0)?.mobile_image}
+          alt={"image"}
+        />
+      );
+    },
+  },
+  {
+    accessorKey: "mobile_image",
+    header: "mobile_image",
+    cell: ({ row }) => {
+      return (
+        <FullImage
+          src={row.original?.home_banners_content?.at?.(0)?.mobile_image}
+          alt={"image"}
+        />
+      );
+    },
+  },
+
+  { accessorKey: "title", header: "title", cell: ({row}) => row.original?.home_banners_content?.at?.(0)?.title },
+  { accessorKey: "description", header: "description", cell: ({row}) => row.original?.home_banners_content?.at?.(0)?.description },
+  { accessorKey: "url", header: "url" },
+];
 const home_sliders = () => [
   {
     id: "select",
@@ -3956,5 +4030,6 @@ const COMBINE_DB_API = {
   combine_chunks,
   combine_Weights,
   combine_sale_product,
+  home_banners
 };
 export default COMBINE_DB_API;

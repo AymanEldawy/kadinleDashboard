@@ -44,7 +44,7 @@ export const SelectCountries = ({
   };
 
   return (
-    <div>
+    <div className="w-full">
       {isLoading ? <LoadingProcess /> : null}
       <p className="mb-2">Selected new country</p>
       <div className="flex gap-2">

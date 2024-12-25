@@ -106,6 +106,8 @@ const fetches = {
     getHomeSliders("less_than", page, pageSize, additionalData),
   home_sliders: (page, pageSize, additionalData) =>
     getHomeSliders("home_sliders", page, pageSize, additionalData),
+  home_banners: (page, pageSize, additionalData) =>
+    getHomeSliders("home_banners", page, pageSize, additionalData),
   definitions: (page, pageSize, additionalData) =>
     getHomeSliders("definitions", page, pageSize, additionalData),
   supplier_products: getSupplierProducts,

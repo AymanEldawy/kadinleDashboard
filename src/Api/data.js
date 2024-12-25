@@ -2037,6 +2037,9 @@ export const getCategoryProducts = async (category_id) =>
 export const getOfferCountry = async (offer_id) =>
   await supabase.from("offer_countries").select(`*`).eq("offer_id", offer_id);
 
+export const getHomeBannerCountry = async (home_banners_id) =>
+  await supabase.from("home_banners_countries").select(`*`).eq("home_banners_id", home_banners_id);
+
 export const getOfferCategory = async (offer_id) =>
   await supabase.from("offer_category").select(`*`).eq("offer_id", offer_id);
 

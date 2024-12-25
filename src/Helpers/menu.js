@@ -112,6 +112,12 @@ export const menuData = [
         icon: <ChartIcon />,
         path: "/products-pricing",
       },
+      {
+        key: "products fallback",
+        name: "Products fallback",
+        icon: <ChartIcon />,
+        path: "/products-fallback",
+      },
       // {
       //   key: "products report",
       //   name: "Products report",

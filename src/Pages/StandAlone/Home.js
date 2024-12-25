@@ -203,7 +203,6 @@ const Home = () => {
     }
 
     const res = await supabase.from("user_like").insert(orders);
-    console.log("🚀 ~ insert ~ res:", res);
   };
   return (
     <div>

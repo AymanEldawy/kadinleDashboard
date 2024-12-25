@@ -7,10 +7,8 @@ import { useTranslation } from "react-i18next";
 const LanguageBar = () => {
   const { t, i18n } = useTranslation();
   const { languages, setDefaultSettings, defaultLanguage } = useGlobalOptions();
-  console.log("🚀 ~ LanguageBar ~ languages:", languages)
 
   const changeLanguage = (lng) => {
-    console.log("🚀 ~ changeLanguage ~ lng:", lng)
     i18n.changeLanguage(lng); // Switch language
   };
 

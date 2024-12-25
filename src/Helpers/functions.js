@@ -74,9 +74,7 @@ export const getFormatPrice = (
   ignore,
   withCode = true,
   realNumber
-) => {
-  console.log(price, currency,'--');
-  
+) => {  
   let code = "";
   switch (currency?.code) {
     case "USD":

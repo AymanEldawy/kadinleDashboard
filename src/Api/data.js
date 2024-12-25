@@ -2031,6 +2031,9 @@ export const getSaleData = async (id, language_id) =>
 export const getOfferProducts = async (offer_id) =>
   await supabase.from("offer_product").select(`*`).eq("offer_id", offer_id);
 
+export const getCategoryProducts = async (category_id) =>
+  await supabase.from("product_fallback").select(`*`).eq("category_id", category_id);
+
 export const getOfferCountry = async (offer_id) =>
   await supabase.from("offer_countries").select(`*`).eq("offer_id", offer_id);
 

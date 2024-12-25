@@ -113,7 +113,6 @@ function OffersForm() {
     queryKey: ["offer", "products", "ignored", params?.id],
     queryFn: async () => {
       const response = await getGroup2ProductIds(params?.id);
-      console.log("🚀 ~ queryFn: ~ response:", response);
       return response;
     },
   });

@@ -31,7 +31,6 @@ const SaleSlider = () => {
     queryKey: ["offer", "products", "ignored", params?.id],
     queryFn: async () => {
       const response = await getOnlySaleProduct();
-      console.log("🚀 ~ queryFn: ~ response:", response);
       return response;
     },
   });

@@ -284,7 +284,6 @@ const MoveCategory = () => {
           <div className="flex items-end mb-4 gap-4">
             <MultiSizeFilter
               outerChange={(value) => {
-                console.log(value, "value");
                 setSize(value);
               }}
               filterSize={size}

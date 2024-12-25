@@ -27,7 +27,6 @@ export const GlobalOptionsProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [refresh, setRefresh] = useState(false);
   const [currency, setCurrency] = useState(null);
-  console.log("🚀 ~ GlobalOptionsProvider ~ currency:", currency)
   // const [languageId, setLanguageId] = useLocalStorage('name', '');
   const { data: currencies } = useQuery({
     queryKey: ["currencies", "list"],

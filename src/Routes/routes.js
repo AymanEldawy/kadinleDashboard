@@ -118,6 +118,7 @@ import SaleForm from "../Pages/StandAlone/SaleForm";
 import SaleSlider from "../Pages/StandAlone/SaleSlider";
 import OffersForm from "../Pages/StandAlone/OffersForm";
 import SuppliersReview from "../Pages/StandAlone/SuppliersReview";
+import ProductFallback from "../Pages/StandAlone/ProductFallback";
 
 const authProtectedRoutes = [
   // **** Group Locations add paths ****
@@ -163,6 +164,11 @@ const authProtectedRoutes = [
   {
     path: "/products-pricing",
     component: <ProductsPricingStatus />,
+    allowedRoles: ["admin", "superadmin"],
+  },
+  {
+    path: "/products-fallback",
+    component: <ProductFallback />,
     allowedRoles: ["admin", "superadmin"],
   },
   {

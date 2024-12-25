@@ -175,7 +175,6 @@ const HomeSections = () => {
     setNewCategory("");
   };
 
-  console.log(selectedType, "-dsdssdsd");
 
   const addNewSection = () => {
     let item = {

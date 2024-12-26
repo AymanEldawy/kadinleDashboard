@@ -68,8 +68,7 @@ const HomeBannerForm = () => {
     },
     enabled: !!id,
   });
-  console.log(countries,'--sd');
-  
+  console.log(countries, "--sd");
 
   const onSubmit = async () => {
     let response = null;
@@ -217,6 +216,7 @@ const HomeBannerForm = () => {
                 }));
               }}
             />
+
             <InputField
               containerClassName="w-full"
               name="url"
@@ -226,6 +226,19 @@ const HomeBannerForm = () => {
                 setValues((prev) => ({
                   ...prev,
                   url: e.target.value,
+                }));
+              }}
+            />
+            <InputField
+              containerClassName="w-full"
+              name="not_include"
+              label="not_include"
+              value={values?.not_include}
+              type="checkbox"
+              onChange={(e) => {
+                setValues((prev) => ({
+                  ...prev,
+                  not_include: e.target.checked,
                 }));
               }}
             />

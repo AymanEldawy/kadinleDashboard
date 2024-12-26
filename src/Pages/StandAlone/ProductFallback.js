@@ -18,6 +18,7 @@ import { processBatch } from "../../Helpers/functions";
 import { useDelete } from "../../hooks/useDelete";
 import { useAdd } from "../../hooks/useAdd";
 import { toast } from "react-toastify";
+import { LoadingProcess } from "../../Components/Global/LoadingProcess";
 
 const ProductFallback = () => {
   const { addItem } = useAdd();
@@ -27,6 +28,7 @@ const ProductFallback = () => {
   const { getDataWithContent } = useFetch();
   const { defaultLanguage } = useGlobalOptions();
   const [category, setCategory] = useState(null);
+  const [isProgress, setIsProgress] = useState(false);
   const [categoryId, setCategoryId] = useState(null);
   const [rowSelection, setRowSelection] = useState([]);
 
@@ -50,11 +52,13 @@ const ProductFallback = () => {
     },
     enabled: !!category?.id,
   });
-  console.log("🚀 ~ onSubmit ~ rowSelection:", rowSelection);
 
   const onSubmit = async () => {
     let newList = Object.keys(rowSelection);
     if (!newList) return;
+    setIsProgress(true);
+    let loading = toast.loading("Loading ...");
+
     let insertedList = [];
     let updatedList = [];
     let list = oldProducts;
@@ -101,69 +105,84 @@ const ProductFallback = () => {
             toast.success(`Processing batch ${i + 1} of ${totalBatches}...`);
           }),
       ]);
-      console.log(list, "list --fd");
+      setIsProgress(false);
 
-      console.log("Category fallback product list processing completed.");
+      toast.update(loading, {
+        render: `Great! successfully save products`,
+        type: "success",
+        isLoading: false,
+        autoClose: 1000,
+      });
     } catch (error) {
+      toast.update(loading, {
+        render: `Oops! failed to save products`,
+        type: "error",
+        isLoading: false,
+        autoClose: 1000,
+      });
       console.error("Error processing Category fallback product list:", error);
       throw error;
     }
   };
 
   return (
-    <BlockPaper title="Category Fallback Products">
-      {category ? (
-        <div>
-          <div className="mb-4 pb-2 border-b flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setCategory(null)}
-                className="bg-red-50 text-red-500 text-sm px-4 py-1 rounded-md hover:bg-red-500 hover:text-white duration-300"
-              >
-                <LongArrow className="h-6 w-6 -rotate-180 text-inherit text-" />
-              </button>
-              |
-              <h3>
-                {
-                  category?.category_content?.find(
-                    (c) => c?.language_id === defaultLanguage?.id
-                  )?.title
-                }
-              </h3>
+    <>
+      {isProgress ? <LoadingProcess isFull /> : null}
+
+      <BlockPaper title="Category Fallback Products">
+        {category ? (
+          <div>
+            <div className="mb-4 pb-2 border-b flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setCategory(null)}
+                  className="bg-red-50 text-red-500 text-sm px-4 py-1 rounded-md hover:bg-red-500 hover:text-white duration-300"
+                >
+                  <LongArrow className="h-6 w-6 -rotate-180 text-inherit text-" />
+                </button>
+                |
+                <h3>
+                  {
+                    category?.category_content?.find(
+                      (c) => c?.language_id === defaultLanguage?.id
+                    )?.title
+                  }
+                </h3>
+              </div>
+              <p className="flex gap-1">
+                Selected Products:
+                <span className="font-extrabold text-lg">
+                  {Object.keys(rowSelection)?.length}
+                </span>
+              </p>
             </div>
-            <p className="flex gap-1">
-              Selected Products:
-              <span className="font-extrabold text-lg">
-                {Object.keys(rowSelection)?.length}
-              </span>
-            </p>
+            <SelectedProductTable
+              onSaveChanges={onSubmit}
+              tableName={"products slider"}
+              rowSelection={rowSelection}
+              setRowSelection={setRowSelection}
+              setSelectedCategory={setCategoryId}
+              showIndex
+              // categoryTitle={category?.title || ""}
+            />
           </div>
-          <SelectedProductTable
-            onSaveChanges={onSubmit}
-            tableName={"products slider"}
-            rowSelection={rowSelection}
-            setRowSelection={setRowSelection}
-            setSelectedCategory={setCategoryId}
-            showIndex
-            // categoryTitle={category?.title || ""}
-          />
-        </div>
-      ) : (
-        <div className="flex gap-4 items-center">
-          <CategoryMultiFilter
-            name="fallback_product"
-            filterCategory={categoryId}
-            setFilterCategory={setCategoryId}
-          />
-          <Button
-            title="Submit"
-            disabled={!categoryId}
-            classes="text-xs capitalize"
-            onClick={getCategoryFallback}
-          />
-        </div>
-      )}
-    </BlockPaper>
+        ) : (
+          <div className="flex gap-4 items-center">
+            <CategoryMultiFilter
+              name="fallback_product"
+              filterCategory={categoryId}
+              setFilterCategory={setCategoryId}
+            />
+            <Button
+              title="Submit"
+              disabled={!categoryId}
+              classes="text-xs capitalize"
+              onClick={getCategoryFallback}
+            />
+          </div>
+        )}
+      </BlockPaper>
+    </>
   );
 };
 
